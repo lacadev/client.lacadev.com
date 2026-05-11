@@ -12,6 +12,9 @@ namespace App\Features;
  * Options (wp_options key → default):
  *   laca_cta_enabled         → '1'
  *   laca_cta_hide_logged_in  → '0'
+ *   laca_cta_show_desktop    → '1'
+ *   laca_cta_show_mobile     → '1'
+ *   laca_cta_color_*         → per-context CTA background color
  *
  * Per-context rules (filter-based, see below):
  *   lacadev/cta/rules  → array of rule definitions
@@ -23,6 +26,7 @@ namespace App\Features;
  *     'url'       => string,       // Button href (empty = scroll to #contact)
  *     'icon'      => string,       // SVG or dashicon class (optional)
  *     'theme'     => string,       // CSS modifier class (optional)
+ *     'color'     => string,       // CTA background hex color (optional)
  *   ]
  *
  * @package App\Features
@@ -61,6 +65,12 @@ class ContextAwareCta
             return;
         }
 
+        $showDesktop = get_option('laca_cta_show_desktop', '1') === '1';
+        $showMobile = get_option('laca_cta_show_mobile', '1') === '1';
+        if (!$showDesktop && !$showMobile) {
+            return;
+        }
+
         // Respect dismiss cookie (set by JS)
         if (!empty($_COOKIE[self::COOKIE_KEY])) {
             return;
@@ -80,9 +90,12 @@ class ContextAwareCta
         $url   = !empty($rule['url']) ? esc_url($rule['url']) : '#contact';
         $icon  = $rule['icon'] ?? '';
         $theme = !empty($rule['theme']) ? ' laca-cta--' . sanitize_html_class($rule['theme']) : '';
+        $visibility = (!$showDesktop ? ' laca-cta--hide-desktop' : '') . (!$showMobile ? ' laca-cta--hide-mobile' : '');
+        $color = sanitize_hex_color($rule['color'] ?? '');
+        $style = $color ? ' style="--laca-cta-bg: ' . esc_attr($color) . ';"' : '';
         $nonce = wp_create_nonce('laca_cta_nonce');
         ?>
-        <div class="laca-cta<?php echo $theme; ?>" role="complementary" aria-label="<?php echo $label; ?>" data-nonce="<?php echo esc_attr($nonce); ?>">
+        <div class="laca-cta<?php echo esc_attr($theme . $visibility); ?>" role="complementary" aria-label="<?php echo $label; ?>" data-nonce="<?php echo esc_attr($nonce); ?>"<?php echo $style; ?>>
             <a href="<?php echo $url; ?>" class="laca-cta__btn">
                 <?php if ($icon): ?><span class="laca-cta__icon" aria-hidden="true"><?php echo $icon; ?></span><?php endif; ?>
                 <span><?php echo $label; ?></span>
@@ -101,11 +114,11 @@ class ContextAwareCta
     /**
      * Returns the first matching rule, or null.
      *
-     * @return array{label:string, url:string, icon:string, theme:string}|null
+     * @return array{label:string, url:string, icon:string, theme:string, color?:string}|null
      */
     private function matchRule(): ?array
     {
-        /** @var array<array{condition:callable,label:string,url:string,icon:string,theme:string}> $rules */
+        /** @var array<array{condition:callable,label:string,url:string,icon:string,theme:string,color?:string}> $rules */
         $rules = apply_filters('lacadev/cta/rules', $this->defaultRules());
 
         foreach ($rules as $rule) {
@@ -133,6 +146,7 @@ class ContextAwareCta
                 'url'       => $contactPage,
                 'icon'      => '',
                 'theme'     => 'blog',
+                'color'     => get_option('laca_cta_color_blog', '#1a6b8a'),
             ],
 
             // Service / landing page → start project
@@ -142,6 +156,7 @@ class ContextAwareCta
                 'url'       => $contactPage,
                 'icon'      => '',
                 'theme'     => 'page',
+                'color'     => get_option('laca_cta_color_page', '#2563eb'),
             ],
 
             // Product (WooCommerce) → view in cart
@@ -151,6 +166,7 @@ class ContextAwareCta
                 'url'       => function_exists('wc_get_cart_url') ? wc_get_cart_url() : $contactPage,
                 'icon'      => '',
                 'theme'     => 'product',
+                'color'     => get_option('laca_cta_color_product', '#16a34a'),
             ],
 
             // Front page → scroll to contact section
@@ -160,6 +176,7 @@ class ContextAwareCta
                 'url'       => $contactPage,
                 'icon'      => '',
                 'theme'     => 'home',
+                'color'     => get_option('laca_cta_color_home', '#2563eb'),
             ],
 
             // Archive / search — general fallback
@@ -169,6 +186,7 @@ class ContextAwareCta
                 'url'       => get_option('laca_cta_services_url', home_url('/dich-vu/')),
                 'icon'      => '',
                 'theme'     => 'archive',
+                'color'     => get_option('laca_cta_color_archive', '#2563eb'),
             ],
         ]);
     }
@@ -237,7 +255,7 @@ class ContextAwareCta
     justify-content: center;
     gap: 1rem;
     padding: 0.85rem 1.5rem;
-    background: var(--primary-color, #2ea2cc);
+    background: var(--laca-cta-bg, var(--primary-color, #2ea2cc));
     color: #fff;
     box-shadow: 0 -4px 20px rgba(0,0,0,.12);
     transform: translateY(100%);
@@ -266,8 +284,31 @@ class ContextAwareCta
     margin-left: auto;
 }
 .laca-cta__close:hover { color: #fff; }
-.laca-cta--blog    { background: var(--secondary-color, #1a6b8a); }
-.laca-cta--product { background: #16a34a; }
+.laca-cta--blog    { background: var(--laca-cta-bg, var(--secondary-color, #1a6b8a)); }
+.laca-cta--product { background: var(--laca-cta-bg, #16a34a); }
+@media (min-width: 783px) {
+    .laca-cta--hide-desktop { display: none !important; }
+}
+@media (max-width: 782px) {
+    .laca-cta {
+        align-items: stretch;
+        gap: .75rem;
+        padding: .75rem 1rem;
+    }
+    .laca-cta__btn {
+        flex: 1;
+        font-size: .9rem;
+        justify-content: center;
+        min-width: 0;
+        text-align: center;
+    }
+    .laca-cta__btn span:last-child {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .laca-cta--hide-mobile { display: none !important; }
+}
 ';
     }
 }

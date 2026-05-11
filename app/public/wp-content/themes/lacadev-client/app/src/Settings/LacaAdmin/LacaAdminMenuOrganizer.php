@@ -48,6 +48,36 @@ class LacaAdminMenuOrganizer
     ];
 
     /**
+     * @var array<string,array{label:string,tab:string}>
+     */
+    private const THEME_SETTINGS_TABS = [
+        'laca-theme-settings-general' => [
+            'label' => 'Tổng quan',
+            'tab' => 'general',
+        ],
+        'laca-theme-settings-cta' => [
+            'label' => 'Sticky CTA',
+            'tab' => 'cta',
+        ],
+        'laca-theme-settings-author' => [
+            'label' => 'Author Profile',
+            'tab' => 'author',
+        ],
+        'laca-theme-settings-performance' => [
+            'label' => 'Performance',
+            'tab' => 'performance',
+        ],
+        'laca-theme-settings-search' => [
+            'label' => 'Smart Search',
+            'tab' => 'search',
+        ],
+        'laca-theme-settings-system' => [
+            'label' => 'System Info',
+            'tab' => 'system',
+        ],
+    ];
+
+    /**
      * @var array<string,array{label:string,icon:string,items:string[]}>
      */
     private const GROUPS = [
@@ -56,8 +86,19 @@ class LacaAdminMenuOrganizer
             'icon' => 'dashicons-admin-generic',
             'items' => [
                 'laca-admin',
-                'lacadev-control-center',
                 'laca-management-settings',
+            ],
+        ],
+        'theme_settings' => [
+            'label' => 'Theme Settings',
+            'icon' => 'dashicons-admin-appearance',
+            'items' => [
+                'laca-theme-settings-general',
+                'laca-theme-settings-cta',
+                'laca-theme-settings-author',
+                'laca-theme-settings-performance',
+                'laca-theme-settings-search',
+                'laca-theme-settings-system',
             ],
         ],
         'maintenance' => [
@@ -160,6 +201,15 @@ class LacaAdminMenuOrganizer
             $groupItems = [];
 
             foreach ($group['items'] as $slug) {
+                if (isset(self::THEME_SETTINGS_TABS[$slug])) {
+                    if (!isset($itemsBySlug['lacadev-control-center'])) {
+                        continue;
+                    }
+
+                    $groupItems[] = $this->buildNavigationItemFromSlug($slug);
+                    continue;
+                }
+
                 if (isset(self::SECURITY_TABS[$slug])) {
                     if (!isset($itemsBySlug['laca-security'])) {
                         continue;
@@ -191,6 +241,11 @@ class LacaAdminMenuOrganizer
         if (isset($itemsBySlug['laca-security'])) {
             $organized[] = $itemsBySlug['laca-security'];
             unset($unassigned['laca-security']);
+        }
+
+        if (isset($itemsBySlug['lacadev-control-center'])) {
+            $organized[] = $itemsBySlug['lacadev-control-center'];
+            unset($unassigned['lacadev-control-center']);
         }
 
         if ($unassigned !== []) {
@@ -237,6 +292,22 @@ class LacaAdminMenuOrganizer
                         'tab' => $tab,
                     ],
                     admin_url('admin.php')
+                ),
+            ];
+        }
+
+        if (isset(self::THEME_SETTINGS_TABS[$slug])) {
+            $tab = self::THEME_SETTINGS_TABS[$slug]['tab'];
+
+            return [
+                'label' => self::THEME_SETTINGS_TABS[$slug]['label'],
+                'slug' => $slug,
+                'url' => add_query_arg(
+                    [
+                        'page' => 'lacadev-control-center',
+                        'tab' => $tab,
+                    ],
+                    admin_url('themes.php')
                 ),
             ];
         }
@@ -437,6 +508,18 @@ class LacaAdminMenuOrganizer
     {
         $page = sanitize_key(wp_unslash($_GET['page'] ?? ''));
 
+        if ($page === 'lacadev-control-center') {
+            $tab = sanitize_key(wp_unslash($_GET['tab'] ?? 'general'));
+
+            foreach (self::THEME_SETTINGS_TABS as $slug => $config) {
+                if ($config['tab'] === $tab) {
+                    return $slug;
+                }
+            }
+
+            return 'laca-theme-settings-general';
+        }
+
         if ($page !== 'laca-security') {
             return $page;
         }
@@ -462,6 +545,10 @@ class LacaAdminMenuOrganizer
             if (in_array($slug, $group['items'], true)) {
                 return true;
             }
+        }
+
+        if (isset(self::THEME_SETTINGS_TABS[$slug])) {
+            return true;
         }
 
         global $submenu;

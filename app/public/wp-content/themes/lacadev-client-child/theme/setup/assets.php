@@ -66,20 +66,6 @@ function child_enqueue_frontend_assets(): void
             true
         );
     }
-
-    // ------------------------------------------------------------------
-    // Stats Counter Block animation script
-    // ------------------------------------------------------------------
-    $sc_js = $dir . '/block-gutenberg/block-stats-counter/stats-counter.js';
-    if (file_exists($sc_js)) {
-        wp_enqueue_script(
-            'block-stats-counter-js',
-            $uri . '/block-gutenberg/block-stats-counter/stats-counter.js',
-            [],
-            filemtime($sc_js),
-            true
-        );
-    }
 }
 add_action('wp_enqueue_scripts', 'child_enqueue_frontend_assets', 20);
 

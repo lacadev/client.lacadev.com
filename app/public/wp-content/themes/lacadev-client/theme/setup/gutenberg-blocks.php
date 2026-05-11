@@ -558,8 +558,8 @@ add_filter('block_categories_all', 'lacadev_register_block_category', 10, 2);
  * Project-level Gutenberg category config for demo-pdn.
  */
 add_filter('lacadev_project_block_category_config', function ($config) {
-    $config['slug']  = 'pdn-blocks';
-    $config['title'] = __('PĐN Blocks', 'laca');
+    $config['slug']  = 'client-blocks';
+    $config['title'] = __('Client Blocks', 'laca');
     $config['icon']  = 'screenoptions';
     return $config;
 });

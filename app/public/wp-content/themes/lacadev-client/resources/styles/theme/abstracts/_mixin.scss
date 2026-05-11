@@ -5,31 +5,32 @@
   @return #{math.div($px, 16)}rem;
 }
 
+// Responsive font-size: $min-size and $max-size are pixel amounts (unitless, e.g. 10 = 10px), output as rem via rem().
 @mixin resFont($min-size, $max-size, $important: false) {
-  $font-size: #{$max-size};
+  $font-size: rem($max-size);
+  // Midpoint between min and max (same math as max - (max - min) / 2), expressed in rem for calc().
+  $font-size-mid: calc((#{rem($min-size)} + #{rem($max-size)}) / 2);
   & {
     font-size: $font-size;
     @if $important {
-      font-size: #{$max-size} !important;
+      font-size: rem($max-size) !important;
     }
   }
 
   @include maxWidth($lg) {
-    $font-size: calc(#{$max-size} - ((#{$max-size} - #{$min-size})) / 2);
     & {
-      font-size: $font-size;
+      font-size: $font-size-mid;
       @if $important {
-        font-size: calc(#{$max-size} - ((#{$max-size} - #{$min-size})) / 2) !important;
+        font-size: $font-size-mid !important;
       }
     }
   }
 
   @include maxWidth($sm) {
-    $font-size: #{$min-size};
     & {
-      font-size: $font-size;
+      font-size: rem($min-size);
       @if $important {
-        font-size: #{$min-size} !important;
+        font-size: rem($min-size) !important;
       }
     }
   }

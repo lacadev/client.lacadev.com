@@ -12,7 +12,6 @@
 /wp-content/index.php
 
 .htaccess
-index.php
 license.txt
 local-xdebuginfo.php
 readme.html

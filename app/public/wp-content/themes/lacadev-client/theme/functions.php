@@ -172,8 +172,8 @@ add_action('after_setup_theme', function () {
 // =============================================================================
 $folders = [
     // APP_APP_SETUP_ECOMMERCE_DIR,
-    APP_APP_SETUP_TAXONOMY_DIR,
-    APP_APP_SETUP_WALKER_DIR,
+    // APP_APP_SETUP_TAXONOMY_DIR,
+    // APP_APP_SETUP_WALKER_DIR,
 ];
 
 foreach ($folders as $folder) {

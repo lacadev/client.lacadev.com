@@ -645,7 +645,8 @@ function lacadev_child_register_synced_blocks(): void
 
         $blockArgs['category'] = lacadev_resolve_block_category($registered_block_name, 'lacadev-blocks');
 
-        error_log("lacadev_child_register: Registering block {$registered_block_name} with editor_script {$blockArgs['editor_script']}");
+        $editorScript = $blockArgs['editor_script'] ?? 'none';
+        error_log("lacadev_child_register: Registering block {$registered_block_name} with editor_script {$editorScript}");
 
         if (file_exists($renderPhp)) {
             $blockArgs['render_callback'] = static function ($attributes, $content) use ($renderPhp) {

@@ -86,7 +86,14 @@ class LacaAdminMenuOrganizer
             'icon' => 'dashicons-admin-generic',
             'items' => [
                 'laca-admin',
-                'laca-management-settings',
+            ],
+        ],
+        'management_help' => [
+            'label' => 'Quản trị & HD Sử dụng',
+            'icon' => 'dashicons-welcome-learn-more',
+            'items' => [
+                'laca-management-dashboard-widgets',
+                'laca-help-content-settings',
             ],
         ],
         'theme_settings' => [

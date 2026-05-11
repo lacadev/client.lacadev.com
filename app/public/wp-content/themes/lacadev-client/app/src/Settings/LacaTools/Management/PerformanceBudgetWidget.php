@@ -32,6 +32,26 @@ class PerformanceBudgetWidget
         'inp'  => ['good' => 200,   'poor' => 500],    // ms
     ];
 
+    private function getCruxApiKey(): string
+    {
+        $value = get_option('laca_crux_api_key', '');
+        if ($value === '' && function_exists('carbon_get_theme_option')) {
+            $value = carbon_get_theme_option('laca_crux_api_key') ?: '';
+        }
+
+        return (string) $value;
+    }
+
+    private function getCruxUrl(): string
+    {
+        $value = get_option('laca_crux_url', '');
+        if ($value === '' && function_exists('carbon_get_theme_option')) {
+            $value = carbon_get_theme_option('laca_crux_url') ?: '';
+        }
+
+        return $value !== '' ? (string) $value : home_url('/');
+    }
+
     public function register(): void
     {
         add_action('wp_dashboard_setup',       [$this, 'addWidget']);
@@ -41,6 +61,10 @@ class PerformanceBudgetWidget
 
     public function addWidget(): void
     {
+        if (function_exists('lacadev_dashboard_widget_enabled') && !lacadev_dashboard_widget_enabled('performance_budget')) {
+            return;
+        }
+
         if (!current_user_can('manage_options')) {
             return;
         }
@@ -48,8 +72,7 @@ class PerformanceBudgetWidget
         wp_add_dashboard_widget(
             'laca_performance_budget',
             '⚡ Performance Budget',
-            [$this, 'renderWidget'],
-            [$this, 'renderWidgetConfig']
+            [$this, 'renderWidget']
         );
     }
 
@@ -66,8 +89,8 @@ class PerformanceBudgetWidget
             delete_transient(self::TRANSIENT_KEY); // bust cache
         }
 
-        $apiKey = get_option('laca_crux_api_key', '');
-        $url    = get_option('laca_crux_url', home_url('/'));
+        $apiKey = $this->getCruxApiKey();
+        $url    = $this->getCruxUrl();
         wp_nonce_field('laca_cwv_config', 'laca_cwv_config_nonce');
         ?>
         <p>
@@ -128,9 +151,9 @@ class PerformanceBudgetWidget
         echo '<h4 style="margin:0 0 8px;font-size:12px;text-transform:uppercase;color:#666;">Core Web Vitals (CrUX)</h4>';
 
         if (empty($data['metrics'])) {
-            $url = get_option('laca_crux_url', home_url('/'));
+            $url = $this->getCruxUrl();
             echo '<p style="color:#999;font-size:12px;">Không có dữ liệu CrUX. ';
-            if (!get_option('laca_crux_api_key')) {
+            if (!$this->getCruxApiKey()) {
                 echo 'Hãy thêm CrUX API Key trong cài đặt widget.';
             } else {
                 echo 'URL có thể chưa có đủ traffic để CrUX thu thập.';
@@ -211,8 +234,8 @@ class PerformanceBudgetWidget
 
     private function fetchCruxData(): ?array
     {
-        $apiKey = get_option('laca_crux_api_key', '');
-        $url    = get_option('laca_crux_url', home_url('/'));
+        $apiKey = $this->getCruxApiKey();
+        $url    = $this->getCruxUrl();
 
         $endpoint = self::CRUX_ENDPOINT . ($apiKey ? '?key=' . urlencode($apiKey) : '');
 

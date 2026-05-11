@@ -29,6 +29,10 @@ class BlockSyncWidget
 
     public function register(): void
     {
+        if (function_exists('lacadev_dashboard_widget_enabled') && !lacadev_dashboard_widget_enabled('block_sync')) {
+            return;
+        }
+
         wp_add_dashboard_widget(
             'laca_block_sync_widget',
             '📦 LacaDev Block Updates',

@@ -104,6 +104,10 @@ class AdminSettings
 	public function addDashboardContactWidget()
 	{
 		add_action('wp_dashboard_setup', static function () {
+			if (function_exists('lacadev_dashboard_widget_enabled') && !lacadev_dashboard_widget_enabled('contact_intro')) {
+				return;
+			}
+
 			wp_add_dashboard_widget('custom_help_widget', 'Giới thiệu', static function () { ?>
 				<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px 0;">
 					<a target="_blank" href="<?php echo AUTHOR['website'] ?>" title="<?php echo AUTHOR['name'] ?>" style="opacity: 0.9; transition: opacity 0.2s;">
@@ -1072,13 +1076,23 @@ class AdminSettings
             ]);
 
             // Workspace / HD Sử dụng & Dashboard Widgets Settings
-            Container::make('theme_options', __('Quản trị & HD Sử dụng', 'laca'))
+            Container::make('theme_options', __('Dashboard Widgets', 'laca'))
                 ->set_page_parent($options)
-                ->set_page_file(__('laca-management-settings', 'laca'))
-                ->add_tab(__('Dashboard Widget', 'laca'), [
-                    Field::make('html', 'dashboard_widget_desc')
-                        ->set_html('<div class="carbon-field-description">Cấu hình hiển thị Widget <b>"Tổng hợp Nội dung"</b> trên màn hình Dashboard chính.</div>'),
-                    
+                ->set_page_file(__('laca-management-dashboard-widgets', 'laca'))
+                ->add_fields([
+                    Field::make('html', 'dashboard_widgets_desc')
+                        ->set_html('<div class="carbon-field-description">Chọn widget custom nào được hiển thị ngoài màn hình Dashboard. Widget không được chọn sẽ không đăng ký ra Dashboard.</div>'),
+
+                    Field::make('multiselect', 'dashboard_widgets_enabled', __('Widget hiển thị ngoài Dashboard', 'laca'))
+                        ->set_options(function() {
+                            return function_exists('lacadev_dashboard_widget_definitions')
+                                ? lacadev_dashboard_widget_definitions()
+                                : [];
+                        })
+                        ->set_default_value(function_exists('lacadev_dashboard_widget_definitions') ? array_keys(lacadev_dashboard_widget_definitions()) : [])
+                        ->set_help_text(__('Chỉ những widget được chọn mới hiển thị ở Dashboard chính.', 'laca')),
+
+					Field::make('separator', 'content_report_separator', __('Widget báo cáo nội dung', 'laca')),
                     Field::make('multiselect', 'dashboard_widget_post_types', __('Các Post Type hiển thị', 'laca'))
                         ->set_options(function() {
                             $types = get_post_types(['public' => true, 'show_in_menu' => true], 'objects');
@@ -1096,8 +1110,22 @@ class AdminSettings
                         ->set_attribute('type', 'number')
                         ->set_default_value('5')
                         ->set_width(50),
-                ])
-                ->add_tab(__('Nội dung HD Sử dụng', 'laca'), [
+
+                    Field::make('separator', 'performance_budget_separator', __('Widget Performance Budget', 'laca')),
+                    Field::make('html', 'performance_budget_desc')
+                        ->set_html('<div class="carbon-field-description">Performance Budget dùng để xem Core Web Vitals và dung lượng CSS/JS của chính website hiện tại. <b>Không bắt buộc cấu hình</b>: nếu để trống CrUX API Key thì vẫn dùng được nhưng có thể bị giới hạn dữ liệu từ Google; URL cần đo mặc định là trang chủ website này.</div>'),
+                    Field::make('text', 'laca_crux_api_key', __('CrUX API Key', 'laca'))
+                        ->set_width(50),
+                    Field::make('text', 'laca_crux_url', __('URL cần đo', 'laca'))
+                        ->set_attribute('type', 'url')
+                        ->set_default_value(home_url('/'))
+                        ->set_width(50),
+                ]);
+
+            Container::make('theme_options', __('Nội dung HD Sử dụng', 'laca'))
+                ->set_page_parent($options)
+                ->set_page_file(__('laca-help-content-settings', 'laca'))
+                ->add_fields([
                     Field::make('html', 'help_page_desc')
                         ->set_html('<div class="carbon-field-description">Nội dung này sẽ hiển thị ở menu <b>"HD Sử dụng"</b> dành cho khách hàng.</div>'),
 

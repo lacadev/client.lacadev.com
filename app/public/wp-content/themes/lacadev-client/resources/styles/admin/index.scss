@@ -1,0 +1,219 @@
+// Shared font declarations used by both frontend and admin.
+@use "../theme/base/fonts";
+@use "../theme/abstracts/variables.scss" as *;
+
+@use "admin-column-style";
+@use "admin-dashboard";
+@use "admin-custom";
+@use "admin-help";
+@use "contact-form";
+
+html :where(.wp-block) {
+  max-width: 95% !important;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 0 !important;
+
+  .container {
+    width: 100%;
+    max-width: $xl;
+    padding-right: 0.9375rem;
+    padding-left: 0.9375rem;
+    margin-right: auto;
+    margin-left: auto;
+  }
+}
+
+body.wp-admin {
+  font-size: 13px !important;
+}
+
+// Theme preview in Appearance screen.
+.theme-overlay .screenshot {
+  box-shadow: none;
+
+  &::after {
+    content: none;
+  }
+
+  img {
+    position: relative;
+  }
+}
+
+.subsubsub {
+  position: relative;
+  z-index: 9999;
+}
+
+.featured_image.column-featured_image {
+  a:not(.remove-thumbnail) {
+    display: block !important;
+    background-color: #fff;
+  }
+
+  a.remove-thumbnail {
+    position: absolute;
+    top: -7px;
+    right: -7px;
+    width: 13px;
+    height: 13px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f15d4f;
+    color: #fff;
+    border-radius: 50%;
+    border: 1px solid #f15d4f;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: #fff;
+      color: #f15d4f;
+    }
+
+    svg {
+      width: 50%;
+      height: 50%;
+    }
+  }
+
+  img {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+  }
+
+  .no-image-text {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    border: 1px dashed;
+    aspect-ratio: 16 / 10;
+  }
+}
+
+input[name="carbon_fields_compact_input[_smtp_password]"] {
+  max-width: 85%;
+  display: inline-block;
+}
+
+button[data-toggle="password-toggle"] {
+  padding: 2px 1rem;
+  min-width: 12%;
+  display: inline-block;
+  font-weight: 600;
+  line-height: 2;
+  color: var(--laca-admin-text);
+  background: var(--laca-admin-surface);
+  border: 1px solid var(--laca-admin-border);
+  border-radius: 10px;
+}
+
+#wp-auth-check-wrap #wp-auth-check {
+  padding: 0 !important;
+  width: 80% !important;
+}
+
+#wp-auth-check-wrap .wp-auth-check-close {
+  color: #fff !important;
+  z-index: 99;
+}
+
+.metabox-holder-disabled .accordion-section-content,
+.metabox-holder-disabled .accordion-section-title,
+.metabox-holder-disabled .postbox {
+  opacity: 1 !important;
+}
+
+.alp-welcome-swal {
+  background: var(--laca-admin-surface) !important;
+  border: 1px solid var(--laca-admin-border) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.16) !important;
+  padding: 1.5rem !important;
+  width: auto !important;
+  max-width: 26rem !important;
+  overflow: hidden;
+
+  .swal2-html-container {
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  .alp-swal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    .alp-swal-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .alp-swal-title {
+      font-family: "Quicksand", sans-serif !important;
+      font-size: 1.25rem !important;
+      font-weight: 800 !important;
+      color: var(--laca-admin-text) !important;
+      margin-bottom: 0.625rem !important;
+    }
+
+    .alp-swal-msg {
+      font-family: "Quicksand", sans-serif !important;
+      font-size: 0.9375rem !important;
+      color: var(--laca-admin-text-muted) !important;
+      margin: 0 !important;
+      line-height: 1.6;
+    }
+  }
+
+  .swal2-timer-progress-bar {
+    background: var(--laca-admin-accent-soft) !important;
+    height: 0.25rem !important;
+  }
+}
+
+// Custom animations for admin notices/modals.
+.alp-zoom-in {
+  animation: alpZoomIn 0.28s ease forwards;
+}
+
+.alp-zoom-out {
+  animation: alpZoomOut 0.2s ease forwards;
+}
+
+@keyframes alpZoomIn {
+  from { transform: translateY(4px) scale(0.98); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes alpZoomOut {
+  from { transform: scale(1); opacity: 1; }
+  to { transform: translateY(4px) scale(0.98); opacity: 0; }
+}
+
+.dashicons,
+.dashicons-before:before {
+  font-family: "dashicons", sans-serif !important;
+}
+
+// Theme card cleanup in Appearance screen.
+.theme-browser .theme .theme-name {
+  padding: 20px 10px;
+  display: flex;
+  align-items: center;
+}
+
+.theme-browser .theme .theme-actions,
+.theme-browser .theme.active .theme-actions {
+  background: transparent;
+  opacity: 1;
+  border: none;
+}
+
+.theme-browser .theme .theme-screenshot:after {
+  padding-top: 50%;
+}

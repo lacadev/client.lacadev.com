@@ -1,0 +1,29 @@
+@use "../abstracts/variables.scss" as *;
+
+@font-face {
+  font-family: "ShopeeDisplay";
+  src: url("~@child-fonts/") format('woff2');
+  font-weight: $light;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "ShopeeDisplay";
+  src: url("~@child-fonts/") format('woff2');
+  font-weight: $regular;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "ShopeeDisplay";
+  src: url("~@child-fonts/") format('woff2');
+  font-weight: $medium;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "ShopeeDisplay";
+  src: url("~@child-fonts/") format('woff2');
+  font-weight: $bold;
+  font-style: normal;
+}

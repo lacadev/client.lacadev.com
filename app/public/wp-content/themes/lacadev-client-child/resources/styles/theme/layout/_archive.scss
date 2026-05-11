@@ -1,0 +1,12 @@
+/**
+ * Archive Page – Layout Styles
+ * BEM parent: .laca-news-list-archive
+ *
+ * Mirror layout của news-list-block nhưng trong ngữ cảnh archive template.
+ * Các modifier block (.laca-news-list__*) được lặp lại ở đây để không phụ
+ * thuộc vào block CSS (vốn chỉ load khi block được render trên trang).
+ */
+
+@use "../abstracts/variables" as *;
+@use "../abstracts/mixin" as *;
+

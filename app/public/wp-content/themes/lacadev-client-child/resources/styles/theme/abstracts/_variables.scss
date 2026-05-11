@@ -1,0 +1,7 @@
+// Forward tất cả variables từ parent theme
+@forward "@parent/styles/theme/abstracts/variables";
+
+// Theme colors
+$primaryColor: var(--primary-color);
+$secondColor: var(--second-color);
+$bgColor: var(--bg-color);

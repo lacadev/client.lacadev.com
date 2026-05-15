@@ -4,6 +4,8 @@ namespace App\Settings;
 
 use App\Contracts\HookNames;
 use App\Databases\TrackerEventTable;
+use App\Settings\Tracker\TrackerClientConfig;
+use App\Settings\Tracker\TrackerHealthSummary;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -953,9 +955,9 @@ class LacaDevTrackerClient
                 && !empty($item['time'])
                 && strtotime((string) $item['time']) >= current_time('timestamp') - WEEK_IN_SECONDS
         ));
-        $remoteStatusCounts = $this->countRemoteHistoryStatuses($remoteHistory);
+        $remoteStatusCounts = TrackerHealthSummary::countRemoteHistoryStatuses($remoteHistory);
         $blockDiagnostics = class_exists(BlockSyncReceiver::class) ? BlockSyncReceiver::getDiagnostics() : [];
-        $blockDiagnosticCounts = $this->countBlockDiagnostics($blockDiagnostics);
+        $blockDiagnosticCounts = TrackerHealthSummary::countBlockDiagnostics($blockDiagnostics);
         $eventSummary = self::hasTrackerEventTable()
             ? TrackerEventTable::getSummarySince(7)
             : [];
@@ -1020,42 +1022,6 @@ class LacaDevTrackerClient
         ];
     }
 
-    private function countRemoteHistoryStatuses(array $history): array
-    {
-        $counts = [];
-        foreach ($history as $item) {
-            if (!is_array($item)) {
-                continue;
-            }
-
-            $status = sanitize_key((string) ($item['status'] ?? 'unknown'));
-            $counts[$status] = ($counts[$status] ?? 0) + 1;
-        }
-
-        return $counts;
-    }
-
-    private function countBlockDiagnostics(array $diagnostics): array
-    {
-        $counts = [
-            'blocks' => 0,
-            'warnings' => 0,
-            'errors' => 0,
-        ];
-
-        foreach ($diagnostics as $item) {
-            if (!is_array($item)) {
-                continue;
-            }
-
-            $counts['blocks']++;
-            $counts['warnings'] += count((array) ($item['warnings'] ?? []));
-            $counts['errors'] += count((array) ($item['errors'] ?? []));
-        }
-
-        return $counts;
-    }
-
     private function nextAttemptAt(int $attempts): string
     {
         $minutes = match (true) {
@@ -1098,26 +1064,20 @@ class LacaDevTrackerClient
             $health = [];
         }
 
-        $queued = $retry = $failed = $delivered = 0;
+        $queueCounts = [
+            'queued' => 0,
+            'retry' => 0,
+            'failed' => 0,
+            'delivered' => 0,
+        ];
+
         if (self::hasTrackerEventTable()) {
-            $queued = TrackerEventTable::countByStatus('queued');
-            $retry = TrackerEventTable::countByStatus('retry');
-            $failed = TrackerEventTable::countByStatus('failed');
-            $delivered = TrackerEventTable::countByStatus('delivered');
+            foreach (array_keys($queueCounts) as $status) {
+                $queueCounts[$status] = TrackerEventTable::countByStatus($status);
+            }
         }
 
-        return [
-            'configured'      => self::isConfigured(),
-            'last_success_at' => (string) ($health['last_success_at'] ?? ''),
-            'last_failure_at' => (string) ($health['last_failure_at'] ?? ''),
-            'last_attempt_at' => (string) ($health['last_attempt_at'] ?? ''),
-            'last_error'      => (string) ($health['last_error'] ?? ''),
-            'last_http_code'  => $health['last_http_code'] ?? null,
-            'queued'          => $queued,
-            'retry'           => $retry,
-            'failed'          => $failed,
-            'delivered'       => $delivered,
-        ];
+        return TrackerHealthSummary::build($health, self::isConfigured(), $queueCounts);
     }
 
     // =========================================================================
@@ -1126,23 +1086,17 @@ class LacaDevTrackerClient
 
     public static function getEndpoint(): string
     {
-        if (function_exists('carbon_get_theme_option')) {
-            return (string) (carbon_get_theme_option(self::CF_ENDPOINT) ?: '');
-        }
-        return (string) get_option('_' . self::CF_ENDPOINT, '');
+        return TrackerClientConfig::endpoint();
     }
 
     public static function getSecretKey(): string
     {
-        if (function_exists('carbon_get_theme_option')) {
-            return (string) (carbon_get_theme_option(self::CF_SECRET) ?: '');
-        }
-        return (string) get_option('_' . self::CF_SECRET, '');
+        return TrackerClientConfig::secretKey();
     }
 
     public static function isConfigured(): bool
     {
-        return !empty(self::getEndpoint()) && !empty(self::getSecretKey());
+        return TrackerClientConfig::isConfigured();
     }
 
     /**

@@ -7,6 +7,9 @@
 
 use WPEmergeTheme\Facades\Theme;
 use WPEmergeTheme\Facades\Assets;
+use App\Assets\AdminScriptData;
+use App\Assets\LoginAssetData;
+use App\Assets\ProjectChartData;
 use App\Contracts\AssetHandles;
 
 /**
@@ -186,101 +189,30 @@ function app_action_admin_enqueue_assets()
     /**
      * Localize admin script data with nonce for AJAX requests and i18n strings
      */
-    wp_localize_script(AssetHandles::ADMIN_JS, 'ajaxurl_params', [
-        'ajaxurl' => admin_url('admin-ajax.php'),
-        'nonce' => wp_create_nonce('update_post_thumbnail'),  // Must match backend check_ajax_referer
-    ]);
+    wp_localize_script(
+        AssetHandles::ADMIN_JS,
+        'ajaxurl_params',
+        AdminScriptData::ajaxParams(admin_url('admin-ajax.php'), wp_create_nonce('update_post_thumbnail'))
+    );
 
     /**
      * Localize i18n strings for admin JavaScript
      */
-    wp_localize_script(AssetHandles::ADMIN_JS, 'adminI18n', [
-        // Thumbnail removal
-        'removeThumbnailTitle' => __('Remove Thumbnail?', 'lacadev'),
-        'removeThumbnailText' => __('Are you sure you want to remove this featured image?', 'lacadev'),
-        'removeThumbnailConfirm' => __('Yes, remove it', 'lacadev'),
-        'removeThumbnailCancel' => __('Cancel', 'lacadev'),
-        'removedTitle' => __('Removed!', 'lacadev'),
-        'removedText' => __('Featured image has been removed.', 'lacadev'),
-        'errorTitle' => __('Error!', 'lacadev'),
-        'failedRemove' => __('Failed to remove thumbnail.', 'lacadev'),
-        
-        // UI labels
-        'chooseImage' => __('Choose image', 'lacadev'),
-        'setFeaturedImage' => __('Set featured image', 'lacadev'),
-    ]);
+    wp_localize_script(
+        AssetHandles::ADMIN_JS,
+        'adminI18n',
+        AdminScriptData::i18n(static fn(string $text): string => __($text, 'lacadev'))
+    );
 
     /**
      * Localize project chart data — chỉ inject trên trang Dashboard (index.php).
      * Dữ liệu được đọc từ custom post type 'project' nếu đã đăng ký.
      */
     $current_screen = get_current_screen();
-    if ($current_screen && $current_screen->id === 'dashboard' && post_type_exists('project')) {
+    if (ProjectChartData::shouldLocalize($current_screen)) {
         global $wpdb;
 
-        // byStatus: đếm project theo meta _project_status (Carbon Fields)
-        $status_labels = [
-            'pending'     => '🕐 Chờ làm',
-            'in_progress' => '🔨 Đang làm',
-            'done'        => '✅ Đã xong',
-            'maintenance' => '🔧 Đang bảo trì',
-            'paused'      => '⏸️ Tạm dừng',
-        ];
-
-        $status_rows = $wpdb->get_results("
-            SELECT
-                COALESCE(pm.meta_value, 'pending') AS `key`,
-                COUNT(*) AS `count`
-            FROM {$wpdb->posts} p
-            LEFT JOIN {$wpdb->postmeta} pm
-                ON p.ID = pm.post_id AND pm.meta_key = '_project_status'
-            WHERE p.post_type = 'project'
-              AND p.post_status NOT IN ('trash','auto-draft','inherit')
-            GROUP BY `key`
-        ");
-
-        $by_status = [];
-        foreach ($status_rows as $row) {
-            $by_status[] = [
-                'key'   => $row->key,
-                'label' => $status_labels[$row->key] ?? ucfirst($row->key),
-                'count' => (int) $row->count,
-            ];
-        }
-
-        // byMonth: đếm project tạo mới trong 12 tháng gần nhất
-        $month_rows = $wpdb->get_results("
-            SELECT
-                DATE_FORMAT(post_date, '%Y-%m') AS ym,
-                COUNT(*) AS cnt
-            FROM {$wpdb->posts}
-            WHERE post_type = 'project'
-              AND post_status NOT IN ('trash','auto-draft','inherit')
-              AND post_date >= DATE_SUB(NOW(), INTERVAL 12 MONTH)
-            GROUP BY ym
-            ORDER BY ym ASC
-        ");
-
-        // Lấp đầy các tháng còn thiếu
-        $month_map = [];
-        foreach ($month_rows as $r) {
-            $month_map[$r->ym] = (int) $r->cnt;
-        }
-        $by_month = [];
-        for ($i = 11; $i >= 0; $i--) {
-            $ym    = date('Y-m', strtotime("-{$i} months"));
-            $label = 'T' . (int) date('n', strtotime("-{$i} months"));
-            $by_month[] = [
-                'month' => $label,
-                'count' => $month_map[$ym] ?? 0,
-            ];
-        }
-
-        wp_localize_script(AssetHandles::ADMIN_JS, 'lacaProjectCharts', [
-            'primary'  => '#2563eb',
-            'byStatus' => $by_status,
-            'byMonth'  => $by_month,
-        ]);
+        wp_localize_script(AssetHandles::ADMIN_JS, 'lacaProjectCharts', ProjectChartData::build($wpdb));
     }
 
     wp_add_inline_style(AssetHandles::ADMIN_CSS, <<<'CSS'
@@ -660,82 +592,13 @@ add_action('admin_head', function() {
 function app_action_login_enqueue_assets()
 {
     $template_dir = dirname(get_stylesheet_directory_uri());
-    $resolveLogoUrl = static function ($rawValue): string {
-        // Carbon Fields image can return ID, URL string, or array.
-        if (empty($rawValue)) {
-            return '';
-        }
 
-        if (is_numeric($rawValue)) {
-            $url = wp_get_attachment_image_url((int) $rawValue, 'full');
-            return $url ?: '';
-        }
-
-        if (is_array($rawValue)) {
-            if (!empty($rawValue['url']) && is_string($rawValue['url'])) {
-                return esc_url_raw($rawValue['url']);
-            }
-
-            if (!empty($rawValue['id']) && is_numeric($rawValue['id'])) {
-                $url = wp_get_attachment_image_url((int) $rawValue['id'], 'full');
-                return $url ?: '';
-            }
-
-            if (!empty($rawValue['value']) && is_numeric($rawValue['value'])) {
-                $url = wp_get_attachment_image_url((int) $rawValue['value'], 'full');
-                return $url ?: '';
-            }
-
-            return '';
-        }
-
-        if (is_string($rawValue)) {
-            if (filter_var($rawValue, FILTER_VALIDATE_URL)) {
-                return esc_url_raw($rawValue);
-            }
-
-            if (ctype_digit($rawValue)) {
-                $url = wp_get_attachment_image_url((int) $rawValue, 'full');
-                return $url ?: '';
-            }
-        }
-
-        return '';
-    };
-
-    $login_logo_raw = carbon_get_theme_option('login_logo');
-    $login_logo_url = $resolveLogoUrl($login_logo_raw);
+    $login_logo_url = LoginAssetData::resolveLogoUrl(carbon_get_theme_option('login_logo'));
     if (empty($login_logo_url)) {
-        $login_logo_url = $resolveLogoUrl(carbon_get_theme_option('logo'));
+        $login_logo_url = LoginAssetData::resolveLogoUrl(carbon_get_theme_option('logo'));
     }
-    $pickLoginI18n = static function (string $key, string $lang, string $fallback) {
-        $value = carbon_get_theme_option("{$key}_{$lang}");
-        if (empty($value)) {
-            // Backward compatibility with old single-language keys.
-            $value = carbon_get_theme_option($key);
-        }
-        return !empty($value) ? $value : $fallback;
-    };
 
-    $loginVi = [
-        'userLabel' => $pickLoginI18n('login_user_label', 'vi', 'Ai đang ghé trạm?'),
-        'userPlaceholder' => $pickLoginI18n('login_user_placeholder', 'vi', 'Điền tên hoặc email vào đây nhé'),
-        'passLabel' => $pickLoginI18n('login_password_label', 'vi', 'Chìa khóa'),
-        'passPlaceholder' => $pickLoginI18n('login_password_placeholder', 'vi', 'Nhập chìa khóa mở cửa'),
-        'welcomeText' => nl2br(sanitize_textarea_field($pickLoginI18n('login_welcome_text', 'vi', "Chào mừng về Trạm Laca!\nCắm sạc, pha trà và bắt đầu nào!"))),
-        'forgetPwd' => $pickLoginI18n('login_forgot_label', 'vi', 'Rớt chìa khoá?'),
-        'backToBlog' => $pickLoginI18n('login_back_label', 'vi', '← Rời khỏi Trạm'),
-    ];
-
-    $loginEn = [
-        'userLabel' => $pickLoginI18n('login_user_label', 'en', "Who's visiting the station?"),
-        'userPlaceholder' => $pickLoginI18n('login_user_placeholder', 'en', 'Enter name or email here'),
-        'passLabel' => $pickLoginI18n('login_password_label', 'en', 'The Key'),
-        'passPlaceholder' => $pickLoginI18n('login_password_placeholder', 'en', 'Enter your key to open'),
-        'welcomeText' => nl2br(sanitize_textarea_field($pickLoginI18n('login_welcome_text', 'en', "Welcome to Laca Station!\nCharge up, brew some tea and let's go!"))),
-        'forgetPwd' => $pickLoginI18n('login_forgot_label', 'en', 'Lost your key?'),
-        'backToBlog' => $pickLoginI18n('login_back_label', 'en', '← Leave the Station'),
-    ];
+    $loginLocales = LoginAssetData::buildLocales(static fn(string $key) => carbon_get_theme_option($key));
 
     /**
      * Enqueue scripts.
@@ -747,22 +610,11 @@ function app_action_login_enqueue_assets()
         true
     );
 
-    wp_localize_script(AssetHandles::LOGIN_JS, 'loginI18n', [
-        'logoUrl' => $login_logo_url,
-        'locales' => [
-            'vi' => $loginVi,
-            'en' => $loginEn,
-        ],
-        'userLabel' => $loginVi['userLabel'],
-        'userPlaceholder' => $loginVi['userPlaceholder'],
-        'passLabel' => $loginVi['passLabel'],
-        'passPlaceholder' => $loginVi['passPlaceholder'],
-        'welcomeText' => $loginVi['welcomeText'],
-        'forgetPwd' => $loginVi['forgetPwd'],
-        'backToBlog' => $loginVi['backToBlog'],
-        'language' => get_bloginfo('language'),
-        'homeUrl' => home_url('/'),
-    ]);
+    wp_localize_script(
+        AssetHandles::LOGIN_JS,
+        'loginI18n',
+        LoginAssetData::buildPayload($login_logo_url, $loginLocales, get_bloginfo('language'), home_url('/'))
+    );
 
     // Ensure placeholders can be overridden from Carbon Fields without requiring JS rebuild.
     wp_add_inline_script(AssetHandles::LOGIN_JS, "(function(){document.addEventListener('DOMContentLoaded',function(){var cfg=window.loginI18n||{};var locales=cfg.locales||{};var lang=(document.documentElement.lang||'').indexOf('en')!==-1?'en':'vi';var data=locales[lang]||locales.vi||{};var userPlaceholder=data.userPlaceholder||cfg.userPlaceholder||'';var passPlaceholder=data.passPlaceholder||cfg.passPlaceholder||'';var user=document.getElementById('user_login');var pass=document.getElementById('user_pass');if(user&&userPlaceholder){user.setAttribute('placeholder',userPlaceholder);}if(pass&&passPlaceholder){pass.setAttribute('placeholder',passPlaceholder);}});}());", 'after');

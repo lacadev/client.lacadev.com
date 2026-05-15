@@ -5,7 +5,11 @@ namespace App\Settings;
 use App\Contracts\HookNames;
 use App\Databases\TrackerEventTable;
 use App\Settings\Tracker\RemoteUpdatePolicy;
+use App\Settings\Tracker\RemoteUpdateHistory;
+use App\Settings\Tracker\SupportAttachmentFiles;
+use App\Settings\Tracker\SuspiciousFileScanner;
 use App\Settings\Tracker\TrackerClientConfig;
+use App\Settings\Tracker\TrackerFileIntegrity;
 use App\Settings\Tracker\TrackerHealthSummary;
 use App\Settings\Tracker\TrackerShortcodeRenderer;
 use App\Settings\Tracker\TrackerTimelinePresenter;
@@ -60,11 +64,6 @@ class LacaDevTrackerClient
         'wp-content/uploads',        // Nơi hacker hay nhét shell
         'wp-content/mu-plugins',     // MU-plugin chạy tự động không cần kích hoạt
     ];
-
-    /**
-     * Extension file lạ trong uploads & root cần cảnh báo
-     */
-    const SUSPICIOUS_EXTS = ['php', 'php3', 'php4', 'php5', 'php7', 'phtml', 'phar'];
 
     /**
      * Option key lưu baseline filemtime cho theme/plugin đang active
@@ -379,22 +378,7 @@ class LacaDevTrackerClient
      */
     public function runHourlyScan(): void
     {
-        $found = [];
-
-        foreach (self::SUSPICIOUS_DIRS as $relDir) {
-            $absDir = rtrim(ABSPATH, '/') . ($relDir ? '/' . ltrim($relDir, '/') : '');
-            if (!is_dir($absDir)) {
-                continue;
-            }
-
-            if ($relDir === '') {
-                // Chỉ quét 1 cấp ở root (không đệ quy — tránh trùng với các thư mục khác)
-                $this->scanRootLevel($absDir, $found);
-            } else {
-                // Đệ quy trong uploads và mu-plugins
-                $this->scanSuspiciousRecursive($absDir, $relDir . '/', $found);
-            }
-        }
+        $found = SuspiciousFileScanner::scan(ABSPATH, self::SUSPICIOUS_DIRS);
 
         if (!empty($found)) {
             $list = implode("\n", array_map(fn($f) => '  - ' . $f, $found));
@@ -403,126 +387,6 @@ class LacaDevTrackerClient
                 'content' => "⚠️ Phát hiện file đáng ngờ:\n{$list}",
                 'level'   => 'critical',
             ]]);
-        }
-    }
-
-    /**
-     * Quét 1 cấp thư mục root — chỉ bắt file lạ, không đệ quy
-     * (Tránh quét lại wp-content, wp-includes, v.v.)
-     */
-    private function scanRootLevel(string $absDir, array &$found): void
-    {
-        // File quan trọng cần giám sát thay đổi ở root
-        $watchFiles = ['wp-config.php', '.htaccess', 'index.php', '.user.ini', 'php.ini'];
-
-        foreach ($watchFiles as $file) {
-            $full = $absDir . '/' . $file;
-            if (!file_exists($full)) {
-                continue;
-            }
-
-            // Phát hiện nội dung đáng ngờ trong wp-config.php / .htaccess
-            if (in_array($file, ['wp-config.php', '.htaccess'], true)) {
-                $this->checkFileForShellPatterns($full, $file, $found);
-            }
-        }
-
-        // Quét file lạ (không phải file WordPress chuẩn) ở thư mục root
-        $allowedRootFiles = [
-            'wp-config.php', 'wp-config-sample.php', '.htaccess', 'index.php',
-            'wp-activate.php', 'wp-blog-header.php', 'wp-comments-post.php',
-            'wp-cron.php', 'wp-links-opml.php', 'wp-load.php', 'wp-login.php',
-            'wp-mail.php', 'wp-settings.php', 'wp-signup.php', 'wp-trackback.php',
-            'xmlrpc.php', 'readme.html', 'license.txt', '.user.ini', 'php.ini',
-            'robots.txt', 'sitemap.xml', 'sitemap_index.xml',
-        ];
-
-        $files = glob($absDir . '/*.php') ?: [];
-        foreach ($files as $filePath) {
-            $filename = basename($filePath);
-            if (!in_array($filename, $allowedRootFiles, true)) {
-                $relPath  = str_replace(ABSPATH, '/', $filePath);
-                $found[]  = $relPath . ' [PHP lạ ở root]';
-            }
-        }
-
-        // File HTML/JS/tệp bất thường ở root
-        $htmlFiles = array_merge(
-            glob($absDir . '/*.html') ?: [],
-            glob($absDir . '/*.htm') ?: [],
-            glob($absDir . '/*.js') ?: []
-        );
-        foreach ($htmlFiles as $filePath) {
-            $filename = basename($filePath);
-            if (!in_array($filename, ['readme.html', 'license.txt'], true)) {
-                $relPath = str_replace(ABSPATH, '/', $filePath);
-                $found[] = $relPath . ' [file lạ ở root]';
-            }
-        }
-    }
-
-    /**
-     * Quét đệ quy thư mục tìm file có extension đáng ngờ
-     */
-    private function scanSuspiciousRecursive(string $absDir, string $relPrefix, array &$found): void
-    {
-        try {
-            $it = new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator($absDir, \FilesystemIterator::SKIP_DOTS),
-                \RecursiveIteratorIterator::SELF_FIRST
-            );
-
-            foreach ($it as $file) {
-                /** @var \SplFileInfo $file */
-                if (!$file->isFile()) {
-                    continue;
-                }
-
-                $ext = strtolower($file->getExtension());
-                if (in_array($ext, self::SUSPICIOUS_EXTS, true)) {
-                    $relPath = $relPrefix . $it->getSubPathname();
-                    $found[] = $relPath;
-                }
-            }
-        } catch (\UnexpectedValueException) {
-            // Permission denied — bỏ qua
-        }
-    }
-
-    /**
-     * Kiểm tra nội dung file có chứa pattern shell/webshell không
-     */
-    private function checkFileForShellPatterns(string $filePath, string $displayName, array &$found): void
-    {
-        // Giới hạn đọc 50KB để tránh tốn bộ nhớ
-        $content = @file_get_contents($filePath, false, null, 0, 51200);
-        if ($content === false) {
-            return;
-        }
-
-        $shellPatterns = [
-            'eval(base64_decode',
-            'eval(gzinflate',
-            'eval(str_rot13',
-            'eval($_POST',
-            'eval($_GET',
-            'assert($_',
-            'system($_',
-            'passthru($_',
-            'exec($_',
-            'shell_exec($_',
-            'base64_decode(str_rot13',
-            'preg_replace(\'/.*/e\'',
-            'FilesMan',
-            'c99shell',
-            'r57shell',
-        ];
-
-        foreach ($shellPatterns as $pattern) {
-            if (stripos($content, $pattern) !== false) {
-                $found[] = $displayName . " [⚠️ pattern đáng ngờ: '{$pattern}']";
-                break;
-            }
         }
     }
 
@@ -669,40 +533,18 @@ class LacaDevTrackerClient
     private function checkFileIntegrity(): array
     {
         $baseline = get_option(self::OPT_BASELINE, []);
-        $current  = [];
-        $changed  = [];
-
-        // Thu thập file cần theo dõi
-        $watchPaths = $this->getIntegrityWatchPaths();
-
-        foreach ($watchPaths as $absPath => $relLabel) {
-            if (!file_exists($absPath)) {
-                continue;
-            }
-            $mtime           = filemtime($absPath);
-            $current[$relLabel] = $mtime;
-
-            if (!empty($baseline[$relLabel]) && $baseline[$relLabel] !== $mtime) {
-                $changed[] = $relLabel . ' (sửa lúc ' . date('d/m/Y H:i', $mtime) . ')';
-            }
-        }
-
-        // Tìm file mới xuất hiện (chưa có trong baseline)
-        foreach ($current as $label => $mtime) {
-            if (!isset($baseline[$label])) {
-                $changed[] = $label . ' [mới] (tạo lúc ' . date('d/m/Y H:i', $mtime) . ')';
-            }
-        }
+        $comparison = TrackerFileIntegrity::compare(
+            is_array($baseline) ? $baseline : [],
+            $this->getIntegrityWatchPaths(),
+            'file_exists',
+            'filemtime',
+            static fn(int $mtime): string => date('d/m/Y H:i', $mtime)
+        );
 
         // Lưu baseline mới
-        update_option(self::OPT_BASELINE, $current, false);
+        update_option(self::OPT_BASELINE, $comparison['current'], false);
 
-        // Bỏ qua lần đầu (baseline chưa có = không có gì để so)
-        if (empty($baseline)) {
-            return [];
-        }
-
-        return $changed;
+        return $comparison['changed'];
     }
 
     /**
@@ -1354,31 +1196,7 @@ class LacaDevTrackerClient
 
     private function normalizeUploadedFiles(array $fileParams): array
     {
-        $raw = $fileParams['attachments'] ?? ($fileParams['attachment'] ?? null);
-        if (empty($raw)) {
-            return [];
-        }
-
-        if (!is_array($raw['name'] ?? null)) {
-            return [$raw];
-        }
-
-        $files = [];
-        foreach ($raw['name'] as $index => $name) {
-            if ($name === '') {
-                continue;
-            }
-
-            $files[] = [
-                'name' => $name,
-                'type' => $raw['type'][$index] ?? '',
-                'tmp_name' => $raw['tmp_name'][$index] ?? '',
-                'error' => $raw['error'][$index] ?? UPLOAD_ERR_NO_FILE,
-                'size' => $raw['size'][$index] ?? 0,
-            ];
-        }
-
-        return $files;
+        return SupportAttachmentFiles::normalize($fileParams);
     }
 
     public function renderSupportCenterShortcode(array $atts = []): string
@@ -1425,9 +1243,9 @@ class LacaDevTrackerClient
                 continue;
             }
 
-            $items[] = $this->makeTimelineItem(
+            $items[] = TrackerTimelinePresenter::makeItem(
                 (string) $row['time'],
-                $this->maintenanceActionLabel((string) ($row['action'] ?? 'maintenance')),
+                TrackerTimelinePresenter::maintenanceActionLabel((string) ($row['action'] ?? 'maintenance')),
                 (string) ($row['message'] ?? __('Đã ghi nhận thao tác bảo trì.', 'laca')),
                 (string) ($row['status'] ?? 'success')
             );
@@ -1440,7 +1258,7 @@ class LacaDevTrackerClient
                     continue;
                 }
 
-                $items[] = $this->makeTimelineItem(
+                $items[] = TrackerTimelinePresenter::makeItem(
                     (string) $row['time'],
                     __('Cập nhật block giao diện', 'laca'),
                     wp_strip_all_tags((string) ($row['message'] ?? __('Đã sync block từ LacaDev.', 'laca'))),
@@ -1462,14 +1280,14 @@ class LacaDevTrackerClient
                         continue;
                     }
 
-                    $message = $this->publicTimelineMessage($log, $event);
+                    $message = TrackerTimelinePresenter::publicMessage($log, $event);
                     if ($message === '') {
                         continue;
                     }
 
-                    $items[] = $this->makeTimelineItem(
+                    $items[] = TrackerTimelinePresenter::makeItem(
                         (string) ($event['delivered_at'] ?: $event['created_at']),
-                        $this->timelineTypeLabel((string) ($log['type'] ?? $event['event_type'] ?? 'other')),
+                        TrackerTimelinePresenter::typeLabel((string) ($log['type'] ?? $event['event_type'] ?? 'other')),
                         $message,
                         (string) ($event['status'] ?? 'queued')
                     );
@@ -1487,31 +1305,6 @@ class LacaDevTrackerClient
         usort($items, static fn(array $a, array $b): int => strtotime($b['time']) <=> strtotime($a['time']));
 
         return array_slice($items, 0, $limit);
-    }
-
-    private function makeTimelineItem(string $time, string $title, string $message, string $status): array
-    {
-        return TrackerTimelinePresenter::makeItem($time, $title, $message, $status);
-    }
-
-    private function publicTimelineMessage(array $log, array $event): string
-    {
-        return TrackerTimelinePresenter::publicMessage($log, $event);
-    }
-
-    private function timelineTypeLabel(string $type): string
-    {
-        return TrackerTimelinePresenter::typeLabel($type);
-    }
-
-    private function maintenanceActionLabel(string $action): string
-    {
-        return TrackerTimelinePresenter::maintenanceActionLabel($action);
-    }
-
-    private function formatTimelineDate(string $time): string
-    {
-        return TrackerTimelinePresenter::formatDate($time);
     }
 
     // =========================================================================
@@ -1867,27 +1660,21 @@ class LacaDevTrackerClient
 
     private function recordMaintenanceEvent(string $action, string $slug, string $status, string $message, array $meta = []): void
     {
-        $history = get_option(self::OPT_REMOTE_HISTORY, []);
-        if (!is_array($history)) {
-            $history = [];
-        }
-
-        array_unshift($history, [
+        $history = RemoteUpdateHistory::normalize(get_option(self::OPT_REMOTE_HISTORY, []));
+        $history = RemoteUpdateHistory::prepend($history, [
             'time' => current_time('mysql'),
-            'action' => sanitize_key($action),
-            'slug' => sanitize_text_field($slug),
-            'status' => sanitize_key($status),
-            'message' => wp_strip_all_tags($message),
+            'action' => $action,
+            'slug' => $slug,
+            'status' => $status,
+            'message' => $message,
             'meta' => $meta,
         ]);
 
-        update_option(self::OPT_REMOTE_HISTORY, array_slice($history, 0, 50), false);
+        update_option(self::OPT_REMOTE_HISTORY, $history, false);
     }
 
     public static function getRemoteUpdateHistory(): array
     {
-        $history = get_option(self::OPT_REMOTE_HISTORY, []);
-
-        return is_array($history) ? $history : [];
+        return RemoteUpdateHistory::normalize(get_option(self::OPT_REMOTE_HISTORY, []));
     }
 }

@@ -3,6 +3,8 @@
 namespace App\Settings;
 
 use App\Settings\Admin\AdminAccessDeniedPage;
+use App\Settings\Admin\AdminAccessPolicy;
+use App\Settings\Admin\AdminDashboardIntroWidget;
 use App\Settings\Admin\AdminMediaSupport;
 use App\Settings\Admin\AdminOptionHtml;
 use Carbon_Fields\Container;
@@ -186,33 +188,12 @@ class AdminSettings
 				return;
 			}
 
-			wp_add_dashboard_widget('custom_help_widget', 'Giới thiệu', static function () { ?>
-				<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px 0;">
-					<a target="_blank" href="<?php echo AUTHOR['website'] ?>" title="<?php echo AUTHOR['name'] ?>" style="opacity: 0.9; transition: opacity 0.2s;">
-						<img style="max-width: 160px; height: auto; display: block;" src="<?php echo get_site_url() . '/wp-content/themes/lacadev/resources/images/dev/moomsdev-black.png' ?>" alt="<?php echo AUTHOR['name'] ?>">
-					</a>
-					<div style="margin-top: 20px; text-align: center;">
-						
-						<p style="margin: 0 0 15px; font-size: 16px; font-style: italic; color: #b5b5b5; font-family: 'Quicksand', sans-serif; font-weight: 500;">
-							"Coding amidst the journeys"
-						</p>
-
-						<div style="display: flex; gap: 12px; justify-content: center; align-items: center; font-size: 14px; color: #848383; font-family: 'Quicksand', sans-serif; font-weight: 600;">
-							<a style="color: inherit; text-decoration: none;" href="tel:<?php echo str_replace(['.', ',', ' '], '', AUTHOR['phone_number']); ?>" target="_blank">
-								<?php echo AUTHOR['phone_number'] ?>
-							</a>
-							<span style="color: #dcdcde;">|</span>
-							<a style="color: inherit; text-decoration: none;" href="mailto:<?php echo AUTHOR['email'] ?>" target="_blank">
-								<?php echo AUTHOR['email'] ?>
-							</a>
-							<span style="color: #dcdcde;">|</span>
-							<a style="color: inherit; text-decoration: none;" href="<?php echo AUTHOR['website'] ?>" target="_blank">
-								Ghé thăm tôi
-							</a>
-						</div>
-					</div>
-				</div>
-<?php });
+			wp_add_dashboard_widget('custom_help_widget', 'Giới thiệu', static function () {
+				echo AdminDashboardIntroWidget::html(
+					AUTHOR,
+					get_site_url() . '/wp-content/themes/lacadev/resources/images/dev/moomsdev-black.png'
+				);
+			});
 		});
 	}
 
@@ -454,26 +435,7 @@ class AdminSettings
 
 		$errorMessage = $this->errorMessage;
 		add_action('current_screen', static function () use ($errorMessage) {
-			$deniePage      = [
-				'plugins',
-				'plugin-install',
-				'plugin-editor',
-				'themes',
-				'theme-install',
-				'theme-install',
-				'customize',
-				'customize',
-				'tools',
-				'import',
-				'export',
-				'tools_page_action-scheduler',
-				'tools_page_export_personal_data',
-				'tools_page_export_personal_data',
-				'tools_page_remove_personal_data',
-			];
-			if (get_option('_hide_theme_editor') === 'yes') {
-				$deniePage[] = 'theme-editor';
-			}
+			$deniePage = AdminAccessPolicy::deniedPluginScreens(get_option('_hide_theme_editor') === 'yes');
 			$current_screen = get_current_screen();
 
 			if ($current_screen !== null && in_array($current_screen->id, $deniePage, true)) {
@@ -484,15 +446,7 @@ class AdminSettings
 
 	public function disableOptionsReadPage()
 	{
-		$removePages = [
-			'options-reading.php',
-			'options-writing.php',
-			'options-discussion.php',
-			'options-media.php',
-			'privacy.php',
-			'options-permalink.php',
-			'tinymce-advanced',
-		];
+		$removePages = AdminAccessPolicy::removedSettingsPages();
 		add_action('admin_menu', static function () use ($removePages) {
 			foreach ($removePages as $page) {
 				remove_submenu_page('options-general.php', $page);
@@ -500,16 +454,7 @@ class AdminSettings
 		});
 
 		$errorMessage = $this->errorMessage;
-		$denyPages    = [
-			'options-reading',
-			'options-writing',
-			'options-discussion',
-			'options-media',
-			'privacy',
-			'options-permalink',
-			'settings_page_tinymce-advanced',
-			'toplevel_page_wpseo_dashboard',
-		];
+		$denyPages = AdminAccessPolicy::deniedSettingsScreens();
 		add_action('current_screen', static function () use ($errorMessage, $denyPages) {
 			$current_screen = get_current_screen();
 			if ($current_screen !== null && in_array($current_screen->id, $denyPages, true)) {
@@ -533,17 +478,7 @@ class AdminSettings
 			global $submenu;
 			$hide_comments = get_option('_hide_comment_menu_default') === 'yes';
 			$hide_comments = (bool) apply_filters('lacadev_hide_comments_menu', $hide_comments);
-			$hidden_menus = [
-				'tools.php',
-				'wpseo_dashboard',
-				'duplicator',
-				'yit_plugin_panel',
-				'woocommerce-checkout-manager',
-			];
-
-			if ($hide_comments) {
-				$hidden_menus[] = 'edit-comments.php';
-			}
+			$hidden_menus = AdminAccessPolicy::hiddenMenuSlugs($hide_comments);
 
 			foreach ($menu as $key => $menuItem) {
 				if (in_array($menuItem[2], $hidden_menus, true)) {

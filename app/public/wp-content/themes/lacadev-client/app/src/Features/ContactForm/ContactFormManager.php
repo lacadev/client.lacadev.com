@@ -866,7 +866,7 @@ class ContactFormManager
         $fields = self::extractFlatFields($form);
         $subs = ContactFormTable::getSubmissions($formId, 1, 9999);
 
-        $filename = 'submissions-form-' . $formId . '-' . date('Y-m-d') . '.csv';
+        $filename = ContactFormCsvExporter::filename($formId, date('Y-m-d'));
 
         header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename="' . $filename . '"');
@@ -877,27 +877,15 @@ class ContactFormManager
         // UTF-8 BOM for Excel compatibility
         fwrite($out, "\xEF\xBB\xBF");
 
-        // Header row
-        $headers = ['#', 'Đọc', 'IP', 'Thời gian'];
-        foreach ($fields as $field) {
-            $headers[] = $field['label'];
-        }
-        fputcsv($out, $headers);
+        fputcsv($out, ContactFormCsvExporter::headers($fields));
 
         // Data rows
-        foreach ($subs as $idx => $sub) {
-            $data = json_decode($sub['data'] ?? '{}', true) ?: [];
-            $row = [
-                $sub['id'],
-                $sub['is_read'] ? 'Đã đọc' : 'Chưa đọc',
-                $sub['ip_address'],
-                date_i18n('d/m/Y H:i', strtotime($sub['created_at'])),
-            ];
-            foreach ($fields as $field) {
-                $val = $data[$field['name']] ?? '';
-                $row[] = is_array($val) ? implode(', ', $val) : $val;
-            }
-            fputcsv($out, $row);
+        foreach ($subs as $sub) {
+            fputcsv($out, ContactFormCsvExporter::row(
+                $sub,
+                $fields,
+                static fn(int|false $timestamp): string => date_i18n('d/m/Y H:i', $timestamp ?: 0)
+            ));
         }
 
         fclose($out);

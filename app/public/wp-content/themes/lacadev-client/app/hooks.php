@@ -76,114 +76,24 @@ add_action('carbon_fields_register_fields', 'app_bootstrap_carbon_fields_registe
  * Chỉ chạy ở admin để tiết kiệm tài nguyên frontend
  */
 if (is_admin()) {
-    add_action('init', static function () {
-        new \App\Settings\ThemeUpdater();
-        new \App\Widgets\BlockSyncWidget();
-
-        if (class_exists('\App\Settings\LacaAdmin\LacaAdminMenuOrganizer')) {
-            (new \App\Settings\LacaAdmin\LacaAdminMenuOrganizer())->register();
-        }
-    });
+    add_action('init', [\App\Bootstrap\FeatureRegistry::class, 'bootAdminFeatures']);
 }
 
 /**
- * LacaDev Tracker Client — lightweight customer-site reporting.
+ * Remote management + block sync must run outside wp-admin so WP-Cron and REST
+ * routes are available on normal WordPress requests.
  *
- * Must run outside wp-admin too so WP-Cron scans and REST remote-update routes
- * are available on normal WordPress requests.
+ * BlockAutoloader disabled — blocks are already registered by
+ * lacadev_child_register_synced_blocks() at init priority 15.
+ * Having both causes duplicate "already registered" notices → "headers already sent" → admin 403/404.
  */
-add_action('init', static function () {
-    if (class_exists('\App\Settings\LacaDevTrackerClient')) {
-        \App\Settings\LacaDevTrackerClient::register();
-    }
-}, 5);
+add_action('init', [\App\Bootstrap\FeatureRegistry::class, 'bootPriorityFiveInitFeatures'], 5);
 
 /**
- * Block Sync Receiver — REST API endpoint nhận blocks từ lacadev.com
- * Chạy cả frontend để REST API hoạt động đúng
+ * Runtime features.
  */
-add_action('init', static function () {
-    new \App\Settings\BlockSyncReceiver();
-    // BlockAutoloader disabled — blocks are already registered by
-    // lacadev_child_register_synced_blocks() at init priority 15.
-    // Having both causes duplicate "already registered" notices → "headers already sent" → admin 403/404.
-    // new \App\Settings\BlockAutoloader();
-}, 5);
-
-/**
- * CONTACT FORM — Frontend AJAX + Shortcode
- */
-add_action('init', function () {
-    if (class_exists('\App\Features\ContactForm\ContactFormAjaxHandler')) {
-        (new \App\Features\ContactForm\ContactFormAjaxHandler())->init();
-    }
-}, 10);
-
-/**
- * Maintenance Mode
- */
-add_action('init', function () {
-    if (class_exists('\App\Settings\MaintenanceModeManager')) {
-        (new \App\Settings\MaintenanceModeManager())->init();
-    }
-}, 1);
-
-/**
- * Email Log
- */
-add_action('init', function () {
-    if (class_exists('\App\Settings\EmailLog\EmailLogManager')) {
-        (new \App\Settings\EmailLog\EmailLogManager())->init();
-    }
-});
-
-/**
- * Related Posts
- */
-add_action('init', function () {
-    if (class_exists('\App\Features\RelatedPosts')) {
-        (new \App\Features\RelatedPosts())->init();
-    }
-});
-
-/**
- * Exit Intent Popup
- */
-add_action('init', function () {
-    if (class_exists('\App\Features\ExitIntentPopup')) {
-        (new \App\Features\ExitIntentPopup())->init();
-    }
-});
-
-/**
- * Frontend Chatbot
- */
-add_action('init', function () {
-    if (class_exists('\App\Features\FrontendChatbot\FrontendChatbotHandler')) {
-        (new \App\Features\FrontendChatbot\FrontendChatbotHandler())->init();
-    }
-});
-
-/**
- * Security — Custom Login, 2FA, Security Manager
- */
-add_action('init', function () {
-    if (class_exists('\App\Settings\Security\CustomLoginManager')) {
-        new \App\Settings\Security\CustomLoginManager();
-    }
-}, 1);
-
-add_action('init', function () {
-    if (class_exists('\App\Settings\Security\TwoFactorAuth')) {
-        new \App\Settings\Security\TwoFactorAuth();
-    }
-});
-
-add_action('init', function () {
-    if (class_exists('\App\Settings\Security\SecurityManager')) {
-        (new \App\Settings\Security\SecurityManager())->init();
-    }
-});
+add_action('init', [\App\Bootstrap\FeatureRegistry::class, 'bootPriorityOneInitFeatures'], 1);
+add_action('init', [\App\Bootstrap\FeatureRegistry::class, 'bootDefaultInitFeatures']);
 
 /**
  * Pages/Posts list table: Add Thumbnail column

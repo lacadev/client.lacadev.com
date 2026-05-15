@@ -1,6 +1,7 @@
 <?php
 use WPEmerge\Facades\WPEmerge;
 use WPEmergeTheme\Facades\Theme;
+use App\Bootstrap\FeatureRegistry;
 use App\Contracts\AssetHandles;
 
 if (!defined('ABSPATH')) {
@@ -167,27 +168,6 @@ add_action('after_setup_theme', function () {
 
 });
 
-// =============================================================================
-// AUTOLOAD COMPONENTS
-// =============================================================================
-$folders = [
-    // APP_APP_SETUP_ECOMMERCE_DIR,
-    // APP_APP_SETUP_TAXONOMY_DIR,
-    // APP_APP_SETUP_WALKER_DIR,
-];
-
-foreach ($folders as $folder) {
-    $filesPath = scandir($folder);
-    if ($filesPath !== false) {
-        foreach ($filesPath as $item) {
-            $file = $folder . $item;
-            if (is_file($file)) {
-                require_once $folder . $item;
-            }
-        }
-    }
-}
-
 /**
  * Localize AJAX search data (script bundled in theme.js)
  */
@@ -219,7 +199,7 @@ add_filter('query_vars', 'lacadev_register_search_query_vars');
 // CUSTOM POST TYPES
 // =============================================================================
 // Dynamic CPT — đăng ký CPT được tạo qua admin panel (Appearance > Custom Post Types)
-new \App\Features\DynamicCPT\DynamicCptManager();
+FeatureRegistry::bootDynamicPostTypes();
 
 // =============================================================================
 // DATABASE TABLES

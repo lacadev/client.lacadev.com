@@ -47,6 +47,8 @@
         }
     },
     "scripts": {
+        "test": "php tests/run.php",
+        "test:unit": "php tests/run.php",
         "install-test-env": [
             "WPEmerge\\Cli\\App::createConfigJson"
         ],

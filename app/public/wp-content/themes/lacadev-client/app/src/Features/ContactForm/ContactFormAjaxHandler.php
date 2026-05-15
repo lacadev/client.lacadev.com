@@ -3,6 +3,7 @@
 namespace App\Features\ContactForm;
 
 use App\Databases\ContactFormTable;
+use App\Support\ClientIpResolver;
 
 /**
  * ContactFormAjaxHandler
@@ -111,7 +112,7 @@ class ContactFormAjaxHandler
         }
 
         // 4. Lấy IP
-        $ip = self::getClientIp();
+        $ip = ClientIpResolver::fromGlobals('unknown');
 
         // 5. Lưu DB
         ContactFormTable::insertSubmission($formId, $data, $ip);
@@ -1046,17 +1047,4 @@ class ContactFormAjaxHandler
         return ContactFormSchema::extractFlatFields($form);
     }
 
-    private static function getClientIp(): string
-    {
-        $keys = ['HTTP_CF_CONNECTING_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_CLIENT_IP', 'REMOTE_ADDR'];
-        foreach ($keys as $key) {
-            if (!empty($_SERVER[$key])) {
-                $ip = trim(explode(',', $_SERVER[$key])[0]);
-                if (filter_var($ip, FILTER_VALIDATE_IP)) {
-                    return $ip;
-                }
-            }
-        }
-        return 'unknown';
-    }
 }

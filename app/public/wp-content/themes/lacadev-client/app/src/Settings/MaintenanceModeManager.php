@@ -2,6 +2,8 @@
 
 namespace App\Settings;
 
+use App\Support\ClientIpResolver;
+
 /**
  * MaintenanceModeManager
  *
@@ -63,7 +65,7 @@ class MaintenanceModeManager
         // IP whitelist bypass
         $whitelist = array_filter(array_map('trim', explode(',', get_option(self::OPT_WHITELIST, ''))));
         if (!empty($whitelist)) {
-            $clientIp = self::getClientIp();
+            $clientIp = ClientIpResolver::fromGlobals();
             if (in_array($clientIp, $whitelist, true)) {
                 return;
             }
@@ -193,19 +195,6 @@ class MaintenanceModeManager
     // =========================================================================
     // HELPERS
     // =========================================================================
-
-    private static function getClientIp(): string
-    {
-        foreach (['HTTP_CF_CONNECTING_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_CLIENT_IP', 'REMOTE_ADDR'] as $key) {
-            if (!empty($_SERVER[$key])) {
-                $ip = trim(explode(',', $_SERVER[$key])[0]);
-                if (filter_var($ip, FILTER_VALIDATE_IP)) {
-                    return $ip;
-                }
-            }
-        }
-        return '';
-    }
 
     public static function activateTemporary(string $owner, int $ttl = 1800): bool
     {

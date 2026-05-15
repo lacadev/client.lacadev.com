@@ -3,6 +3,7 @@
 namespace App\Features\FrontendChatbot;
 
 use App\Settings\LacaTools\AITranslationHandler;
+use App\Support\ClientIpResolver;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -76,7 +77,7 @@ class FrontendChatbotHandler
         }
 
         // Rate limiting per IP
-        $ip     = sanitize_text_field($_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? 'unknown');
+        $ip     = ClientIpResolver::fromGlobals('unknown');
         $rl_key = self::RATE_LIMIT_KEY . md5($ip);
         $count  = (int) get_transient($rl_key);
 

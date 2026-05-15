@@ -6,6 +6,7 @@ use App\Contracts\HookNames;
 use App\Databases\TrackerEventTable;
 use App\Settings\Tracker\TrackerClientConfig;
 use App\Settings\Tracker\TrackerHealthSummary;
+use App\Support\ClientIpResolver;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -1165,7 +1166,8 @@ class LacaDevTrackerClient
             ], 400);
         }
 
-        $rateKey = 'laca_client_request_' . md5((string) ($_SERVER['REMOTE_ADDR'] ?? ''));
+        $clientIp = ClientIpResolver::fromGlobals('unknown');
+        $rateKey = 'laca_client_request_' . md5($clientIp);
         if (get_transient($rateKey)) {
             return new \WP_REST_Response([
                 'success' => false,
@@ -1232,7 +1234,7 @@ class LacaDevTrackerClient
             'contact_name' => $contactName,
             'contact_email' => $contactEmail,
             'page_url' => $pageUrl,
-            'ip' => $this->getClientIp(),
+            'ip' => $clientIp,
             'user_agent' => sanitize_text_field((string) ($_SERVER['HTTP_USER_AGENT'] ?? '')),
             'attachments' => $attachments,
         ];
@@ -1374,20 +1376,6 @@ class LacaDevTrackerClient
         }
 
         return $files;
-    }
-
-    private function getClientIp(): string
-    {
-        foreach (['HTTP_CF_CONNECTING_IP', 'HTTP_X_FORWARDED_FOR', 'REMOTE_ADDR'] as $key) {
-            $value = sanitize_text_field((string) ($_SERVER[$key] ?? ''));
-            if ($value === '') {
-                continue;
-            }
-
-            return trim(explode(',', $value)[0]);
-        }
-
-        return '';
     }
 
     public function renderSupportCenterShortcode(array $atts = []): string

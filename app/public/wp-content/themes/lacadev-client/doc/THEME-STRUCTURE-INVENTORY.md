@@ -66,7 +66,7 @@ This document is a quick map of the current `lacadev-client` theme after the boo
 | Content UX | `RelatedPosts`, `ContextAwareCta`, `AuthorTrustProfile`, `RecommendationEngine`, `ExitIntentPopup` | Single post content additions, CTA visibility, popup rules, recommendation output. |
 | Admin UX | `ThemeControlCenter`, `RoleBasedAdminUx`, `EditorialWorkflow`, `LacaAdminMenuOrganizer`, `AdminAccessDeniedPage`, `AdminAccessPolicy`, `AdminDashboardIntroWidget`, `AdminOptionHtml`, `AdminMediaSupport` | Admin menu structure, tabbed theme settings, custom statuses, role restrictions, branded denial screen, reusable option snippets, dashboard intro widget, media upload helper behavior. |
 | Management tools | `app/src/Settings/LacaTools/*` | Dashboard widgets, database cleaner, media audit, content audit, quick notes, performance budget widget, AI chat/translation tools. |
-| Remote operations | `LacaDevTrackerClient`, `TrackerClientConfig`, `TrackerHealthSummary`, `TrackerTimelinePresenter`, `TrackerShortcodeRenderer`, `RemoteUpdatePolicy`, `RemoteUpdateHistory`, `SupportAttachmentFiles`, `SuspiciousFileScanner`, `TrackerFileIntegrity`, `ThemeUpdater`, `BlockSyncReceiver`, `BlockSyncWidget` | Tracker delivery, tracker connection config, tracker health counters, public tracker shortcodes, remote update policy/history, support attachments, file scans/integrity checks, block sync API, dashboard widget status. |
+| Remote operations | `LacaDevTrackerClient`, `TrackerClientConfig`, `TrackerHttpTransport`, `TrackerQueuePolicy`, `TrackerHealthSummary`, `TrackerTimelinePresenter`, `TrackerShortcodeRenderer`, `RemoteUpdatePolicy`, `RemoteUpdatePreflight`, `RemoteUpdateHistory`, `MaintenanceSnapshot`, `SupportAttachmentFiles`, `SuspiciousFileScanner`, `TrackerFileIntegrity`, `ThemeUpdater`, `BlockSyncReceiver`, `BlockSyncWidget` | Tracker delivery, HTTP response normalization, local queue retry policy, tracker connection config, tracker health counters, public tracker shortcodes, remote update policy/preflight/history, maintenance snapshots, support attachments, file scans/integrity checks, block sync API, dashboard widget status. |
 | Email log | `app/src/Settings/EmailLog/*` | Email capture table and admin display. |
 | Maintenance mode | `MaintenanceModeManager`, `theme/maintenance.php` | Frontend lockout, admin bypass, maintenance template. |
 | Gutenberg blocks | `theme/setup/gutenberg-blocks.php`, `block-gutenberg/*` | Block registration, category mapping, synced block rendering. |
@@ -154,10 +154,14 @@ The current tests are intentionally lightweight and run without booting WordPres
 | Contact form frontend scripts | Guards single-step and multi-step AJAX script rendering. |
 | Contact form submission validator | Guards frontend submit validation, sanitization, conditions, and format errors. |
 | Tracker client config | Guards tracker endpoint/secret option fallback and configured-state detection. |
+| Tracker HTTP transport | Guards tracker JSON POST args, blocking response handling, non-blocking response handling, and non-2xx error messages. |
+| Tracker queue policy | Guards local queue backoff windows, next-attempt formatting, and permanent-failure threshold. |
 | Tracker health summary | Guards tracker queue/status counters and block diagnostics counters. |
 | Tracker timeline presenter | Guards public-safe timeline messages, labels, dates, and remote update policy. |
 | Tracker shortcode renderer | Guards support center and maintenance timeline shortcode markup. |
+| Remote update preflight | Guards normalized preflight result shape without booting WordPress. |
 | Remote update history | Guards remote update history normalization and capped prepends. |
+| Maintenance snapshot | Guards captured remote-maintenance context for core updates. |
 | Support attachment files | Guards single/multiple uploaded attachment normalization. |
 | Suspicious file scanner | Guards root/uploads suspicious file detection and shell-pattern checks. |
 | Tracker file integrity | Guards tracked file mtime comparison and baseline behavior. |
@@ -178,5 +182,5 @@ The current tests are intentionally lightweight and run without booting WordPres
 | Candidate | Why it still needs review |
 | --- | --- |
 | `theme/template-parts/*` references | This package references `template-parts` in several templates, while the files currently live in the sibling `lacadev-client-child` theme. Confirm whether `lacadev-client` must run standalone before changing or copying these parts. |
-| Large admin feature classes | `LacaDevTrackerClient`, `ContactFormManager`, and `AdminSettings` are still large. `ContactFormAjaxHandler` is now much lighter after extracting frontend scripts and submission validation. Continue splitting tracker transport/REST update flow, contact form admin screens, and admin option registration one feature slice at a time with tests. |
+| Large admin feature classes | `LacaDevTrackerClient`, `ContactFormManager`, and `AdminSettings` are still large. `ContactFormAjaxHandler` is now much lighter after extracting frontend scripts and submission validation; tracker transport, queue policy, remote-update preflight, and maintenance snapshot logic are now extracted. Continue splitting tracker support-request/remote-update execution flow, contact form admin screens, and admin option registration one feature slice at a time with tests. |
 | Empty local directories | `app/src/Module`, `app/src/Routing`, `app/src/View`, `resources/images/sprite`, `resources/vendor`, and `theme/setup/taxonomies` are empty in the working tree after cleanup. They are not tracked once their placeholder files are removed. |

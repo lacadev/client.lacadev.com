@@ -4,13 +4,17 @@ namespace App\Settings;
 
 use App\Contracts\HookNames;
 use App\Databases\TrackerEventTable;
+use App\Settings\Tracker\MaintenanceSnapshot;
 use App\Settings\Tracker\RemoteUpdatePolicy;
 use App\Settings\Tracker\RemoteUpdateHistory;
+use App\Settings\Tracker\RemoteUpdatePreflight;
 use App\Settings\Tracker\SupportAttachmentFiles;
 use App\Settings\Tracker\SuspiciousFileScanner;
 use App\Settings\Tracker\TrackerClientConfig;
 use App\Settings\Tracker\TrackerFileIntegrity;
 use App\Settings\Tracker\TrackerHealthSummary;
+use App\Settings\Tracker\TrackerHttpTransport;
+use App\Settings\Tracker\TrackerQueuePolicy;
 use App\Settings\Tracker\TrackerShortcodeRenderer;
 use App\Settings\Tracker\TrackerTimelinePresenter;
 use App\Support\ClientIpResolver;
@@ -668,52 +672,7 @@ class LacaDevTrackerClient
 
     private function postPayload(array $payload, bool $blocking = true): array
     {
-        $endpoint = self::getEndpoint();
-
-        $response = wp_remote_post($endpoint, [
-            'body'       => wp_json_encode($payload, JSON_UNESCAPED_UNICODE),
-            'headers'    => ['Content-Type' => 'application/json'],
-            'timeout'    => $blocking ? 15 : 8,
-            'blocking'   => $blocking,
-        ]);
-
-        if (!$blocking) {
-            return [
-                'success' => !is_wp_error($response),
-                'code'    => null,
-                'error'   => is_wp_error($response) ? $response->get_error_message() : '',
-            ];
-        }
-
-        if (is_wp_error($response)) {
-            return [
-                'success' => false,
-                'code'    => null,
-                'error'   => $response->get_error_message(),
-            ];
-        }
-
-        $code = wp_remote_retrieve_response_code($response);
-        $body = trim((string) wp_remote_retrieve_body($response));
-
-        if ($code < 200 || $code >= 300) {
-            $decoded = json_decode($body, true);
-            $message = is_array($decoded) && !empty($decoded['message'])
-                ? (string) $decoded['message']
-                : 'HTTP ' . $code;
-
-            return [
-                'success' => false,
-                'code'    => $code,
-                'error'   => $message,
-            ];
-        }
-
-        return [
-            'success' => true,
-            'code'    => $code,
-            'error'   => '',
-        ];
+        return TrackerHttpTransport::post(self::getEndpoint(), $payload, $blocking);
     }
 
     private function deliverStoredEvent(array $event, bool $blocking = true): bool
@@ -735,7 +694,7 @@ class LacaDevTrackerClient
         }
 
         $error = $result['error'] ?: 'Không gửi được tracker event.';
-        if ($attempts >= self::MAX_ATTEMPTS) {
+        if (TrackerQueuePolicy::shouldFailPermanently($attempts, self::MAX_ATTEMPTS)) {
             TrackerEventTable::markFailed((int) $event['id'], $attempts, $error);
         } else {
             TrackerEventTable::markRetry((int) $event['id'], $attempts, $error, $this->nextAttemptAt($attempts));
@@ -870,14 +829,11 @@ class LacaDevTrackerClient
 
     private function nextAttemptAt(int $attempts): string
     {
-        $minutes = match (true) {
-            $attempts <= 1 => 5,
-            $attempts === 2 => 15,
-            $attempts === 3 => 60,
-            default => 180,
-        };
-
-        return date_i18n('Y-m-d H:i:s', current_time('timestamp') + $minutes * MINUTE_IN_SECONDS);
+        return TrackerQueuePolicy::nextAttemptAt(
+            $attempts,
+            current_time('timestamp'),
+            static fn(int $timestamp): string => date_i18n('Y-m-d H:i:s', $timestamp)
+        );
     }
 
     private function recordHealth(bool $success, string $error = '', ?int $code = null): void
@@ -1518,134 +1474,12 @@ class LacaDevTrackerClient
 
     private function preflightRemoteUpdate(string $action, string $slug): array
     {
-        $errors = [];
-        $warnings = [];
-        $target = [];
-
-        if (function_exists('wp_is_file_mod_allowed') && !wp_is_file_mod_allowed('automatic_updater')) {
-            $errors[] = 'WordPress đang chặn chỉnh sửa file tự động.';
-        }
-
-        if (!defined('WP_CONTENT_DIR') || !is_dir(WP_CONTENT_DIR)) {
-            $errors[] = 'Không xác định được thư mục wp-content.';
-        } elseif (!is_writable(WP_CONTENT_DIR)) {
-            $warnings[] = 'wp-content có thể không ghi được; updater vẫn có thể dùng filesystem credentials nếu server hỗ trợ.';
-        }
-
-        if ($action === 'update_plugin') {
-            require_once ABSPATH . 'wp-admin/includes/plugin.php';
-            $pluginPath = WP_PLUGIN_DIR . '/' . $slug;
-            if (!file_exists($pluginPath)) {
-                $errors[] = 'Không tìm thấy plugin target.';
-            } else {
-                $pluginData = get_plugin_data($pluginPath, false, false);
-                wp_update_plugins();
-                $updates = get_site_transient('update_plugins');
-                $newVersion = !empty($updates->response[$slug]->new_version) ? (string) $updates->response[$slug]->new_version : '';
-                if ($newVersion === '') {
-                    $warnings[] = 'Không thấy bản cập nhật pending trong WordPress transient; updater có thể trả về skipped.';
-                }
-
-                $target = [
-                    'type' => 'plugin',
-                    'name' => (string) ($pluginData['Name'] ?? $slug),
-                    'current_version' => (string) ($pluginData['Version'] ?? ''),
-                    'new_version' => $newVersion,
-                    'active' => function_exists('is_plugin_active') ? is_plugin_active($slug) : null,
-                ];
-            }
-        } elseif ($action === 'update_theme') {
-            wp_update_themes();
-            $theme = wp_get_theme($slug);
-            if (!$theme->exists()) {
-                $errors[] = 'Không tìm thấy theme target.';
-            } else {
-                $updates = get_site_transient('update_themes');
-                $newVersion = !empty($updates->response[$slug]['new_version']) ? (string) $updates->response[$slug]['new_version'] : '';
-                if ($newVersion === '') {
-                    $warnings[] = 'Không thấy bản cập nhật pending trong WordPress transient; updater có thể trả về skipped.';
-                }
-
-                $target = [
-                    'type' => 'theme',
-                    'name' => $theme->get('Name') ?: $slug,
-                    'current_version' => $theme->get('Version') ?: '',
-                    'new_version' => $newVersion,
-                    'active' => get_stylesheet() === $slug || get_template() === $slug,
-                ];
-            }
-        } elseif ($action === 'update_core') {
-            require_once ABSPATH . 'wp-admin/includes/update.php';
-            wp_version_check();
-            $updates = get_core_updates();
-            $next = $updates[0] ?? null;
-            $target = [
-                'type' => 'core',
-                'current_version' => get_bloginfo('version'),
-                'new_version' => is_object($next) ? (string) ($next->version ?? '') : '',
-            ];
-
-            if (empty($updates) || !is_object($next) || ($next->response ?? '') === 'latest') {
-                return [
-                    'ok' => true,
-                    'skip' => true,
-                    'message' => 'WordPress đã ở phiên bản mới nhất, không cần cập nhật.',
-                    'warnings' => $warnings,
-                    'target' => $target,
-                ];
-            }
-        }
-
-        return [
-            'ok' => empty($errors),
-            'skip' => false,
-            'errors' => $errors,
-            'warnings' => $warnings,
-            'target' => $target,
-        ];
+        return RemoteUpdatePreflight::check($action, $slug);
     }
 
     private function captureMaintenanceSnapshot(string $action, string $slug): array
     {
-        $snapshot = [
-            'time' => current_time('mysql'),
-            'site_url' => home_url('/'),
-            'wp_version' => get_bloginfo('version'),
-            'php_version' => PHP_VERSION,
-            'stylesheet' => get_stylesheet(),
-            'template' => get_template(),
-            'maintenance_active' => (bool) get_option(MaintenanceModeManager::OPT_ACTIVE),
-            'active_plugins_count' => count((array) get_option('active_plugins', [])),
-            'target' => [],
-        ];
-
-        if ($action === 'update_plugin' && $slug !== '' && file_exists(WP_PLUGIN_DIR . '/' . $slug)) {
-            require_once ABSPATH . 'wp-admin/includes/plugin.php';
-            $data = get_plugin_data(WP_PLUGIN_DIR . '/' . $slug, false, false);
-            $snapshot['target'] = [
-                'type' => 'plugin',
-                'slug' => $slug,
-                'name' => (string) ($data['Name'] ?? $slug),
-                'version' => (string) ($data['Version'] ?? ''),
-                'active' => function_exists('is_plugin_active') ? is_plugin_active($slug) : null,
-            ];
-        } elseif ($action === 'update_theme' && $slug !== '') {
-            $theme = wp_get_theme($slug);
-            $snapshot['target'] = [
-                'type' => 'theme',
-                'slug' => $slug,
-                'name' => $theme->exists() ? ($theme->get('Name') ?: $slug) : $slug,
-                'version' => $theme->exists() ? ($theme->get('Version') ?: '') : '',
-                'active' => get_stylesheet() === $slug || get_template() === $slug,
-            ];
-        } elseif ($action === 'update_core') {
-            $snapshot['target'] = [
-                'type' => 'core',
-                'version' => get_bloginfo('version'),
-            ];
-        }
-
-        return $snapshot;
+        return MaintenanceSnapshot::capture($action, $slug);
     }
 
     private function shouldUseTemporaryMaintenance(string $action, array $params): bool

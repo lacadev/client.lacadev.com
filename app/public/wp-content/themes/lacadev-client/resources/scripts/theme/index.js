@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-import '@images/favicon.ico';
 import '@csstools/normalize.css';
 import 'swiper/css/bundle';
 import '@styles/tailwind.css'; // Tailwind v3: PostCSS only, no sass-loader

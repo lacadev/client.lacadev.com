@@ -844,7 +844,21 @@ function app_action_editor_enqueue_assets()
  */
 function app_action_add_favicon()
 {
-    Assets::addFavicon();
+    if (function_exists('has_site_icon') && has_site_icon()) {
+        return;
+    }
+
+    $favicon_path = APP_RESOURCES_DIR . 'images/favicon.ico';
+    if (file_exists($favicon_path) && filesize($favicon_path) > 0) {
+        Assets::addFavicon();
+        return;
+    }
+
+    $svg_path = APP_RESOURCES_DIR . 'images/dev/icon.svg';
+    if (file_exists($svg_path)) {
+        $theme_root_uri = dirname(get_stylesheet_directory_uri());
+        echo '<link rel="icon" type="image/svg+xml" href="' . esc_url($theme_root_uri . '/resources/images/dev/icon.svg') . '" />' . "\n";
+    }
 }
 
 /**

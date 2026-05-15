@@ -3,6 +3,7 @@
 namespace App\Settings;
 
 use App\Settings\Admin\AdminAccessDeniedPage;
+use App\Settings\Admin\AdminMediaSupport;
 use App\Settings\Admin\AdminOptionHtml;
 use Carbon_Fields\Container;
 use Carbon_Fields\Field;
@@ -66,12 +67,7 @@ class AdminSettings
 	public function addCustomExtensionsInMediaUpload()
 	{
 		add_filter('upload_mimes', static function ($mimes) {
-			return array_merge($mimes, [
-				'ac3' => 'audio/ac3',
-				'mpa' => 'audio/MPA',
-				'flv' => 'video/x-flv',
-				'svg' => 'image/svg+xml',
-			]);
+			return AdminMediaSupport::allowedMimes($mimes);
 		});
 
 		add_action('wp_ajax_mm_get_attachment_url_thumbnail', static function () {
@@ -95,17 +91,7 @@ class AdminSettings
 			$screen = function_exists('get_current_screen') ? get_current_screen() : null;
 			$screenId = $screen && !empty($screen->id) ? (string) $screen->id : '';
 
-			// Theme options: "Nội dung HD Sử dụng" (rich_text) + legacy slugs + menu HD Sử dụng.
-			$isHelpGuideScreen =
-				strpos((string) $hook_suffix, 'laca-help-content-settings') !== false
-				|| strpos($screenId, 'laca-help-content-settings') !== false
-				|| $page === 'laca-help-content-settings'
-				|| strpos((string) $hook_suffix, 'laca-management-settings') !== false
-				|| strpos($screenId, 'laca-management-settings') !== false
-				|| $page === 'laca-management-settings'
-				|| ($page !== '' && strpos($page, 'management-settings') !== false)
-				|| strpos((string) $hook_suffix, 'lacadev-help') !== false
-				|| $page === 'lacadev-help';
+			$isHelpGuideScreen = AdminMediaSupport::isHelpGuideScreen((string) $hook_suffix, $page, $screenId);
 
 			if (!$isHelpGuideScreen) {
 				return;
@@ -121,13 +107,15 @@ class AdminSettings
 				$script_ver,
 				true
 			);
-			wp_localize_script('laca-help-guide-paste-image', 'lacaHelpPasteImage', [
-				'ajaxUrl' => admin_url('admin-ajax.php'),
-				'nonce'   => wp_create_nonce('laca_help_paste_image'),
-				'i18n'    => [
-					'uploadFail' => __('Không thể upload ảnh từ clipboard. Vui lòng thử lại.', 'laca'),
-				],
-			]);
+			wp_localize_script(
+				'laca-help-guide-paste-image',
+				'lacaHelpPasteImage',
+				AdminMediaSupport::pasteImageConfig(
+					admin_url('admin-ajax.php'),
+					wp_create_nonce('laca_help_paste_image'),
+					static fn(string $text): string => __($text, 'laca')
+				)
+			);
 		}, 20);
 	}
 
@@ -323,32 +311,7 @@ class AdminSettings
 	public function renameUploadFileName()
 	{
 		add_filter('sanitize_file_name', function ($filename) {
-			$info        = pathinfo($filename);
-			$ext         = empty($info['extension']) ? '' : '.' . $info['extension'];
-			$newFileName = str_replace($ext, '', date('YmdHi') . '-' . $filename);
-			$unicode     = [
-				'a' => 'á|à|ả|ã|ạ|ă|ắ|ặ|ằ|ẳ|ẵ|â|ấ|ầ|ẩ|ẫ|ậ',
-				'd' => 'đ',
-				'e' => 'é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ',
-				'i' => 'í|ì|ỉ|ĩ|ị',
-				'o' => 'ó|ò|ỏ|õ|ọ|ô|ố|ồ|ổ|ỗ|ộ|ơ|ớ|ờ|ở|ỡ|ợ',
-				'u' => 'ú|ù|ủ|ũ|ụ|ư|ứ|ừ|ử|ữ|ự',
-				'y' => 'ý|ỳ|ỷ|ỹ|ỵ',
-				'A' => 'Á|À|Ả|Ã|Ạ|Ă|Ắ|Ặ|Ằ|Ẳ|Ẵ|Â|Ấ|Ầ|Ẩ|Ẫ|Ậ',
-				'D' => 'Đ',
-				'E' => 'É|È|Ẻ|Ẽ|Ẹ|Ê|Ế|Ề|Ể|Ễ|Ệ',
-				'I' => 'Í|Ì|Ỉ|Ĩ|Ị',
-				'O' => 'Ó|Ò|Ỏ|Õ|Ọ|Ô|Ố|Ồ|Ổ|Ỗ|Ộ|Ơ|Ớ|Ờ|Ở|Ỡ|Ợ',
-				'U' => 'Ú|Ù|Ủ|Ũ|Ụ|Ư|Ứ|Ừ|Ử|Ữ|Ự',
-				'Y' => 'Ý|Ỳ|Ỷ|Ỹ|Ỵ',
-			];
-			foreach ($unicode as $nonUnicode => $uni) {
-				$newFileName = preg_replace("/($uni)/i", $nonUnicode, $newFileName);
-			}
-			$newFileName = str_replace(' ', '-', $newFileName);
-			$newFileName = preg_replace('/[^A-Za-z0-9\-]/', '', $newFileName);
-			$newFileName = preg_replace('/-+/', '-', $newFileName);
-			return $newFileName . $ext;
+			return AdminMediaSupport::sanitizeUploadFilename($filename, date('YmdHi'));
 		}, 10);
 	}
 

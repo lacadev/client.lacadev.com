@@ -4,8 +4,11 @@ namespace App\Settings;
 
 use App\Contracts\HookNames;
 use App\Databases\TrackerEventTable;
+use App\Settings\Tracker\RemoteUpdatePolicy;
 use App\Settings\Tracker\TrackerClientConfig;
 use App\Settings\Tracker\TrackerHealthSummary;
+use App\Settings\Tracker\TrackerShortcodeRenderer;
+use App\Settings\Tracker\TrackerTimelinePresenter;
 use App\Support\ClientIpResolver;
 
 if (!defined('ABSPATH')) {
@@ -1389,172 +1392,13 @@ class LacaDevTrackerClient
         $formId = 'laca-support-' . wp_generate_uuid4();
         $extraClass = sanitize_html_class((string) $atts['class']);
 
-        ob_start();
-        ?>
-        <style>
-            .laca-support-center {
-                background: #ffffff;
-                border: 1px solid #dbe1ea;
-                border-radius: 8px;
-                margin: 24px 0;
-                padding: clamp(18px, 3vw, 28px);
-            }
-
-            .laca-support-center__header {
-                margin-bottom: 20px;
-            }
-
-            .laca-support-center__header h2 {
-                font-size: 24px;
-                line-height: 1.25;
-                margin: 0 0 6px;
-            }
-
-            .laca-support-center__header p,
-            .laca-support-center__status {
-                color: #64748b;
-                margin: 0;
-            }
-
-            .laca-support-center__grid {
-                display: grid;
-                gap: 14px;
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-
-            .laca-support-center label {
-                display: grid;
-                gap: 7px;
-            }
-
-            .laca-support-center label span {
-                color: #334155;
-                font-size: 13px;
-                font-weight: 700;
-            }
-
-            .laca-support-center input,
-            .laca-support-center select,
-            .laca-support-center textarea {
-                border: 1px solid #cbd5e1;
-                border-radius: 8px;
-                font: inherit;
-                min-height: 42px;
-                padding: 10px 12px;
-                width: 100%;
-            }
-
-            .laca-support-center textarea {
-                min-height: 140px;
-                resize: vertical;
-            }
-
-            .laca-support-center__wide {
-                grid-column: 1 / -1;
-            }
-
-            .laca-support-center button {
-                background: #0f172a;
-                border: 0;
-                border-radius: 8px;
-                color: #ffffff;
-                cursor: pointer;
-                font-weight: 700;
-                margin-top: 16px;
-                min-height: 44px;
-                padding: 0 18px;
-            }
-
-            .laca-support-center button:disabled {
-                cursor: wait;
-                opacity: 0.7;
-            }
-
-            .laca-support-center__status {
-                margin-top: 12px;
-            }
-
-            @media (max-width: 720px) {
-                .laca-support-center__grid {
-                    grid-template-columns: 1fr;
-                }
-            }
-        </style>
-        <section class="laca-support-center <?php echo esc_attr($extraClass); ?>" data-laca-support>
-            <form id="<?php echo esc_attr($formId); ?>" class="laca-support-center__form" enctype="multipart/form-data">
-                <div class="laca-support-center__header">
-                    <h2><?php echo esc_html($atts['title']); ?></h2>
-                    <p>Yêu cầu sẽ được chuyển trực tiếp về hệ thống hỗ trợ LacaDev.</p>
-                </div>
-
-                <div class="laca-support-center__grid">
-                    <label>
-                        <span>Loại yêu cầu</span>
-                        <select name="request_type">
-                            <option value="request">Yêu cầu hỗ trợ</option>
-                            <option value="bug">Báo lỗi</option>
-                            <option value="content">Cập nhật nội dung</option>
-                            <option value="maintenance">Bảo trì</option>
-                            <option value="billing">Thanh toán</option>
-                        </select>
-                    </label>
-                    <label>
-                        <span>Họ tên</span>
-                        <input type="text" name="contact_name" autocomplete="name">
-                    </label>
-                    <label>
-                        <span>Email</span>
-                        <input type="email" name="contact_email" autocomplete="email">
-                    </label>
-                    <label class="laca-support-center__wide">
-                        <span>Nội dung</span>
-                        <textarea name="message" rows="5" required></textarea>
-                    </label>
-                    <label class="laca-support-center__wide">
-                        <span>Ảnh đính kèm</span>
-                        <input type="file" name="attachments[]" accept="image/png,image/jpeg,image/webp,image/gif" multiple>
-                    </label>
-                </div>
-
-                <input type="hidden" name="page_url" value="<?php echo esc_url(get_permalink() ?: home_url('/')); ?>">
-                <button type="submit">Gửi yêu cầu</button>
-                <p class="laca-support-center__status" role="status" aria-live="polite"></p>
-            </form>
-        </section>
-        <script>
-        (function() {
-            const form = document.getElementById('<?php echo esc_js($formId); ?>');
-            if (!form) return;
-            const status = form.querySelector('.laca-support-center__status');
-            form.addEventListener('submit', async function(event) {
-                event.preventDefault();
-                const button = form.querySelector('button[type="submit"]');
-                const data = new FormData(form);
-                button.disabled = true;
-                status.textContent = 'Đang gửi...';
-                try {
-                    const response = await fetch('<?php echo esc_url_raw($endpoint); ?>', {
-                        method: 'POST',
-                        body: data,
-                        credentials: 'same-origin'
-                    });
-                    const payload = await response.json();
-                    if (!response.ok || !payload.success) {
-                        throw new Error(payload.message || 'Không gửi được yêu cầu.');
-                    }
-                    form.reset();
-                    status.textContent = payload.message || 'Yêu cầu đã được gửi.';
-                } catch (error) {
-                    status.textContent = error.message || 'Không gửi được yêu cầu.';
-                } finally {
-                    button.disabled = false;
-                }
-            });
-        })();
-        </script>
-        <?php
-
-        return (string) ob_get_clean();
+        return TrackerShortcodeRenderer::supportCenter(
+            (string) $atts['title'],
+            $extraClass,
+            $endpoint,
+            $formId,
+            get_permalink() ?: home_url('/')
+        );
     }
 
     public function renderMaintenanceTimelineShortcode(array $atts = []): string
@@ -1569,152 +1413,7 @@ class LacaDevTrackerClient
         $items = $this->getMaintenanceTimelineItems($limit);
         $extraClass = sanitize_html_class((string) $atts['class']);
 
-        ob_start();
-        ?>
-        <style>
-            .laca-maintenance-timeline {
-                background: #ffffff;
-                border: 1px solid #dbe1ea;
-                border-radius: 8px;
-                margin: 24px 0;
-                padding: clamp(18px, 3vw, 28px);
-            }
-
-            .laca-maintenance-timeline__head {
-                align-items: flex-start;
-                display: flex;
-                gap: 16px;
-                justify-content: space-between;
-                margin-bottom: 18px;
-            }
-
-            .laca-maintenance-timeline h2 {
-                font-size: 24px;
-                line-height: 1.25;
-                margin: 0 0 6px;
-            }
-
-            .laca-maintenance-timeline__head p,
-            .laca-maintenance-timeline__empty,
-            .laca-maintenance-timeline__time {
-                color: #64748b;
-                margin: 0;
-            }
-
-            .laca-maintenance-timeline__count {
-                background: #f8fafc;
-                border: 1px solid #e2e8f0;
-                border-radius: 999px;
-                color: #334155;
-                font-size: 13px;
-                font-weight: 700;
-                padding: 6px 10px;
-                white-space: nowrap;
-            }
-
-            .laca-maintenance-timeline__list {
-                display: grid;
-                gap: 12px;
-                margin: 0;
-                padding: 0;
-            }
-
-            .laca-maintenance-timeline__item {
-                border: 1px solid #e5e7eb;
-                border-radius: 8px;
-                display: grid;
-                gap: 8px;
-                list-style: none;
-                padding: 14px;
-            }
-
-            .laca-maintenance-timeline__meta {
-                align-items: center;
-                display: flex;
-                gap: 8px;
-                justify-content: space-between;
-            }
-
-            .laca-maintenance-timeline__title {
-                color: #0f172a;
-                font-size: 16px;
-                font-weight: 700;
-                margin: 0;
-            }
-
-            .laca-maintenance-timeline__message {
-                color: #334155;
-                line-height: 1.55;
-                margin: 0;
-            }
-
-            .laca-maintenance-timeline__badge {
-                background: #f8fafc;
-                border: 1px solid #e2e8f0;
-                border-radius: 999px;
-                color: #475569;
-                font-size: 12px;
-                font-weight: 700;
-                padding: 4px 8px;
-                white-space: nowrap;
-            }
-
-            .laca-maintenance-timeline__badge--done {
-                background: #f0fdf4;
-                border-color: #bbf7d0;
-                color: #047857;
-            }
-
-            .laca-maintenance-timeline__badge--attention {
-                background: #fef2f2;
-                border-color: #fecaca;
-                color: #b91c1c;
-            }
-
-            .laca-maintenance-timeline__badge--pending {
-                background: #fffbeb;
-                border-color: #fde68a;
-                color: #92400e;
-            }
-
-            @media (max-width: 640px) {
-                .laca-maintenance-timeline__head,
-                .laca-maintenance-timeline__meta {
-                    display: grid;
-                }
-            }
-        </style>
-        <section class="laca-maintenance-timeline <?php echo esc_attr($extraClass); ?>">
-            <div class="laca-maintenance-timeline__head">
-                <div>
-                    <h2><?php echo esc_html((string) $atts['title']); ?></h2>
-                    <p><?php echo esc_html__('Các cập nhật, bảo trì và yêu cầu hỗ trợ đã được ghi nhận cho website này.', 'laca'); ?></p>
-                </div>
-                <span class="laca-maintenance-timeline__count"><?php echo esc_html((string) count($items)); ?> <?php echo esc_html__('mục', 'laca'); ?></span>
-            </div>
-
-            <?php if (empty($items)) : ?>
-                <p class="laca-maintenance-timeline__empty"><?php echo esc_html__('Chưa có hoạt động bảo trì nào được ghi nhận.', 'laca'); ?></p>
-            <?php else : ?>
-                <ol class="laca-maintenance-timeline__list">
-                    <?php foreach ($items as $item) : ?>
-                        <li class="laca-maintenance-timeline__item">
-                            <div class="laca-maintenance-timeline__meta">
-                                <p class="laca-maintenance-timeline__title"><?php echo esc_html($item['title']); ?></p>
-                                <span class="laca-maintenance-timeline__badge laca-maintenance-timeline__badge--<?php echo esc_attr($item['tone']); ?>">
-                                    <?php echo esc_html($item['status_label']); ?>
-                                </span>
-                            </div>
-                            <p class="laca-maintenance-timeline__message"><?php echo esc_html($item['message']); ?></p>
-                            <p class="laca-maintenance-timeline__time"><?php echo esc_html($this->formatTimelineDate($item['time'])); ?></p>
-                        </li>
-                    <?php endforeach; ?>
-                </ol>
-            <?php endif; ?>
-        </section>
-        <?php
-
-        return (string) ob_get_clean();
+        return TrackerShortcodeRenderer::maintenanceTimeline((string) $atts['title'], $extraClass, $items);
     }
 
     private function getMaintenanceTimelineItems(int $limit): array
@@ -1792,104 +1491,27 @@ class LacaDevTrackerClient
 
     private function makeTimelineItem(string $time, string $title, string $message, string $status): array
     {
-        $tone = match ($status) {
-            'success', 'delivered' => 'done',
-            'failed' => 'attention',
-            'queued', 'retry' => 'pending',
-            default => 'neutral',
-        };
-
-        $statusLabel = match ($status) {
-            'success', 'delivered' => __('Hoàn tất', 'laca'),
-            'failed' => __('Cần kiểm tra', 'laca'),
-            'queued', 'retry' => __('Đang xử lý', 'laca'),
-            'skipped' => __('Bỏ qua', 'laca'),
-            default => __('Đã ghi nhận', 'laca'),
-        };
-
-        return [
-            'time' => $time,
-            'title' => $title,
-            'message' => wp_trim_words(wp_strip_all_tags($message), 34),
-            'tone' => $tone,
-            'status_label' => $statusLabel,
-        ];
+        return TrackerTimelinePresenter::makeItem($time, $title, $message, $status);
     }
 
     private function publicTimelineMessage(array $log, array $event): string
     {
-        $type = sanitize_key((string) ($log['type'] ?? $event['event_type'] ?? 'other'));
-
-        if ($type === 'client_request') {
-            $requestId = (string) ($log['request_id'] ?? '');
-            return $requestId !== ''
-                ? sprintf(__('Yêu cầu hỗ trợ %s đã được ghi nhận.', 'laca'), $requestId)
-                : __('Yêu cầu hỗ trợ đã được ghi nhận.', 'laca');
-        }
-
-        if (in_array($type, ['file_changed', 'file_suspicious', 'code_edit'], true)) {
-            return __('Hệ thống đã ghi nhận cảnh báo kỹ thuật để đội LacaDev kiểm tra.', 'laca');
-        }
-
-        if ($type === 'update_pending') {
-            return __('Hệ thống đã ghi nhận các bản cập nhật đang chờ xử lý.', 'laca');
-        }
-
-        if ($type === 'maintenance_summary') {
-            return __('Báo cáo chăm sóc định kỳ đã được tạo.', 'laca');
-        }
-
-        $allowedFullMessages = [
-            'deployment',
-            'plugin_update',
-            'theme_update',
-            'core_update',
-            'plugin_install',
-            'plugin_activate',
-            'plugin_deactivate',
-            'plugin_delete',
-            'block_sync',
-        ];
-
-        if (in_array($type, $allowedFullMessages, true)) {
-            return (string) ($log['content'] ?? '');
-        }
-
-        return '';
+        return TrackerTimelinePresenter::publicMessage($log, $event);
     }
 
     private function timelineTypeLabel(string $type): string
     {
-        return [
-            'deployment' => __('Triển khai/cập nhật', 'laca'),
-            'plugin_update' => __('Cập nhật plugin', 'laca'),
-            'theme_update' => __('Cập nhật theme', 'laca'),
-            'core_update' => __('Cập nhật WordPress', 'laca'),
-            'plugin_install' => __('Cài plugin', 'laca'),
-            'plugin_activate' => __('Kích hoạt plugin', 'laca'),
-            'plugin_deactivate' => __('Tắt plugin', 'laca'),
-            'plugin_delete' => __('Xóa plugin', 'laca'),
-            'block_sync' => __('Cập nhật block giao diện', 'laca'),
-            'client_request' => __('Yêu cầu hỗ trợ', 'laca'),
-            'update_pending' => __('Theo dõi cập nhật', 'laca'),
-            'maintenance_summary' => __('Báo cáo định kỳ', 'laca'),
-        ][$type] ?? __('Hoạt động bảo trì', 'laca');
+        return TrackerTimelinePresenter::typeLabel($type);
     }
 
     private function maintenanceActionLabel(string $action): string
     {
-        return [
-            'update_plugin' => __('Cập nhật plugin từ xa', 'laca'),
-            'update_theme' => __('Cập nhật theme từ xa', 'laca'),
-            'update_core' => __('Cập nhật WordPress từ xa', 'laca'),
-        ][$action] ?? __('Bảo trì website', 'laca');
+        return TrackerTimelinePresenter::maintenanceActionLabel($action);
     }
 
     private function formatTimelineDate(string $time): string
     {
-        $timestamp = strtotime($time);
-
-        return $timestamp ? date_i18n('d/m/Y H:i', $timestamp) : $time;
+        return TrackerTimelinePresenter::formatDate($time);
     }
 
     // =========================================================================
@@ -2235,21 +1857,12 @@ class LacaDevTrackerClient
 
     private function shouldUseTemporaryMaintenance(string $action, array $params): bool
     {
-        if (array_key_exists('maintenance_mode', $params)) {
-            return (bool) $params['maintenance_mode'];
-        }
-
-        return in_array($action, ['update_theme', 'update_core'], true);
+        return RemoteUpdatePolicy::shouldUseTemporaryMaintenance($action, $params);
     }
 
     private function rollbackNote(string $action, string $slug): string
     {
-        return match ($action) {
-            'update_plugin' => "Kiểm tra plugin {$slug}, rollback bằng bản backup/plugin zip nếu website lỗi.",
-            'update_theme' => "Kiểm tra theme {$slug}, rollback bằng bản backup/theme zip nếu giao diện lỗi.",
-            'update_core' => 'Kiểm tra WordPress core, restore backup nếu update làm site lỗi.',
-            default => 'Kiểm tra snapshot trước/sau và restore backup nếu cần.',
-        };
+        return RemoteUpdatePolicy::rollbackNote($action, $slug);
     }
 
     private function recordMaintenanceEvent(string $action, string $slug, string $status, string $message, array $meta = []): void

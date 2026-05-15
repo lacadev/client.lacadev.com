@@ -60,13 +60,13 @@ This document is a quick map of the current `lacadev-client` theme after the boo
 | Security | `theme/setup/security.php`, `app/src/Settings/Security/*` | Security admin page, custom login, 2FA, malware scan, file integrity scan, hidden user scan. |
 | reCAPTCHA | `theme/setup/recaptcha.php` | Contact/login form verification and configured site keys. |
 | SEO | `theme/setup/seo.php` | Meta/schema output if this setup file is enabled again. |
-| Contact forms | `app/src/Features/ContactForm/*`, `app/src/Databases/ContactFormTable.php` | Form defaults, schema conversion, field rendering, shared CSS, shortcode rendering, multi-step flow, AJAX submit, email notifications, submissions table. |
+| Contact forms | `app/src/Features/ContactForm/*`, `app/src/Databases/ContactFormTable.php` | Form defaults, schema/admin sanitization, field rendering, shared CSS/JS renderers, shortcode rendering, multi-step flow, AJAX submit, email notifications, submissions table. |
 | Dynamic CPT | `app/src/Features/DynamicCPT/*` | CPT creation UI, generated archive/single templates, generated meta files, rewrite URLs. |
 | Smart search | `app/src/Features/SmartSearch/SmartSearchEndpoint.php`, `resources/scripts/theme/ajax-search.js` | REST search index, cache busting, frontend search UI. |
 | Content UX | `RelatedPosts`, `ContextAwareCta`, `AuthorTrustProfile`, `RecommendationEngine`, `ExitIntentPopup` | Single post content additions, CTA visibility, popup rules, recommendation output. |
-| Admin UX | `ThemeControlCenter`, `RoleBasedAdminUx`, `EditorialWorkflow`, `LacaAdminMenuOrganizer`, `AdminAccessDeniedPage`, `AdminOptionHtml` | Admin menu structure, tabbed theme settings, custom statuses, role restrictions, branded denial screen, reusable option snippets. |
+| Admin UX | `ThemeControlCenter`, `RoleBasedAdminUx`, `EditorialWorkflow`, `LacaAdminMenuOrganizer`, `AdminAccessDeniedPage`, `AdminOptionHtml`, `AdminMediaSupport` | Admin menu structure, tabbed theme settings, custom statuses, role restrictions, branded denial screen, reusable option snippets, media upload helper behavior. |
 | Management tools | `app/src/Settings/LacaTools/*` | Dashboard widgets, database cleaner, media audit, content audit, quick notes, performance budget widget, AI chat/translation tools. |
-| Remote operations | `LacaDevTrackerClient`, `TrackerClientConfig`, `TrackerHealthSummary`, `ThemeUpdater`, `BlockSyncReceiver`, `BlockSyncWidget` | Tracker delivery, tracker connection config, tracker health counters, remote update routes, block sync API, dashboard widget status. |
+| Remote operations | `LacaDevTrackerClient`, `TrackerClientConfig`, `TrackerHealthSummary`, `TrackerTimelinePresenter`, `TrackerShortcodeRenderer`, `RemoteUpdatePolicy`, `ThemeUpdater`, `BlockSyncReceiver`, `BlockSyncWidget` | Tracker delivery, tracker connection config, tracker health counters, public tracker shortcodes, remote update policy/routes, block sync API, dashboard widget status. |
 | Email log | `app/src/Settings/EmailLog/*` | Email capture table and admin display. |
 | Maintenance mode | `MaintenanceModeManager`, `theme/maintenance.php` | Frontend lockout, admin bypass, maintenance template. |
 | Gutenberg blocks | `theme/setup/gutenberg-blocks.php`, `block-gutenberg/*` | Block registration, category mapping, synced block rendering. |
@@ -145,12 +145,18 @@ The current tests are intentionally lightweight and run without booting WordPres
 | Admin option HTML | Guards Block Sync and Tracker option page snippets. |
 | Contact form defaults | Guards default fields and default email templates. |
 | Contact form schema | Guards old/new field extraction, row conversion, multi-step splitting, conditions, sanitization, and scoped CSS. |
+| Contact form admin sanitizer | Guards builder row/style payload cleanup before persistence. |
 | Contact form field renderer | Guards frontend field markup and step-marker skips. |
 | Contact form frontend assets | Guards shared frontend CSS selectors and style output wrapper. |
+| Contact form frontend scripts | Guards single-step and multi-step AJAX script rendering. |
+| Contact form submission validator | Guards frontend submit validation, sanitization, conditions, and format errors. |
 | Tracker client config | Guards tracker endpoint/secret option fallback and configured-state detection. |
 | Tracker health summary | Guards tracker queue/status counters and block diagnostics counters. |
+| Tracker timeline presenter | Guards public-safe timeline messages, labels, dates, and remote update policy. |
+| Tracker shortcode renderer | Guards support center and maintenance timeline shortcode markup. |
 | `Crypto` encrypt/decrypt behavior | Guards sensitive-data helper round trips and invalid input behavior. |
 | `DbVersionManager` schema version behavior | Guards installer execution, forced install, installed version reads, and reset behavior. |
+| Admin media support | Guards custom upload mime types, help-guide screen detection, paste-image config, and upload filename normalization. |
 
 ## 7. Maintenance Rules
 
@@ -165,5 +171,5 @@ The current tests are intentionally lightweight and run without booting WordPres
 | Candidate | Why it still needs review |
 | --- | --- |
 | `theme/template-parts/*` references | This package references `template-parts` in several templates, while the files currently live in the sibling `lacadev-client-child` theme. Confirm whether `lacadev-client` must run standalone before changing or copying these parts. |
-| Large admin feature classes | `LacaDevTrackerClient`, `ContactFormAjaxHandler`, `ContactFormManager`, and `AdminSettings` are still large. `theme/setup/assets.php` is lighter after extracting asset helpers, but should stay focused on enqueue/hook wiring only. Continue splitting one feature slice at a time with tests. |
+| Large admin feature classes | `LacaDevTrackerClient`, `ContactFormManager`, and `AdminSettings` are still large. `ContactFormAjaxHandler` is now much lighter after extracting frontend scripts and submission validation. Continue splitting tracker scan/transport and admin option registration one feature slice at a time with tests. |
 | Empty local directories | `app/src/Module`, `app/src/Routing`, `app/src/View`, `resources/images/sprite`, `resources/vendor`, and `theme/setup/taxonomies` are empty in the working tree after cleanup. They are not tracked once their placeholder files are removed. |

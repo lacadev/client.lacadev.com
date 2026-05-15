@@ -54,18 +54,18 @@ This document is a quick map of the current `lacadev-client` theme after the boo
 | Area | Files/classes | What to check manually |
 | --- | --- | --- |
 | Theme setup | `theme/setup/theme-support.php`, `menus.php`, `sidebars.php`, `admin-ui.php` | Theme supports, menu locations, admin UI visibility. |
-| Assets | `theme/setup/assets.php`, `app/src/Contracts/AssetHandles.php` | Frontend/admin/editor/login CSS and JS load with correct URLs. |
+| Assets | `theme/setup/assets.php`, `app/src/Assets/*`, `app/src/Contracts/AssetHandles.php` | Frontend/admin/editor/login CSS and JS load with correct URLs, localized data, and dashboard chart payloads. |
 | Performance | `theme/setup/performance.php`, `image-optimization.php`, `pwa.php`, `script-governance.php`, `app/src/Performance/ScriptGovernor.php` | Critical CSS, deferred scripts, WebP/AVIF, service worker, script governance. |
 | Security | `theme/setup/security.php`, `app/src/Settings/Security/*` | Security admin page, custom login, 2FA, malware scan, file integrity scan, hidden user scan. |
 | reCAPTCHA | `theme/setup/recaptcha.php` | Contact/login form verification and configured site keys. |
 | SEO | `theme/setup/seo.php` | Meta/schema output if this setup file is enabled again. |
-| Contact forms | `app/src/Features/ContactForm/*`, `app/src/Databases/ContactFormTable.php` | Form builder, shortcode rendering, multi-step flow, AJAX submit, email notifications, submissions table. |
+| Contact forms | `app/src/Features/ContactForm/*`, `app/src/Databases/ContactFormTable.php` | Form defaults, schema conversion, field rendering, shared CSS, shortcode rendering, multi-step flow, AJAX submit, email notifications, submissions table. |
 | Dynamic CPT | `app/src/Features/DynamicCPT/*` | CPT creation UI, generated archive/single templates, generated meta files, rewrite URLs. |
 | Smart search | `app/src/Features/SmartSearch/SmartSearchEndpoint.php`, `resources/scripts/theme/ajax-search.js` | REST search index, cache busting, frontend search UI. |
 | Content UX | `RelatedPosts`, `ContextAwareCta`, `AuthorTrustProfile`, `RecommendationEngine`, `ExitIntentPopup` | Single post content additions, CTA visibility, popup rules, recommendation output. |
-| Admin UX | `ThemeControlCenter`, `RoleBasedAdminUx`, `EditorialWorkflow`, `LacaAdminMenuOrganizer` | Admin menu structure, tabbed theme settings, custom statuses, role restrictions. |
+| Admin UX | `ThemeControlCenter`, `RoleBasedAdminUx`, `EditorialWorkflow`, `LacaAdminMenuOrganizer`, `AdminAccessDeniedPage`, `AdminOptionHtml` | Admin menu structure, tabbed theme settings, custom statuses, role restrictions, branded denial screen, reusable option snippets. |
 | Management tools | `app/src/Settings/LacaTools/*` | Dashboard widgets, database cleaner, media audit, content audit, quick notes, performance budget widget, AI chat/translation tools. |
-| Remote operations | `LacaDevTrackerClient`, `ThemeUpdater`, `BlockSyncReceiver`, `BlockSyncWidget` | Tracker delivery, remote update routes, block sync API, dashboard widget status. |
+| Remote operations | `LacaDevTrackerClient`, `TrackerClientConfig`, `TrackerHealthSummary`, `ThemeUpdater`, `BlockSyncReceiver`, `BlockSyncWidget` | Tracker delivery, tracker connection config, tracker health counters, remote update routes, block sync API, dashboard widget status. |
 | Email log | `app/src/Settings/EmailLog/*` | Email capture table and admin display. |
 | Maintenance mode | `MaintenanceModeManager`, `theme/maintenance.php` | Frontend lockout, admin bypass, maintenance template. |
 | Gutenberg blocks | `theme/setup/gutenberg-blocks.php`, `block-gutenberg/*` | Block registration, category mapping, synced block rendering. |
@@ -82,6 +82,7 @@ lacadev-client/
 │   ├── routes/
 │   ├── helpers/
 │   └── src/
+│       ├── Assets/
 │       ├── Bootstrap/
 │       ├── Abstracts/
 │       ├── Contracts/
@@ -132,6 +133,17 @@ The current tests are intentionally lightweight and run without booting WordPres
 | Removed placeholder files stay removed | Guards against reintroducing unused Module/View/Routing scaffolding. |
 | Favicon fallback | Guards against outputting the empty `favicon.ico` without an SVG fallback. |
 | Theme JS entrypoint asset cleanup | Guards against importing the empty favicon asset into the bundle. |
+| Admin script data | Guards admin AJAX params and JS i18n keys. |
+| Project chart data | Guards dashboard project status/month chart payloads. |
+| Login asset data | Guards Carbon image normalization and localized login payload construction. |
+| Admin access denied page | Guards branded denial-screen markup and generated visual particles. |
+| Admin option HTML | Guards Block Sync and Tracker option page snippets. |
+| Contact form defaults | Guards default fields and default email templates. |
+| Contact form schema | Guards old/new field extraction, row conversion, multi-step splitting, conditions, sanitization, and scoped CSS. |
+| Contact form field renderer | Guards frontend field markup and step-marker skips. |
+| Contact form frontend assets | Guards shared frontend CSS selectors and style output wrapper. |
+| Tracker client config | Guards tracker endpoint/secret option fallback and configured-state detection. |
+| Tracker health summary | Guards tracker queue/status counters and block diagnostics counters. |
 | `Crypto` encrypt/decrypt behavior | Guards sensitive-data helper round trips and invalid input behavior. |
 | `DbVersionManager` schema version behavior | Guards installer execution, forced install, installed version reads, and reset behavior. |
 
@@ -148,5 +160,5 @@ The current tests are intentionally lightweight and run without booting WordPres
 | Candidate | Why it still needs review |
 | --- | --- |
 | `theme/template-parts/*` references | This package references `template-parts` in several templates, while the files currently live in the sibling `lacadev-client-child` theme. Confirm whether `lacadev-client` must run standalone before changing or copying these parts. |
-| Large admin feature classes | `LacaDevTrackerClient`, `ContactFormAjaxHandler`, `ContactFormManager`, `AdminSettings`, and `theme/setup/assets.php` are still large. Split only when touching each feature, with feature-level tests. |
+| Large admin feature classes | `LacaDevTrackerClient`, `ContactFormAjaxHandler`, `ContactFormManager`, `AdminSettings`, and `theme/setup/assets.php` are smaller than before but still large. Continue splitting one feature slice at a time with tests. |
 | Empty local directories | `app/src/Module`, `app/src/Routing`, `app/src/View`, `resources/images/sprite`, `resources/vendor`, and `theme/setup/taxonomies` are empty in the working tree after cleanup. They are not tracked once their placeholder files are removed. |

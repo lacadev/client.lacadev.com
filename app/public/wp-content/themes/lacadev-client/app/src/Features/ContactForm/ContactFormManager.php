@@ -192,101 +192,30 @@ class ContactFormManager
     {
         $forms = ContactFormTable::getAllForms();
         $pageUrl = admin_url('admin.php?page=' . self::MENU_SLUG);
-        $message = $this->getFlashMessage();
-        ?>
-        <div class="wrap laca-cf-wrap">
-            <div class="laca-cf-header">
-                <div>
-                    <h1>📋 Quản lý Form Liên Hệ</h1>
-                    <p class="laca-cf-subtitle">Tạo và quản lý các form liên hệ. Nhúng bằng shortcode <code>[laca_contact_form id="X"]</code></p>
-                </div>
-                <a href="<?php echo esc_url($pageUrl . '&action=new'); ?>" class="button button-primary laca-cf-btn-new">
-                    + Tạo Form Mới
-                </a>
-            </div>
+        $items = [];
 
-            <?php if ($message): ?>
-                <div class="laca-cf-notice laca-cf-notice--<?php echo esc_attr($message['type']); ?>">
-                    <?php echo esc_html($message['text']); ?>
-                </div>
-            <?php endif; ?>
+        foreach ($forms as $form) {
+            $formId = (int) $form['id'];
+            $items[] = [
+                'id' => $formId,
+                'name' => (string) $form['name'],
+                'field_count' => count(self::extractFlatFields($form)),
+                'submission_count' => (int) $form['submission_count'],
+                'unread_count' => (int) $form['unread_count'],
+                'shortcode' => '[laca_contact_form id="' . $formId . '"]',
+                'edit_url' => $pageUrl . '&action=edit&id=' . $formId,
+                'submissions_url' => $pageUrl . '&action=submissions&id=' . $formId,
+                'delete_action' => admin_url('admin-post.php'),
+            ];
+        }
 
-            <?php if (empty($forms)): ?>
-                <div class="laca-cf-empty">
-                    <p>Chưa có form nào. <a href="<?php echo esc_url($pageUrl . '&action=new'); ?>">Tạo form đầu tiên</a></p>
-                </div>
-            <?php else: ?>
-                <table class="wp-list-table widefat fixed striped laca-cf-table">
-                    <thead>
-                        <tr>
-                            <th style="width:40px">ID</th>
-                            <th>Tên Form</th>
-                            <th style="width:100px">Số Fields</th>
-                            <th style="width:120px">Submissions</th>
-                            <th style="width:120px">Chưa đọc</th>
-                            <th style="width:140px">Shortcode</th>
-                            <th style="width:200px">Thao tác</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($forms as $form): ?>
-                            <?php
-                            $flatFields = self::extractFlatFields($form);
-                            $formId = (int) $form['id'];
-                            $shortcode = '[laca_contact_form id="' . $formId . '"]';
-                            $editUrl = $pageUrl . '&action=edit&id=' . $formId;
-                            $subsUrl = $pageUrl . '&action=submissions&id=' . $formId;
-                            $unreadCount = (int) $form['unread_count'];
-                            $totalCount = (int) $form['submission_count'];
-                            ?>
-                            <tr>
-                                <td><?php echo esc_html($formId); ?></td>
-                                <td>
-                                    <strong>
-                                        <a href="<?php echo esc_url($editUrl); ?>">
-                                            <?php echo esc_html($form['name']); ?>
-                                        </a>
-                                    </strong>
-                                </td>
-                                <td><?php echo count($flatFields); ?></td>
-                                <td>
-                                    <a href="<?php echo esc_url($subsUrl); ?>">
-                                        <?php echo esc_html($totalCount); ?> lượt
-                                    </a>
-                                </td>
-                                <td>
-                                    <?php if ($unreadCount > 0): ?>
-                                        <span class="laca-cf-badge laca-cf-badge--unread"><?php echo esc_html($unreadCount); ?> mới</span>
-                                    <?php else: ?>
-                                        <span style="color:#999">—</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <code class="laca-cf-shortcode" title="Click để copy"
-                                          onclick="navigator.clipboard.writeText('<?php echo esc_js($shortcode); ?>').then(()=>alert('Đã copy shortcode!'))"
-                                          style="cursor:pointer">
-                                        <?php echo esc_html($shortcode); ?>
-                                    </code>
-                                </td>
-                                <td>
-                                    <a href="<?php echo esc_url($editUrl); ?>" class="button button-small">Sửa</a>
-                                    <a href="<?php echo esc_url($subsUrl); ?>" class="button button-small">Xem Submissions</a>
-                                    <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>"
-                                          style="display:inline"
-                                          class="laca-cf-delete-form">
-                                        <?php wp_nonce_field(self::NONCE_ACTION, self::NONCE_FIELD); ?>
-                                        <input type="hidden" name="action" value="laca_cf_delete">
-                                        <input type="hidden" name="form_id" value="<?php echo esc_attr($formId); ?>">
-                                        <button type="submit" class="button button-small button-link-delete">Xoá</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            <?php endif; ?>
-        </div>
-        <?php
+        echo ContactFormListPageRenderer::render([
+            'page_url' => $pageUrl,
+            'message' => $this->getFlashMessage(),
+            'items' => $items,
+            'nonce_action' => self::NONCE_ACTION,
+            'nonce_field' => self::NONCE_FIELD,
+        ]);
     }
 
     // =========================================================================
@@ -299,333 +228,32 @@ class ContactFormManager
         $pageUrl = admin_url('admin.php?page=' . self::MENU_SLUG);
         $formId = $isNew ? 0 : (int) $form['id'];
         $rows = $isNew ? self::defaultFormRows() : self::toRowsFormat($form);
-        $message = $this->getFlashMessage();
-        $styleSettings = json_decode($form['style_settings'] ?? '{}', true) ?: [];
-
         $defaultAdminSubject = 'Liên hệ mới: [$name - $phone_number]';
         $defaultAdminBody = self::defaultAdminEmailBody();
         $defaultCustomerSubject = 'Cảm ơn bạn đã liên hệ - ' . get_bloginfo('name');
         $defaultCustomerBody = self::defaultCustomerEmailBody();
         $adminEmail = (string) get_option('admin_email');
         $useAdminNotifyEmail = empty($form['notify_email']);
-        ?>
-        <div class="wrap laca-cf-wrap">
-            <div class="laca-cf-header">
-                <div>
-                    <h1><?php echo $isNew ? '+ Tạo Form Mới' : '✏️ Sửa Form: ' . esc_html($form['name']); ?></h1>
-                    <p class="laca-cf-subtitle">
-                        <a href="<?php echo esc_url($pageUrl); ?>">← Quay lại danh sách</a>
-                        <?php if (!$isNew): ?>
-                            &nbsp;|&nbsp;
-                            Shortcode: <code onclick="navigator.clipboard.writeText('[laca_contact_form id=&quot;<?php echo esc_js($formId); ?>&quot;]').then(()=>alert('Đã copy!'))" style="cursor:pointer" title="Click để copy">[laca_contact_form id="<?php echo esc_html($formId); ?>"]</code>
-                        <?php endif; ?>
-                    </p>
-                </div>
-            </div>
-
-            <?php if ($message): ?>
-                <div class="laca-cf-notice laca-cf-notice--<?php echo esc_attr($message['type']); ?>">
-                    <?php echo esc_html($message['text']); ?>
-                </div>
-            <?php endif; ?>
-
-            <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" id="laca-cf-form">
-                <?php wp_nonce_field(self::NONCE_ACTION, self::NONCE_FIELD); ?>
-                <input type="hidden" name="action"      value="laca_cf_save">
-                <input type="hidden" name="form_id"     value="<?php echo esc_attr($formId); ?>">
-                <input type="hidden" name="fields_json"  id="fields-json-input"  value="<?php echo esc_attr(wp_json_encode($rows)); ?>">
-                <input type="hidden" name="style_json"   id="style-json-input"   value="<?php echo esc_attr($form['style_settings'] ?? '{}'); ?>">
-
-                <div class="laca-cf-builder-shell">
-
-                    <!-- ===== CONTROLS (Left) ===== -->
-                    <div class="laca-cf-builder-controls">
-
-                        <!-- Tab Nav -->
-                        <div class="lcf-tabs">
-                            <button type="button" class="lcf-tab-btn is-active" data-tab="settings">⚙ Cài đặt</button>
-                            <button type="button" class="lcf-tab-btn" data-tab="fields">⊞ Trường</button>
-                            <button type="button" class="lcf-tab-btn" data-tab="styles">✦ Giao diện</button>
-                            <button type="button" class="lcf-tab-btn" data-tab="emails">✉ Email</button>
-                        </div>
-
-                        <!-- Tab: Cài đặt -->
-                        <div id="lcf-panel-settings" class="lcf-tab-panel is-active">
-                            <div class="lcf-panel-inner">
-                                <div class="laca-cf-field-group">
-                                    <label for="cf-name" class="lcf-form-label">Tên form <span class="required">*</span></label>
-                                    <input type="text" id="cf-name" name="form_name" class="widefat"
-                                           value="<?php echo esc_attr($form['name'] ?? ''); ?>"
-                                           placeholder="VD: Form Tư Vấn Miễn Phí" required>
-                                </div>
-                                <div class="laca-cf-field-group">
-                                    <label for="cf-notify-email" class="lcf-form-label">Email nhận thông báo</label>
-                                    <label style="display:flex;align-items:center;gap:8px;margin-bottom:10px;cursor:pointer;font-weight:600;font-size:13px;">
-                                        <input type="checkbox" id="cf-use-admin-email" name="use_admin_notify_email" value="1"
-                                               <?php checked(true, $useAdminNotifyEmail); ?>>
-                                        Dùng Administration Email Address
-                                        <code><?php echo esc_html($adminEmail); ?></code>
-                                    </label>
-                                    <input type="email" id="cf-notify-email" name="notify_email" class="widefat"
-                                           value="<?php echo esc_attr($form['notify_email'] ?? ''); ?>"
-                                           placeholder="Nhập email khác nếu không muốn dùng Administration Email Address"
-                                           <?php disabled($useAdminNotifyEmail); ?>>
-                                    <p class="description">Mặc định form sẽ gửi thông báo về Administration Email Address. Chỉ nhập email ở ô trên khi muốn dùng email nhận thông báo khác.</p>
-                                </div>
-                                <div class="laca-cf-field-group">
-                                    <label for="s-form-mode" class="lcf-form-label">Kiểu hiển thị form</label>
-                                    <select id="s-form-mode" class="widefat" onchange="lcfStyleUpdate('form_mode',this.value)">
-                                        <option value="standard">Form thường</option>
-                                        <option value="multi_step">Form từng bước</option>
-                                    </select>
-                                    <p class="description">Dùng "Ngắt bước (Step)" trong tab Trường để chia form thành nhiều bước.</p>
-                                </div>
-                                <div id="lcf-step-settings" class="lcf-step-settings">
-                                    <div class="laca-cf-field-group">
-                                        <label class="lcf-form-label">Nút tiếp theo</label>
-                                        <input type="text" id="s-step-next-text" class="widefat"
-                                               oninput="lcfStyleUpdate('step_next_text',this.value)"
-                                               placeholder="Tiếp theo">
-                                    </div>
-                                    <div class="laca-cf-field-group">
-                                        <label class="lcf-form-label">Nút quay lại</label>
-                                        <input type="text" id="s-step-prev-text" class="widefat"
-                                               oninput="lcfStyleUpdate('step_prev_text',this.value)"
-                                               placeholder="Quay lại">
-                                    </div>
-                                    <div class="laca-cf-field-group">
-                                        <label class="lcf-form-label">Nút gửi cuối</label>
-                                        <input type="text" id="s-step-submit-text" class="widefat"
-                                               oninput="lcfStyleUpdate('step_submit_text',this.value)"
-                                               placeholder="Gửi thông tin">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Tab: Trường nhập liệu -->
-                        <div id="lcf-panel-fields" class="lcf-tab-panel">
-                            <div class="lcf-panel-inner">
-                                <p class="description" style="margin-bottom:12px;color:#888">
-                                    Thêm hàng layout, rồi thêm field vào từng cột. Kéo để di chuyển.
-                                </p>
-                                <div id="rows-builder" class="laca-cf-rows-builder"></div>
-                                <p id="rows-empty-msg" class="laca-cf-fields-empty" style="<?php echo empty($rows) ? '' : 'display:none'; ?>">
-                                    Chưa có hàng nào. Thêm hàng bên dưới.
-                                </p>
-                                <div class="laca-cf-add-row-palette">
-                                    <span class="lcf-palette-label">+ Thêm hàng:</span>
-                                    <button type="button" class="lcf-add-row-btn lcf-add-step-btn" onclick="lcfAddStep()">
-                                        + Thêm bước
-                                    </button>
-                                    <button type="button" class="lcf-add-row-btn" onclick="lcfAddRow('1')">
-                                        <span class="lcf-row-preview lcf-rp-1"></span>1 cột
-                                    </button>
-                                    <button type="button" class="lcf-add-row-btn" onclick="lcfAddRow('2')">
-                                        <span class="lcf-row-preview lcf-rp-2"></span>2 cột
-                                    </button>
-                                    <button type="button" class="lcf-add-row-btn" onclick="lcfAddRow('3')">
-                                        <span class="lcf-row-preview lcf-rp-3"></span>3 cột
-                                    </button>
-                                    <button type="button" class="lcf-add-row-btn" onclick="lcfAddRow('4')">
-                                        <span class="lcf-row-preview lcf-rp-4"></span>4 cột
-                                    </button>
-                                    <button type="button" class="lcf-add-row-btn" onclick="lcfAddRow('1-2')">
-                                        <span class="lcf-row-preview lcf-rp-1-2"></span>1/3 + 2/3
-                                    </button>
-                                    <button type="button" class="lcf-add-row-btn" onclick="lcfAddRow('2-1')">
-                                        <span class="lcf-row-preview lcf-rp-2-1"></span>2/3 + 1/3
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Tab: Giao diện -->
-                        <div id="lcf-panel-styles" class="lcf-tab-panel">
-                            <div class="lcf-panel-inner">
-                                <div class="lcf-style-grid">
-                                    <div class="laca-cf-field-group">
-                                        <label class="lcf-form-label">Màu chính (Nút bấm)</label>
-                                        <div class="lcf-color-row">
-                                            <input type="color" id="s-primary-color" oninput="lcfStyleUpdate('primary_color',this.value)">
-                                            <input type="text" class="lcf-color-text" id="s-primary-color-text" maxlength="7"
-                                                   oninput="lcfStyleUpdate('primary_color',this.value);document.getElementById('s-primary-color').value=this.value">
-                                        </div>
-                                    </div>
-                                    <div class="laca-cf-field-group">
-                                        <label class="lcf-form-label">Màu phụ (Hover nút)</label>
-                                        <div class="lcf-color-row">
-                                            <input type="color" id="s-secondary-color" oninput="lcfStyleUpdate('secondary_color',this.value)">
-                                            <input type="text" class="lcf-color-text" id="s-secondary-color-text" maxlength="7"
-                                                   oninput="lcfStyleUpdate('secondary_color',this.value);document.getElementById('s-secondary-color').value=this.value">
-                                        </div>
-                                    </div>
-                                    <div class="laca-cf-field-group">
-                                        <label class="lcf-form-label">Màu viền Input</label>
-                                        <div class="lcf-color-row">
-                                            <input type="color" id="s-input-border" oninput="lcfStyleUpdate('input_border_color',this.value)">
-                                            <input type="text" class="lcf-color-text" id="s-input-border-text" maxlength="7"
-                                                   oninput="lcfStyleUpdate('input_border_color',this.value);document.getElementById('s-input-border').value=this.value">
-                                        </div>
-                                    </div>
-                                    <div class="laca-cf-field-group">
-                                        <label class="lcf-form-label">Màu chữ Label</label>
-                                        <div class="lcf-color-row">
-                                            <input type="color" id="s-label-color" oninput="lcfStyleUpdate('label_color',this.value)">
-                                            <input type="text" class="lcf-color-text" id="s-label-color-text" maxlength="7"
-                                                   oninput="lcfStyleUpdate('label_color',this.value);document.getElementById('s-label-color').value=this.value">
-                                        </div>
-                                    </div>
-                                    <div class="laca-cf-field-group">
-                                        <label class="lcf-form-label">Bo góc Nút bấm (px)</label>
-                                        <div class="lcf-range-row">
-                                            <input type="range" min="0" max="50" id="s-btn-radius"
-                                                   oninput="lcfStyleUpdate('btn_border_radius',this.value);document.getElementById('s-btn-radius-num').value=this.value">
-                                            <input type="number" min="0" max="50" id="s-btn-radius-num" class="lcf-range-num"
-                                                   oninput="lcfStyleUpdate('btn_border_radius',this.value);document.getElementById('s-btn-radius').value=this.value">
-                                            <span class="lcf-range-unit">px</span>
-                                        </div>
-                                    </div>
-                                    <div class="laca-cf-field-group">
-                                        <label class="lcf-form-label">Bo góc Input (px)</label>
-                                        <div class="lcf-range-row">
-                                            <input type="range" min="0" max="50" id="s-input-radius"
-                                                   oninput="lcfStyleUpdate('input_border_radius',this.value);document.getElementById('s-input-radius-num').value=this.value">
-                                            <input type="number" min="0" max="50" id="s-input-radius-num" class="lcf-range-num"
-                                                   oninput="lcfStyleUpdate('input_border_radius',this.value);document.getElementById('s-input-radius').value=this.value">
-                                            <span class="lcf-range-unit">px</span>
-                                        </div>
-                                    </div>
-                                    <div class="laca-cf-field-group">
-                                        <label class="lcf-form-label">Khoảng cách nhập (Padding CSS)</label>
-                                        <input type="text" class="widefat" id="s-input-spacing"
-                                               oninput="lcfStyleUpdate('input_spacing',this.value)"
-                                               placeholder="Ví dụ: 10px 14px">
-                                    </div>
-                                    <div class="laca-cf-field-group" style="display:flex;align-items:center;">
-                                        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-weight:600;font-size:13px;margin-top:10px;">
-                                            <input type="checkbox" id="s-show-label" onchange="lcfStyleUpdate('show_label',this.checked)">
-                                            Hiển thị Label các trường
-                                        </label>
-                                    </div>
-                                    <div class="laca-cf-field-group" style="grid-column:1/-1">
-                                        <label class="lcf-form-label">Chữ nút Submit</label>
-                                        <input type="text" class="widefat" id="s-btn-text"
-                                               oninput="lcfStyleUpdate('btn_text',this.value)"
-                                               placeholder="Gửi thông tin">
-                                    </div>
-                                    <div class="laca-cf-field-group" style="grid-column:1/-1">
-                                        <label class="lcf-form-label">Custom CSS</label>
-                                        <textarea class="widefat laca-cf-email-body" id="s-custom-css" rows="5"
-                                                  oninput="lcfStyleUpdate('custom_css',this.value)"
-                                                  placeholder="/* Nhập CSS tuỳ chỉnh...\n Dùng __FORM__ để ám chỉ class chứa form (ví dụ: __FORM__ .laca-cf-input { ... }) */"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Tab: Email -->
-                        <div id="lcf-panel-emails" class="lcf-tab-panel">
-                            <div class="lcf-panel-inner">
-                                <p class="description" style="margin-bottom:12px;color:#888">
-                                    Dùng <code>$tên_field</code> để chèn giá trị. Hỗ trợ HTML — preview hiển thị bên phải.
-                                </p>
-                                <div class="lcf-email-section">
-                                    <h3 class="lcf-email-section-title">Email Admin</h3>
-                                    <div class="laca-cf-field-group">
-                                        <label class="lcf-form-label">Tiêu đề (Subject)</label>
-                                        <input type="text" name="email_admin_subject" class="widefat"
-                                               value="<?php echo esc_attr($form['email_admin_subject'] ?? $defaultAdminSubject); ?>">
-                                    </div>
-                                    <div class="laca-cf-field-group">
-                                        <label class="lcf-form-label">Nội dung (Body — hỗ trợ HTML)</label>
-                                        <textarea name="email_admin_body" id="email-admin-body" class="widefat laca-cf-email-body" rows="8"
-                                                  oninput="lcfUpdateEmailPreview('admin')"><?php echo esc_textarea($form['email_admin_body'] ?? $defaultAdminBody); ?></textarea>
-                                    </div>
-                                    <div class="laca-cf-var-hint">
-                                        <strong>Biến:</strong>
-                                        <code>$name</code> <code>$email</code> <code>$phone_number</code>
-                                        <code>$message</code> <code>$ip</code> <code>$date</code> <code>$time</code>
-                                    </div>
-                                </div>
-                                <div class="lcf-email-section" style="margin-top:20px">
-                                    <h3 class="lcf-email-section-title">Email Khách hàng</h3>
-                                    <div class="laca-cf-field-group">
-                                        <label class="lcf-form-label">Tiêu đề (Subject) — để trống = không gửi</label>
-                                        <input type="text" name="email_customer_subject" class="widefat"
-                                               value="<?php echo esc_attr($form['email_customer_subject'] ?? $defaultCustomerSubject); ?>">
-                                    </div>
-                                    <div class="laca-cf-field-group">
-                                        <label class="lcf-form-label">Nội dung (Body — hỗ trợ HTML)</label>
-                                        <textarea name="email_customer_body" id="email-customer-body" class="widefat laca-cf-email-body" rows="6"
-                                                  oninput="lcfUpdateEmailPreview('customer')"><?php echo esc_textarea($form['email_customer_body'] ?? $defaultCustomerBody); ?></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Actions -->
-                        <div class="lcf-actions-bar">
-                            <a href="<?php echo esc_url($pageUrl); ?>" class="button">Huỷ</a>
-                            <button type="submit" class="button button-primary button-large">
-                                <?php echo $isNew ? 'Tạo Form' : 'Lưu Thay Đổi'; ?>
-                            </button>
-                        </div>
-
-                    </div><!-- .laca-cf-builder-controls -->
-
-                    <!-- ===== PREVIEW (Right) ===== -->
-                    <div class="laca-cf-builder-preview">
-                        <div class="lcf-preview-switcher">
-                            <button type="button" class="lcf-pv-tab is-active" data-pv="form">Form</button>
-                            <button type="button" class="lcf-pv-tab" data-pv="email-admin">Email Admin</button>
-                            <button type="button" class="lcf-pv-tab" data-pv="email-customer">Email Khách</button>
-                        </div>
-                        <div class="lcf-preview-viewport">
-                            <div id="lcf-pv-form" class="lcf-pv-panel is-active">
-                                <div id="lcf-form-preview-output" class="lcf-pv-form-wrap"></div>
-                            </div>
-                            <div id="lcf-pv-email-admin" class="lcf-pv-panel">
-                                <div id="lcf-email-admin-preview-output" class="lcf-pv-email-wrap"></div>
-                            </div>
-                            <div id="lcf-pv-email-customer" class="lcf-pv-panel">
-                                <div id="lcf-email-customer-preview-output" class="lcf-pv-email-wrap"></div>
-                            </div>
-                        </div>
-                    </div><!-- .laca-cf-builder-preview -->
-
-                </div><!-- .laca-cf-builder-shell -->
-            </form>
-        </div>
-
-        <script>
-            window.LacaContactFormVars = {
-                FIELD_TYPES: <?php echo wp_json_encode(self::FIELD_TYPES); ?>,
-                rows: <?php echo wp_json_encode($rows); ?>
-            };
-
-            document.addEventListener('DOMContentLoaded', function () {
-                var useAdminCheckbox = document.getElementById('cf-use-admin-email');
-                var notifyEmailInput = document.getElementById('cf-notify-email');
-
-                if (!useAdminCheckbox || !notifyEmailInput) {
-                    return;
-                }
-
-                var syncNotifyEmailState = function () {
-                    var useAdmin = useAdminCheckbox.checked;
-                    notifyEmailInput.disabled = useAdmin;
-
-                    if (useAdmin) {
-                        notifyEmailInput.value = '';
-                    }
-                };
-
-                useAdminCheckbox.addEventListener('change', syncNotifyEmailState);
-                syncNotifyEmailState();
-            });
-        </script>
-        <?php
+        echo ContactFormEditPageRenderer::render([
+            'is_new' => $isNew,
+            'page_url' => $pageUrl,
+            'form_action' => admin_url('admin-post.php'),
+            'form_id' => $formId,
+            'form_name' => (string) ($form['name'] ?? ''),
+            'rows' => $rows,
+            'style_json' => (string) ($form['style_settings'] ?? '{}'),
+            'message' => $this->getFlashMessage(),
+            'notify_email' => (string) ($form['notify_email'] ?? ''),
+            'admin_email' => $adminEmail,
+            'use_admin_notify_email' => $useAdminNotifyEmail,
+            'email_admin_subject' => (string) ($form['email_admin_subject'] ?? $defaultAdminSubject),
+            'email_admin_body' => (string) ($form['email_admin_body'] ?? $defaultAdminBody),
+            'email_customer_subject' => (string) ($form['email_customer_subject'] ?? $defaultCustomerSubject),
+            'email_customer_body' => (string) ($form['email_customer_body'] ?? $defaultCustomerBody),
+            'field_types' => self::FIELD_TYPES,
+            'nonce_action' => self::NONCE_ACTION,
+            'nonce_field' => self::NONCE_FIELD,
+        ]);
     }
 
     // =========================================================================
@@ -642,108 +270,47 @@ class ContactFormManager
         $total   = ContactFormTable::countSubmissions($formId);
         $pages   = (int) ceil($total / $perPage);
         $fields  = self::extractFlatFields($form);
-        $message = $this->getFlashMessage();
-        ?>
-        <div class="wrap laca-cf-wrap">
-            <div class="laca-cf-header">
-                <div>
-                    <h1>📥 Submissions — <?php echo esc_html($form['name']); ?></h1>
-                    <p class="laca-cf-subtitle"><a href="<?php echo esc_url($pageUrl); ?>">← Quay lại danh sách</a></p>
-                </div>
-                <div style="display:flex;gap:8px;align-items:center">
-                    <span class="laca-cf-badge laca-cf-badge--total"><?php echo esc_html($total); ?> submission</span>
-                    <?php if ($total > 0):
-                        $exportUrl = wp_nonce_url(
-                            admin_url('admin-post.php?action=laca_cf_export_csv&form_id=' . $formId),
-                            self::NONCE_ACTION,
-                            self::NONCE_FIELD
-                        );
-                        ?>
-                        <a href="<?php echo esc_url($exportUrl); ?>" class="button button-secondary">
-                            ⬇ Xuất CSV
-                        </a>
-                    <?php endif; ?>
-                </div>
-            </div>
+        $items = [];
 
-            <?php if ($message): ?>
-                <div class="laca-cf-notice laca-cf-notice--<?php echo esc_attr($message['type']); ?>">
-                    <?php echo esc_html($message['text']); ?>
-                </div>
-            <?php endif; ?>
+        foreach ($subs as $sub) {
+            $data = json_decode($sub['data'] ?? '{}', true) ?: [];
+            $values = [];
 
-            <?php if (empty($subs)): ?>
-                <div class="laca-cf-empty"><p>Chưa có submission nào.</p></div>
-            <?php else: ?>
-                <table class="wp-list-table widefat fixed striped laca-cf-table">
-                    <thead>
-                        <tr>
-                            <th style="width:40px">ID</th>
-                            <th style="width:60px">Đọc</th>
-                            <?php foreach ($fields as $field): ?>
-                                <th><?php echo esc_html($field['label']); ?></th>
-                            <?php endforeach; ?>
-                            <th style="width:120px">IP</th>
-                            <th style="width:150px">Thời gian</th>
-                            <th style="width:80px">Thao tác</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($subs as $sub): ?>
-                            <?php
-                            $subId = (int) $sub['id'];
-                            $data = json_decode($sub['data'] ?? '{}', true) ?: [];
-                            $isRead = (bool) $sub['is_read'];
-                            $markUrl = admin_url('admin-post.php?action=laca_cf_mark_read&submission_id=' . $subId . '&form_id=' . $formId . '&' . self::NONCE_FIELD . '=' . wp_create_nonce(self::NONCE_ACTION));
-                            $delUrl = admin_url('admin-post.php?action=laca_cf_delete_submission&submission_id=' . $subId . '&form_id=' . $formId . '&' . self::NONCE_FIELD . '=' . wp_create_nonce(self::NONCE_ACTION));
-                            ?>
-                            <tr class="<?php echo $isRead ? '' : 'laca-cf-row-unread'; ?>">
-                                <td><?php echo esc_html($subId); ?></td>
-                                <td>
-                                    <?php if ($isRead): ?>
-                                        <span title="Đã đọc" style="color:#5cb85c">✓</span>
-                                    <?php else: ?>
-                                        <a href="<?php echo esc_url($markUrl); ?>" title="Đánh dấu đã đọc" class="laca-cf-mark-read">👁</a>
-                                    <?php endif; ?>
-                                </td>
-                                <?php foreach ($fields as $field): ?>
-                                    <td>
-                                        <?php
-                                        $val = $data[$field['name']] ?? '';
-                                        if (is_array($val)) {
-                                            echo esc_html(implode(', ', $val));
-                                        } else {
-                                            echo esc_html($val);
-                                        }
-                                        ?>
-                                    </td>
-                                <?php endforeach; ?>
-                                <td><?php echo esc_html($sub['ip_address']); ?></td>
-                                <td><?php echo esc_html(date_i18n('d/m/Y H:i', strtotime($sub['created_at']))); ?></td>
-                                <td>
-                                    <a href="<?php echo esc_url($delUrl); ?>"
-                                       class="button button-small button-link-delete laca-cf-delete-sub">Xoá</a>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+            foreach ($fields as $field) {
+                $value = $data[$field['name']] ?? '';
+                $values[] = is_array($value) ? implode(', ', $value) : (string) $value;
+            }
 
-                <?php if ($pages > 1): ?>
-                    <div class="tablenav">
-                        <div class="tablenav-pages">
-                            <?php for ($i = 1; $i <= $pages; $i++): ?>
-                                <a href="<?php echo esc_url($pageUrl . '&action=submissions&id=' . $formId . '&paged=' . $i); ?>"
-                                   class="button button-small <?php echo $i === $page ? 'button-primary' : ''; ?>">
-                                    <?php echo esc_html($i); ?>
-                                </a>
-                            <?php endfor; ?>
-                        </div>
-                    </div>
-                <?php endif; ?>
-            <?php endif; ?>
-        </div>
-        <?php
+            $subId = (int) $sub['id'];
+            $items[] = [
+                'id' => $subId,
+                'is_read' => (bool) $sub['is_read'],
+                'values' => $values,
+                'ip_address' => (string) $sub['ip_address'],
+                'created_at' => date_i18n('d/m/Y H:i', strtotime($sub['created_at'])),
+                'mark_url' => admin_url('admin-post.php?action=laca_cf_mark_read&submission_id=' . $subId . '&form_id=' . $formId . '&' . self::NONCE_FIELD . '=' . wp_create_nonce(self::NONCE_ACTION)),
+                'delete_url' => admin_url('admin-post.php?action=laca_cf_delete_submission&submission_id=' . $subId . '&form_id=' . $formId . '&' . self::NONCE_FIELD . '=' . wp_create_nonce(self::NONCE_ACTION)),
+            ];
+        }
+
+        echo ContactFormSubmissionsPageRenderer::render([
+            'form_id' => $formId,
+            'form_name' => (string) $form['name'],
+            'page_url' => $pageUrl,
+            'total' => $total,
+            'message' => $this->getFlashMessage(),
+            'fields' => $fields,
+            'items' => $items,
+            'pages' => $pages,
+            'page' => $page,
+            'export_url' => $total > 0
+                ? wp_nonce_url(
+                    admin_url('admin-post.php?action=laca_cf_export_csv&form_id=' . $formId),
+                    self::NONCE_ACTION,
+                    self::NONCE_FIELD
+                )
+                : '',
+        ]);
     }
 
     // =========================================================================

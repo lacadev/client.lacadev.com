@@ -6,15 +6,20 @@ use App\Contracts\HookNames;
 use App\Databases\TrackerEventTable;
 use App\Settings\Tracker\ClientSupportRequestBuilder;
 use App\Settings\Tracker\MaintenanceSnapshot;
+use App\Settings\Tracker\RemoteUpdateExecutor;
+use App\Settings\Tracker\RemoteUpdateHistoryStore;
+use App\Settings\Tracker\RemoteUpdateMeta;
 use App\Settings\Tracker\RemoteUpdatePolicy;
 use App\Settings\Tracker\RemoteUpdateHistory;
 use App\Settings\Tracker\RemoteUpdatePreflight;
-use App\Settings\Tracker\SupportAttachmentUploader;
+use App\Settings\Tracker\RemoteUpdateRequestValidator;
 use App\Settings\Tracker\SuspiciousFileScanner;
+use App\Settings\Tracker\TrackerClientRequestHandler;
 use App\Settings\Tracker\TrackerClientConfig;
 use App\Settings\Tracker\TrackerFileIntegrity;
 use App\Settings\Tracker\TrackerHealthSummary;
 use App\Settings\Tracker\TrackerHttpTransport;
+use App\Settings\Tracker\TrackerMaintenanceTimelineBuilder;
 use App\Settings\Tracker\TrackerQueuePolicy;
 use App\Settings\Tracker\TrackerShortcodeRenderer;
 use App\Settings\Tracker\TrackerTimelinePresenter;
@@ -953,87 +958,12 @@ class LacaDevTrackerClient
      */
     public function handleClientRequest(\WP_REST_Request $request): \WP_REST_Response
     {
-        if (!self::isConfigured()) {
-            return new \WP_REST_Response([
-                'success' => false,
-                'message' => 'Tracker chưa được cấu hình.',
-            ], 503);
-        }
-
-        $message = trim((string) $request->get_param('message'));
-        if ($message === '') {
-            return new \WP_REST_Response([
-                'success' => false,
-                'message' => 'Vui lòng nhập nội dung yêu cầu.',
-            ], 400);
-        }
-
-        $clientIp = ClientIpResolver::fromGlobals('unknown');
-        $rateKey = ClientSupportRequestBuilder::rateLimitKey($clientIp);
-        if (get_transient($rateKey)) {
-            return new \WP_REST_Response([
-                'success' => false,
-                'message' => 'Bạn vừa gửi yêu cầu. Vui lòng thử lại sau ít phút.',
-            ], 429);
-        }
-
-        $requestType = ClientSupportRequestBuilder::normalizeType((string) ($request->get_param('request_type') ?: 'request'));
-        $requestId = strtoupper(substr(str_replace('-', '', wp_generate_uuid4()), 0, 10));
-        $attachments = $this->handleSupportAttachments($request, $requestId);
-
-        if (is_wp_error($attachments)) {
-            return new \WP_REST_Response([
-                'success' => false,
-                'message' => $attachments->get_error_message(),
-            ], 400);
-        }
-
-        $payload = ClientSupportRequestBuilder::build([
-            'request_id' => $requestId,
-            'request_type' => $requestType,
-            'message' => $message,
-            'site_url' => home_url('/'),
-            'contact_name' => sanitize_text_field((string) $request->get_param('contact_name')),
-            'contact_email' => sanitize_email((string) $request->get_param('contact_email')),
-            'page_url' => esc_url_raw((string) $request->get_param('page_url')),
-            'ip' => $clientIp,
-            'user_agent' => sanitize_text_field((string) ($_SERVER['HTTP_USER_AGENT'] ?? '')),
-            'attachments' => $attachments,
-        ]);
-
-        $canQueueLocally = self::hasTrackerEventTable();
-        $sent = $this->sendLogs([$payload['log']], true, 'support', $payload['context']);
-
-        if (!$sent) {
-            if ($canQueueLocally) {
-                set_transient($rateKey, 1, 5 * MINUTE_IN_SECONDS);
-
-                return new \WP_REST_Response([
-                    'success' => true,
-                    'queued' => true,
-                    'message' => 'Yêu cầu đã được ghi nhận. Hệ thống sẽ tự gửi lại khi kết nối ổn định. Mã yêu cầu: ' . $requestId,
-                    'request_id' => $requestId,
-                ], 202);
-            }
-
-            return new \WP_REST_Response([
-                'success' => false,
-                'message' => 'Không gửi được yêu cầu tới hệ thống LacaDev. Vui lòng thử lại sau.',
-            ], 502);
-        }
-
-        set_transient($rateKey, 1, 5 * MINUTE_IN_SECONDS);
-
-        return new \WP_REST_Response([
-            'success' => true,
-            'message' => 'Yêu cầu đã được gửi. Mã yêu cầu: ' . $requestId,
-            'request_id' => $requestId,
-        ], 201);
-    }
-
-    private function handleSupportAttachments(\WP_REST_Request $request, string $requestId): array|\WP_Error
-    {
-        return SupportAttachmentUploader::upload($request->get_file_params(), $requestId);
+        return TrackerClientRequestHandler::handle(
+            $request,
+            [self::class, 'isConfigured'],
+            [self::class, 'hasTrackerEventTable'],
+            fn(array $logs, bool $blocking, string $channel, array $context): bool => $this->sendLogs($logs, $blocking, $channel, $context)
+        );
     }
 
     public function renderSupportCenterShortcode(array $atts = []): string
@@ -1073,75 +1003,12 @@ class LacaDevTrackerClient
 
     private function getMaintenanceTimelineItems(int $limit): array
     {
-        $items = [];
-
-        foreach (self::getRemoteUpdateHistory() as $row) {
-            if (!is_array($row) || empty($row['time'])) {
-                continue;
-            }
-
-            $items[] = TrackerTimelinePresenter::makeItem(
-                (string) $row['time'],
-                TrackerTimelinePresenter::maintenanceActionLabel((string) ($row['action'] ?? 'maintenance')),
-                (string) ($row['message'] ?? __('Đã ghi nhận thao tác bảo trì.', 'laca')),
-                (string) ($row['status'] ?? 'success')
-            );
-        }
-
-        $blockLog = get_option('laca_block_activity_log', []);
-        if (is_array($blockLog)) {
-            foreach (array_slice($blockLog, 0, 30) as $row) {
-                if (!is_array($row) || empty($row['time'])) {
-                    continue;
-                }
-
-                $items[] = TrackerTimelinePresenter::makeItem(
-                    (string) $row['time'],
-                    __('Cập nhật block giao diện', 'laca'),
-                    wp_strip_all_tags((string) ($row['message'] ?? __('Đã sync block từ LacaDev.', 'laca'))),
-                    'success'
-                );
-            }
-        }
-
-        if (self::hasTrackerEventTable()) {
-            foreach (TrackerEventTable::getRecent(80) as $event) {
-                $channel = sanitize_key((string) ($event['channel'] ?? 'tracker'));
-                if ($channel === 'heartbeat') {
-                    continue;
-                }
-
-                $payload = TrackerEventTable::decodeJsonColumn($event['payload'] ?? '');
-                foreach ((array) ($payload['logs'] ?? []) as $log) {
-                    if (!is_array($log)) {
-                        continue;
-                    }
-
-                    $message = TrackerTimelinePresenter::publicMessage($log, $event);
-                    if ($message === '') {
-                        continue;
-                    }
-
-                    $items[] = TrackerTimelinePresenter::makeItem(
-                        (string) ($event['delivered_at'] ?: $event['created_at']),
-                        TrackerTimelinePresenter::typeLabel((string) ($log['type'] ?? $event['event_type'] ?? 'other')),
-                        $message,
-                        (string) ($event['status'] ?? 'queued')
-                    );
-                }
-            }
-        }
-
-        $unique = [];
-        foreach ($items as $item) {
-            $key = md5($item['time'] . '|' . $item['title'] . '|' . $item['message']);
-            $unique[$key] = $item;
-        }
-
-        $items = array_values($unique);
-        usort($items, static fn(array $a, array $b): int => strtotime($b['time']) <=> strtotime($a['time']));
-
-        return array_slice($items, 0, $limit);
+        return TrackerMaintenanceTimelineBuilder::build(
+            self::getRemoteUpdateHistory(),
+            (array) get_option('laca_block_activity_log', []),
+            self::hasTrackerEventTable() ? TrackerEventTable::getRecent(80) : [],
+            $limit
+        );
     }
 
     // =========================================================================
@@ -1170,29 +1037,21 @@ class LacaDevTrackerClient
      */
     public function handleRemoteUpdate(\WP_REST_Request $request): \WP_REST_Response
     {
-        $params    = $request->get_json_params() ?: [];
-        $secretKey = sanitize_text_field($params['secret_key'] ?? '');
-        $action    = sanitize_key($params['action'] ?? '');
-        $slug      = sanitize_text_field($params['slug'] ?? '');
+        $validated = RemoteUpdateRequestValidator::validate(
+            $request->get_json_params() ?: [],
+            self::getSecretKey()
+        );
 
-        // 1) Xác thực secret key
-        if (empty($secretKey) || $secretKey !== self::getSecretKey()) {
-            return new \WP_REST_Response(['success' => false, 'message' => 'Unauthorized'], 401);
+        if (empty($validated['ok'])) {
+            return new \WP_REST_Response([
+                'success' => false,
+                'message' => (string) ($validated['message'] ?? 'Yêu cầu không hợp lệ.'),
+            ], (int) ($validated['status'] ?? 400));
         }
 
-        // 2) Validate action
-        $allowed = ['update_plugin', 'update_theme', 'update_core'];
-        if (!in_array($action, $allowed, true)) {
-            return new \WP_REST_Response(['success' => false, 'message' => 'Action không hợp lệ.'], 400);
-        }
-
-        if ($action === 'update_plugin' && empty($slug)) {
-            return new \WP_REST_Response(['success' => false, 'message' => 'Thiếu slug plugin.'], 400);
-        }
-
-        if ($action === 'update_theme' && empty($slug)) {
-            return new \WP_REST_Response(['success' => false, 'message' => 'Thiếu slug theme.'], 400);
-        }
+        $action = (string) $validated['action'];
+        $slug = (string) $validated['slug'];
+        $params = (array) ($validated['params'] ?? []);
 
         // 3) Load các class WordPress cần thiết
         if (!function_exists('request_filesystem_credentials')) {
@@ -1202,7 +1061,7 @@ class LacaDevTrackerClient
         require_once ABSPATH . 'wp-admin/includes/misc.php';
 
         $preflight = $this->preflightRemoteUpdate($action, $slug);
-        if (!empty($params['dry_run'])) {
+        if (!empty($validated['dry_run'])) {
             return new \WP_REST_Response([
                 'success' => !empty($preflight['ok']),
                 'message' => !empty($preflight['ok']) ? 'Preflight hoàn tất.' : 'Preflight không đạt.',
@@ -1258,59 +1117,48 @@ class LacaDevTrackerClient
             'temporary_maintenance' => $temporaryMaintenanceEnabled,
         ], HOUR_IN_SECONDS);
 
-        switch ($action) {
-            case 'update_plugin':
-                require_once ABSPATH . 'wp-admin/includes/plugin.php';
-                wp_update_plugins(); // Refresh transient từ API
-                $upgrader = new \Plugin_Upgrader($skin);
-                $result   = $upgrader->upgrade($slug);
-                $label    = "plugin '{$slug}'";
-                break;
+        $execution = RemoteUpdateExecutor::execute($action, $slug, $skin);
+        if (!empty($execution['invalid'])) {
+            MaintenanceModeManager::deactivateTemporary($maintenanceOwner);
+            delete_transient('_laca_remote_update_in_progress');
 
-            case 'update_theme':
-                wp_update_themes();
-                $upgrader = new \Theme_Upgrader($skin);
-                $result   = $upgrader->upgrade($slug);
-                $label    = "theme '{$slug}'";
-                break;
-
-            case 'update_core':
-                require_once ABSPATH . 'wp-admin/includes/update.php';
-                $updates = get_core_updates();
-                if (empty($updates) || !isset($updates[0]->response) || $updates[0]->response === 'latest') {
-                    $msg = 'WordPress đã ở phiên bản mới nhất, không cần cập nhật.';
-                    $this->recordMaintenanceEvent($action, $slug, 'skipped', $msg, [
-                        'preflight' => $preflight,
-                        'snapshot_before' => $snapshotBefore,
-                        'snapshot_after' => $this->captureMaintenanceSnapshot($action, $slug),
-                        'temporary_maintenance' => $temporaryMaintenanceEnabled,
-                    ]);
-                    MaintenanceModeManager::deactivateTemporary($maintenanceOwner);
-                    delete_transient('_laca_remote_update_in_progress');
-                    return new \WP_REST_Response([
-                        'success' => true,
-                        'message' => $msg,
-                    ]);
-                }
-                $upgrader = new \Core_Upgrader($skin);
-                $result   = $upgrader->upgrade($updates[0]);
-                $label    = 'WordPress core';
-                break;
-
-            default:
-                return new \WP_REST_Response(['success' => false, 'message' => 'Action không hợp lệ.'], 400);
+            return new \WP_REST_Response([
+                'success' => false,
+                'message' => (string) ($execution['message'] ?? 'Action không hợp lệ.'),
+            ], 400);
         }
+
+        if (!empty($execution['skip'])) {
+            $msg = (string) ($execution['message'] ?? 'Không có cập nhật cần chạy.');
+            $meta = RemoteUpdateMeta::build(
+                $preflight,
+                $snapshotBefore,
+                $this->captureMaintenanceSnapshot($action, $slug),
+                $temporaryMaintenanceEnabled
+            );
+            $this->recordMaintenanceEvent($action, $slug, 'skipped', $msg, $meta);
+            MaintenanceModeManager::deactivateTemporary($maintenanceOwner);
+            delete_transient('_laca_remote_update_in_progress');
+
+            return new \WP_REST_Response([
+                'success' => true,
+                'message' => $msg,
+            ]);
+        }
+
+        $result = $execution['result'] ?? null;
+        $label = (string) ($execution['label'] ?? $action);
 
         // 5) Xử lý kết quả
         if (is_wp_error($result)) {
             $msg = "Cập nhật {$label} thất bại: " . $result->get_error_message();
-            $meta = [
-                'preflight' => $preflight,
-                'snapshot_before' => $snapshotBefore,
-                'snapshot_after' => $this->captureMaintenanceSnapshot($action, $slug),
-                'temporary_maintenance' => $temporaryMaintenanceEnabled,
-                'rollback_note' => $this->rollbackNote($action, $slug),
-            ];
+            $meta = RemoteUpdateMeta::build(
+                $preflight,
+                $snapshotBefore,
+                $this->captureMaintenanceSnapshot($action, $slug),
+                $temporaryMaintenanceEnabled,
+                $this->rollbackNote($action, $slug)
+            );
             $this->recordMaintenanceEvent($action, $slug, 'failed', $msg, $meta);
             $this->sendLogs([['type' => 'other', 'content' => $msg, 'level' => 'critical', 'meta' => $meta]]);
             MaintenanceModeManager::deactivateTemporary($maintenanceOwner);
@@ -1320,13 +1168,13 @@ class LacaDevTrackerClient
 
         if ($result === false || $result === null) {
             $msg = "Cập nhật {$label} không thành công (có thể đã ở phiên bản mới nhất).";
-            $meta = [
-                'preflight' => $preflight,
-                'snapshot_before' => $snapshotBefore,
-                'snapshot_after' => $this->captureMaintenanceSnapshot($action, $slug),
-                'temporary_maintenance' => $temporaryMaintenanceEnabled,
-                'rollback_note' => $this->rollbackNote($action, $slug),
-            ];
+            $meta = RemoteUpdateMeta::build(
+                $preflight,
+                $snapshotBefore,
+                $this->captureMaintenanceSnapshot($action, $slug),
+                $temporaryMaintenanceEnabled,
+                $this->rollbackNote($action, $slug)
+            );
             $this->recordMaintenanceEvent($action, $slug, 'skipped', $msg, $meta);
             $this->sendLogs([['type' => 'other', 'content' => $msg, 'level' => 'warning', 'meta' => $meta]]);
             MaintenanceModeManager::deactivateTemporary($maintenanceOwner);
@@ -1336,12 +1184,12 @@ class LacaDevTrackerClient
 
         // Thành công — ghi log về lacadev
         $successMsg = "✅ Đã cập nhật {$label} thành công từ lệnh remote.";
-        $meta = [
-            'preflight' => $preflight,
-            'snapshot_before' => $snapshotBefore,
-            'snapshot_after' => $this->captureMaintenanceSnapshot($action, $slug),
-            'temporary_maintenance' => $temporaryMaintenanceEnabled,
-        ];
+        $meta = RemoteUpdateMeta::build(
+            $preflight,
+            $snapshotBefore,
+            $this->captureMaintenanceSnapshot($action, $slug),
+            $temporaryMaintenanceEnabled
+        );
         $this->recordMaintenanceEvent($action, $slug, 'success', $successMsg, $meta);
         $this->sendLogs([['type' => 'deployment', 'content' => $successMsg, 'level' => 'info', 'meta' => $meta]]);
         MaintenanceModeManager::deactivateTemporary($maintenanceOwner);
@@ -1375,17 +1223,19 @@ class LacaDevTrackerClient
 
     private function recordMaintenanceEvent(string $action, string $slug, string $status, string $message, array $meta = []): void
     {
-        $history = RemoteUpdateHistory::normalize(get_option(self::OPT_REMOTE_HISTORY, []));
-        $history = RemoteUpdateHistory::prepend($history, [
-            'time' => current_time('mysql'),
-            'action' => $action,
-            'slug' => $slug,
-            'status' => $status,
-            'message' => $message,
-            'meta' => $meta,
-        ]);
-
-        update_option(self::OPT_REMOTE_HISTORY, $history, false);
+        update_option(
+            self::OPT_REMOTE_HISTORY,
+            RemoteUpdateHistoryStore::append(
+                get_option(self::OPT_REMOTE_HISTORY, []),
+                $action,
+                $slug,
+                $status,
+                $message,
+                $meta,
+                current_time('mysql')
+            ),
+            false
+        );
     }
 
     public static function getRemoteUpdateHistory(): array

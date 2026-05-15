@@ -4,11 +4,12 @@ namespace App\Settings;
 
 use App\Contracts\HookNames;
 use App\Databases\TrackerEventTable;
+use App\Settings\Tracker\ClientSupportRequestBuilder;
 use App\Settings\Tracker\MaintenanceSnapshot;
 use App\Settings\Tracker\RemoteUpdatePolicy;
 use App\Settings\Tracker\RemoteUpdateHistory;
 use App\Settings\Tracker\RemoteUpdatePreflight;
-use App\Settings\Tracker\SupportAttachmentFiles;
+use App\Settings\Tracker\SupportAttachmentUploader;
 use App\Settings\Tracker\SuspiciousFileScanner;
 use App\Settings\Tracker\TrackerClientConfig;
 use App\Settings\Tracker\TrackerFileIntegrity;
@@ -968,7 +969,7 @@ class LacaDevTrackerClient
         }
 
         $clientIp = ClientIpResolver::fromGlobals('unknown');
-        $rateKey = 'laca_client_request_' . md5($clientIp);
+        $rateKey = ClientSupportRequestBuilder::rateLimitKey($clientIp);
         if (get_transient($rateKey)) {
             return new \WP_REST_Response([
                 'success' => false,
@@ -976,15 +977,7 @@ class LacaDevTrackerClient
             ], 429);
         }
 
-        $requestType = sanitize_key((string) ($request->get_param('request_type') ?: 'request'));
-        $allowedTypes = ['request', 'bug', 'content', 'maintenance', 'billing'];
-        if (!in_array($requestType, $allowedTypes, true)) {
-            $requestType = 'request';
-        }
-
-        $contactName = sanitize_text_field((string) $request->get_param('contact_name'));
-        $contactEmail = sanitize_email((string) $request->get_param('contact_email'));
-        $pageUrl = esc_url_raw((string) $request->get_param('page_url'));
+        $requestType = ClientSupportRequestBuilder::normalizeType((string) ($request->get_param('request_type') ?: 'request'));
         $requestId = strtoupper(substr(str_replace('-', '', wp_generate_uuid4()), 0, 10));
         $attachments = $this->handleSupportAttachments($request, $requestId);
 
@@ -995,63 +988,21 @@ class LacaDevTrackerClient
             ], 400);
         }
 
-        $typeLabels = [
-            'request' => 'Yêu cầu hỗ trợ',
-            'bug' => 'Báo lỗi',
-            'content' => 'Nội dung cần cập nhật',
-            'maintenance' => 'Bảo trì',
-            'billing' => 'Thanh toán',
-        ];
-
-        $parts = [
-            'Mã yêu cầu: ' . $requestId,
-            '[' . ($typeLabels[$requestType] ?? 'Yêu cầu hỗ trợ') . ']',
-            'Website: ' . home_url('/'),
-            $message,
-        ];
-
-        if ($contactName !== '') {
-            $parts[] = 'Người gửi: ' . $contactName;
-        }
-
-        if ($contactEmail !== '') {
-            $parts[] = 'Email: ' . $contactEmail;
-        }
-
-        if ($pageUrl !== '') {
-            $parts[] = 'Trang gửi: ' . $pageUrl;
-        }
-
-        if (!empty($attachments)) {
-            $parts[] = 'Đính kèm:';
-            foreach ($attachments as $attachment) {
-                $parts[] = '- ' . ($attachment['url'] ?? '');
-            }
-        }
-
-        $context = [
+        $payload = ClientSupportRequestBuilder::build([
             'request_id' => $requestId,
             'request_type' => $requestType,
-            'contact_name' => $contactName,
-            'contact_email' => $contactEmail,
-            'page_url' => $pageUrl,
+            'message' => $message,
+            'site_url' => home_url('/'),
+            'contact_name' => sanitize_text_field((string) $request->get_param('contact_name')),
+            'contact_email' => sanitize_email((string) $request->get_param('contact_email')),
+            'page_url' => esc_url_raw((string) $request->get_param('page_url')),
             'ip' => $clientIp,
             'user_agent' => sanitize_text_field((string) ($_SERVER['HTTP_USER_AGENT'] ?? '')),
             'attachments' => $attachments,
-        ];
+        ]);
 
         $canQueueLocally = self::hasTrackerEventTable();
-        $sent = $this->sendLogs([[
-            'type' => 'client_request',
-            'content' => implode("\n", $parts),
-            'level' => $requestType === 'bug' ? 'warning' : 'info',
-            'request_type' => $requestType,
-            'contact_name' => $contactName,
-            'contact_email' => $contactEmail,
-            'request_id' => $requestId,
-            'attachments' => $attachments,
-            'meta' => $context,
-        ]], true, 'support', $context);
+        $sent = $this->sendLogs([$payload['log']], true, 'support', $payload['context']);
 
         if (!$sent) {
             if ($canQueueLocally) {
@@ -1082,77 +1033,7 @@ class LacaDevTrackerClient
 
     private function handleSupportAttachments(\WP_REST_Request $request, string $requestId): array|\WP_Error
     {
-        $files = $this->normalizeUploadedFiles($request->get_file_params());
-        if (empty($files)) {
-            return [];
-        }
-
-        if (count($files) > 5) {
-            return new \WP_Error('too_many_files', 'Chỉ được đính kèm tối đa 5 hình ảnh.');
-        }
-
-        if (!function_exists('wp_handle_upload')) {
-            require_once ABSPATH . 'wp-admin/includes/file.php';
-        }
-        if (!function_exists('wp_generate_attachment_metadata')) {
-            require_once ABSPATH . 'wp-admin/includes/image.php';
-        }
-
-        $allowedMimes = [
-            'jpg|jpeg|jpe' => 'image/jpeg',
-            'png'          => 'image/png',
-            'webp'         => 'image/webp',
-            'gif'          => 'image/gif',
-        ];
-
-        $attachments = [];
-        foreach ($files as $file) {
-            if (($file['error'] ?? UPLOAD_ERR_OK) !== UPLOAD_ERR_OK) {
-                return new \WP_Error('upload_error', 'Không tải được một hình ảnh đính kèm.');
-            }
-
-            if ((int) ($file['size'] ?? 0) > 5 * MB_IN_BYTES) {
-                return new \WP_Error('file_too_large', 'Mỗi hình ảnh đính kèm tối đa 5MB.');
-            }
-
-            $handled = wp_handle_upload($file, [
-                'test_form' => false,
-                'mimes' => $allowedMimes,
-                'unique_filename_callback' => static function ($dir, $name, $ext) use ($requestId) {
-                    return sanitize_file_name('support-' . strtolower($requestId) . '-' . time() . '-' . wp_generate_password(6, false) . $ext);
-                },
-            ]);
-
-            if (!empty($handled['error'])) {
-                return new \WP_Error('upload_error', sanitize_text_field($handled['error']));
-            }
-
-            $attachmentId = wp_insert_attachment([
-                'post_mime_type' => $handled['type'] ?? '',
-                'post_title'     => sanitize_file_name(pathinfo($handled['file'], PATHINFO_FILENAME)),
-                'post_content'   => '',
-                'post_status'    => 'inherit',
-            ], $handled['file']);
-
-            if (!is_wp_error($attachmentId)) {
-                $metadata = wp_generate_attachment_metadata((int) $attachmentId, $handled['file']);
-                wp_update_attachment_metadata((int) $attachmentId, $metadata);
-            }
-
-            $attachments[] = [
-                'id' => is_wp_error($attachmentId) ? 0 : (int) $attachmentId,
-                'url' => esc_url_raw($handled['url'] ?? ''),
-                'name' => sanitize_file_name($file['name'] ?? ''),
-                'type' => sanitize_text_field($handled['type'] ?? ''),
-            ];
-        }
-
-        return $attachments;
-    }
-
-    private function normalizeUploadedFiles(array $fileParams): array
-    {
-        return SupportAttachmentFiles::normalize($fileParams);
+        return SupportAttachmentUploader::upload($request->get_file_params(), $requestId);
     }
 
     public function renderSupportCenterShortcode(array $atts = []): string

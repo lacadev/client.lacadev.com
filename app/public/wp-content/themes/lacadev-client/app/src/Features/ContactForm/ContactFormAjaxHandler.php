@@ -46,7 +46,7 @@ class ContactFormAjaxHandler
             wp_send_json_error(['message' => 'Form không tồn tại.'], 404);
         }
 
-        $fields = self::extractFlatFields($form);
+        $fields = ContactFormSchema::extractFlatFields($form);
 
         // 3. Validate & Sanitize từng field
         $data   = [];
@@ -57,7 +57,7 @@ class ContactFormAjaxHandler
                 continue;
             }
 
-            if (!self::isFieldConditionMatched($field, $_POST)) {
+            if (!ContactFormSchema::isFieldConditionMatched($field, $_POST)) {
                 continue;
             }
 
@@ -84,10 +84,10 @@ class ContactFormAjaxHandler
             }
 
             // Sanitize theo type
-            $cleanValue = self::sanitizeByType($type, $rawValue, $field);
+            $cleanValue = ContactFormSchema::sanitizeByType($type, $rawValue, $field);
 
             // Validate format
-            $formatError = self::validateFormat($type, $cleanValue, $label);
+            $formatError = ContactFormSchema::validateFormat($type, $cleanValue, $label);
             if ($formatError) {
                 $errors[] = $formatError;
                 continue;
@@ -150,14 +150,14 @@ class ContactFormAjaxHandler
 
         // Build scoped CSS vars từ style_settings
         $styleSettings = json_decode($form['style_settings'] ?? '{}', true) ?: [];
-        $scopedCss     = self::buildScopedCss($wrapId, $styleSettings);
+        $scopedCss     = ContactFormSchema::buildScopedCss($wrapId, $styleSettings);
 
         // Enqueue inline CSS once
         if (!wp_style_is('laca-contact-form', 'done')) {
             add_action('wp_footer', [__CLASS__, 'printInlineCss'], 5);
         }
 
-        if (self::shouldRenderMultiStep($rawData, $styleSettings)) {
+        if (ContactFormSchema::shouldRenderMultiStep($rawData, $styleSettings)) {
             return $this->renderMultiStepForm(
                 $rawData,
                 $formId,
@@ -539,7 +539,7 @@ class ContactFormAjaxHandler
         array $styleSettings,
         string $scopedCss
     ): string {
-        $steps = self::splitRowsIntoSteps($rawData);
+        $steps = ContactFormSchema::splitRowsIntoSteps($rawData);
         $totalSteps = max(1, count($steps));
         $nextText = $styleSettings['step_next_text'] ?? 'Tiếp theo';
         $prevText = $styleSettings['step_prev_text'] ?? 'Quay lại';
@@ -648,127 +648,12 @@ class ContactFormAjaxHandler
 
     public static function renderSingleField(array $field): string
     {
-        ob_start();
-        (new self())->renderField($field);
-        return ob_get_clean();
+        return ContactFormFieldRenderer::renderSingle($field);
     }
 
     private function renderField(array $field): void
     {
-        if (($field['type'] ?? '') === 'step_break') {
-            return;
-        }
-
-        $name        = esc_attr($field['name']);
-        $label       = esc_html($field['label']);
-        $placeholder = esc_attr($field['placeholder'] ?? '');
-        $required    = !empty($field['required']);
-        $type        = $field['type'];
-        $rawCol      = $field['col_width'] ?? '12';
-        $colWidth    = in_array($rawCol, ['12','6','4','3'], true) ? $rawCol : '12';
-        $reqAttr     = $required ? 'required data-required="true"' : 'data-required="false"';
-        $reqMark     = $required ? ' <span class="laca-cf-required" aria-hidden="true">*</span>' : '';
-        $fieldId     = 'laca-cf-field-' . esc_attr($name) . '-' . uniqid('', true);
-        $conditionAttrs = self::buildConditionAttributes($field);
-        ?>
-        <div class="laca-cf-form-row laca-cf-type-<?php echo esc_attr($type); ?> laca-cf-col-<?php echo esc_attr($colWidth); ?>"<?php echo $conditionAttrs; ?>>
-            <?php if ($type !== 'hidden'): ?>
-                <label for="<?php echo esc_attr($fieldId); ?>" class="laca-cf-label">
-                    <?php echo $label . $reqMark; ?>
-                </label>
-            <?php endif; ?>
-
-            <?php
-            switch ($type) {
-                case 'textarea':
-                    echo '<textarea id="' . esc_attr($fieldId) . '" name="' . $name . '" class="laca-cf-textarea" placeholder="' . $placeholder . '" rows="4" ' . $reqAttr . '></textarea>';
-                    break;
-
-                case 'select':
-                    $options = $field['options'] ?? [];
-                    echo '<select id="' . esc_attr($fieldId) . '" name="' . $name . '" class="laca-cf-select" ' . $reqAttr . '>';
-                    echo '<option value="">— Chọn ' . $label . ' —</option>';
-                    foreach ($options as $opt) {
-                        echo '<option value="' . esc_attr($opt) . '">' . esc_html($opt) . '</option>';
-                    }
-                    echo '</select>';
-                    break;
-
-                case 'multiselect':
-                    $options = $field['options'] ?? [];
-                    echo '<select id="' . esc_attr($fieldId) . '" name="' . $name . '[]" class="laca-cf-select laca-cf-multiselect" multiple size="4" ' . $reqAttr . '>';
-                    foreach ($options as $opt) {
-                        echo '<option value="' . esc_attr($opt) . '">' . esc_html($opt) . '</option>';
-                    }
-                    echo '</select>';
-                    echo '<p class="laca-cf-hint">Giữ Ctrl / Cmd để chọn nhiều.</p>';
-                    break;
-
-                case 'radio':
-                    $options = $field['options'] ?? [];
-                    echo '<div class="laca-cf-radio-group" id="' . esc_attr($fieldId) . '" ' . $reqAttr . '>';
-                    foreach ($options as $idx => $opt) {
-                        $optId = esc_attr($fieldId . '-' . $idx);
-                        echo '<label class="laca-cf-radio-label"><input type="radio" id="' . $optId . '" name="' . $name . '" value="' . esc_attr($opt) . '"> ' . esc_html($opt) . '</label>';
-                    }
-                    echo '</div>';
-                    break;
-
-                case 'checkbox':
-                    $options = $field['options'] ?? [];
-                    if (count($options) <= 1) {
-                        // Single checkbox
-                        $singleOpt = $options[0] ?? 'yes';
-                        echo '<label class="laca-cf-checkbox-label"><input type="checkbox" id="' . esc_attr($fieldId) . '" name="' . $name . '" value="' . esc_attr($singleOpt) . '" ' . $reqAttr . '> ' . esc_html($singleOpt) . '</label>';
-                    } else {
-                        // Multiple checkboxes
-                        echo '<div class="laca-cf-checkbox-group" id="' . esc_attr($fieldId) . '">';
-                        foreach ($options as $idx => $opt) {
-                            $optId = esc_attr($fieldId . '-' . $idx);
-                            echo '<label class="laca-cf-checkbox-label"><input type="checkbox" id="' . $optId . '" name="' . $name . '[]" value="' . esc_attr($opt) . '" data-required="' . ($required ? 'true' : 'false') . '"> ' . esc_html($opt) . '</label>';
-                        }
-                        echo '</div>';
-                    }
-                    break;
-
-                case 'date':
-                    echo '<input type="date" id="' . esc_attr($fieldId) . '" name="' . $name . '" class="laca-cf-input" ' . $reqAttr . '>';
-                    break;
-
-                case 'datetime':
-                    echo '<input type="datetime-local" id="' . esc_attr($fieldId) . '" name="' . $name . '" class="laca-cf-input" ' . $reqAttr . '>';
-                    break;
-
-                case 'hidden':
-                    echo '<input type="hidden" name="' . $name . '" value="' . $placeholder . '">';
-                    break;
-
-                default:
-                    // text, email, phone, number, url
-                    $inputType = match ($type) {
-                        'email'  => 'email',
-                        'phone'  => 'tel',
-                        'number' => 'number',
-                        'url'    => 'url',
-                        default  => 'text',
-                    };
-                    $autocomplete = match ($type) {
-                        'email' => 'email',
-                        'phone' => 'tel',
-                        'text'  => 'on',
-                        default => 'off',
-                    };
-                    $extraAttrs = match ($type) {
-                        'phone' => ' inputmode="tel" pattern="\\+?[0-9\\s().-]{8,24}" minlength="8" maxlength="24"',
-                        'number' => ' inputmode="decimal"',
-                        default => '',
-                    };
-                    echo '<input type="' . esc_attr($inputType) . '" id="' . esc_attr($fieldId) . '" name="' . $name . '" class="laca-cf-input" placeholder="' . $placeholder . '" autocomplete="' . esc_attr($autocomplete) . '" ' . $reqAttr . $extraAttrs . '>';
-            }
-            ?>
-            <span class="laca-cf-field-error" hidden aria-live="polite"></span>
-        </div>
-        <?php
+        (new ContactFormFieldRenderer())->render($field);
     }
 
     // =========================================================================
@@ -1148,105 +1033,7 @@ class ContactFormAjaxHandler
 
     public static function printInlineCss(): void
     {
-        ?>
-        <style id="laca-contact-form-css">
-        .laca-contact-form-wrap { max-width: 700px; }
-        /* New row-based layout: flex column of layout rows */
-        .laca-contact-form { display: flex; flex-direction: column; gap: 16px; align-items: stretch; }
-        /* Each layout row uses CSS grid (inline style sets grid-template-columns) */
-        .laca-cf-layout-row { align-items: start; }
-        /* Mobile: force single column */
-        @media (max-width: 640px) {
-            .laca-cf-layout-row { grid-template-columns: 1fr !important; }
-        }
-        /* Old flat-format fields (fallback) */
-        .laca-cf-col-12  { grid-column: span 12; }
-        .laca-cf-col-6   { grid-column: span 6; }
-        .laca-cf-col-4   { grid-column: span 4; }
-        .laca-cf-col-3   { grid-column: span 3; }
-        .laca-cf-form-row { display: flex; flex-direction: column; gap: 5px; }
-        .laca-cf-label { font-weight: 600; font-size: 14px; }
-        .laca-cf-required { color: #d9534f; margin-left: 2px; }
-        .laca-cf-input,
-        .laca-cf-textarea,
-        .laca-cf-select {
-            width: 100%; padding: 10px 14px; border: 1px solid #ccc;
-            border-radius: 6px; font-size: 14px; font-family: inherit;
-            transition: border-color 0.2s, box-shadow 0.2s; box-sizing: border-box;
-        }
-        .laca-cf-input:focus,
-        .laca-cf-textarea:focus,
-        .laca-cf-select:focus {
-            outline: none;
-            border-color: var(--cf-primary, var(--primary-color, #2271b1));
-            box-shadow: 0 0 0 3px rgba(34,113,177,.15);
-        }
-        .laca-cf-label { color: var(--cf-label-color, inherit); display: var(--cf-label-display, block); }
-        .laca-cf-input, .laca-cf-textarea, .laca-cf-select {
-            border-color: var(--cf-input-border, #ccc) !important;
-            border-radius: var(--cf-input-radius, 6px) !important;
-            padding: var(--cf-input-spacing, 10px 14px) !important;
-        }
-        .laca-cf-field-invalid { border-color: #d9534f !important; box-shadow: 0 0 0 3px rgba(217,83,79,.15) !important; }
-        .laca-cf-field-error { color: #d9534f; font-size: 12px; margin-top: 2px; }
-        .laca-cf-conditional-hidden { display: none !important; }
-        .laca-cf-radio-group, .laca-cf-checkbox-group { display: flex; flex-direction: column; gap: 8px; }
-        .laca-cf-radio-label, .laca-cf-checkbox-label { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; }
-        .laca-cf-multiselect { padding: 4px; }
-        .laca-cf-hint { margin: 4px 0 0; font-size: 12px; color: #888; }
-        .laca-contact-form-wrap--multistep { max-width: 760px; }
-        .laca-contact-form--multistep { gap: 20px; }
-        .laca-cf-step-progress { display: grid; gap: 14px; margin-bottom: 4px; }
-        .laca-cf-step-progress__track { background: #e5e7eb; border-radius: 999px; height: 6px; overflow: hidden; }
-        .laca-cf-step-progress__fill { background: var(--cf-primary, var(--primary-color, #2271b1)); border-radius: inherit; height: 100%; transition: width .2s ease; }
-        .laca-cf-step-list { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); list-style: none; margin: 0; padding: 0; }
-        .laca-cf-step-dot { align-items: center; color: #64748b; display: flex; font-size: 12px; font-weight: 600; gap: 8px; min-width: 0; }
-        .laca-cf-step-dot span { align-items: center; background: #f8fafc; border: 1px solid #dbe3ef; border-radius: 999px; display: inline-flex; height: 24px; justify-content: center; width: 24px; }
-        .laca-cf-step-dot strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .laca-cf-step-dot.is-active { color: var(--cf-primary, var(--primary-color, #2271b1)); }
-        .laca-cf-step-dot.is-active span,
-        .laca-cf-step-dot.is-done span { background: var(--cf-primary, var(--primary-color, #2271b1)); border-color: var(--cf-primary, var(--primary-color, #2271b1)); color: #fff; }
-        .laca-cf-step-panel { animation: laca-cf-step-in .18s ease; display: flex; flex-direction: column; gap: 16px; }
-        @keyframes laca-cf-step-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-        .laca-cf-step-notice { background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; color: #991b1b; margin: 0; padding: 10px 12px; }
-        .laca-cf-step-actions { align-items: center; display: flex; gap: 10px; justify-content: flex-end; }
-        .laca-cf-step-btn { border-radius: var(--cf-btn-radius, 6px); cursor: pointer; font-size: 15px; font-weight: 600; padding: 11px 22px; }
-        .laca-cf-step-btn--prev { background: #fff; border: 1px solid #d1d5db; color: #374151; margin-right: auto; }
-        .laca-cf-step-btn--next { background: var(--cf-primary, var(--primary-color, #2271b1)); border: 0; color: #fff; }
-        .laca-cf-step-btn--next:hover,
-        .laca-cf-step-btn--submit:hover { background: var(--cf-secondary, var(--secondary-color, #1a5a9e)); }
-        /* Submit row */
-        .laca-cf-submit-row { flex-direction: row; align-items: center; justify-content: flex-end; }
-        .laca-cf-submit-btn {
-            display: inline-flex; align-items: center; gap: 8px;
-            padding: 11px 28px; background: var(--cf-primary, var(--primary-color, #2271b1));
-            color: #fff; border: none; border-radius: var(--cf-btn-radius, 6px); font-size: 15px;
-            font-weight: 600; cursor: pointer;
-            transition: background 0.2s, transform 0.1s;
-        }
-        .laca-cf-submit-btn:hover  { background: var(--cf-secondary, var(--secondary-color, #1a5a9e)); }
-        .laca-cf-submit-btn:active { transform: scale(0.98); }
-        .laca-cf-submit-btn:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
-        /* hidden attribute must not be overridden by display:flex */
-        [hidden] { display: none !important; }
-        .laca-cf-btn-loading { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; }
-        /* Spinner */
-        @keyframes laca-spin { to { stroke-dashoffset: -31.4; } }
-        .laca-cf-spinner circle {
-            animation: laca-spin 0.8s linear infinite;
-            transform-origin: center;
-        }
-        /* Fallback message (no Swal) */
-        .laca-cf-fallback-msg {
-            margin-top: 12px; padding: 12px 14px; border-radius: 8px; font-size: 14px;
-            border: 1px solid transparent;
-        }
-        .laca-cf-fallback-msg:not([hidden]) { display: block; }
-        .laca-cf-fallback-msg--success { background: #f0fdf4; color: #166534; border-color: #bbf7d0; }
-        .laca-cf-fallback-msg--error { background: #fef2f2; color: #991b1b; border-color: #fecaca; }
-        .laca-cf-error { color: #d9534f; font-style: italic; }
-        </style>
-        <?php
+        ContactFormFrontendAssets::printInlineCss();
     }
 
     private static function getCspNonceAttribute(): string
@@ -1254,320 +1041,9 @@ class ContactFormAjaxHandler
         return defined('LACA_CSP_NONCE') ? ' nonce="' . esc_attr(LACA_CSP_NONCE) . '"' : '';
     }
 
-    // =========================================================================
-    // DATA HELPERS
-    // =========================================================================
-
-    /**
-     * Extract a flat list of field objects from a form row.
-     * Handles both old flat format and new row-based format.
-     */
     public static function extractFlatFields(array $form): array
     {
-        $raw = json_decode($form['fields'] ?? '[]', true) ?: [];
-        if (empty($raw)) {
-            return [];
-        }
-        // Old flat format: first item has 'type' and no 'cols'
-        if (isset($raw[0]['type']) && !isset($raw[0]['cols'])) {
-            return array_values(array_filter($raw, fn($field) => ($field['type'] ?? '') !== 'step_break'));
-        }
-        // New row-based format
-        $fields = [];
-        foreach ($raw as $row) {
-            foreach ($row['cols'] ?? [] as $col) {
-                foreach ($col['fields'] ?? [] as $field) {
-                    if (($field['type'] ?? '') === 'step_break') {
-                        continue;
-                    }
-                    $fields[] = $field;
-                }
-            }
-        }
-        return $fields;
-    }
-
-    private static function shouldRenderMultiStep(array $rawData, array $styleSettings): bool
-    {
-        if (($styleSettings['form_mode'] ?? 'standard') === 'multi_step') {
-            return true;
-        }
-
-        foreach (self::flattenRawFields($rawData) as $field) {
-            if (($field['type'] ?? '') === 'step_break') {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private static function flattenRawFields(array $rawData): array
-    {
-        if (isset($rawData[0]['type']) && !isset($rawData[0]['cols'])) {
-            return $rawData;
-        }
-
-        $fields = [];
-        foreach ($rawData as $row) {
-            foreach ($row['cols'] ?? [] as $col) {
-                foreach ($col['fields'] ?? [] as $field) {
-                    $fields[] = $field;
-                }
-            }
-        }
-
-        return $fields;
-    }
-
-    private static function splitRowsIntoSteps(array $rawData): array
-    {
-        $rows = isset($rawData[0]['cols'])
-            ? $rawData
-            : array_map(fn($field) => [
-                'id' => $field['id'] ?? uniqid('row_', true),
-                'cols' => [[
-                    'id' => uniqid('col_', true),
-                    'span' => 12,
-                    'fields' => [$field],
-                ]],
-            ], $rawData);
-
-        $steps = [];
-        $currentRows = [];
-        $currentLabel = 'Bước 1';
-
-        foreach ($rows as $row) {
-            $marker = self::getStepMarker($row);
-            if ($marker !== null) {
-                if (!empty($currentRows)) {
-                    $steps[] = [
-                        'label' => $currentLabel,
-                        'rows' => $currentRows,
-                    ];
-                    $currentRows = [];
-                }
-
-                $fallback = 'Bước ' . (count($steps) + 2);
-                $currentLabel = trim((string) ($marker['label'] ?? '')) ?: $fallback;
-
-                $rowWithoutMarkers = self::stripStepMarkersFromRow($row);
-                if (self::rowHasRenderableFields($rowWithoutMarkers)) {
-                    $currentRows[] = $rowWithoutMarkers;
-                }
-
-                continue;
-            }
-
-            if (self::rowHasRenderableFields($row)) {
-                $currentRows[] = $row;
-            }
-        }
-
-        if (!empty($currentRows) || $steps === []) {
-            $steps[] = [
-                'label' => $currentLabel,
-                'rows' => $currentRows,
-            ];
-        }
-
-        return $steps;
-    }
-
-    private static function getStepMarker(array $row): ?array
-    {
-        foreach ($row['cols'] ?? [] as $col) {
-            foreach ($col['fields'] ?? [] as $field) {
-                if (($field['type'] ?? '') === 'step_break') {
-                    return $field;
-                }
-            }
-        }
-
-        return null;
-    }
-
-    private static function stripStepMarkersFromRow(array $row): array
-    {
-        foreach ($row['cols'] ?? [] as $colIndex => $col) {
-            $row['cols'][$colIndex]['fields'] = array_values(array_filter(
-                $col['fields'] ?? [],
-                fn($field) => ($field['type'] ?? '') !== 'step_break'
-            ));
-        }
-
-        return $row;
-    }
-
-    private static function rowHasRenderableFields(array $row): bool
-    {
-        foreach ($row['cols'] ?? [] as $col) {
-            foreach ($col['fields'] ?? [] as $field) {
-                if (($field['type'] ?? '') !== 'step_break') {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    private static function buildConditionAttributes(array $field): string
-    {
-        $condition = $field['condition'] ?? [];
-        if (empty($condition['field'])) {
-            return '';
-        }
-
-        $operator = $condition['operator'] ?? 'equals';
-        if (!in_array($operator, ['equals', 'not_equals', 'contains', 'not_empty', 'empty'], true)) {
-            $operator = 'equals';
-        }
-
-        return sprintf(
-            ' data-condition-field="%s" data-condition-operator="%s" data-condition-value="%s"',
-            esc_attr($condition['field']),
-            esc_attr($operator),
-            esc_attr($condition['value'] ?? '')
-        );
-    }
-
-    private static function isFieldConditionMatched(array $field, array $source): bool
-    {
-        $condition = $field['condition'] ?? [];
-        if (empty($condition['field'])) {
-            return true;
-        }
-
-        $operator = $condition['operator'] ?? 'equals';
-        $expected = (string) ($condition['value'] ?? '');
-        $actual = $source[$condition['field']] ?? '';
-
-        if (is_array($actual)) {
-            $actualValues = array_map('strval', $actual);
-            $actualString = implode(', ', $actualValues);
-        } else {
-            $actualValues = [(string) $actual];
-            $actualString = (string) $actual;
-        }
-
-        return match ($operator) {
-            'not_equals' => !in_array($expected, $actualValues, true),
-            'contains' => $expected !== '' && str_contains($actualString, $expected),
-            'not_empty' => trim($actualString) !== '',
-            'empty' => trim($actualString) === '',
-            default => in_array($expected, $actualValues, true),
-        };
-    }
-
-    // =========================================================================
-    // VALIDATION / SANITIZATION HELPERS
-    // =========================================================================
-
-    private static function sanitizeByType(string $type, mixed $value, array $field): mixed
-    {
-        if (in_array($type, ['multiselect', 'checkbox'], true) && is_array($value)) {
-            $allowed = $field['options'] ?? [];
-            return array_filter($value, fn($v) => in_array($v, $allowed, true));
-        }
-
-        $value = (string) $value;
-
-        return match ($type) {
-            'email'  => sanitize_email($value),
-            'url'    => esc_url_raw($value),
-            'number' => sanitize_text_field($value),
-            'date', 'datetime' => sanitize_text_field($value),
-            'textarea' => sanitize_textarea_field($value),
-            'select', 'radio' => in_array($value, $field['options'] ?? [], true) ? sanitize_text_field($value) : '',
-            default   => sanitize_text_field($value),
-        };
-    }
-
-    private static function validateFormat(string $type, mixed $value, string $label): string
-    {
-        $hasValue = trim((string) $value) !== '';
-
-        if ($type === 'email' && $hasValue && !is_email($value)) {
-            return $label . ': Địa chỉ email không hợp lệ.';
-        }
-        if ($type === 'url' && $hasValue && !filter_var($value, FILTER_VALIDATE_URL)) {
-            return $label . ': Đường dẫn URL không hợp lệ.';
-        }
-        if ($type === 'phone' && $hasValue) {
-            $digits = preg_replace('/\D+/', '', (string) $value);
-            if (
-                !preg_match('/^\+?[0-9\s().-]+$/', (string) $value) ||
-                strlen($digits) < 8 ||
-                strlen($digits) > 15
-            ) {
-                return $label . ': Số điện thoại không hợp lệ.';
-            }
-        }
-        if ($type === 'number' && $hasValue && !is_numeric($value)) {
-            return $label . ': Giá trị phải là số hợp lệ.';
-        }
-        return '';
-    }
-
-    /**
-     * Sinh CSS variables scoped theo wrap ID từ style_settings.
-     */
-    private static function buildScopedCss(string $wrapId, array $s): string
-    {
-        if (empty($s)) {
-            return '';
-        }
-
-        $allowed = [
-            'primary_color'      => '--cf-primary',
-            'secondary_color'    => '--cf-secondary',
-            'input_border_color' => '--cf-input-border',
-            'label_color'        => '--cf-label-color',
-        ];
-
-        $vars = [];
-        foreach ($allowed as $key => $var) {
-            if (!empty($s[$key])) {
-                $val    = preg_replace('/[^a-zA-Z0-9#()\s,%.+-]/', '', $s[$key]);
-                $vars[] = $var . ':' . $val;
-            }
-        }
-
-        // Numeric properties (px values)
-        foreach (['btn_border_radius' => '--cf-btn-radius', 'input_border_radius' => '--cf-input-radius'] as $key => $var) {
-            if (isset($s[$key])) {
-                $val    = (int) $s[$key];
-                $vars[] = $var . ':' . $val . 'px';
-            }
-        }
-
-        // Spacing
-        if (!empty($s['input_spacing'])) {
-            $val = preg_replace('/[^0-9px\s]/', '', $s['input_spacing']);
-            if ($val) {
-                $vars[] = '--cf-input-spacing:' . $val;
-            }
-        }
-
-        // Show label
-        if (isset($s['show_label']) && !$s['show_label']) {
-            $vars[] = '--cf-label-display:none';
-        }
-
-        $css = '';
-        if (!empty($vars)) {
-            $css .= '#' . $wrapId . '{' . implode(';', $vars) . '}';
-        }
-
-        // Custom CSS
-        if (!empty($s['custom_css'])) {
-            $custom = wp_strip_all_tags($s['custom_css']);
-            $custom = str_replace('__FORM__', '#' . $wrapId, $custom);
-            $css .= "\n" . $custom;
-        }
-
-        return $css;
+        return ContactFormSchema::extractFlatFields($form);
     }
 
     private static function getClientIp(): string

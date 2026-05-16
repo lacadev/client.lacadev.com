@@ -20,8 +20,6 @@ if (!defined('ABSPATH')) {
 define('CHILD_DIR', dirname(__DIR__) . DIRECTORY_SEPARATOR);
 define('CHILD_THEME_DIR', CHILD_DIR . 'theme' . DIRECTORY_SEPARATOR);
 define('CHILD_APP_DIR', CHILD_DIR . 'app' . DIRECTORY_SEPARATOR);
-define('CHILD_RESOURCES_DIR', CHILD_DIR . 'resources' . DIRECTORY_SEPARATOR);
-define('CHILD_DIST_DIR', CHILD_DIR . 'dist' . DIRECTORY_SEPARATOR);
 define('CHILD_THEME_SETUP_DIR', CHILD_THEME_DIR . 'setup' . DIRECTORY_SEPARATOR);
 
 // =============================================================================
@@ -35,8 +33,8 @@ add_action('after_setup_theme', function () {
 
     // Load child assets
     require_once CHILD_THEME_SETUP_DIR . 'assets.php';
-    
-    // Load child theme options (Carbon Fields)
+
+    // Load child theme options when the project defines actual extra fields.
     require_once CHILD_THEME_SETUP_DIR . 'theme-options.php';
 
 }, 20); // priority 20 — sau parent (10)

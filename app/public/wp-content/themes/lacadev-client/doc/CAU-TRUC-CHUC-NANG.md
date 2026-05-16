@@ -1,6 +1,6 @@
 # Cấu Trúc Chức Năng Theme `lacadev-client`
 
-Cập nhật lần cuối: 2026-05-15
+Cập nhật lần cuối: 2026-05-16
 
 Tài liệu này mô tả cấu trúc chức năng hiện tại của theme sau các đợt refactor lớn để dễ bảo trì hơn.
 Mỗi mục bên dưới ghi rõ:
@@ -14,7 +14,12 @@ Mỗi mục bên dưới ghi rõ:
 - Mục đích:
   Gửi log vận hành từ site khách về hệ thống LacaDev, nhận lệnh cập nhật từ xa, lưu hàng đợi cục bộ, hiển thị timeline bảo trì công khai.
 - Các file chính:
-  - `app/src/Settings/LacaDevTrackerClient.php:49`
+  - `app/src/Settings/LacaDevTrackerClient.php:26`
+  - `app/src/Settings/Tracker/Client/ScheduleManager.php:5`
+  - `app/src/Settings/Tracker/Client/EventMonitor.php:7`
+  - `app/src/Settings/Tracker/Client/DigestRunner.php:7`
+  - `app/src/Settings/Tracker/Client/DeliveryManager.php:14`
+  - `app/src/Settings/Tracker/Client/RemoteUpdateController.php:16`
   - `app/src/Settings/Tracker/TrackerClientConfig.php:8`
   - `app/src/Settings/Tracker/TrackerHttpTransport.php:8`
   - `app/src/Settings/Tracker/TrackerQueuePolicy.php:8`
@@ -56,6 +61,10 @@ Mỗi mục bên dưới ghi rõ:
   - `tests/Unit/SupportAttachmentFilesTest.php:7`
   - `tests/Unit/SuspiciousFileScannerTest.php` chưa có file riêng trong suite hiện tại
   - `tests/Unit/TrackerFileIntegrityTest.php:7`
+  - `tests/Unit/ThemeRefactorStructureTest.php:67`
+- Trạng thái:
+  - `LacaDevTrackerClient` hiện chỉ còn vai trò facade đăng ký hook/cron/shortcode/REST.
+  - 5 trách nhiệm lớn đã được tách riêng thành schedule, event monitor, digest scan, delivery/queue và remote update controller.
 
 ## 2. Contact Form
 
@@ -112,16 +121,28 @@ Mỗi mục bên dưới ghi rõ:
 - Mục đích:
   Gom các cài đặt theme phân tán thành một màn hình tabbed duy nhất trong admin.
 - Các file chính:
-  - `app/src/Settings/ThemeControlCenter.php:31`
+  - `app/src/Settings/ThemeControlCenter.php:39`
+  - `app/src/Settings/ThemeControlTabs/GeneralTab.php:5`
+  - `app/src/Settings/ThemeControlTabs/CtaTab.php:5`
+  - `app/src/Settings/ThemeControlTabs/AuthorTab.php:5`
+  - `app/src/Settings/ThemeControlTabs/PerformanceTab.php:5`
+  - `app/src/Settings/ThemeControlTabs/SearchTab.php:5`
+  - `app/src/Settings/ThemeControlTabs/SystemTab.php:5`
+  - `app/src/Settings/ThemeControlTabs/Assets.php:5`
 - Trạng thái:
-  Đây vẫn là một module lớn nhưng đã có cấu trúc tab nội bộ rõ ràng: `general`, `cta`, `author`, `performance`, `search`, `system`.
+  - `ThemeControlCenter` hiện là page shell + tab registry + save router.
+  - Logic từng tab đã được tách theo feature để dễ sửa và dễ test hơn.
+  - Test cấu trúc: `tests/Unit/ThemeRefactorStructureTest.php:5`
 
 ## 5. Security Center
 
 - Mục đích:
   Cung cấp dashboard bảo mật cho admin: audit bảo mật, file integrity monitor, malware scan, hidden user scan, custom login và 2FA.
 - Các file chính:
-  - `app/src/Settings/Security/SecurityManager.php:23`
+  - `app/src/Settings/Security/SecurityManager.php:27`
+  - `app/src/Settings/Security/Admin/PageRenderer.php:5`
+  - `app/src/Settings/Security/Admin/FimResultRenderer.php:5`
+  - `app/src/Settings/Security/Admin/InlineAssets.php:5`
   - `app/src/Settings/Security/SecurityAudit.php:15`
   - `app/src/Settings/Security/FileIntegrityMonitor.php:19`
   - `app/src/Settings/Security/MalwareScanner.php:17`
@@ -129,7 +150,9 @@ Mỗi mục bên dưới ghi rõ:
   - `app/src/Settings/Security/CustomLoginManager.php:19`
   - `app/src/Settings/Security/TwoFactorAuth.php:19`
 - Ghi chú:
-  `SecurityManager` đang làm vai trò controller/admin hub cho các service bảo mật ở trên.
+  - `SecurityManager` hiện giữ vai trò controller/admin hub.
+  - HTML page, FIM result HTML và inline assets đã được tách khỏi class chính.
+  - Test cấu trúc: `tests/Unit/ThemeRefactorStructureTest.php:27`
 
 ## 6. Dynamic CPT
 
@@ -137,11 +160,17 @@ Mỗi mục bên dưới ghi rõ:
   Cho phép tạo Custom Post Type động, sinh template archive/single, và tạo file meta fields cho từng CPT.
 - Các file chính:
   - `app/src/Features/DynamicCPT/DynamicCptManager.php:12`
-  - `app/src/Features/DynamicCPT/DynamicCptAdminPage.php:12`
-  - `app/src/Features/DynamicCPT/DynamicCptMetaEditor.php:25`
+  - `app/src/Features/DynamicCPT/DynamicCptAdminPage.php:14`
+  - `app/src/Features/DynamicCPT/Admin/AdminPageRenderer.php:8`
+  - `app/src/Features/DynamicCPT/DynamicCptMetaEditor.php:28`
+  - `app/src/Features/DynamicCPT/Meta/MetaCodeGenerator.php:5`
+  - `app/src/Features/DynamicCPT/Meta/MetaEditorRenderer.php:5`
   - `app/src/Features/DynamicCPT/DynamicCptTemplateGenerator.php:12`
 - Ghi chú:
-  Hai file admin lớn nhất hiện tại của mảng này là `DynamicCptAdminPage` và `DynamicCptMetaEditor`.
+  - `DynamicCptAdminPage` hiện tập trung vào routing/admin action.
+  - `DynamicCptMetaEditor` hiện tập trung vào lưu file meta và điều phối màn editor.
+  - Phần render UI và generate code đã tách ra helper riêng.
+  - Test cấu trúc: `tests/Unit/ThemeRefactorStructureTest.php:45`
 
 ## 7. Assets Và Shared Support
 
@@ -167,24 +196,47 @@ Mỗi mục bên dưới ghi rõ:
   - `tests/Unit/ProjectChartDataTest.php:7`
   - `tests/Unit/ClientIpResolverTest.php:7`
 
-## 8. Tóm Tắt Trạng Thái Hiện Tại
+## 8. Ranh Giới Parent/Child Theme
+
+- Mục đích:
+  Chốt rõ phần nào thuộc parent, phần nào thuộc child để tránh phụ thuộc chéo giữa hai theme.
+- Các file chính:
+  - `theme/template-parts/breadcrumb.php:1`
+  - `theme/template-parts/page-hero.php:1`
+  - `theme/template-parts/share_box.php:1`
+  - `theme/template-parts/post-hero.php:1`
+  - `theme/template-parts/rating-box.php:1`
+  - `theme/template-parts/loop-post.php:1`
+  - `theme/template-parts/loop-service.php:1`
+  - `theme/template-parts/loop-product.php:1`
+  - `tests/Unit/ParentChildThemeBoundaryTest.php:5`
+- Trạng thái:
+  - Parent hiện sở hữu shared partials dùng chung.
+  - Child không còn giữ `app/routes/*` placeholder và không còn duplicate các template-part dùng chung.
+  - Tài liệu chi tiết hơn nằm ở `doc/CAU-TRUC-PARENT-CHILD.md`.
+
+## 9. Tóm Tắt Trạng Thái Hiện Tại
 
 - Đã tách mạnh khỏi file lớn:
   - Tracker transport / queue / preflight / snapshot / support request / timeline builder / remote-update helpers
+  - Tracker facade theo 5 service con: schedule / event monitor / digest / delivery / remote update
   - Contact form admin renderer / sanitize / validate / CSV / frontend helper
   - Admin settings option registrar / access policy / media helper / option HTML
-- Các file vẫn còn lớn nhưng hiện đã có ranh giới trách nhiệm rõ hơn:
-  - `app/src/Settings/LacaDevTrackerClient.php:49`
-  - `app/src/Settings/ThemeControlCenter.php:31`
-  - `app/src/Settings/Security/SecurityManager.php:23`
-  - `app/src/Features/DynamicCPT/DynamicCptAdminPage.php:12`
-  - `app/src/Features/DynamicCPT/DynamicCptMetaEditor.php:25`
+- Các hotspot đã chốt trong lượt này:
+  - `LacaDevTrackerClient` không còn ôm toàn bộ tracker logic trong một class.
+  - `ThemeControlCenter` không còn giữ logic render/save của toàn bộ tab trong một file.
+  - `SecurityManager` không còn giữ HTML/inline JS/CSS lớn trong class chính.
+  - `DynamicCptAdminPage` và `DynamicCptMetaEditor` đã tách render/code generation sang helper riêng.
+- Phần còn nên theo dõi tiếp nếu muốn dọn sâu hơn toàn theme:
+  - `theme/setup/assets.php`
+  - `app/src/Features/ContactForm/ContactFormManager.php`
+  - `app/src/Settings/AdminSettings.php`
 
-## 9. Lệnh Test Hiện Tại
+## 10. Lệnh Test Hiện Tại
 
 ```bash
 php tests/run.php
 composer test
 ```
 
-Tại thời điểm cập nhật tài liệu này, suite đang pass: `104 tests, 0 failures`.
+Tại thời điểm cập nhật tài liệu này, suite đang pass: `111 tests, 0 failures`.

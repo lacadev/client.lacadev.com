@@ -1,6 +1,6 @@
 # LacaDev Client Theme - Structure And Feature Inventory
 
-Last updated: 2026-05-15
+Last updated: 2026-05-16
 
 This document is a quick map of the current `lacadev-client` theme after the bootstrap cleanup. Use it as a manual checklist when reviewing future changes.
 
@@ -66,11 +66,11 @@ This document is a quick map of the current `lacadev-client` theme after the boo
 | Content UX | `RelatedPosts`, `ContextAwareCta`, `AuthorTrustProfile`, `RecommendationEngine`, `ExitIntentPopup` | Single post content additions, CTA visibility, popup rules, recommendation output. |
 | Admin UX | `ThemeControlCenter`, `RoleBasedAdminUx`, `EditorialWorkflow`, `LacaAdminMenuOrganizer`, `AdminSettings`, `AdminOptionsRegistrar`, `AdminAccessDeniedPage`, `AdminAccessPolicy`, `AdminDashboardIntroWidget`, `AdminOptionHtml`, `AdminMediaSupport` | Admin menu structure, option-page registration, tabbed theme settings, custom statuses, role restrictions, branded denial screen, reusable option snippets, dashboard intro widget, media upload helper behavior. |
 | Management tools | `app/src/Settings/LacaTools/*` | Dashboard widgets, database cleaner, media audit, content audit, quick notes, performance budget widget, AI chat/translation tools. |
-| Remote operations | `LacaDevTrackerClient`, `TrackerClientConfig`, `TrackerHttpTransport`, `TrackerQueuePolicy`, `TrackerHealthSummary`, `TrackerTimelinePresenter`, `TrackerShortcodeRenderer`, `TrackerClientRequestHandler`, `ClientSupportRequestBuilder`, `SupportAttachmentUploader`, `RemoteUpdateRequestValidator`, `RemoteUpdateExecutor`, `RemoteUpdateMeta`, `RemoteUpdatePolicy`, `RemoteUpdatePreflight`, `RemoteUpdateHistory`, `RemoteUpdateHistoryStore`, `MaintenanceSnapshot`, `TrackerMaintenanceTimelineBuilder`, `SupportAttachmentFiles`, `SuspiciousFileScanner`, `TrackerFileIntegrity`, `ThemeUpdater`, `BlockSyncReceiver`, `BlockSyncWidget` | Tracker delivery, HTTP response normalization, local queue retry policy, tracker connection config, tracker health counters, public tracker shortcodes, support-request controller/builder/upload flow, remote update validation/execution/meta/history, maintenance snapshots and timeline assembly, file scans/integrity checks, block sync API, dashboard widget status. |
+| Remote operations | `LacaDevTrackerClient`, `app/src/Settings/Tracker/Client/*`, `TrackerClientConfig`, `TrackerHttpTransport`, `TrackerQueuePolicy`, `TrackerHealthSummary`, `TrackerTimelinePresenter`, `TrackerShortcodeRenderer`, `TrackerClientRequestHandler`, `ClientSupportRequestBuilder`, `SupportAttachmentUploader`, `RemoteUpdateRequestValidator`, `RemoteUpdateExecutor`, `RemoteUpdateMeta`, `RemoteUpdatePolicy`, `RemoteUpdatePreflight`, `RemoteUpdateHistory`, `RemoteUpdateHistoryStore`, `MaintenanceSnapshot`, `TrackerMaintenanceTimelineBuilder`, `SupportAttachmentFiles`, `SuspiciousFileScanner`, `TrackerFileIntegrity`, `ThemeUpdater`, `BlockSyncReceiver`, `BlockSyncWidget` | Tracker facade wiring, cron scheduling, event monitoring, digest scans, queue/delivery flow, support-request controller/builder/upload flow, remote update validation/execution/meta/history, maintenance snapshots and timeline assembly, file scans/integrity checks, block sync API, dashboard widget status. |
 | Email log | `app/src/Settings/EmailLog/*` | Email capture table and admin display. |
 | Maintenance mode | `MaintenanceModeManager`, `theme/maintenance.php` | Frontend lockout, admin bypass, maintenance template. |
 | Gutenberg blocks | `theme/setup/gutenberg-blocks.php`, `block-gutenberg/*` | Block registration, category mapping, synced block rendering. |
-| Templates | `theme/*.php`, `theme/layouts`, `theme/loop_templates`, `theme/page_templates` | Header/footer rendering, page template behavior, loop output, comments. |
+| Templates | `theme/*.php`, `theme/layouts`, `theme/loop_templates`, `theme/page_templates`, `theme/template-parts` | Header/footer rendering, page template behavior, shared partials, loop output, comments. |
 
 ## 5. Current Directory Shape
 
@@ -108,6 +108,7 @@ lacadev-client/
 │   ├── layouts/
 │   ├── loop_templates/
 │   ├── page_templates/
+│   ├── template-parts/
 │   ├── setup/
 │   └── *.php
 ├── theme-server/
@@ -153,6 +154,7 @@ The current tests are intentionally lightweight and run without booting WordPres
 | Contact form frontend assets | Guards shared frontend CSS selectors and style output wrapper. |
 | Contact form frontend scripts | Guards single-step and multi-step AJAX script rendering. |
 | Contact form admin page renderers | Guards list, edit, and submissions admin page HTML shells after moving them out of `ContactFormManager`. |
+| Theme refactor structure | Guards that `ThemeControlCenter`, `SecurityManager`, `DynamicCptAdminPage`, `DynamicCptMetaEditor`, and `LacaDevTrackerClient` continue delegating to the extracted helper/service classes. |
 | Contact form submission validator | Guards frontend submit validation, sanitization, conditions, and format errors. |
 | Admin settings structure | Guards `AdminSettings` delegation to grouped bootstrap methods and `AdminOptionsRegistrar`. |
 | Tracker client config | Guards tracker endpoint/secret option fallback and configured-state detection. |
@@ -177,6 +179,7 @@ The current tests are intentionally lightweight and run without booting WordPres
 | `Crypto` encrypt/decrypt behavior | Guards sensitive-data helper round trips and invalid input behavior. |
 | `DbVersionManager` schema version behavior | Guards installer execution, forced install, installed version reads, and reset behavior. |
 | Admin media support | Guards custom upload mime types, help-guide screen detection, paste-image config, and upload filename normalization. |
+| Parent/child theme boundary | Guards parent-owned shared template parts, removed child placeholder routes, and dormant child theme option scaffolding. |
 
 ## 7. Maintenance Rules
 
@@ -190,6 +193,7 @@ The current tests are intentionally lightweight and run without booting WordPres
 
 | Candidate | Why it still needs review |
 | --- | --- |
-| `theme/template-parts/*` references | This package references `template-parts` in several templates, while the files currently live in the sibling `lacadev-client-child` theme. Confirm whether `lacadev-client` must run standalone before changing or copying these parts. |
-| Large admin feature classes | `LacaDevTrackerClient`, `ThemeControlCenter`, `SecurityManager`, `DynamicCptAdminPage`, and `DynamicCptMetaEditor` remain the largest cohesive modules. `ContactFormManager` and `AdminSettings` are now much slimmer after moving admin renderers and option registration into dedicated helpers; tracker support request, remote-update helpers, and timeline assembly are also extracted. The next cleanup slices, if needed, should focus on theme control tabs, security page rendering/scripts, and dynamic CPT admin/meta editor rendering. |
+| Parent/child ownership drift | Shared partials now live in `theme/template-parts/*` inside the parent theme, while the child theme only keeps top-level templates, assets, and hook overrides. Review any future child additions carefully so duplicate template-parts or placeholder routes do not return. |
+| Setup-heavy entry files | `theme/setup/assets.php`, `theme/functions.php`, and `app/helpers.php` still concentrate a lot of bootstrap wiring. They are more stable than the previous admin hotspots, but they remain the next places to review if we want to reduce theme-level indirection further. |
+| Broader domain orchestrators | `ContactFormManager` and `AdminSettings` are already slimmer after the previous refactors, but they still coordinate many subfeatures. Any future split should keep them as facades and continue extracting render/save rules by feature, not by arbitrary file size alone. |
 | Empty local directories | `app/src/Module`, `app/src/Routing`, `app/src/View`, `resources/images/sprite`, `resources/vendor`, and `theme/setup/taxonomies` are empty in the working tree after cleanup. They are not tracked once their placeholder files are removed. |

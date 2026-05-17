@@ -1,0 +1,64 @@
+@use "../common/section-header";
+
+.laca-testimonial-block {
+	&__surface {
+		padding: 1rem 0;
+	}
+
+	&__grid {
+		display: grid;
+		gap: 1rem;
+	}
+
+	&__grid.columns-1 {
+		grid-template-columns: 1fr;
+	}
+
+	&__grid.columns-2 {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	&__grid.columns-3 {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+
+	&__card {
+		padding: 1.5rem;
+		border-radius: 1.35rem;
+		background: #f8fafc;
+	}
+
+	&__quote {
+		margin: 0 0 1.2rem;
+		font-size: 1rem;
+		line-height: 1.8;
+		color: #0f172a;
+	}
+
+	&__name {
+		display: block;
+		font-size: 1rem;
+	}
+
+	&__role {
+		display: block;
+		margin-top: 0.25rem;
+		font-size: 0.92rem;
+		color: #64748b;
+	}
+
+	&.is-tone-outline &__card {
+		background: #fff;
+		border: 1px solid rgba(148, 163, 184, 0.35);
+	}
+
+	&.is-tone-dark &__card {
+		background: #0f172a;
+	}
+
+	&.is-tone-dark &__quote,
+	&.is-tone-dark &__name,
+	&.is-tone-dark &__role {
+		color: #fff;
+	}
+}

@@ -1,96 +1,20 @@
 {
     "$schema": "https://schemas.wp.org/trunk/block.json",
     "apiVersion": 3,
-    "name": "lacadev/video-block",
+    "name": "lacadev/accordion",
     "version": "1.0.0",
-    "title": "Video Block",
+    "title": "Accordion Block",
     "category": "lacadev-blocks",
-    "icon": "video-alt3",
-    "description": "Nhúng video từ URL hoặc upload file video trực tiếp",
+    "icon": "editor-help",
+    "description": "Khối accordion/FAQ dùng chung cho landing page và trang dịch vụ",
     "supports": {
         "html": false,
         "anchor": true
     },
     "attributes": {
-        "sourceType": {
-            "type": "string",
-            "default": "url",
-            "enum": [
-                "url",
-                "file"
-            ]
-        },
-        "videoUrl": {
-            "type": "string",
-            "default": ""
-        },
-        "videoId": {
-            "type": "number",
-            "default": 0
-        },
-        "videoFileUrl": {
-            "type": "string",
-            "default": ""
-        },
-        "autoplay": {
-            "type": "boolean",
-            "default": false
-        },
-        "loop": {
-            "type": "boolean",
-            "default": false
-        },
-        "muted": {
-            "type": "boolean",
-            "default": false
-        },
-        "controls": {
-            "type": "boolean",
-            "default": true
-        },
-        "posterUrl": {
-            "type": "string",
-            "default": ""
-        },
-        "posterId": {
-            "type": "number",
-            "default": 0
-        },
-        "overlayEnabled": {
-            "type": "boolean",
-            "default": false
-        },
-        "overlayColor": {
-            "type": "string",
-            "default": "#000000"
-        },
-        "overlayOpacity": {
-            "type": "number",
-            "default": 40
-        },
-        "overlayText": {
-            "type": "string",
-            "default": ""
-        },
-        "overlayFontSize": {
-            "type": "number",
-            "default": 16
-        },
-        "overlayTextColor": {
-            "type": "string",
-            "default": "#ffffff"
-        },
-        "overlayTextAlign": {
-            "type": "string",
-            "default": "center"
-        },
-        "overlayVerticalAlign": {
-            "type": "string",
-            "default": "center"
-        },
         "bgColor": {
             "type": "string",
-            "default": "#0f0f0f"
+            "default": "#ffffff"
         },
         "bgOpacity": {
             "type": "number",
@@ -208,6 +132,35 @@
         "paddingBottom": {
             "type": "number",
             "default": 55
+        },
+        "openFirst": {
+            "type": "boolean",
+            "default": true
+        },
+        "tone": {
+            "type": "string",
+            "default": "soft",
+            "enum": [
+                "soft",
+                "outline"
+            ]
+        },
+        "items": {
+            "type": "array",
+            "default": [
+                {
+                    "question": "Câu hỏi 1?",
+                    "answer": "Câu trả lời mẫu cho item đầu tiên."
+                },
+                {
+                    "question": "Câu hỏi 2?",
+                    "answer": "Câu trả lời mẫu cho item thứ hai."
+                },
+                {
+                    "question": "Câu hỏi 3?",
+                    "answer": "Câu trả lời mẫu cho item thứ ba."
+                }
+            ]
         }
     },
     "textdomain": "lacadev",

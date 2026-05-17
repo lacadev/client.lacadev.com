@@ -1,0 +1,34 @@
+@use "../common/section-header";
+
+.laca-accordion-block {
+	&__surface {
+		padding: 1rem 0;
+	}
+
+	&__items {
+		display: grid;
+		gap: 0.9rem;
+	}
+
+	&__item {
+		padding: 1.15rem 1.2rem;
+		border-radius: 1rem;
+		background: #f8fafc;
+
+		summary {
+			cursor: pointer;
+			font-weight: 700;
+		}
+
+		p {
+			margin: 0.9rem 0 0;
+			line-height: 1.75;
+			color: #475569;
+		}
+	}
+
+	&.is-tone-outline &__item {
+		background: #fff;
+		border: 1px solid rgba(148, 163, 184, 0.35);
+	}
+}

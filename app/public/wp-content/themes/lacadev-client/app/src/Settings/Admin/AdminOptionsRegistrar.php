@@ -231,6 +231,47 @@ final class AdminOptionsRegistrar
                         Field::make('color', 'border_color', __('Màu viền (Border top)', 'laca'))->set_default_value('#2271b1'),
                         Field::make('rich_text', 'content', __('Nội dung hướng dẫn (Link, Video, Text)', 'laca')),
                     ]),
+                Field::make('separator', 'help_tours_separator', __('Tour hướng dẫn tương tác', 'laca')),
+                Field::make('html', 'help_tours_desc')
+                    ->set_html('<div class="carbon-field-description">Tạo các tour hướng dẫn theo từng bước. Nên dùng <strong>Link click / URL đích</strong> để chuyển qua màn hình kế tiếp, còn <strong>CSS selector</strong> chỉ dùng để highlight phần tử trên màn hình hiện tại. Nếu selector không tồn tại, hệ thống vẫn hiển thị nội dung bước thay vì dừng tour.</div>'),
+                Field::make('complex', 'help_page_tours', __('Danh sách tour', 'laca'))
+                    ->set_layout('tabbed-horizontal')
+                    ->add_fields([
+                        Field::make('text', 'title', __('Tên tour', 'laca'))
+                            ->set_width(40),
+                        Field::make('text', 'slug', __('Slug tour', 'laca'))
+                            ->set_width(20)
+                            ->set_help_text(__('Có thể để trống, hệ thống tự tạo từ tiêu đề.', 'laca')),
+                        Field::make('text', 'admin_page', __('Trang admin đích', 'laca'))
+                            ->set_width(40)
+                            ->set_help_text(__('Ví dụ: index.php, upload.php, edit.php?post_type=page, themes.php?page=lacadev-control-center', 'laca')),
+                        Field::make('textarea', 'description', __('Mô tả ngắn', 'laca'))
+                            ->set_rows(2),
+                        Field::make('complex', 'steps', __('Các bước', 'laca'))
+                            ->set_layout('tabbed-horizontal')
+                            ->add_fields([
+                                Field::make('text', 'title', __('Tiêu đề bước', 'laca'))
+                                    ->set_width(40),
+                                Field::make('text', 'selector', __('CSS selector', 'laca'))
+                                    ->set_width(30)
+                                    ->set_help_text(__('Tuỳ chọn. Dùng để highlight phần tử hiện tại. Ví dụ: #menu-pages > a.menu-top, .row-title, .wrap h1, button[aria-label="Document Overview"]. Nên dùng dấu nháy thẳng " thay vì dấu ngoặc cong.', 'laca')),
+                                Field::make('text', 'click_url', __('Link click / URL đích', 'laca'))
+                                    ->set_width(50)
+                                    ->set_help_text(__('Tuỳ chọn. Dùng khi bước này cần mở màn hình tiếp theo. Ví dụ: edit.php?post_type=page hoặc post.php?post=12&action=edit', 'laca')),
+                                Field::make('select', 'position', __('Vị trí tooltip', 'laca'))
+                                    ->set_width(20)
+                                    ->set_options([
+                                        'auto' => __('Tự động', 'laca'),
+                                        'top' => __('Trên', 'laca'),
+                                        'right' => __('Phải', 'laca'),
+                                        'bottom' => __('Dưới', 'laca'),
+                                        'left' => __('Trái', 'laca'),
+                                    ])
+                                    ->set_default_value('bottom'),
+                                Field::make('textarea', 'content', __('Nội dung bước', 'laca'))
+                                    ->set_rows(3),
+                            ]),
+                    ]),
                 Field::make('separator', 'help_separator', __('Thông tin hỗ trợ kỹ thuật', 'laca')),
                 Field::make('text', 'help_support_phone', __('Điện thoại/Zalo', 'laca')),
                 Field::make('text', 'help_support_email', __('Email', 'laca')),

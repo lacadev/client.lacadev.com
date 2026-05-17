@@ -102,7 +102,7 @@ module.exports = {
                     },
                     mangle: {
                         // Rename variables but keep global functions safe
-                        reserved: ['globalFunctions', 'themeData', 'ajaxurl_params', 'adminI18n', 'Swal', 'grecaptcha', 'LacaDashboard', 'lacaDashboard'],
+                        reserved: ['globalFunctions', 'themeData', 'ajaxurl_params', 'adminI18n', 'lacaHelpToursData', 'Swal', 'grecaptcha', 'LacaDashboard', 'lacaDashboard'],
                         // CRITICAL: Don't mangle property names (breaks alert.title, data.success, etc)
                         properties: false,
                     },

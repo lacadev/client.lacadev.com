@@ -182,6 +182,20 @@ function app_action_admin_enqueue_assets()
         AdminScriptData::i18n(static fn(string $text): string => __($text, 'lacadev'))
     );
 
+    wp_localize_script(AssetHandles::ADMIN_JS, 'lacaHelpToursData', [
+        'tours' => function_exists('lacadev_help_tours_definitions') ? lacadev_help_tours_definitions() : [],
+        'i18n' => [
+            'next' => __('Tiếp theo', 'lacadev'),
+            'prev' => __('Quay lại', 'lacadev'),
+            'done' => __('Hoàn tất', 'lacadev'),
+            'skip' => __('Bỏ qua', 'lacadev'),
+            'missingSteps' => __('Tour này chưa có bước nào phù hợp với màn hình hiện tại.', 'lacadev'),
+            'missingStep' => __('Không tìm thấy phần tử của bước này trên màn hình hiện tại.', 'lacadev'),
+            'missingStepHint' => __('Không tìm thấy selector của bước này trên màn hình hiện tại. Bạn vẫn có thể đọc nội dung và bấm tiếp để sang bước kế tiếp.', 'lacadev'),
+            'stepLabel' => __('Bước', 'lacadev'),
+        ],
+    ]);
+
     /**
      * Localize project chart data — chỉ inject trên trang Dashboard (index.php).
      * Dữ liệu được đọc từ custom post type 'project' nếu đã đăng ký.

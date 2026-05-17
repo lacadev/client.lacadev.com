@@ -482,7 +482,7 @@ class LacaAdminMenuOrganizer
 
         $currentSlug = $this->getCurrentPageSlug();
         ?>
-        <nav class="laca-admin-dock" aria-label="<?php echo esc_attr__('Laca Admin', 'laca'); ?>">
+        <nav class="laca-admin-dock" aria-label="<?php echo esc_attr__('Laca Admin', 'laca'); ?>" data-laca-tour="laca-admin-dock">
             <?php foreach ($this->navigationGroups as $group): ?>
                 <section class="laca-admin-dock__group">
                     <h2 class="laca-admin-dock__group-title">

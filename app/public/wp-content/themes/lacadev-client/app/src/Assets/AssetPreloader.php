@@ -30,6 +30,7 @@ final class AssetPreloader
     public static function frontendPreloadHtml(
         string $distPath,
         string $distUrl,
+        bool $allowCriticalInline = true,
         ?callable $fileExists = null,
         ?callable $fileGetContents = null
     ): string {
@@ -39,7 +40,7 @@ final class AssetPreloader
         $html = '';
         $criticalPath = $distPath . 'styles/critical.css';
 
-        if ($fileExists($criticalPath)) {
+        if ($allowCriticalInline && $fileExists($criticalPath)) {
             $criticalCss = $fileGetContents($criticalPath);
             if ($criticalCss) {
                 $html .= '<style id="critical-css">' . $criticalCss . '</style>' . "\n";
@@ -50,7 +51,7 @@ final class AssetPreloader
             $html .= '<link rel="preload" href="' . esc_url($distUrl . 'critical.js') . '" as="script">' . "\n";
         }
 
-        if (!$fileExists($criticalPath)) {
+        if (!$allowCriticalInline || !$fileExists($criticalPath)) {
             $html .= '<link rel="preload" href="' . esc_url($distUrl . 'styles/theme.css') . '" as="style">' . "\n";
         }
 
@@ -67,7 +68,12 @@ final class AssetPreloader
     {
         $themeRootDir = dirname(get_stylesheet_directory());
         $themeRootUri = dirname(get_stylesheet_directory_uri());
+        $allowCriticalInline = wp_get_environment_type() !== 'local';
 
-        echo self::frontendPreloadHtml($themeRootDir . '/dist/', $themeRootUri . '/dist/');
+        echo self::frontendPreloadHtml(
+            $themeRootDir . '/dist/',
+            $themeRootUri . '/dist/',
+            $allowCriticalInline
+        );
     }
 }

@@ -39,14 +39,8 @@ if (!defined('ABSPATH')) {
 	<meta name="msapplication-TileColor" content="#ffffff">
 	<meta name="msapplication-TileImage" content="<?php theAsset('favicon/ms-icon-144x144.png'); ?>">
 	<meta name="theme-color" content="#ffffff">
-	<?php
-	$critical_css_path = get_template_directory() . '/dist/styles/critical.css';
-	if (file_exists($critical_css_path)) {
-		echo '<style id="critical-css">' . file_get_contents($critical_css_path) . '</style>';
-	}
-	?>
-	<style>
-		:root {
+		<style>
+			:root {
 			/* Theme colors */
 			--primary-color:
 				<?php echo carbon_get_theme_option('primary_color'); ?>

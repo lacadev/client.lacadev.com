@@ -3,6 +3,7 @@
 namespace App\Settings\Admin;
 
 use Carbon_Fields\Container;
+use Carbon_Fields\Container\Theme_Options_Container;
 use Carbon_Fields\Field;
 
 final class AdminOptionsRegistrar
@@ -23,7 +24,7 @@ final class AdminOptionsRegistrar
         });
     }
 
-    private static function registerRootOptions(): Container
+    private static function registerRootOptions(): Theme_Options_Container
     {
         return Container::make('theme_options', __('Laca Admin', 'laca'))
             ->set_page_file(__('laca-admin', 'laca'))
@@ -33,7 +34,7 @@ final class AdminOptionsRegistrar
             ->add_tab(__('LOGIN', 'laca'), self::loginTabFields());
     }
 
-    private static function registerToolsOptions(Container $root): void
+    private static function registerToolsOptions(Theme_Options_Container $root): void
     {
         Container::make('theme_options', __('Tools', 'laca'))
             ->set_page_parent($root)
@@ -42,9 +43,9 @@ final class AdminOptionsRegistrar
             ->add_tab(__('Security', 'laca'), self::securityTabFields());
     }
 
-    private static function registerBlockSyncOptions(Container $root): void
+    private static function registerBlockSyncOptions(Theme_Options_Container $root): void
     {
-        Container::make('theme_options', __('🧩 LacaDev', 'laca'))
+        Container::make('theme_options', __('LacaDev', 'laca'))
             ->set_page_parent($root)
             ->set_page_file(__('laca-block-sync', 'laca'))
             ->add_fields([
@@ -60,9 +61,9 @@ final class AdminOptionsRegistrar
             ]);
     }
 
-    private static function registerTrackerOptions(Container $root): void
+    private static function registerTrackerOptions(Theme_Options_Container $root): void
     {
-        Container::make('theme_options', __('📡 Tracker', 'laca'))
+        Container::make('theme_options', __('Tracker', 'laca'))
             ->set_page_parent($root)
             ->set_page_file(__('laca-tracker', 'laca'))
             ->add_fields([
@@ -87,7 +88,7 @@ final class AdminOptionsRegistrar
             ]);
     }
 
-    private static function registerRecaptchaOptions(Container $root): void
+    private static function registerRecaptchaOptions(Theme_Options_Container $root): void
     {
         Container::make('theme_options', __('Google reCAPTCHA', 'laca'))
             ->set_page_parent($root)
@@ -123,7 +124,7 @@ final class AdminOptionsRegistrar
             ]);
     }
 
-    private static function registerProjectNotificationsOptions(Container $root): void
+    private static function registerProjectNotificationsOptions(Theme_Options_Container $root): void
     {
         Container::make('theme_options', __('LacaDev PM & Bots', 'laca'))
             ->set_page_parent($root)
@@ -147,7 +148,7 @@ final class AdminOptionsRegistrar
             ]);
     }
 
-    private static function registerLoginSocialOptions(Container $root): void
+    private static function registerLoginSocialOptions(Theme_Options_Container $root): void
     {
         Container::make('theme_options', __('Login Socials', 'laca'))
             ->set_page_parent($root)
@@ -164,7 +165,7 @@ final class AdminOptionsRegistrar
             ]);
     }
 
-    private static function registerDashboardWidgetOptions(Container $root): void
+    private static function registerDashboardWidgetOptions(Theme_Options_Container $root): void
     {
         Container::make('theme_options', __('Dashboard Widgets', 'laca'))
             ->set_page_parent($root)
@@ -211,7 +212,7 @@ final class AdminOptionsRegistrar
             ]);
     }
 
-    private static function registerHelpContentOptions(Container $root): void
+    private static function registerHelpContentOptions(Theme_Options_Container $root): void
     {
         Container::make('theme_options', __('Nội dung HD Sử dụng', 'laca'))
             ->set_page_parent($root)

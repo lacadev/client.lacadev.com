@@ -112,6 +112,10 @@ final class FeatureRegistry
         'Management/ContentAuditService.php',
         'Management/MediaService.php',
         'Management/DashboardWidgets.php',
+        'Management/WebsiteOverviewWidgets.php',
+        'Management/QuickNotesWidget.php',
+        'Management/PerformanceBudgetWidget.php',
+        'Management/LacaDashboardPage.php',
         'Management/ListTableEnhancements.php',
         'Management/AdminUxService.php',
         'Management/ClientOperationsPage.php',
@@ -243,6 +247,11 @@ final class FeatureRegistry
         }
 
         $parentLacaTools = get_template_directory() . '/app/src/Settings/LacaTools';
+        $blockSyncWidget = get_template_directory() . '/app/src/Widgets/BlockSyncWidget.php';
+
+        if (file_exists($blockSyncWidget)) {
+            require_once $blockSyncWidget;
+        }
 
         foreach (self::LACA_TOOLS_FALLBACK_FILES as $relativeFile) {
             $classFile = $parentLacaTools . '/' . $relativeFile;

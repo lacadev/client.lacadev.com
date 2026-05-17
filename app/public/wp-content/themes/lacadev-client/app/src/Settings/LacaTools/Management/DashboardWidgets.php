@@ -4,7 +4,7 @@ namespace App\Settings\LacaTools\Management;
 
 /**
  * DashboardWidgets
- * Registers and renders all 6 WordPress dashboard widgets.
+ * Renders Laca Dashboard panels.
  * Extracted from ManagementExperience (lines 88–1423).
  * Depends on ContentAuditService and MediaService for data.
  */
@@ -26,46 +26,12 @@ class DashboardWidgets
         add_action('admin_head', [$this, 'renderWidgetStyles']);
         add_action('admin_enqueue_scripts', [$this, 'enqueueDashboardScripts']);
 
-        add_action('wp_dashboard_setup', function () {
-            if ($this->isWidgetEnabled('management_hub')) {
-                wp_add_dashboard_widget('lacadev_management_hub', '🚀 LacaDev Business Hub', [$this, 'renderDashboardWidget']);
-            }
-            if ($this->isWidgetEnabled('content_tracker')) {
-                wp_add_dashboard_widget('lacadev_content_tracker', '📈 Báo cáo Nội dung', [$this, 'renderContentTrackerWidget']);
-            }
-            if ($this->isWidgetEnabled('site_health')) {
-                wp_add_dashboard_widget('lacadev_site_health', '🩺 Tình trạng Website', [$this, 'renderSiteHealthWidget']);
-            }
-            if ($this->isWidgetEnabled('media_insights')) {
-                wp_add_dashboard_widget('lacadev_media_insights', '🖼️ Thư viện Media', [$this, 'renderMediaLibraryWidget']);
-            }
-            if ($this->isWidgetEnabled('todo')) {
-                wp_add_dashboard_widget('lacadev_todo_widget', '✅ Việc cần làm', [$this, 'renderTodoWidget']);
-            }
-            if ($this->isWidgetEnabled('quick_search')) {
-                wp_add_dashboard_widget('lacadev_quick_search', '🔍 Tìm kiếm nhanh', [$this, 'renderQuickSearchWidget']);
-            }
-            if ($this->isWidgetEnabled('client_ops')) {
-                wp_add_dashboard_widget('lacadev_client_ops', 'LacaDev Client Operations', [$this, 'renderClientOperationsWidget']);
-            }
-            if ($this->isWidgetEnabled('project_charts') && post_type_exists('project')) {
-                wp_add_dashboard_widget('lacadev_project_charts', '📊 Thống kê Dự án', [$this, 'renderProjectChartsWidget']);
-            }
-        });
-
         add_action('wp_ajax_lacadev_quick_search', [$this, 'ajaxQuickSearch']);
-    }
-
-    private function isWidgetEnabled(string $key): bool
-    {
-        return function_exists('lacadev_dashboard_widget_enabled')
-            ? lacadev_dashboard_widget_enabled($key)
-            : true;
     }
 
     public function enqueueDashboardScripts(string $hook): void
     {
-        if ('index.php' !== $hook) {
+        if (!in_array($hook, ['index.php', 'toplevel_page_' . LacaDashboardPage::SLUG], true)) {
             return;
         }
 

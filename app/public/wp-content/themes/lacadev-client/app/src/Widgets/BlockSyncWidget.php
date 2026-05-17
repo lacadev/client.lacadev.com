@@ -20,24 +20,17 @@ class BlockSyncWidget
     private const INST_OPTION  = 'laca_blocks_installed';
     private const PAGE_SIZE    = 20;
 
-    public function __construct()
+    public function __construct(bool $registerHooks = true)
     {
-        add_action('wp_dashboard_setup',     [$this, 'register']);
-        add_action('admin_enqueue_scripts',  [$this, 'enqueueAssets']);
-        add_action('wp_ajax_laca_clear_sync_log', [$this, 'ajaxClearLog']);
+        if ($registerHooks) {
+            add_action('admin_enqueue_scripts',  [$this, 'enqueueAssets']);
+            add_action('wp_ajax_laca_clear_sync_log', [$this, 'ajaxClearLog']);
+        }
     }
 
     public function register(): void
     {
-        if (function_exists('lacadev_dashboard_widget_enabled') && !lacadev_dashboard_widget_enabled('block_sync')) {
-            return;
-        }
-
-        wp_add_dashboard_widget(
-            'laca_block_sync_widget',
-            '📦 LacaDev Block Updates',
-            [$this, 'render']
-        );
+        // Deprecated: rendered by LacaDashboardPage instead of wp-admin Dashboard.
     }
 
     // ─────────────────────────────────────────────────────────────────────
@@ -153,7 +146,7 @@ class BlockSyncWidget
 
     public function enqueueAssets(string $hook): void
     {
-        if ('index.php' !== $hook) {
+        if (!in_array($hook, ['index.php', 'toplevel_page_lacadev-dashboard'], true)) {
             return;
         }
 

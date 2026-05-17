@@ -19,7 +19,6 @@ final class AdminOptionsRegistrar
             self::registerRecaptchaOptions($root);
             self::registerProjectNotificationsOptions($root);
             self::registerLoginSocialOptions($root);
-            self::registerDashboardWidgetOptions($root);
             self::registerHelpContentOptions($root);
         });
     }
@@ -162,53 +161,6 @@ final class AdminOptionsRegistrar
                 Field::make('text', 'google_redirect_uri', __('Redirect URI', 'laca'))
                     ->set_attribute('readOnly', true)
                     ->set_default_value(home_url('/wp-admin/admin-ajax.php?action=social_login_callback&driver=google')),
-            ]);
-    }
-
-    private static function registerDashboardWidgetOptions(Theme_Options_Container $root): void
-    {
-        Container::make('theme_options', __('Dashboard Widgets', 'laca'))
-            ->set_page_parent($root)
-            ->set_page_file(__('laca-management-dashboard-widgets', 'laca'))
-            ->add_fields([
-                Field::make('html', 'dashboard_widgets_desc')
-                    ->set_html('<div class="carbon-field-description">Chọn widget custom nào được hiển thị ngoài màn hình Dashboard. Widget không được chọn sẽ không đăng ký ra Dashboard.</div>'),
-                Field::make('multiselect', 'dashboard_widgets_enabled', __('Widget hiển thị ngoài Dashboard', 'laca'))
-                    ->set_options(function () {
-                        return function_exists('lacadev_dashboard_widget_definitions')
-                            ? lacadev_dashboard_widget_definitions()
-                            : [];
-                    })
-                    ->set_default_value(function_exists('lacadev_dashboard_widget_definitions') ? array_keys(lacadev_dashboard_widget_definitions()) : [])
-                    ->set_help_text(__('Chỉ những widget được chọn mới hiển thị ở Dashboard chính.', 'laca')),
-                Field::make('separator', 'content_report_separator', __('Widget báo cáo nội dung', 'laca')),
-                Field::make('multiselect', 'dashboard_widget_post_types', __('Các Post Type hiển thị', 'laca'))
-                    ->set_options(function () {
-                        $types = get_post_types(['public' => true, 'show_in_menu' => true], 'objects');
-                        $options = [];
-                        foreach ($types as $pt) {
-                            if (in_array($pt->name, ['attachment', 'wp_block', 'wp_template', 'wp_template_part'], true)) {
-                                continue;
-                            }
-                            $options[$pt->name] = $pt->label;
-                        }
-                        return $options;
-                    })
-                    ->set_help_text(__('Để trống để tự động hiển thị tất cả các loại nội dung quan trọng (Posts, Services, Projects, Properties...).', 'laca'))
-                    ->set_default_value(['post']),
-                Field::make('text', 'dashboard_widget_limit', __('Số lượng bài hiển thị', 'laca'))
-                    ->set_attribute('type', 'number')
-                    ->set_default_value('5')
-                    ->set_width(50),
-                Field::make('separator', 'performance_budget_separator', __('Widget Performance Budget', 'laca')),
-                Field::make('html', 'performance_budget_desc')
-                    ->set_html('<div class="carbon-field-description">Performance Budget dùng để xem Core Web Vitals và dung lượng CSS/JS của chính website hiện tại. <b>Không bắt buộc cấu hình</b>: nếu để trống CrUX API Key thì vẫn dùng được nhưng có thể bị giới hạn dữ liệu từ Google; URL cần đo mặc định là trang chủ website này.</div>'),
-                Field::make('text', 'laca_crux_api_key', __('CrUX API Key', 'laca'))
-                    ->set_width(50),
-                Field::make('text', 'laca_crux_url', __('URL cần đo', 'laca'))
-                    ->set_attribute('type', 'url')
-                    ->set_default_value(home_url('/'))
-                    ->set_width(50),
             ]);
     }
 

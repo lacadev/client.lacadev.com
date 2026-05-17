@@ -92,7 +92,6 @@ class LacaAdminMenuOrganizer
             'label' => 'Quản trị & HD Sử dụng',
             'icon' => 'dashicons-welcome-learn-more',
             'items' => [
-                'laca-management-dashboard-widgets',
                 'laca-help-content-settings',
             ],
         ],

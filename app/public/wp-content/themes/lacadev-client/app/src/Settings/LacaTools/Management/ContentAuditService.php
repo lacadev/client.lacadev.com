@@ -391,7 +391,6 @@ class ContentAuditService
      */
     public function getDashboardPostTypes(): array
     {
-        $configured   = carbon_get_theme_option('dashboard_widget_post_types');
         $discoverable = get_post_types(['public' => true, 'show_in_menu' => true], 'names');
 
         $excluded = apply_filters('lacadev_dashboard_post_types_excluded', [
@@ -401,7 +400,7 @@ class ContentAuditService
         ]);
         $available = array_diff($discoverable, $excluded);
 
-        $types = !empty($configured) ? (array) $configured : array_values($available);
+        $types = array_values($available);
 
         foreach (['service', 'project'] as $core_cpt) {
             if (post_type_exists($core_cpt) && !in_array($core_cpt, $types, true)) {

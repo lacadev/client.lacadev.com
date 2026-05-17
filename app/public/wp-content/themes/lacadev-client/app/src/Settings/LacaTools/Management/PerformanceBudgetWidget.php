@@ -54,26 +54,13 @@ class PerformanceBudgetWidget
 
     public function register(): void
     {
-        add_action('wp_dashboard_setup',       [$this, 'addWidget']);
         add_action('admin_enqueue_scripts',    [$this, 'enqueueAssets']);
         add_action('wp_ajax_laca_refresh_cwv', [$this, 'ajaxRefresh']);
     }
 
     public function addWidget(): void
     {
-        if (function_exists('lacadev_dashboard_widget_enabled') && !lacadev_dashboard_widget_enabled('performance_budget')) {
-            return;
-        }
-
-        if (!current_user_can('manage_options')) {
-            return;
-        }
-
-        wp_add_dashboard_widget(
-            'laca_performance_budget',
-            '⚡ Performance Budget',
-            [$this, 'renderWidget']
-        );
+        // Deprecated: rendered by LacaDashboardPage instead of wp-admin Dashboard.
     }
 
     // ─────────────────────────────────────────────────────────────────────
@@ -151,10 +138,9 @@ class PerformanceBudgetWidget
         echo '<h4 style="margin:0 0 8px;font-size:12px;text-transform:uppercase;color:#666;">Core Web Vitals (CrUX)</h4>';
 
         if (empty($data['metrics'])) {
-            $url = $this->getCruxUrl();
             echo '<p style="color:#999;font-size:12px;">Không có dữ liệu CrUX. ';
             if (!$this->getCruxApiKey()) {
-                echo 'Hãy thêm CrUX API Key trong cài đặt widget.';
+                echo 'Widget vẫn hoạt động nhưng có thể bị giới hạn quota từ Google.';
             } else {
                 echo 'URL có thể chưa có đủ traffic để CrUX thu thập.';
             }
@@ -369,7 +355,7 @@ class PerformanceBudgetWidget
 
     public function enqueueAssets(string $hook): void
     {
-        if ('index.php' !== $hook) {
+        if (!in_array($hook, ['index.php', 'toplevel_page_' . LacaDashboardPage::SLUG], true)) {
             return;
         }
 

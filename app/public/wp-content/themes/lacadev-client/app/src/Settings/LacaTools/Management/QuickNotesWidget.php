@@ -16,22 +16,13 @@ class QuickNotesWidget
 
     public function register(): void
     {
-        add_action('wp_dashboard_setup', [$this, 'addWidget']);
         add_action('wp_ajax_laca_notes_save', [$this, 'handleSave']);
         add_action('wp_ajax_laca_notes_delete', [$this, 'handleDelete']);
     }
 
     public function addWidget(): void
     {
-        if (function_exists('lacadev_dashboard_widget_enabled') && !lacadev_dashboard_widget_enabled('quick_notes')) {
-            return;
-        }
-
-        wp_add_dashboard_widget(
-            'laca_quick_notes',
-            'Ghi chú nhanh',
-            [$this, 'renderWidget']
-        );
+        // Deprecated: rendered by LacaDashboardPage instead of wp-admin Dashboard.
     }
 
     public function renderWidget(): void

@@ -201,18 +201,7 @@ class AdminSettings
 
 	public function addDashboardContactWidget()
 	{
-		add_action('wp_dashboard_setup', static function () {
-			if (function_exists('lacadev_dashboard_widget_enabled') && !lacadev_dashboard_widget_enabled('contact_intro')) {
-				return;
-			}
-
-			wp_add_dashboard_widget('custom_help_widget', 'Giới thiệu', static function () {
-				echo AdminDashboardIntroWidget::html(
-					AUTHOR,
-					get_site_url() . '/wp-content/themes/lacadev/resources/images/dev/moomsdev-black.png'
-				);
-			});
-		});
+		// The intro panel is rendered on Laca Dashboard instead of wp-admin Dashboard.
 	}
 
 	public function removeDefaultWidgets()

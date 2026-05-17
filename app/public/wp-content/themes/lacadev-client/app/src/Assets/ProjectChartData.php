@@ -17,8 +17,10 @@ final class ProjectChartData
 
     public static function shouldLocalize(mixed $screen): bool
     {
+        $screenId = (string) ($screen->id ?? '');
+
         return $screen
-            && ($screen->id ?? '') === 'dashboard'
+            && in_array($screenId, ['dashboard', 'toplevel_page_lacadev-dashboard'], true)
             && function_exists('post_type_exists')
             && post_type_exists('project');
     }

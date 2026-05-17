@@ -5,12 +5,15 @@ namespace App\Settings\LacaTools;
 use App\Settings\LacaTools\Management\ContentAuditService;
 use App\Settings\LacaTools\Management\MediaService;
 use App\Settings\LacaTools\Management\DashboardWidgets;
+use App\Settings\LacaTools\Management\WebsiteOverviewWidgets;
 use App\Settings\LacaTools\Management\ListTableEnhancements;
 use App\Settings\LacaTools\Management\AdminUxService;
 use App\Settings\LacaTools\Management\DatabaseCleaner;
 use App\Settings\LacaTools\Management\QuickNotesWidget;
 use App\Settings\LacaTools\Management\PerformanceBudgetWidget;
 use App\Settings\LacaTools\Management\ClientOperationsPage;
+use App\Settings\LacaTools\Management\LacaDashboardPage;
+use App\Widgets\BlockSyncWidget;
 
 /**
  * ManagementExperience
@@ -19,7 +22,7 @@ use App\Settings\LacaTools\Management\ClientOperationsPage;
  * Business logic lives in the Management/ sub-namespace:
  *   - ContentAuditService  — weekly cron + health audit
  *   - MediaService         — media library stats & orphan detection
- *   - DashboardWidgets     — 6 WordPress dashboard widgets
+ *   - DashboardWidgets     — Laca Dashboard panels
  *   - ListTableEnhancements— Views column, ID columns, duplication
  *   - AdminUxService       — Help menu, merchant simplification
  */
@@ -39,9 +42,10 @@ class ManagementExperience
         $auditService = new ContentAuditService();
         $mediaService = new MediaService();
 
-        // 2. Dashboard widgets — depends on both data services
+        // 2. Laca Dashboard panels — depends on both data services
         $widgets = new DashboardWidgets($auditService, $mediaService);
         $widgets->register();
+        $overviewWidgets = new WebsiteOverviewWidgets($auditService, $mediaService);
 
         // 3. List-table enhancements (Views column, IDs, duplication)
         $listTable = new ListTableEnhancements($auditService);
@@ -57,14 +61,25 @@ class ManagementExperience
         // 6. Media orphan filtering
         $mediaService->register();
 
-        // 7. Quick Notes dashboard widget
-        (new QuickNotesWidget())->register();
+        // 7. Quick Notes panel
+        $quickNotes = new QuickNotesWidget();
+        $quickNotes->register();
 
         // 8. Database Cleaner (Appearance > Dọn dẹp DB)
         (new DatabaseCleaner())->register();
 
         // 9b. Performance Budget widget (CWV + bundle sizes)
-        (new PerformanceBudgetWidget())->register();
+        $performanceBudget = new PerformanceBudgetWidget();
+        $performanceBudget->register();
+
+        // 9c. Dedicated Laca Dashboard page replacing wp-admin dashboard widgets
+        (new LacaDashboardPage(
+            $widgets,
+            $overviewWidgets,
+            $quickNotes,
+            $performanceBudget,
+            new BlockSyncWidget(false)
+        ))->register();
 
         // 9. AI Translation Manager
         add_action('init', function () {

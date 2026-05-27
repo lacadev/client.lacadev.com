@@ -1,0 +1,2257 @@
+.laca-kds-wrap,
+.laca-kds-settings-wrap {
+	--laca-admin-font: "Quicksand", "Be Vietnam Pro", "Segoe UI", sans-serif;
+	--laca-admin-ink: #251914;
+	--laca-admin-paper: #fff8e8;
+	--laca-admin-card: #fffdf5;
+	--laca-admin-warm: #f7ead0;
+	--laca-admin-rule: #d9c7aa;
+	--laca-admin-muted: #806b55;
+	--laca-admin-accent: #d7652c;
+	--laca-admin-olive: #496f38;
+	--laca-admin-red: #a83c2d;
+	background:
+		radial-gradient(circle at 16px 16px, rgba(37, 25, 20, 0.055) 1px, transparent 1.3px) 0 0 / 18px 18px,
+		linear-gradient(145deg, #fff8e8 0%, #f4e3c4 100%);
+	border: 1px solid rgba(37, 25, 20, 0.16);
+	border-radius: 20px;
+	box-shadow: 0 18px 42px rgba(37, 25, 20, 0.08);
+	color: var(--laca-admin-ink);
+	font-size: 16px;
+	font-family: var(--laca-admin-font);
+	margin: 20px 20px 0 0;
+	padding: 24px;
+}
+
+.laca-kds-header {
+	align-items: center;
+	display: flex;
+	gap: 16px;
+	justify-content: space-between;
+	margin-bottom: 18px;
+}
+
+.laca-kds-header h1,
+.laca-kds-settings-wrap h1 {
+	color: var(--laca-admin-ink);
+	font-family: var(--laca-admin-font);
+	font-size: clamp(28px, 3vw, 36px);
+	font-weight: 600;
+	letter-spacing: -0.03em;
+	line-height: 1.1;
+	margin: 0 0 8px;
+}
+
+.laca-kds-header p,
+.laca-kds-settings-wrap > p,
+.laca-settings-card p,
+.laca-settings-card .description {
+	color: var(--laca-admin-muted);
+	font-size: 16px;
+	font-weight: 400;
+	margin-top: 0;
+}
+
+.laca-kds-wrap .button,
+.laca-kds-settings-wrap .button,
+.laca-kds-settings-wrap .button-primary,
+.laca-kds-wrap .button-primary,
+.laca-kds-settings-wrap .submit .button {
+	border: 2px solid var(--laca-admin-ink);
+	border-radius: 999px;
+	box-shadow: none;
+	font-weight: 600;
+	min-height: 38px;
+	padding: 4px 16px;
+}
+
+.laca-kds-wrap .button-primary,
+.laca-kds-settings-wrap .button-primary,
+.laca-kds-settings-wrap .submit .button-primary {
+	background: var(--laca-admin-ink);
+	color: var(--laca-admin-paper);
+}
+
+.laca-kds-wrap .button-primary:hover,
+.laca-kds-settings-wrap .button-primary:hover,
+.laca-kds-settings-wrap .submit .button-primary:hover {
+	background: var(--laca-admin-accent);
+	border-color: var(--laca-admin-ink);
+	color: var(--laca-admin-ink);
+}
+
+.laca-kds-status-bar {
+	background: var(--laca-admin-card);
+	border: 2px solid var(--laca-admin-rule);
+	border-radius: 999px;
+	color: var(--laca-admin-muted);
+	display: inline-flex;
+	font-family: var(--laca-admin-font);
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	margin-bottom: 18px;
+	padding: 8px 14px;
+	text-transform: uppercase;
+}
+
+.laca-kds-summary {
+	display: grid;
+	gap: 12px;
+	grid-template-columns: repeat(4, minmax(150px, 1fr));
+	margin: 0 0 16px;
+}
+
+.laca-kds-summary div {
+	background: rgba(255, 253, 245, 0.78);
+	border: 1px solid var(--laca-admin-rule);
+	border-radius: 18px;
+	box-shadow: 3px 3px 0 rgba(37, 25, 20, 0.08);
+	padding: 14px 16px;
+}
+
+.laca-kds-summary span,
+.laca-kds-rule-note span {
+	color: var(--laca-admin-muted);
+	display: block;
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+
+.laca-kds-summary strong {
+	color: var(--laca-admin-ink);
+	display: block;
+	font-size: 24px;
+	font-weight: 600;
+	letter-spacing: -0.04em;
+	line-height: 1;
+	margin-top: 8px;
+}
+
+.laca-kds-rule-note {
+	align-items: center;
+	background: rgba(255, 253, 245, 0.78);
+	border: 1px dashed var(--laca-admin-rule);
+	border-radius: 18px;
+	display: grid;
+	gap: 5px;
+	margin: 0 0 18px;
+	padding: 13px 16px;
+}
+
+.laca-kds-rule-note p {
+	color: var(--laca-admin-muted);
+	font-size: 14px;
+	margin: 0;
+}
+
+.laca-kds-board {
+	display: grid;
+	gap: 14px;
+	grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+}
+
+.laca-kds-board--recent {
+	grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+
+.laca-kds-recent {
+	border-top: 2px dashed var(--laca-admin-rule);
+	margin-top: 28px;
+	padding-top: 22px;
+}
+
+.laca-kds-recent h2 {
+	color: var(--laca-admin-ink);
+	font-family: var(--laca-admin-font);
+	font-size: 22px;
+	font-weight: 600;
+	letter-spacing: -0.03em;
+	margin: 0 0 6px;
+}
+
+.laca-kds-recent p {
+	color: var(--laca-admin-muted);
+	margin-top: 0;
+}
+
+.laca-food-admin-board {
+	display: grid;
+	gap: 14px;
+	grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+
+.laca-order-card,
+.laca-food-admin-card,
+.laca-kds-empty,
+.laca-kds-error,
+.laca-kds-loading,
+.laca-settings-card {
+	background: var(--laca-admin-card);
+	border: 1px solid rgba(37, 25, 20, 0.2);
+	border-radius: 18px;
+	box-shadow: 0 10px 24px rgba(37, 25, 20, 0.06);
+	padding: 18px;
+}
+
+.laca-order-card {
+	background:
+		linear-gradient(90deg, rgba(215, 101, 44, 0.14), transparent 5px),
+		var(--laca-admin-card);
+	display: flex;
+	flex-direction: column;
+	gap: 13px;
+	position: relative;
+	transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.laca-order-card--paid {
+	background:
+		linear-gradient(90deg, rgba(73, 111, 56, 0.18), transparent 5px),
+		var(--laca-admin-card);
+}
+
+.laca-food-admin-card {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	justify-content: space-between;
+}
+
+.laca-food-admin-card.is-sold-out {
+	background: #f6dfd8;
+}
+
+.laca-food-admin-card.is-available {
+	background: #f4f7df;
+}
+
+.laca-order-card:hover {
+	transform: translateY(-1px);
+}
+
+.laca-order-card.is-updating {
+	opacity: 0.65;
+}
+
+.laca-order-card__top {
+	align-items: flex-start;
+	display: flex;
+	gap: 12px;
+	justify-content: space-between;
+}
+
+.laca-order-label {
+	color: var(--laca-admin-accent);
+	display: block;
+	font-family: var(--laca-admin-font);
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+}
+
+.laca-order-card h2 {
+	color: var(--laca-admin-ink);
+	font-family: var(--laca-admin-font);
+	font-size: 36px;
+	font-weight: 700;
+	letter-spacing: -0.05em;
+	line-height: 0.95;
+	margin: 2px 0 0;
+}
+
+.laca-status-badge {
+	border: 1px solid currentColor;
+	border-radius: 999px;
+	font-family: var(--laca-admin-font);
+	font-size: 11px;
+	font-weight: 600;
+	padding: 6px 10px;
+	text-transform: uppercase;
+	white-space: nowrap;
+}
+
+.laca-status-pending {
+	background: #fff0c2;
+	color: #7b5208;
+}
+
+.laca-status-paid {
+	background: #e4efd8;
+	color: var(--laca-admin-olive);
+}
+
+.laca-status-completed {
+	background: #dcefd4;
+	color: var(--laca-admin-olive);
+}
+
+.laca-status-canceled {
+	background: #f6dfd8;
+	color: var(--laca-admin-red);
+}
+
+.laca-order-meta {
+	background: transparent;
+	border: 0;
+	border-radius: 0;
+	color: var(--laca-admin-muted);
+	display: grid;
+	gap: 8px;
+	grid-template-columns: 1fr;
+	margin: 0;
+	padding: 0;
+}
+
+.laca-order-meta span {
+	align-items: center;
+	display: inline-flex;
+	font-size: 13px;
+	gap: 7px;
+	min-width: 0;
+}
+
+.laca-order-phone {
+	color: var(--laca-admin-ink);
+	font-size: 14px !important;
+	letter-spacing: 0.01em;
+	word-break: break-word;
+}
+
+.laca-order-created {
+	padding-left: 31px;
+}
+
+.laca-order-phone-icon {
+	align-items: center;
+	background: var(--laca-admin-warm);
+	border-radius: 999px;
+	color: var(--laca-admin-accent);
+	display: inline-flex;
+	font-size: 12px;
+	height: 24px;
+	justify-content: center;
+	width: 24px;
+}
+
+.laca-order-status-hint {
+	background: #fff7dd;
+	border: 1px dashed rgba(123, 82, 8, 0.24);
+	border-radius: 14px;
+	color: #7b5208;
+	font-size: 13px;
+	line-height: 1.4;
+	margin: 0;
+	padding: 10px 12px;
+}
+
+.laca-order-status-hint.is-paid {
+	background: #edf4df;
+	border-color: rgba(73, 111, 56, 0.24);
+	color: var(--laca-admin-olive);
+}
+
+.laca-order-items {
+	color: var(--laca-admin-ink);
+	display: grid;
+	font-size: 15px;
+	gap: 7px;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.laca-order-items li {
+	align-items: flex-start;
+	background: rgba(247, 234, 208, 0.5);
+	border: 1px dashed rgba(217, 199, 170, 0.75);
+	border-radius: 13px;
+	display: grid;
+	gap: 8px;
+	grid-template-columns: minmax(0, 1fr) auto;
+	margin: 0;
+	padding: 9px 11px;
+}
+
+.laca-order-items li span {
+	min-width: 0;
+}
+
+.laca-order-items li i {
+	color: var(--laca-admin-muted);
+	font-style: normal;
+	white-space: nowrap;
+}
+
+.laca-order-items small {
+	background: transparent;
+	border: 0;
+	border-radius: 0;
+	color: var(--laca-admin-muted);
+	display: block;
+	font-size: 12px;
+	font-weight: 500;
+	grid-column: 1 / -1;
+	margin-top: -2px;
+	padding: 0;
+}
+
+.laca-order-item-discount,
+.laca-order-item-gift,
+.laca-order-item-combo {
+	border-radius: 12px;
+	list-style: none;
+	padding: 8px 10px;
+}
+
+.laca-order-item-discount {
+	background: #e4efd8;
+	color: var(--laca-admin-olive);
+}
+
+.laca-order-item-gift {
+	background: #fff0c2;
+	color: #7b5208;
+}
+
+.laca-order-item-combo {
+	background: #fff5df;
+	border: 1px dashed var(--laca-admin-rule);
+	color: var(--laca-admin-ink);
+}
+
+.laca-order-item-discount em {
+	float: right;
+	font-style: normal;
+	font-weight: 700;
+}
+
+.laca-order-actions {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.laca-order-actions__main {
+	display: grid;
+	gap: 10px;
+	grid-template-columns: 1fr 1fr;
+}
+
+.laca-order-total {
+	align-items: center;
+	border-top: 1px dashed var(--laca-admin-rule);
+	display: flex;
+	justify-content: space-between;
+	margin-top: auto;
+	padding-top: 11px;
+}
+
+.laca-order-total span {
+	color: var(--laca-admin-muted);
+	font-size: 12px;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+}
+
+.laca-order-total strong {
+	color: var(--laca-admin-ink);
+	font-family: var(--laca-admin-font);
+	font-size: 23px;
+	font-weight: 700;
+	letter-spacing: -0.04em;
+}
+
+.laca-kds-cancel {
+	border-color: var(--laca-admin-red) !important;
+	color: var(--laca-admin-red) !important;
+}
+
+.laca-kds-paid {
+	align-self: flex-start;
+	background: transparent !important;
+	border-color: rgba(73, 111, 56, 0.45) !important;
+	color: var(--laca-admin-olive) !important;
+	min-height: 34px !important;
+	padding: 3px 12px !important;
+}
+
+.laca-settings-shell {
+	align-items: start;
+	display: grid;
+	gap: 24px;
+	grid-template-columns: 270px minmax(0, 1fr);
+	margin-top: 22px;
+}
+
+.laca-settings-grid {
+	align-items: start;
+	display: grid;
+	gap: 24px;
+	grid-template-columns: minmax(0, 1fr) minmax(280px, 370px);
+}
+
+.laca-settings-shell:not([data-active-section="pages"]) .laca-settings-grid,
+.laca-settings-shell[data-active-section="pages"] .laca-settings-grid {
+	grid-template-columns: minmax(0, 1fr);
+}
+
+.laca-settings-shell[data-active-section="pages"] form.laca-settings-card,
+.laca-settings-shell[data-active-section="pages"] .laca-settings-submit {
+	display: none;
+}
+
+.laca-settings-hub {
+	background: rgba(255, 248, 232, 0.86);
+	border: 1px solid rgba(37, 25, 20, 0.14);
+	border-radius: 22px;
+	box-shadow: 0 12px 28px rgba(37, 25, 20, 0.06);
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	margin: 0;
+	padding: 14px;
+	position: sticky;
+	top: 44px;
+}
+
+.laca-settings-hub a {
+	align-items: center;
+	background: transparent;
+	border: 1px solid transparent;
+	border-radius: 15px;
+	color: var(--laca-admin-ink);
+	display: flex;
+	flex-direction: row;
+	font-size: 16px;
+	font-weight: 500;
+	gap: 10px;
+	min-height: 42px;
+	padding: 10px 12px;
+	text-decoration: none;
+	transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+
+.laca-settings-hub__group {
+	border-top: 1px solid rgba(37, 25, 20, 0.12);
+	color: var(--laca-admin-muted);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.12em;
+	margin: 10px 4px 2px;
+	padding-top: 12px;
+	text-transform: uppercase;
+}
+
+.laca-settings-hub__group:first-child {
+	border-top: 0;
+	margin-top: 2px;
+	padding-top: 0;
+}
+
+.laca-settings-hub a:hover,
+.laca-settings-hub a:focus,
+.laca-settings-hub a.is-active {
+	background: #fff4d9;
+	border-color: rgba(215, 101, 44, 0.28);
+	transform: translateX(2px);
+}
+
+.laca-settings-hub span {
+	align-items: center;
+	background: rgba(215, 101, 44, 0.12);
+	border-radius: 999px;
+	color: var(--laca-admin-accent);
+	display: inline-flex;
+	font-size: 11px;
+	height: 26px;
+	justify-content: center;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	width: 34px;
+}
+
+.laca-settings-section {
+	display: none;
+	scroll-margin-top: 44px;
+}
+
+.laca-settings-section.is-active {
+	display: block;
+}
+
+.laca-settings-section + .laca-settings-section {
+	border-top: 0;
+	margin-top: 0;
+	padding-top: 0;
+}
+
+.laca-settings-card h2 {
+	border-bottom: 1px dashed var(--laca-admin-rule);
+	color: var(--laca-admin-ink);
+	font-family: var(--laca-admin-font);
+	font-size: 22px;
+	font-weight: 600;
+	letter-spacing: -0.03em;
+	margin: 10px 0 14px;
+	padding-bottom: 10px;
+}
+
+.laca-settings-card h2:first-child {
+	margin-top: 0;
+}
+
+.laca-settings-card .form-table th {
+	color: var(--laca-admin-ink);
+	font-family: var(--laca-admin-font);
+	font-size: 13px;
+	font-weight: 600;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	width: 190px;
+}
+
+.laca-settings-card input[type="text"],
+.laca-settings-card input[type="url"],
+.laca-settings-card input[type="password"],
+.laca-settings-card input[type="number"],
+.laca-settings-card select,
+.laca-settings-card textarea {
+	background: var(--laca-admin-paper);
+	border: 1px solid rgba(37, 25, 20, 0.32);
+	border-radius: 12px;
+	color: var(--laca-admin-ink);
+	font-size: 16px;
+	min-height: 42px;
+	padding: 7px 12px;
+}
+
+.laca-color-fields {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 14px;
+}
+
+.laca-inline-fields {
+	align-items: center;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px 14px;
+	margin: 10px 0;
+}
+
+.laca-inline-fields label {
+	align-items: center;
+	background: var(--laca-admin-warm);
+	border: 1px dashed var(--laca-admin-rule);
+	border-radius: 12px;
+	display: inline-flex;
+	font-weight: 500;
+	gap: 7px;
+	padding: 8px 10px;
+}
+
+.laca-inline-fields select {
+	background: var(--laca-admin-paper);
+	border: 1px solid rgba(37, 25, 20, 0.32);
+	border-radius: 10px;
+	color: var(--laca-admin-ink);
+	font-weight: 500;
+	min-height: 36px;
+}
+
+.laca-combo-builder,
+.laca-variant-builder,
+.laca-promo-rules {
+	display: grid;
+	gap: 14px;
+}
+
+.laca-combo-builder {
+	background:
+		radial-gradient(circle at top left, rgba(215, 101, 44, 0.13), transparent 34%),
+		linear-gradient(135deg, #fffaf0 0%, #fff2d5 100%);
+	border: 1px solid rgba(37, 25, 20, 0.18);
+	border-radius: 24px;
+	box-shadow: 0 12px 26px rgba(37, 25, 20, 0.06);
+	padding: 18px;
+}
+
+.laca-variant-builder {
+	background:
+		radial-gradient(circle at bottom right, rgba(215, 101, 44, 0.11), transparent 32%),
+		linear-gradient(135deg, #fffdf5 0%, #fff3dc 100%);
+	border: 1px solid rgba(37, 25, 20, 0.18);
+	border-radius: 24px;
+	box-shadow: 0 12px 26px rgba(37, 25, 20, 0.06);
+	padding: 18px;
+}
+
+.laca-combo-builder__hero,
+.laca-variant-builder__hero {
+	align-items: stretch;
+	display: grid;
+	gap: 14px;
+	grid-template-columns: minmax(0, 1fr) 240px;
+}
+
+.laca-combo-builder__hero h3,
+.laca-variant-builder__hero h3 {
+	color: var(--laca-admin-ink);
+	font-size: 20px;
+	font-weight: 600;
+	letter-spacing: -0.03em;
+	margin: 4px 0 6px;
+}
+
+.laca-combo-builder__hero span,
+.laca-variant-builder__hero span,
+.laca-combo-builder__summary label,
+.laca-variant-group label,
+.laca-promo-rule label {
+	color: var(--laca-admin-muted);
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+}
+
+.laca-combo-builder__hero p,
+.laca-variant-builder__hero p {
+	color: var(--laca-admin-muted);
+	font-size: 14px;
+	font-weight: 400;
+	margin: 0;
+}
+
+.laca-variant-builder__hero {
+	background:
+		radial-gradient(circle at 90% 20%, rgba(73, 111, 56, 0.12), transparent 32%),
+		var(--laca-admin-card);
+	border: 1px solid rgba(37, 25, 20, 0.18);
+	border-radius: 22px;
+	box-shadow: 0 12px 26px rgba(37, 25, 20, 0.06);
+	padding: 16px;
+}
+
+.laca-variant-builder__hero ul {
+	background: var(--laca-admin-warm);
+	border: 1px dashed var(--laca-admin-rule);
+	border-radius: 16px;
+	color: var(--laca-admin-muted);
+	font-weight: 400;
+	margin: 0;
+	padding: 12px 14px 12px 26px;
+}
+
+.laca-variant-builder__hero li {
+	margin: 5px 0;
+}
+
+.laca-combo-builder__summary,
+.laca-variant-group__head,
+.laca-promo-rule__grid {
+	display: grid;
+	gap: 12px;
+	grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+}
+
+.laca-combo-builder input[type="text"],
+.laca-combo-builder input[type="number"],
+.laca-combo-builder select,
+.laca-variant-builder input[type="text"],
+.laca-variant-builder input[type="number"],
+.laca-variant-builder select,
+.laca-promo-rule input[type="text"],
+.laca-promo-rule input[type="number"],
+.laca-promo-rule select {
+	background: var(--laca-admin-paper);
+	border: 2px solid var(--laca-admin-ink);
+	border-radius: 13px;
+	box-shadow: none;
+	color: var(--laca-admin-ink);
+	display: block;
+	font-weight: 800;
+	margin-top: 6px;
+	min-height: 38px;
+	width: 100%;
+}
+
+.laca-promo-gift-foods {
+	min-height: 96px !important;
+	padding: 8px !important;
+}
+
+.laca-promo-rule .description {
+	color: var(--laca-admin-muted);
+	display: block;
+	font-size: 12px;
+	font-weight: 700;
+	margin-top: 6px;
+}
+
+.laca-combo-items {
+	display: grid;
+	gap: 10px;
+}
+
+.laca-combo-item-row {
+	align-items: center;
+	background: rgba(255, 248, 232, 0.92);
+	border: 2px solid rgba(37, 25, 20, 0.13);
+	border-radius: 20px;
+	box-shadow: inset 0 -3px 0 rgba(37, 25, 20, 0.06);
+	display: grid;
+	gap: 10px;
+	grid-template-columns: auto minmax(220px, 1fr) 90px auto;
+	padding: 14px;
+	transition: border-color 160ms ease, transform 160ms ease;
+}
+
+.laca-combo-item-row:focus-within {
+	border-color: var(--laca-admin-accent);
+	transform: translateY(-1px);
+}
+
+.laca-combo-item-row__main label,
+.laca-combo-item-row > label {
+	color: var(--laca-admin-muted);
+	font-size: 11px;
+	font-weight: 900;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.laca-combo-item-row__badge {
+	align-items: center;
+	background: var(--laca-admin-ink);
+	border-radius: 999px;
+	color: var(--laca-admin-paper);
+	display: inline-flex;
+	font-size: 12px;
+	font-weight: 900;
+	height: 34px;
+	justify-content: center;
+	width: 42px;
+}
+
+.laca-combo-unique-warning {
+	background: #fff0c2;
+	border: 1px dashed rgba(123, 82, 8, 0.35);
+	border-radius: 14px;
+	color: #7b5208;
+	font-weight: 800;
+	margin: 0;
+	padding: 10px 12px;
+}
+
+.laca-combo-price-preview,
+.laca-variant-group,
+.laca-promo-rule {
+	background: var(--laca-admin-card);
+	border: 2px solid var(--laca-admin-ink);
+	border-radius: 20px;
+	box-shadow: 4px 4px 0 rgba(37, 25, 20, 0.14);
+	padding: 14px;
+}
+
+.laca-combo-price-preview {
+	align-items: center;
+	background: var(--laca-admin-ink);
+	color: var(--laca-admin-paper);
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	justify-content: space-between;
+	text-align: center;
+}
+
+.laca-combo-price-preview span {
+	color: rgba(255, 248, 232, 0.72);
+}
+
+.laca-combo-price-preview strong {
+	font-size: 24px;
+}
+
+.laca-variant-group {
+	display: grid;
+	gap: 12px;
+}
+
+.laca-variant-options {
+	display: grid;
+	gap: 10px;
+}
+
+.laca-variant-option {
+	align-items: end;
+	background: #fff5df;
+	border: 1px dashed var(--laca-admin-rule);
+	border-radius: 16px;
+	display: grid;
+	gap: 10px;
+	grid-template-columns: minmax(160px, 1fr) 140px auto;
+	padding: 10px;
+}
+
+.laca-promo-rule__head {
+	align-items: center;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	justify-content: space-between;
+	margin-bottom: 12px;
+}
+
+.laca-promo-rule__head strong {
+	color: var(--laca-admin-ink);
+	font-size: 15px;
+	text-transform: uppercase;
+}
+
+.laca-promo-rule__wide {
+	grid-column: 1 / -1;
+}
+
+.laca-color-fields label {
+	align-items: center;
+	background: var(--laca-admin-warm);
+	border: 1px dashed var(--laca-admin-rule);
+	border-radius: 12px;
+	display: inline-flex;
+	font-weight: 700;
+	gap: 8px;
+	padding: 8px 10px;
+}
+
+.laca-color-fields input[type="color"] {
+	border: 2px solid var(--laca-admin-ink);
+	border-radius: 999px;
+	height: 34px;
+	padding: 0;
+	width: 44px;
+}
+
+.laca-settings-card input:focus {
+	border-color: var(--laca-admin-accent);
+	box-shadow: 0 0 0 3px rgba(215, 101, 44, 0.2);
+	outline: none;
+}
+
+.laca-settings-card code {
+	background: var(--laca-admin-warm);
+	border: 1px dashed var(--laca-admin-rule);
+	border-radius: 10px;
+	color: var(--laca-admin-ink);
+	display: inline-block;
+	max-width: 100%;
+	padding: 8px 10px;
+	white-space: normal;
+}
+
+.laca-setup-guide {
+	background: var(--laca-admin-warm);
+	border: 1px dashed var(--laca-admin-rule);
+	border-radius: 18px;
+	margin: 16px 0 26px;
+	padding: 16px 18px;
+}
+
+.laca-setup-guide h3 {
+	color: var(--laca-admin-ink);
+	font-size: 18px;
+	font-weight: 600;
+	margin: 0 0 10px;
+}
+
+.laca-setup-guide ol {
+	margin: 0 0 12px 20px;
+}
+
+.laca-setup-guide li {
+	color: var(--laca-admin-ink);
+	margin: 8px 0;
+}
+
+.laca-setup-guide p {
+	margin-bottom: 0;
+}
+
+.laca-sms-test-form {
+	display: grid;
+	gap: 10px;
+	margin-top: 14px;
+}
+
+.laca-sms-test-form label {
+	color: var(--laca-admin-ink);
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.laca-test-sms-result {
+	border-radius: 14px;
+	color: var(--laca-admin-muted);
+	min-height: 22px;
+	padding: 8px 10px;
+}
+
+.laca-test-sms-result.is-success {
+	background: rgba(73, 111, 56, 0.12);
+	color: #2f4c26;
+}
+
+.laca-test-sms-result.is-error {
+	background: rgba(191, 59, 36, 0.12);
+	color: #8d2d1d;
+}
+
+.laca-menu-qr-frame {
+	background: #ffffff;
+	border: 2px solid var(--laca-admin-ink);
+	border-radius: 18px;
+	box-shadow: 4px 4px 0 var(--laca-admin-rule);
+	padding: 14px;
+	text-align: center;
+}
+
+.laca-menu-qr-frame img {
+	display: block;
+	height: auto;
+	margin: 0 auto;
+	max-width: 280px;
+	width: 100%;
+}
+
+.laca-payment-log-table {
+	background: var(--laca-admin-card);
+	border: 2px solid var(--laca-admin-ink);
+	border-radius: 18px;
+	box-shadow: 5px 5px 0 rgba(37, 25, 20, 0.16);
+	overflow: auto;
+	padding: 12px;
+}
+
+.laca-payment-log-table table {
+	border: 0;
+}
+
+.laca-revenue-grid {
+	display: grid;
+	gap: 18px;
+	grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+	margin-bottom: 22px;
+}
+
+.laca-revenue-grid--detail {
+	grid-template-columns: repeat(4, minmax(220px, 1fr));
+}
+
+.laca-revenue-filter {
+	align-items: end;
+	background: rgba(255, 253, 245, 0.82);
+	border: 2px dashed var(--laca-admin-rule);
+	border-radius: 18px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	margin: 6px 0 20px;
+	padding: 14px;
+}
+
+.laca-revenue-filter label {
+	display: grid;
+	gap: 6px;
+}
+
+.laca-revenue-filter label span {
+	color: var(--laca-admin-muted);
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+}
+
+.laca-revenue-filter input[type="date"] {
+	background: var(--laca-admin-paper);
+	border: 2px solid var(--laca-admin-ink);
+	border-radius: 12px;
+	color: var(--laca-admin-ink);
+	font-family: var(--laca-admin-font);
+	font-weight: 700;
+	min-height: 40px;
+	padding: 4px 10px;
+}
+
+.laca-revenue-card {
+	background: var(--laca-admin-card);
+	border: 2px solid var(--laca-admin-ink);
+	border-radius: 18px;
+	box-shadow: 5px 5px 0 rgba(37, 25, 20, 0.16);
+	padding: 20px;
+}
+
+.laca-revenue-card--accent {
+	background: #fff0c2;
+}
+
+.laca-revenue-card span {
+	color: var(--laca-admin-muted);
+	display: block;
+	font-size: 12px;
+	font-weight: 700;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+
+.laca-revenue-card strong {
+	color: var(--laca-admin-ink);
+	display: block;
+	font-family: var(--laca-admin-font);
+	font-size: clamp(36px, 5vw, 58px);
+	font-weight: 700;
+	letter-spacing: -0.06em;
+	line-height: 0.95;
+	margin: 10px 0;
+}
+
+.laca-revenue-card em {
+	color: var(--laca-admin-muted);
+	font-style: normal;
+	font-weight: 700;
+}
+
+.laca-payment-log-table th {
+	color: var(--laca-admin-ink);
+	font-family: var(--laca-admin-font);
+	font-size: 12px;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.laca-revenue-detail-grid {
+	display: grid;
+	gap: 18px;
+	grid-template-columns: minmax(320px, 0.8fr) minmax(360px, 1.2fr);
+	margin-bottom: 22px;
+}
+
+.laca-revenue-table h2,
+.laca-revenue-section-head h2 {
+	color: var(--laca-admin-ink);
+	font-family: var(--laca-admin-font);
+	font-size: 26px;
+	font-weight: 700;
+	letter-spacing: -0.03em;
+	margin: 2px 0 12px;
+}
+
+.laca-revenue-section-head {
+	align-items: flex-start;
+	display: flex;
+	gap: 16px;
+	justify-content: space-between;
+}
+
+.laca-revenue-section-head p,
+.laca-revenue-orders small {
+	color: var(--laca-admin-muted);
+	display: block;
+	font-weight: 700;
+	margin: 0;
+}
+
+.laca-revenue-orders {
+	margin-top: 6px;
+}
+
+.laca-revenue-orders table {
+	min-width: 980px;
+}
+
+.laca-revenue-order-items {
+	display: grid;
+	gap: 6px;
+	margin: 0;
+	min-width: 240px;
+}
+
+.laca-revenue-order-items li {
+	align-items: center;
+	background: var(--laca-admin-warm);
+	border: 1px dashed var(--laca-admin-rule);
+	border-radius: 12px;
+	display: flex;
+	gap: 12px;
+	justify-content: space-between;
+	margin: 0;
+	padding: 7px 9px;
+}
+
+.laca-revenue-order-items span {
+	color: var(--laca-admin-ink);
+	font-weight: 700;
+}
+
+.laca-revenue-order-items small {
+	color: var(--laca-admin-muted);
+	display: block;
+	font-size: 11px;
+	font-weight: 800;
+	margin-top: 3px;
+}
+
+.laca-revenue-order-items strong {
+	color: var(--laca-admin-accent);
+	white-space: nowrap;
+}
+
+.laca-revenue-order-item--discount {
+	background: #e4efd8 !important;
+}
+
+.laca-revenue-order-item--gift {
+	background: #fff0c2 !important;
+}
+
+.laca-log-matched,
+.laca-log-already_paid,
+.laca-log-sent {
+	background: #e4efd8;
+	color: var(--laca-admin-olive);
+}
+
+.laca-log-amount_mismatch,
+.laca-log-invalid,
+.laca-log-order_not_found,
+.laca-log-error {
+	background: #f6dfd8;
+	color: var(--laca-admin-red);
+}
+
+.laca-log-queued {
+	background: #fff0c2;
+	color: #7b5208;
+}
+
+body.post-type-laca_food,
+body.post-type-laca_combo {
+	--laca-admin-font: "Quicksand", "Be Vietnam Pro", "Segoe UI", sans-serif;
+	--laca-admin-ink: #251914;
+	--laca-admin-paper: #fff8e8;
+	--laca-admin-card: #fffdf5;
+	--laca-admin-warm: #f7ead0;
+	--laca-admin-rule: #d9c7aa;
+	--laca-admin-muted: #806b55;
+	--laca-admin-accent: #d7652c;
+	--laca-admin-olive: #496f38;
+	--laca-admin-red: #a83c2d;
+}
+
+.post-type-laca_food #wpcontent,
+.post-type-laca_combo #wpcontent {
+	background:
+		radial-gradient(circle at 18px 18px, rgba(37, 25, 20, 0.045) 1px, transparent 1.2px) 0 0 / 20px 20px,
+		linear-gradient(180deg, #f8f1e3 0%, #fffaf0 48%, #f5ead4 100%);
+	min-height: 100vh;
+}
+
+.post-type-laca_food .wrap h1,
+.post-type-laca_food .wp-list-table,
+.post-type-laca_food .tablenav,
+.post-type-laca_food .button,
+.post-type-laca_food input,
+.post-type-laca_combo .wrap h1,
+.post-type-laca_combo .wp-list-table,
+.post-type-laca_combo .tablenav,
+.post-type-laca_combo .button,
+.post-type-laca_combo input,
+.post-type-laca_combo select {
+	font-family: var(--laca-admin-font);
+}
+
+.post-type-laca_food .wrap h1,
+.post-type-laca_combo .wrap h1 {
+	color: var(--laca-admin-ink);
+	font-size: 34px;
+	font-weight: 700;
+	letter-spacing: -0.04em;
+}
+
+.post-type-laca_food .subsubsub a,
+.post-type-laca_food .tablenav .displaying-num {
+	color: var(--laca-admin-muted);
+	font-weight: 700;
+}
+
+.post-type-laca_food .tablenav .button,
+.post-type-laca_food .search-box .button,
+.post-type-laca_food .tablenav select,
+.post-type-laca_food .search-box input[type="search"] {
+	background: rgba(255, 253, 245, 0.9);
+	border: 2px solid #c9d3e3;
+	border-radius: 12px;
+	box-shadow: none;
+	color: var(--laca-admin-ink);
+	font-weight: 700;
+	min-height: 34px;
+}
+
+.post-type-laca_food .tablenav .button:hover,
+.post-type-laca_food .search-box .button:hover {
+	background: var(--laca-admin-ink);
+	border-color: var(--laca-admin-ink);
+	color: var(--laca-admin-paper);
+}
+
+.post-type-laca_food .wp-list-table.widefat {
+	background: transparent;
+	border: 0;
+	border-collapse: separate;
+	border-spacing: 0 10px;
+	box-shadow: none;
+}
+
+.post-type-laca_food .wp-list-table thead th,
+.post-type-laca_food .wp-list-table tfoot th {
+	background: #f3e6ca;
+	border-bottom: 1px solid var(--laca-admin-rule);
+	border-top: 1px solid var(--laca-admin-rule);
+	color: var(--laca-admin-ink);
+	font-size: 12px;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	padding-bottom: 11px;
+	padding-top: 11px;
+	text-transform: uppercase;
+}
+
+.post-type-laca_food .wp-list-table thead th:first-child,
+.post-type-laca_food .wp-list-table tfoot th:first-child {
+	border-left: 1px solid var(--laca-admin-rule);
+	border-radius: 16px 0 0 16px;
+}
+
+.post-type-laca_food .wp-list-table thead th:last-child,
+.post-type-laca_food .wp-list-table tfoot th:last-child {
+	border-radius: 0 16px 16px 0;
+	border-right: 1px solid var(--laca-admin-rule);
+}
+
+.post-type-laca_food .wp-list-table tbody tr {
+	transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.post-type-laca_food .wp-list-table tbody td,
+.post-type-laca_food .wp-list-table tbody th.check-column {
+	background: rgba(255, 253, 245, 0.92);
+	border-bottom: 1px solid rgba(37, 25, 20, 0.12);
+	border-top: 1px solid rgba(37, 25, 20, 0.12);
+	padding-bottom: 16px;
+	padding-top: 16px;
+	vertical-align: middle;
+}
+
+.post-type-laca_food .wp-list-table tbody th.check-column {
+	border-left: 2px solid var(--laca-admin-ink);
+	border-radius: 18px 0 0 18px;
+}
+
+.post-type-laca_food .wp-list-table tbody td:last-child {
+	border-radius: 0 18px 18px 0;
+	border-right: 2px solid var(--laca-admin-ink);
+}
+
+.post-type-laca_food .wp-list-table tbody tr:hover td,
+.post-type-laca_food .wp-list-table tbody tr:hover th.check-column {
+	background: #fff8e8;
+}
+
+.post-type-laca_food .wp-list-table tbody tr.laca-food-inline-is-dirty {
+	transform: translateY(-1px);
+}
+
+.post-type-laca_food .wp-list-table tbody tr.laca-food-inline-is-dirty td,
+.post-type-laca_food .wp-list-table tbody tr.laca-food-inline-is-dirty th.check-column {
+	background: #fff2c9;
+}
+
+.post-type-laca_food .wp-list-table tbody tr.laca-food-inline-is-saving {
+	opacity: 0.72;
+}
+
+.post-type-laca_food .column-laca_food_thumb {
+	width: 118px;
+}
+
+.post-type-laca_food .column-laca_food_inline_title {
+	min-width: 260px;
+}
+
+.post-type-laca_food .column-laca_food_price {
+	width: 150px;
+}
+
+.post-type-laca_food .column-laca_food_available {
+	width: 128px;
+}
+
+.post-type-laca_food .column-laca_food_save {
+	width: 124px;
+}
+
+.laca-food-inline-thumb {
+	position: relative;
+	width: 92px;
+}
+
+.laca-food-inline-image-button {
+	background: transparent;
+	border: 0;
+	cursor: pointer;
+	display: block;
+	margin: 0;
+	padding: 0;
+	text-align: left;
+	width: 92px;
+}
+
+.laca-food-inline-thumb__preview {
+	align-items: center;
+	background:
+		radial-gradient(circle at 10px 10px, rgba(37, 25, 20, 0.08) 1px, transparent 1.2px) 0 0 / 12px 12px,
+		var(--laca-admin-paper);
+	border: 2px solid var(--laca-admin-ink);
+	border-radius: 18px;
+	box-shadow: 4px 4px 0 rgba(37, 25, 20, 0.16);
+	color: var(--laca-admin-muted);
+	display: flex;
+	font-size: 11px;
+	font-weight: 700;
+	height: 86px;
+	justify-content: center;
+	line-height: 1.25;
+	overflow: hidden;
+	text-align: center;
+	transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+	width: 86px;
+}
+
+.laca-food-inline-thumb__preview img {
+	display: block;
+	height: 100%;
+	object-fit: cover;
+	width: 100%;
+}
+
+.laca-food-inline-image-button:hover .laca-food-inline-thumb__preview,
+.laca-food-inline-image-button:focus-visible .laca-food-inline-thumb__preview {
+	border-color: var(--laca-admin-accent);
+	box-shadow: 4px 4px 0 var(--laca-admin-ink);
+	transform: translate(-1px, -1px);
+}
+
+.laca-food-inline-image-button:disabled {
+	cursor: wait;
+	opacity: 0.7;
+}
+
+.laca-food-inline-thumb__hint {
+	color: var(--laca-admin-muted);
+	display: block;
+	font-size: 11px;
+	font-weight: 700;
+	line-height: 1.15;
+	margin-top: 8px;
+}
+
+.laca-food-inline-field {
+	align-items: flex-start;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.post-type-laca_food .laca-food-inline-title,
+.post-type-laca_food .laca-food-inline-price,
+.post-type-laca_food .laca-food-inline-combo-badge,
+.post-type-laca_food .laca-food-inline-combo-details {
+	background: var(--laca-admin-paper);
+	border: 2px solid #c9d3e3;
+	border-radius: 14px;
+	box-shadow: none;
+	color: var(--laca-admin-ink);
+	font-weight: 700;
+	min-height: 40px;
+	padding: 7px 12px;
+	transition: background 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+	width: 100%;
+}
+
+.post-type-laca_food .laca-food-inline-title:focus,
+.post-type-laca_food .laca-food-inline-price:focus,
+.post-type-laca_food .laca-food-inline-combo-badge:focus,
+.post-type-laca_food .laca-food-inline-combo-details:focus {
+	border-color: var(--laca-admin-accent);
+	box-shadow: 0 0 0 3px rgba(215, 101, 44, 0.18);
+	outline: none;
+}
+
+.post-type-laca_food .laca-food-inline-price {
+	max-width: 112px;
+	text-align: right;
+}
+
+.laca-food-inline-combo-wrap {
+	display: grid;
+	gap: 8px;
+	min-width: 180px;
+}
+
+.post-type-laca_food .laca-food-inline-combo-badge {
+	min-height: 34px;
+	padding: 5px 10px;
+}
+
+.post-type-laca_food .laca-food-inline-combo-details {
+	font-size: 12px;
+	line-height: 1.35;
+	min-height: 58px;
+	padding: 8px 10px;
+	resize: vertical;
+}
+
+.laca-food-inline-currency,
+.laca-food-inline-detail-link {
+	color: var(--laca-admin-muted);
+	font-size: 12px;
+	font-weight: 700;
+}
+
+.laca-food-inline-detail-link {
+	text-decoration: none;
+}
+
+.laca-food-inline-detail-link:hover {
+	color: var(--laca-admin-accent);
+}
+
+.laca-food-inline-switch {
+	align-items: center;
+	background: #edf4df;
+	border: 1px dashed rgba(73, 111, 56, 0.48);
+	border-radius: 999px;
+	color: var(--laca-admin-olive);
+	display: inline-flex;
+	font-weight: 700;
+	gap: 7px;
+	padding: 8px 11px;
+}
+
+.laca-food-inline-save-wrap {
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.laca-food-inline-remove-image {
+	align-items: center;
+	background: var(--laca-admin-red);
+	border: 2px solid var(--laca-admin-card);
+	border-radius: 999px;
+	box-shadow: 0 2px 0 rgba(37, 25, 20, 0.22);
+	color: #ffffff;
+	cursor: pointer;
+	display: inline-flex;
+	font-size: 18px;
+	font-weight: 700;
+	height: 26px;
+	justify-content: center;
+	line-height: 1;
+	padding: 0;
+	position: absolute;
+	right: -3px;
+	text-decoration: none;
+	top: -7px;
+	width: 26px;
+}
+
+.laca-food-inline-remove-image.is-hidden {
+	display: none;
+}
+
+.laca-food-inline-remove-image:disabled {
+	cursor: wait;
+	opacity: 0.65;
+}
+
+.laca-food-inline-status {
+	background: var(--laca-admin-warm);
+	border: 1px solid var(--laca-admin-rule);
+	border-radius: 999px;
+	color: var(--laca-admin-muted);
+	display: inline-flex;
+	font-size: 11px;
+	font-weight: 700;
+	justify-content: center;
+	letter-spacing: 0.08em;
+	line-height: 1.3;
+	min-width: 76px;
+	padding: 7px 10px;
+	text-transform: uppercase;
+}
+
+.laca-food-inline-status.is-success {
+	background: #e4efd8;
+	border-color: rgba(73, 111, 56, 0.3);
+	color: var(--laca-admin-olive);
+}
+
+.laca-food-inline-status.is-error {
+	background: #f6dfd8;
+	border-color: rgba(168, 60, 45, 0.32);
+	color: var(--laca-admin-red);
+}
+
+.laca-food-inline-status.is-dirty,
+.laca-food-inline-status.is-saving {
+	background: #fff0c2;
+	border-color: rgba(123, 82, 8, 0.28);
+	color: #7b5208;
+}
+
+.laca-food-inline-status-help {
+	color: var(--laca-admin-muted);
+	font-size: 11px;
+	font-weight: 700;
+	text-align: center;
+}
+
+@media (max-width: 960px) {
+	.laca-settings-shell,
+	.laca-settings-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.laca-settings-hub {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+		position: static;
+	}
+
+	.laca-kds-summary {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.laca-kds-board {
+		grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	}
+
+	.laca-revenue-grid--detail,
+	.laca-revenue-detail-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (max-width: 782px) {
+	.laca-kds-wrap,
+	.laca-kds-settings-wrap {
+		margin-right: 10px;
+		padding: 16px;
+	}
+
+	.laca-kds-header {
+		align-items: stretch;
+		flex-direction: column;
+	}
+
+	.laca-kds-summary {
+		grid-template-columns: 1fr 1fr;
+	}
+
+	.laca-kds-summary div {
+		padding: 12px;
+	}
+
+	.laca-kds-summary strong {
+		font-size: 24px;
+	}
+
+	.laca-kds-board,
+	.laca-kds-board--recent {
+		grid-template-columns: 1fr;
+	}
+
+	.laca-order-card {
+		border-radius: 16px;
+		padding: 15px;
+	}
+
+	.laca-order-card h2 {
+		font-size: 32px;
+	}
+
+	.laca-order-meta {
+		grid-template-columns: 1fr;
+	}
+
+	.laca-order-actions {
+		flex-direction: column;
+	}
+
+	.laca-order-actions__main {
+		grid-template-columns: 1fr;
+	}
+
+	.laca-kds-paid {
+		align-self: stretch;
+		text-align: center;
+	}
+
+	.laca-combo-item-row {
+		grid-template-columns: 1fr;
+	}
+
+	.laca-combo-builder__hero,
+	.laca-variant-builder__hero,
+	.laca-variant-option {
+		grid-template-columns: 1fr;
+	}
+
+	.laca-settings-card .form-table th {
+		width: auto;
+	}
+}
+
+/* Unified admin visual language for every Laca-owned WordPress admin screen. */
+.laca-kds-wrap,
+.laca-kds-settings-wrap,
+body.post-type-laca_food,
+body.post-type-laca_combo,
+body.taxonomy-laca_food_category {
+	--laca-admin-font: "Quicksand", "Be Vietnam Pro", "Segoe UI", sans-serif;
+	--laca-admin-ink: #251914;
+	--laca-admin-paper: #fff8e8;
+	--laca-admin-card: #fffdf5;
+	--laca-admin-warm: #f7ead0;
+	--laca-admin-rule: #d9c7aa;
+	--laca-admin-muted: #806b55;
+	--laca-admin-accent: #d7652c;
+	--laca-admin-olive: #496f38;
+	--laca-admin-red: #a83c2d;
+	--laca-admin-shadow: 0 14px 34px rgba(37, 25, 20, 0.07);
+}
+
+.laca-kds-wrap,
+.laca-kds-settings-wrap {
+	border: 1px solid rgba(37, 25, 20, 0.12);
+	border-radius: 22px;
+	box-shadow: var(--laca-admin-shadow);
+	font-family: var(--laca-admin-font);
+	font-size: 16px;
+	padding: 22px;
+}
+
+body.post-type-laca_food #wpcontent,
+body.post-type-laca_combo #wpcontent,
+body.taxonomy-laca_food_category #wpcontent {
+	background:
+		radial-gradient(circle at 18px 18px, rgba(37, 25, 20, 0.045) 1px, transparent 1.2px) 0 0 / 20px 20px,
+		linear-gradient(180deg, #f8f1e3 0%, #fffaf0 48%, #f5ead4 100%);
+	min-height: 100vh;
+}
+
+body.post-type-laca_food .wrap,
+body.post-type-laca_combo .wrap,
+body.taxonomy-laca_food_category .wrap {
+	background: rgba(255, 253, 245, 0.72);
+	border: 1px solid rgba(37, 25, 20, 0.12);
+	border-radius: 22px;
+	box-shadow: var(--laca-admin-shadow);
+	color: var(--laca-admin-ink);
+	font-family: var(--laca-admin-font);
+	font-size: 16px;
+	margin: 20px 20px 0 0;
+	padding: 22px;
+}
+
+.laca-kds-header h1,
+.laca-kds-settings-wrap h1,
+body.post-type-laca_food .wrap h1,
+body.post-type-laca_combo .wrap h1,
+body.taxonomy-laca_food_category .wrap h1 {
+	color: var(--laca-admin-ink);
+	font-family: var(--laca-admin-font);
+	font-size: clamp(26px, 3vw, 34px);
+	font-weight: 600;
+	letter-spacing: -0.035em;
+	line-height: 1.12;
+	margin-bottom: 8px;
+}
+
+.laca-kds-header p,
+.laca-kds-settings-wrap > p,
+.laca-settings-card p,
+.laca-settings-card .description,
+body.post-type-laca_food .description,
+body.post-type-laca_combo .description,
+body.taxonomy-laca_food_category .description,
+body.taxonomy-laca_food_category p {
+	color: var(--laca-admin-muted);
+	font-size: 15px;
+	font-weight: 400;
+	line-height: 1.55;
+}
+
+.laca-kds-wrap h2,
+.laca-kds-settings-wrap h2,
+body.post-type-laca_food h2,
+body.post-type-laca_combo h2,
+body.taxonomy-laca_food_category h2 {
+	color: var(--laca-admin-ink);
+	font-family: var(--laca-admin-font);
+	font-weight: 600;
+	letter-spacing: -0.025em;
+}
+
+.laca-kds-wrap .button,
+.laca-kds-settings-wrap .button,
+body.post-type-laca_food .button,
+body.post-type-laca_combo .button,
+body.taxonomy-laca_food_category .button,
+body.post-type-laca_food .page-title-action,
+body.post-type-laca_combo .page-title-action,
+body.taxonomy-laca_food_category .page-title-action {
+	background: rgba(255, 253, 245, 0.86);
+	border: 1px solid rgba(37, 25, 20, 0.28);
+	border-radius: 999px;
+	box-shadow: none;
+	color: var(--laca-admin-ink);
+	font-family: var(--laca-admin-font);
+	font-size: 14px;
+	font-weight: 500;
+	min-height: 36px;
+	padding: 4px 14px;
+	transition: background 160ms ease, border-color 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.laca-kds-wrap .button:hover,
+.laca-kds-settings-wrap .button:hover,
+body.post-type-laca_food .button:hover,
+body.post-type-laca_combo .button:hover,
+body.taxonomy-laca_food_category .button:hover,
+body.post-type-laca_food .page-title-action:hover,
+body.post-type-laca_combo .page-title-action:hover,
+body.taxonomy-laca_food_category .page-title-action:hover {
+	background: #fff3d7;
+	border-color: rgba(215, 101, 44, 0.5);
+	color: var(--laca-admin-ink);
+	transform: translateY(-1px);
+}
+
+.laca-kds-wrap .button-primary,
+.laca-kds-settings-wrap .button-primary,
+.laca-kds-settings-wrap .submit .button-primary,
+body.post-type-laca_food .button-primary,
+body.post-type-laca_combo .button-primary,
+body.taxonomy-laca_food_category .button-primary,
+body.post-type-laca_food .page-title-action,
+body.post-type-laca_combo .page-title-action {
+	background: var(--laca-admin-ink);
+	border-color: var(--laca-admin-ink);
+	color: var(--laca-admin-paper);
+}
+
+.laca-kds-wrap .button-primary:hover,
+.laca-kds-settings-wrap .button-primary:hover,
+.laca-kds-settings-wrap .submit .button-primary:hover,
+body.post-type-laca_food .button-primary:hover,
+body.post-type-laca_combo .button-primary:hover,
+body.taxonomy-laca_food_category .button-primary:hover,
+body.post-type-laca_food .page-title-action:hover,
+body.post-type-laca_combo .page-title-action:hover {
+	background: var(--laca-admin-accent);
+	border-color: var(--laca-admin-accent);
+	color: #ffffff;
+}
+
+.laca-kds-wrap input,
+.laca-kds-wrap select,
+.laca-kds-wrap textarea,
+.laca-kds-settings-wrap input,
+.laca-kds-settings-wrap select,
+.laca-kds-settings-wrap textarea,
+body.post-type-laca_food input,
+body.post-type-laca_food select,
+body.post-type-laca_food textarea,
+body.post-type-laca_combo input,
+body.post-type-laca_combo select,
+body.post-type-laca_combo textarea,
+body.taxonomy-laca_food_category input,
+body.taxonomy-laca_food_category select,
+body.taxonomy-laca_food_category textarea {
+	background: #fffaf0;
+	border: 1px solid rgba(37, 25, 20, 0.24);
+	border-radius: 12px;
+	box-shadow: none;
+	color: var(--laca-admin-ink);
+	font-family: var(--laca-admin-font);
+	font-size: 15px;
+	font-weight: 400;
+	min-height: 38px;
+}
+
+.laca-kds-wrap input:focus,
+.laca-kds-wrap select:focus,
+.laca-kds-wrap textarea:focus,
+.laca-kds-settings-wrap input:focus,
+.laca-kds-settings-wrap select:focus,
+.laca-kds-settings-wrap textarea:focus,
+body.post-type-laca_food input:focus,
+body.post-type-laca_food select:focus,
+body.post-type-laca_food textarea:focus,
+body.post-type-laca_combo input:focus,
+body.post-type-laca_combo select:focus,
+body.post-type-laca_combo textarea:focus,
+body.taxonomy-laca_food_category input:focus,
+body.taxonomy-laca_food_category select:focus,
+body.taxonomy-laca_food_category textarea:focus {
+	border-color: var(--laca-admin-accent);
+	box-shadow: 0 0 0 3px rgba(215, 101, 44, 0.16);
+	outline: none;
+}
+
+.laca-order-card,
+.laca-food-admin-card,
+.laca-kds-empty,
+.laca-kds-error,
+.laca-kds-loading,
+.laca-settings-card,
+.laca-combo-builder,
+.laca-variant-builder,
+.laca-combo-price-preview,
+.laca-variant-group,
+.laca-promo-rule,
+.laca-payment-log-table,
+.laca-revenue-card,
+.laca-setup-guide,
+.laca-menu-qr-frame {
+	border: 1px solid rgba(37, 25, 20, 0.14);
+	box-shadow: 0 10px 26px rgba(37, 25, 20, 0.06);
+}
+
+.laca-kds-summary div,
+.laca-revenue-card,
+.laca-settings-card,
+.laca-payment-log-table,
+.laca-setup-guide {
+	background: rgba(255, 253, 245, 0.88);
+}
+
+.laca-kds-summary span,
+.laca-kds-rule-note span,
+.laca-order-label,
+.laca-order-total span,
+.laca-settings-card .form-table th,
+.laca-combo-builder__hero span,
+.laca-variant-builder__hero span,
+.laca-combo-builder__summary label,
+.laca-variant-group label,
+.laca-promo-rule label,
+.laca-revenue-filter label span,
+.laca-revenue-card span,
+.laca-payment-log-table th,
+body.post-type-laca_food .wp-list-table thead th,
+body.post-type-laca_food .wp-list-table tfoot th,
+body.post-type-laca_combo .wp-list-table thead th,
+body.post-type-laca_combo .wp-list-table tfoot th,
+body.taxonomy-laca_food_category .wp-list-table thead th,
+body.taxonomy-laca_food_category .wp-list-table tfoot th {
+	color: var(--laca-admin-muted);
+	font-family: var(--laca-admin-font);
+	font-size: 12px;
+	font-weight: 500;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.laca-order-card h2 {
+	font-size: 32px;
+	font-weight: 600;
+}
+
+.laca-order-total strong,
+.laca-revenue-order-items strong {
+	font-weight: 600;
+}
+
+.laca-revenue-card strong {
+	font-size: clamp(30px, 4vw, 44px);
+	font-weight: 600;
+}
+
+.laca-revenue-card em,
+.laca-revenue-order-items span,
+.laca-revenue-order-items small,
+.laca-revenue-section-head p,
+.laca-revenue-orders small {
+	font-weight: 400;
+}
+
+.laca-combo-builder input[type="text"],
+.laca-combo-builder input[type="number"],
+.laca-combo-builder select,
+.laca-variant-builder input[type="text"],
+.laca-variant-builder input[type="number"],
+.laca-variant-builder select,
+.laca-promo-rule input[type="text"],
+.laca-promo-rule input[type="number"],
+.laca-promo-rule select,
+.laca-revenue-filter input[type="date"],
+body.post-type-laca_food .laca-food-inline-title,
+body.post-type-laca_food .laca-food-inline-price,
+body.post-type-laca_food .laca-food-inline-combo-badge,
+body.post-type-laca_food .laca-food-inline-combo-details {
+	border: 1px solid rgba(37, 25, 20, 0.24);
+	font-weight: 400;
+}
+
+.laca-combo-item-row {
+	border: 1px solid rgba(37, 25, 20, 0.12);
+	box-shadow: none;
+}
+
+.laca-combo-item-row__main label,
+.laca-combo-item-row > label,
+.laca-combo-unique-warning,
+.laca-promo-rule .description,
+.laca-color-fields label,
+.laca-food-inline-thumb__hint,
+.laca-food-inline-currency,
+.laca-food-inline-detail-link,
+.laca-food-inline-switch,
+.laca-food-inline-status,
+.laca-food-inline-status-help {
+	font-weight: 500;
+}
+
+.laca-combo-item-row__badge {
+	background: rgba(37, 25, 20, 0.08);
+	color: var(--laca-admin-ink);
+	font-weight: 600;
+}
+
+.laca-combo-price-preview {
+	background: #fff3d7;
+	color: var(--laca-admin-ink);
+}
+
+.laca-combo-price-preview span {
+	color: var(--laca-admin-muted);
+}
+
+.laca-combo-price-preview strong {
+	font-weight: 600;
+}
+
+.laca-status-badge,
+.laca-kds-status-bar,
+.laca-food-inline-status {
+	font-weight: 500;
+	letter-spacing: 0.08em;
+}
+
+body.post-type-laca_food .wp-list-table.widefat,
+body.post-type-laca_combo .wp-list-table.widefat,
+body.taxonomy-laca_food_category .wp-list-table.widefat {
+	background: transparent;
+	border: 0;
+	border-collapse: separate;
+	border-spacing: 0 10px;
+	box-shadow: none;
+	font-family: var(--laca-admin-font);
+}
+
+body.post-type-laca_food .wp-list-table thead th,
+body.post-type-laca_food .wp-list-table tfoot th,
+body.post-type-laca_combo .wp-list-table thead th,
+body.post-type-laca_combo .wp-list-table tfoot th,
+body.taxonomy-laca_food_category .wp-list-table thead th,
+body.taxonomy-laca_food_category .wp-list-table tfoot th {
+	background: rgba(247, 234, 208, 0.76);
+	border-bottom: 1px solid var(--laca-admin-rule);
+	border-top: 1px solid var(--laca-admin-rule);
+	padding-bottom: 11px;
+	padding-top: 11px;
+}
+
+body.post-type-laca_food .wp-list-table thead th:first-child,
+body.post-type-laca_food .wp-list-table tfoot th:first-child,
+body.post-type-laca_combo .wp-list-table thead th:first-child,
+body.post-type-laca_combo .wp-list-table tfoot th:first-child,
+body.taxonomy-laca_food_category .wp-list-table thead th:first-child,
+body.taxonomy-laca_food_category .wp-list-table tfoot th:first-child {
+	border-left: 1px solid var(--laca-admin-rule);
+	border-radius: 16px 0 0 16px;
+}
+
+body.post-type-laca_food .wp-list-table thead th:last-child,
+body.post-type-laca_food .wp-list-table tfoot th:last-child,
+body.post-type-laca_combo .wp-list-table thead th:last-child,
+body.post-type-laca_combo .wp-list-table tfoot th:last-child,
+body.taxonomy-laca_food_category .wp-list-table thead th:last-child,
+body.taxonomy-laca_food_category .wp-list-table tfoot th:last-child {
+	border-radius: 0 16px 16px 0;
+	border-right: 1px solid var(--laca-admin-rule);
+}
+
+body.post-type-laca_food .wp-list-table tbody td,
+body.post-type-laca_food .wp-list-table tbody th.check-column,
+body.post-type-laca_combo .wp-list-table tbody td,
+body.post-type-laca_combo .wp-list-table tbody th.check-column,
+body.taxonomy-laca_food_category .wp-list-table tbody td,
+body.taxonomy-laca_food_category .wp-list-table tbody th.check-column {
+	background: rgba(255, 253, 245, 0.92);
+	border-bottom: 1px solid rgba(37, 25, 20, 0.1);
+	border-top: 1px solid rgba(37, 25, 20, 0.1);
+	font-family: var(--laca-admin-font);
+	font-size: 15px;
+	padding-bottom: 15px;
+	padding-top: 15px;
+	vertical-align: middle;
+}
+
+body.post-type-laca_food .wp-list-table tbody th.check-column,
+body.post-type-laca_combo .wp-list-table tbody th.check-column,
+body.taxonomy-laca_food_category .wp-list-table tbody th.check-column {
+	border-left: 1px solid rgba(37, 25, 20, 0.14);
+	border-radius: 16px 0 0 16px;
+}
+
+body.post-type-laca_food .wp-list-table tbody td:last-child,
+body.post-type-laca_combo .wp-list-table tbody td:last-child,
+body.taxonomy-laca_food_category .wp-list-table tbody td:last-child {
+	border-radius: 0 16px 16px 0;
+	border-right: 1px solid rgba(37, 25, 20, 0.14);
+}
+
+body.post-type-laca_food .wp-list-table tbody tr:hover td,
+body.post-type-laca_food .wp-list-table tbody tr:hover th.check-column,
+body.post-type-laca_combo .wp-list-table tbody tr:hover td,
+body.post-type-laca_combo .wp-list-table tbody tr:hover th.check-column,
+body.taxonomy-laca_food_category .wp-list-table tbody tr:hover td,
+body.taxonomy-laca_food_category .wp-list-table tbody tr:hover th.check-column {
+	background: #fff8e8;
+}
+
+body.post-type-laca_food .subsubsub a,
+body.post-type-laca_food .tablenav .displaying-num,
+body.post-type-laca_combo .subsubsub a,
+body.post-type-laca_combo .tablenav .displaying-num,
+body.taxonomy-laca_food_category .subsubsub a,
+body.taxonomy-laca_food_category .tablenav .displaying-num {
+	color: var(--laca-admin-muted);
+	font-weight: 500;
+}
+
+body.post-type-laca_food .tablenav .button,
+body.post-type-laca_food .search-box .button,
+body.post-type-laca_food .tablenav select,
+body.post-type-laca_food .search-box input[type="search"],
+body.post-type-laca_combo .tablenav .button,
+body.post-type-laca_combo .search-box .button,
+body.post-type-laca_combo .tablenav select,
+body.post-type-laca_combo .search-box input[type="search"],
+body.taxonomy-laca_food_category .tablenav .button,
+body.taxonomy-laca_food_category .search-box .button,
+body.taxonomy-laca_food_category .tablenav select,
+body.taxonomy-laca_food_category .search-box input[type="search"] {
+	border: 1px solid rgba(37, 25, 20, 0.24);
+	font-weight: 400;
+}
+
+.laca-food-inline-thumb__preview {
+	border: 1px solid rgba(37, 25, 20, 0.22);
+	box-shadow: 0 8px 18px rgba(37, 25, 20, 0.08);
+	font-weight: 500;
+}
+
+.laca-food-inline-image-button:hover .laca-food-inline-thumb__preview,
+.laca-food-inline-image-button:focus-visible .laca-food-inline-thumb__preview {
+	box-shadow: 0 10px 22px rgba(37, 25, 20, 0.1);
+}
+
+body.taxonomy-laca_food_category #col-left,
+body.taxonomy-laca_food_category #col-right {
+	float: none;
+	width: auto;
+}
+
+body.taxonomy-laca_food_category #col-container {
+	display: grid;
+	gap: 22px;
+	grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+}
+
+body.taxonomy-laca_food_category #col-left .col-wrap,
+body.taxonomy-laca_food_category #col-right .col-wrap {
+	background: rgba(255, 253, 245, 0.84);
+	border: 1px solid rgba(37, 25, 20, 0.12);
+	border-radius: 18px;
+	box-shadow: 0 10px 26px rgba(37, 25, 20, 0.05);
+	padding: 18px;
+}
+
+body.taxonomy-laca_food_category .form-wrap h2 {
+	font-size: 22px;
+	margin-top: 0;
+}
+
+body.taxonomy-laca_food_category .form-field label {
+	color: var(--laca-admin-ink);
+	font-family: var(--laca-admin-font);
+	font-size: 14px;
+	font-weight: 500;
+}
+
+body.taxonomy-laca_food_category .form-field {
+	margin-bottom: 16px;
+}
+
+body.taxonomy-laca_food_category .form-field input,
+body.taxonomy-laca_food_category .form-field textarea {
+	width: 100%;
+}
+
+@media (max-width: 960px) {
+	body.taxonomy-laca_food_category #col-container {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (max-width: 782px) {
+	.laca-kds-wrap,
+	.laca-kds-settings-wrap,
+	body.post-type-laca_food .wrap,
+	body.post-type-laca_combo .wrap,
+	body.taxonomy-laca_food_category .wrap {
+		border-radius: 18px;
+		margin-right: 10px;
+		padding: 16px;
+	}
+
+	.laca-kds-header h1,
+	.laca-kds-settings-wrap h1,
+	body.post-type-laca_food .wrap h1,
+	body.post-type-laca_combo .wrap h1,
+	body.taxonomy-laca_food_category .wrap h1 {
+		font-size: 28px;
+	}
+}

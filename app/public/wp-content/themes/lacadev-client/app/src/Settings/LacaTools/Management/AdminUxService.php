@@ -56,7 +56,6 @@ class AdminUxService
         $page_title = carbon_get_theme_option('help_page_title') ?: 'Hướng dẫn quản trị Website Professional';
         $page_intro = carbon_get_theme_option('help_page_intro') ?: 'Chào mừng bạn đến với hệ thống quản trị website nâng cao. Hệ thống đã được tối ưu để bạn quản lý nội dung dễ dàng nhất.';
         $blocks     = carbon_get_theme_option('help_page_blocks');
-        $tours      = function_exists('lacadev_help_tours_definitions') ? lacadev_help_tours_definitions() : [];
 
         $phone   = carbon_get_theme_option('help_support_phone')   ?: (defined('AUTHOR') ? AUTHOR['phone_number'] : '');
         $email   = carbon_get_theme_option('help_support_email')   ?: (defined('AUTHOR') ? AUTHOR['email'] : '');
@@ -70,30 +69,6 @@ class AdminUxService
                 <?php echo esc_html($page_title); ?>
             </h1>
             <p class="laca-help-intro"><?php echo nl2br(esc_html($page_intro)); ?></p>
-
-            <?php if (!empty($tours)) : ?>
-            <section class="laca-help-tour-section">
-                <div class="laca-help-tour-section__head">
-                    <h2>Hướng dẫn tương tác</h2>
-                    <p>Chạy từng tour để xem hướng dẫn trực tiếp trên màn hình admin.</p>
-                </div>
-                <div class="laca-help-tour-grid">
-                    <?php foreach ($tours as $tour) : ?>
-                        <article class="laca-help-tour-card">
-                            <h3><?php echo esc_html($tour['title']); ?></h3>
-                            <?php if (!empty($tour['description'])) : ?>
-                                <p><?php echo esc_html($tour['description']); ?></p>
-                            <?php endif; ?>
-                            <div class="laca-help-tour-meta">
-                                <span><?php echo esc_html(count($tour['steps'])); ?> bước</span>
-                                <code><?php echo esc_html($tour['admin_page']); ?></code>
-                            </div>
-                            <a class="button button-primary" href="<?php echo esc_url($tour['launch_url']); ?>">Chạy hướng dẫn</a>
-                        </article>
-                    <?php endforeach; ?>
-                </div>
-            </section>
-            <?php endif; ?>
 
             <div class="laca-help-grid">
                 <?php if (!empty($blocks)) : ?>

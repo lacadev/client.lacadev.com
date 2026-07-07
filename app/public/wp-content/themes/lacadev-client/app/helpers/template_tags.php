@@ -7,6 +7,7 @@
  * @return string
  */
 function getImageAsset($path) {
+    $my_theme   = wp_get_theme();
     $theme_path = dirname(get_stylesheet_directory_uri());
 
     if (carbon_get_theme_option('use_short_url') !== true) {

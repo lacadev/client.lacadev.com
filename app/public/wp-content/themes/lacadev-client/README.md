@@ -1,12 +1,12 @@
 # ⚡ La Cà Dev Theme (v3.1)
 
-Theme WordPress hiệu suất cao, ưu tiên Vanilla JavaScript ở frontend, tối ưu hóa cho tốc độ và trải nghiệm người dùng.
+Theme WordPress hiệu suất cao, "Zero jQuery", tối ưu hóa cho tốc độ và trải nghiệm người dùng.
 
 ## Tổng Quan Dự Án
 
 La Cà Dev là một WordPress theme hiệu năng cao được xây dựng với kiến trúc hiện đại:
-- **Frontend ưu tiên Vanilla JavaScript** - Admin vẫn có thể dùng jQuery khi phụ thuộc API/UI sẵn có của WordPress
-- **WPEmerge Framework** - Pass frontend requests qua WordPress template hierarchy, không dùng controller layer riêng
+- **Zero jQuery** - Sử dụng Vanilla JavaScript để tối ưu hiệu năng
+- **WPEmerge Framework** - Routing và controllers theo phong cách MVC cho WordPress
 - **Modern Build System** - Webpack 5 với code splitting, Critical CSS và tối ưu hóa
 - **PSR-4 Autoloading** - Cấu trúc namespace PHP chuẩn
 - **Tập trung vào bảo mật** - Xác thực nonce toàn diện, security headers và sanitization input
@@ -58,16 +58,16 @@ yarn lint-fix:scripts
 lacadev/
 ├── app/                     # PHP Business Logic (PSR-4: App\)
 │   ├── src/                 # Core application classes
-│   │   ├── Bootstrap/       # FeatureRegistry - manifest boot feature/module
 │   │   ├── Abstracts/       # Base classes (AbstractPostType, AbstractTaxonomy)
-│   │   ├── Contracts/       # Shared constants/interfaces
-│   │   ├── Databases/       # Custom tables + schema version manager
-│   │   ├── Features/        # Domain features (Contact Form, Dynamic CPT, Search...)
-│   │   ├── Settings/        # Admin settings, tools (Optimize, Security)
+│   │   ├── Controllers/     # Web, Admin, Ajax controllers
 │   │   ├── PostTypes/       # Định nghĩa custom post type
-│   │   └── Widgets/         # WordPress widgets
-│   ├── routes/
-│   │   └── web.php          # Frontend Route::all()
+│   │   ├── Routing/         # Route service providers
+│   │   ├── Settings/        # Admin settings, tools (Optimize, Security)
+│   │   └── View/            # View service provider
+│   ├── routes/              # Định nghĩa routes
+│   │   ├── web.php          # Frontend routes
+│   │   ├── admin.php        # Admin panel routes
+│   │   └── ajax.php         # AJAX endpoints
 │   ├── helpers/             # Utility functions
 │   ├── config.php           # WPEmerge configuration
 │   └── hooks.php            # WordPress hooks registration
@@ -83,8 +83,9 @@ lacadev/
 │   │   ├── admin/           # Admin panel styles
 │   │   ├── editor/          # Block editor styles
 │   │   └── shared/          # Shared utilities/variables
+│   └── build/               # Webpack configuration
 │
-├── dist/                    # Compiled Assets nếu build pipeline tạo ra (KHÔNG SỬA trực tiếp)
+├── dist/                    # Compiled Assets (KHÔNG SỬA)
 │   ├── theme.js             # Main theme bundle (~12KB)
 │   ├── vendors.js           # Third-party libraries (~685KB)
 │   ├── admin.js             # Admin bundle
@@ -97,9 +98,7 @@ lacadev/
 │   │   ├── security.php     # Security headers & hardening
 │   │   ├── seo.php          # SEO meta tags, Schema.org
 │   │   └── gutenberg-blocks.php
-│   ├── layouts/             # Layout wrappers
-│   ├── loop_templates/      # Reusable loop/comment fragments
-│   ├── page_templates/      # Page templates
+│   ├── template-parts/      # Reusable template components
 │   ├── functions.php        # Theme bootstrap
 │   └── *.php                # WordPress template files
 │
@@ -107,11 +106,11 @@ lacadev/
 ```
 
 ### WPEmerge Routing
-Theme này dùng WPEmerge ở mức nhẹ để chuyển frontend request qua WordPress template hierarchy:
+Theme này sử dụng WPEmerge framework cho routing theo phong cách MVC:
 
-- **Route frontend** hiện nằm ở `app/routes/web.php`
-- **Business logic** nằm trong `app/src/Features`, `app/src/Settings`, `app/src/Databases`
-- **Templates** được phục vụ từ thư mục `theme/` theo chuẩn WordPress
+- **Routes** được định nghĩa trong `app/routes/` (web.php, admin.php, ajax.php)
+- **Controllers** trong `app/src/Controllers/` xử lý business logic
+- **Views** được phục vụ từ thư mục `theme/` (WordPress templates chuẩn)
 - **Middleware** được cấu hình trong `app/config.php`
 
 Ví dụ cấu trúc route (hiện tại sử dụng `Route::all()` cho WordPress template hierarchy chuẩn):
@@ -144,11 +143,14 @@ Mỗi bundle tự động include SCSS tương ứng từ `resources/styles/`.
 
 ### Khi Thêm Custom Post Types
 1. Tạo class mới trong `app/src/PostTypes/` extend `AbstractPostType`
-2. Đăng ký boot trong `app/src/Bootstrap/FeatureRegistry.php` nếu CPT cần khởi tạo tự động.
+2. Đăng ký trong `theme/functions.php`:
+   ```php
+   new \App\PostTypes\YourPostType();
+   ```
 
 ### Khi Thêm Routes
-1. Chỉ thêm route mới khi thật sự cần đi ngoài WordPress template hierarchy.
-2. Với AJAX/REST/admin page, ưu tiên class feature trong `app/src/Features` hoặc `app/src/Settings` và boot qua `FeatureRegistry`.
+1. Thêm route trong file phù hợp (`app/routes/web.php`, `admin.php`, `ajax.php`)
+2. Tạo controller trong `app/src/Controllers/`
 3. Theo docs WPEmerge routing: https://docs.wpemerge.com/#/framework/routing/methods
 
 ### Trước Khi Deploy Production

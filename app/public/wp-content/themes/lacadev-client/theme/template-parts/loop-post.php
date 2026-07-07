@@ -1,22 +1,13 @@
 <?php
-/**
- * Shared search/archive card for generic posts/pages.
- *
- * @package LacaDevClient
- */
-
-if (!defined('ABSPATH')) {
-	exit;
-}
-
 global $post;
-
-$post_id       = $post->ID;
-$url           = get_the_permalink($post_id);
-$thumbnail     = getResponsivePostThumbnail($post_id);
-$title         = get_the_title($post_id);
-$excerpt       = get_the_excerpt($post_id);
+$postID = $post->ID;
+$url = get_the_permalink($postID);
+$thumbnail = getResponsivePostThumbnail($postID);
+$title = get_the_title($postID);
+$excerpt = get_the_excerpt($postID);
+$category = get_the_terms($postID, 'blog_cat');
 ?>
+
 <div class="loop-service">
 	<a href="<?php echo esc_url($url); ?>">
 		<div class="inner">
@@ -25,13 +16,15 @@ $excerpt       = get_the_excerpt($post_id);
 			</figure>
 
 			<div class="content">
-				<?php if ($title) : ?>
-					<h3 class="heading"><?php echo esc_html($title); ?></h3>
-				<?php endif; ?>
+				<?php 
+				if ($title) :
+					echo '<h3 class="heading"> ' . esc_html($title) . '</h3>';
+				endif;
 
-				<?php if ($excerpt) : ?>
-					<div class="desc"><?php echo esc_html($excerpt); ?></div>
-				<?php endif; ?>
+				if ($excerpt) :
+					echo '<div class="desc"> ' . esc_html($excerpt) . '</div>';
+				endif;
+				?>
 			</div>
 		</div>
 	</a>

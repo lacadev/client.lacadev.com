@@ -4,7 +4,7 @@ namespace App\Settings\LacaTools\Management;
 
 /**
  * DashboardWidgets
- * Renders Laca Dashboard panels.
+ * Registers and renders all 6 WordPress dashboard widgets.
  * Extracted from ManagementExperience (lines 88–1423).
  * Depends on ContentAuditService and MediaService for data.
  */
@@ -26,12 +26,24 @@ class DashboardWidgets
         add_action('admin_head', [$this, 'renderWidgetStyles']);
         add_action('admin_enqueue_scripts', [$this, 'enqueueDashboardScripts']);
 
+        add_action('wp_dashboard_setup', function () {
+            wp_add_dashboard_widget('lacadev_management_hub',    '🚀 LacaDev Business Hub',   [$this, 'renderDashboardWidget']);
+            wp_add_dashboard_widget('lacadev_content_tracker',  '📈 Báo cáo Nội dung',       [$this, 'renderContentTrackerWidget']);
+            wp_add_dashboard_widget('lacadev_site_health',      '🩺 Tình trạng Website',      [$this, 'renderSiteHealthWidget']);
+            wp_add_dashboard_widget('lacadev_media_insights',   '🖼️ Thư viện Media',          [$this, 'renderMediaLibraryWidget']);
+            wp_add_dashboard_widget('lacadev_todo_widget',      '✅ Việc cần làm',            [$this, 'renderTodoWidget']);
+            wp_add_dashboard_widget('lacadev_quick_search',     '🔍 Tìm kiếm nhanh',          [$this, 'renderQuickSearchWidget']);
+            if (post_type_exists('project')) {
+                wp_add_dashboard_widget('lacadev_project_charts', '📊 Thống kê Dự án', [$this, 'renderProjectChartsWidget']);
+            }
+        });
+
         add_action('wp_ajax_lacadev_quick_search', [$this, 'ajaxQuickSearch']);
     }
 
     public function enqueueDashboardScripts(string $hook): void
     {
-        if (!in_array($hook, ['index.php', 'toplevel_page_' . LacaDashboardPage::SLUG], true)) {
+        if ('index.php' !== $hook) {
             return;
         }
 
@@ -192,37 +204,6 @@ class DashboardWidgets
                 <span class="health-value"><?php echo esc_html($trash_total); ?><?php if ($trash_total > 0) : ?><a class="health-link" href="<?php echo esc_url(admin_url('edit.php?post_status=trash')); ?>">Dọn</a><?php endif; ?></span>
             </li>
         </ul>
-        <?php
-    }
-
-    public function renderClientOperationsWidget(): void
-    {
-        if (!class_exists('\App\Settings\LacaDevTrackerClient')) {
-            echo '<p class="laca-health-list">Tracker chưa sẵn sàng.</p>';
-            return;
-        }
-
-        $health = \App\Settings\LacaDevTrackerClient::getHealthSummary();
-        $status = !empty($health['configured']) ? 'Đã cấu hình' : 'Chưa cấu hình';
-        $statusClass = !empty($health['configured']) ? 'health-ok' : 'health-warn';
-
-        if (!empty($health['last_error'])) {
-            $status = 'Có lỗi gửi log';
-            $statusClass = 'health-warn';
-        }
-        ?>
-        <ul class="laca-health-list">
-            <li><span class="health-label">Tracker</span><span class="health-value <?php echo esc_attr($statusClass); ?>"><?php echo esc_html($status); ?></span></li>
-            <li><span class="health-label">Gửi thành công cuối</span><span class="health-value"><?php echo esc_html($health['last_success_at'] ?: '-'); ?></span></li>
-            <li><span class="health-label">Queue</span><span class="health-value"><?php echo esc_html((string) ((int) $health['queued'] + (int) $health['retry'])); ?></span></li>
-            <li><span class="health-label">Failed</span><span class="health-value <?php echo ((int) $health['failed'] > 0) ? 'health-warn' : 'health-ok'; ?>"><?php echo esc_html((string) $health['failed']); ?></span></li>
-        </ul>
-        <?php if (!empty($health['last_error'])) : ?>
-            <p style="color:#991b1b;margin:10px 0 0;"><?php echo esc_html($health['last_error']); ?></p>
-        <?php endif; ?>
-        <p style="margin-bottom:0;">
-            <a class="button button-small" href="<?php echo esc_url(admin_url('admin.php?page=laca-client-ops')); ?>">Xem Client Operations</a>
-        </p>
         <?php
     }
 

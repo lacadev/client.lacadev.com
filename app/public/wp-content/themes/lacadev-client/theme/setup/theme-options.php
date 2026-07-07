@@ -34,8 +34,7 @@ $optionsPage = Container::make('theme_options', __('Laca Theme', 'laca'))
 	->add_tab(__('Contact | Liên hệ', 'laca'), [
 		Field::make('html', 'info', __('', 'laca'))
 			->set_html('----<i> Information | Thông tin </i>----'),
-		Field::make('text', 'company' . currentLanguage(), __('', 'laca'))->set_width(50)
-			->set_attribute('placeholder', 'Company | Công ty'),
+		
 		Field::make('text', 'address' . currentLanguage(), __('', 'laca'))->set_width(50)
 			->set_attribute('placeholder', 'Address | Địa chỉ'),
 		Field::make('textarea', 'googlemap' . currentLanguage(), __('', 'laca'))

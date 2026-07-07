@@ -27,11 +27,6 @@ add_action('login_head', 'app_action_add_favicon', 5);
 add_action('admin_head', 'app_action_add_favicon', 5);
 add_filter('upload_dir', 'app_filter_fix_upload_dir_url_schema');
 
-/** Media modal: keep "Load more" pagination (WP default) so admin JS can trigger it on scroll.
- *  When media_library_infinite_scrolling is true, core hides the button and uses its own scroll loading.
- */
-add_filter('media_library_infinite_scrolling', '__return_false', 9999);
-
 /**
  * Content
  */
@@ -76,24 +71,99 @@ add_action('carbon_fields_register_fields', 'app_bootstrap_carbon_fields_registe
  * Chỉ chạy ở admin để tiết kiệm tài nguyên frontend
  */
 if (is_admin()) {
-    add_action('init', [\App\Bootstrap\FeatureRegistry::class, 'bootAdminFeatures']);
+    add_action('init', static function () {
+        new \App\Settings\ThemeUpdater();
+        new \App\Widgets\BlockSyncWidget();
+        new \App\Settings\LacaDevTrackerClient(); // Gửi logs & alerts về lacadev CMS
+    });
 }
 
 /**
- * Remote management + block sync must run outside wp-admin so WP-Cron and REST
- * routes are available on normal WordPress requests.
- *
- * BlockAutoloader disabled — blocks are already registered by
- * lacadev_child_register_synced_blocks() at init priority 15.
- * Having both causes duplicate "already registered" notices → "headers already sent" → admin 403/404.
+ * Block Sync Receiver — REST API endpoint nhận blocks từ lacadev.com
+ * Chạy cả frontend để REST API hoạt động đúng
  */
-add_action('init', [\App\Bootstrap\FeatureRegistry::class, 'bootPriorityFiveInitFeatures'], 5);
+add_action('init', static function () {
+    new \App\Settings\BlockSyncReceiver();
+    // BlockAutoloader disabled — blocks are already registered by
+    // lacadev_child_register_synced_blocks() at init priority 15.
+    // Having both causes duplicate "already registered" notices → "headers already sent" → admin 403/404.
+    // new \App\Settings\BlockAutoloader();
+}, 5);
 
 /**
- * Runtime features.
+ * CONTACT FORM — Frontend AJAX + Shortcode
  */
-add_action('init', [\App\Bootstrap\FeatureRegistry::class, 'bootPriorityOneInitFeatures'], 1);
-add_action('init', [\App\Bootstrap\FeatureRegistry::class, 'bootDefaultInitFeatures']);
+add_action('init', function () {
+    if (class_exists('\App\Features\ContactForm\ContactFormAjaxHandler')) {
+        (new \App\Features\ContactForm\ContactFormAjaxHandler())->init();
+    }
+}, 10);
+
+/**
+ * Maintenance Mode
+ */
+add_action('init', function () {
+    if (class_exists('\App\Settings\MaintenanceModeManager')) {
+        (new \App\Settings\MaintenanceModeManager())->init();
+    }
+}, 1);
+
+/**
+ * Email Log
+ */
+add_action('init', function () {
+    if (class_exists('\App\Settings\EmailLog\EmailLogManager')) {
+        (new \App\Settings\EmailLog\EmailLogManager())->init();
+    }
+});
+
+/**
+ * Related Posts
+ */
+add_action('init', function () {
+    if (class_exists('\App\Features\RelatedPosts')) {
+        (new \App\Features\RelatedPosts())->init();
+    }
+});
+
+/**
+ * Exit Intent Popup
+ */
+add_action('init', function () {
+    if (class_exists('\App\Features\ExitIntentPopup')) {
+        (new \App\Features\ExitIntentPopup())->init();
+    }
+});
+
+/**
+ * Frontend Chatbot
+ */
+add_action('init', function () {
+    if (class_exists('\App\Features\FrontendChatbot\FrontendChatbotHandler')) {
+        (new \App\Features\FrontendChatbot\FrontendChatbotHandler())->init();
+    }
+});
+
+/**
+ * Security — Custom Login, 2FA, Security Manager
+ */
+add_action('init', function () {
+    if (class_exists('\App\Settings\Security\CustomLoginManager')) {
+        new \App\Settings\Security\CustomLoginManager();
+    }
+}, 1);
+
+add_action('init', function () {
+    if (class_exists('\App\Settings\Security\TwoFactorAuth')) {
+        new \App\Settings\Security\TwoFactorAuth();
+    }
+});
+
+add_action('init', function () {
+    if (class_exists('\App\Settings\Security\SecurityManager')) {
+        (new \App\Settings\Security\SecurityManager())->init();
+    }
+});
 
 /**
  * Pages/Posts list table: Add Thumbnail column

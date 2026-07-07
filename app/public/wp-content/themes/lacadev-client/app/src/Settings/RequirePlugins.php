@@ -100,3 +100,5 @@ class RequirePlugins
         tgmpa($plugins, $config);
     }
 }
+
+new RequirePlugins();

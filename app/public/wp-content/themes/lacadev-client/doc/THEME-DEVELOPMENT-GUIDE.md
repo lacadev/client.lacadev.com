@@ -29,15 +29,12 @@ lacadev/
 │   ├── helpers/                 # Helper functions
 │   ├── routes/                  # Routing logic
 │   └── src/                     # PSR-4 classes (App\*)
-│       ├── Bootstrap/          # FeatureRegistry boot manifest
 │       ├── Abstracts/          # Abstract classes
-│       ├── Contracts/          # Shared constants/interfaces
-│       ├── Databases/          # Custom DB tables + schema versions
-│       ├── Features/           # Domain features
+│       ├── Controllers/        # MVC Controllers
 │       ├── Models/             # Data models
 │       ├── PostTypes/          # Custom Post Types
 │       ├── Settings/           # Admin settings (Carbon Fields)
-│       └── Widgets/            # WordPress widgets
+│       └── View/               # View providers
 ├── theme/                       # Template files
 │   ├── setup/                  # Theme setup modules (tách biệt từng chức năng)
 │   └── *.php                   # Template files chuẩn WordPress
@@ -51,7 +48,7 @@ lacadev/
 
 ### 1.2. Công Nghệ Sử Dụng
 
-- **Backend:** WP Emerge frontend route passthrough, Carbon Fields (Fields/Options), PSR-4 Autoloading.
+- **Backend:** WP Emerge (MVC), Carbon Fields (Fields/Options), PSR-4 Autoloading.
 - **Frontend:** Webpack 5, Babel (ES6+), SCSS, BEM naming.
 - **Libraries:** GSAP (Animation), Swiper (Slider), SweetAlert2 (Modal), Pristine.js (Validation).
 - **Optimization:** WebP/AVIF auto-convert, Critical CSS, Service Worker.

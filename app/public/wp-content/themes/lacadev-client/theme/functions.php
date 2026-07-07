@@ -1,8 +1,6 @@
 <?php
 use WPEmerge\Facades\WPEmerge;
 use WPEmergeTheme\Facades\Theme;
-use App\Bootstrap\FeatureRegistry;
-use App\Contracts\AssetHandles;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -154,7 +152,6 @@ add_action('after_setup_theme', function () {
     require_once APP_APP_SETUP_DIR . 'assets.php';
     require_once APP_APP_SETUP_DIR . 'performance.php';
     require_once APP_APP_SETUP_DIR . 'pwa.php';
-    require_once APP_APP_SETUP_DIR . 'script-governance.php';
 
     // Load Gutenberg blocks (Carbon Fields)
     // $blocks_dir = APP_APP_SETUP_DIR . '/blocks';
@@ -168,12 +165,33 @@ add_action('after_setup_theme', function () {
 
 });
 
+// =============================================================================
+// AUTOLOAD COMPONENTS
+// =============================================================================
+$folders = [
+    // APP_APP_SETUP_ECOMMERCE_DIR,
+    APP_APP_SETUP_TAXONOMY_DIR,
+    APP_APP_SETUP_WALKER_DIR,
+];
+
+foreach ($folders as $folder) {
+    $filesPath = scandir($folder);
+    if ($filesPath !== false) {
+        foreach ($filesPath as $item) {
+            $file = $folder . $item;
+            if (is_file($file)) {
+                require_once $folder . $item;
+            }
+        }
+    }
+}
+
 /**
  * Localize AJAX search data (script bundled in theme.js)
  */
 function custom_ajax_search_script()
 {
-    wp_localize_script(AssetHandles::THEME_JS, 'themeSearch', [
+    wp_localize_script('theme-js-bundle', 'themeSearch', [
         'ajaxurl' => admin_url('admin-ajax.php'),
         'nonce' => wp_create_nonce('theme_search_nonce'),
     ]);
@@ -194,35 +212,29 @@ function lacadev_register_search_query_vars($vars)
 }
 add_filter('query_vars', 'lacadev_register_search_query_vars');
 
+// =============================================================================
+// CLIENT TRACKER — báo cáo thay đổi plugin/theme/file về lacadev master
+// =============================================================================
+// Cấu hình URL webhook tại: Settings > General > laca_tracker_webhook_url
+(new \App\Features\ClientTracker\Tracker())->init();
 
 // =============================================================================
 // CUSTOM POST TYPES
 // =============================================================================
 // Dynamic CPT — đăng ký CPT được tạo qua admin panel (Appearance > Custom Post Types)
-FeatureRegistry::bootDynamicPostTypes();
+new \App\Features\DynamicCPT\DynamicCptManager();
 
 // =============================================================================
 // DATABASE TABLES
-// Chỉ chạy dbDelta() khi schema version thay đổi — tránh query nặng mỗi request.
-// Tăng LACADEV_CLIENT_SCHEMA_VERSION khi thêm/sửa cấu trúc bảng.
 // =============================================================================
-define('LACADEV_CLIENT_SCHEMA_VERSION', '1.1.0');
+add_action('after_switch_theme', function () {
+    \App\Databases\ContactFormTable::install();
+    \App\Settings\EmailLog\EmailLogTable::install();
+});
 
-$_laca_client_db_install = function () {
-    \App\Databases\DbVersionManager::maybeInstall(
-        LACADEV_CLIENT_SCHEMA_VERSION,
-        'lacadev_client_db_version',
-        [
-            fn() => \App\Databases\ContactFormTable::install(),
-            fn() => \App\Settings\EmailLog\EmailLogTable::install(),
-            fn() => \App\Databases\TrackerEventTable::install(),
-        ]
-    );
-};
-
-add_action('after_switch_theme', $_laca_client_db_install);
-add_action('after_setup_theme', $_laca_client_db_install, 1);
-unset($_laca_client_db_install);
+// Đảm bảo bảng luôn tồn tại
+\App\Databases\ContactFormTable::install();
+\App\Settings\EmailLog\EmailLogTable::install();
 
 // =============================================================================
 // COMMENTS CALLBACK

@@ -11,10 +11,15 @@ return [
     /**
      * Array of service providers you wish to enable.
      */
-    'providers' => [],
+    'providers' => [
+        \App\Routing\RouteConditionsServiceProvider::class,
+        \App\View\ViewServiceProvider::class,
+    ],
 
     'routes'              => [
         'web'   => APP_APP_ROUTES_DIR . 'web.php',
+        'admin' => APP_APP_ROUTES_DIR . 'admin.php',
+        'ajax'  => APP_APP_ROUTES_DIR . 'ajax.php',
     ],
 
     /**

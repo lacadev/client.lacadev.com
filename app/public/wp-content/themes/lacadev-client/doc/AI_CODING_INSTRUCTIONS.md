@@ -4,17 +4,18 @@
 
 ---
 
-## 1. TỔNG QUAN KIẾN TRÚC & VỊ TRÍ FILE
-Kiến trúc dự án bám sát chuẩn OOP, module hóa và phân tách Frontend/Backend. KHÔNG code quy trình (procedural) hoặc ném mọi thứ vào `functions.php`.
+## 1. TỔNG QUAN KIẾN TRÚC & VỊ TRÍ FILE (WPEmerge MVC)
+Kiến trúc dự án bám sát chuẩn OOP, Module hóa và phân tách Frontend/Backend. KHÔNG code quy trình (procedural) hoặc ném mọi thứ vào `functions.php`.
 
-> ⚠️ **KHÔNG có thư mục `Controllers/`**. WPEmerge hiện chủ yếu dùng để pass frontend request qua WordPress template hierarchy (`app/routes/web.php`). Logic nhỏ đặt vào `app/hooks.php`, logic lớn tạo class tại `app/src/`.
-> ⚠️ Bootstrap feature tập trung tại `app/src/Bootstrap/FeatureRegistry.php`. Khi thêm/tắt feature, cập nhật registry này trước.
+> ⚠️ **KHÔNG có thư mục `Controllers/`**. Logic nhỏ đặt vào `app/hooks.php`, logic lớn tạo Class tại `app/src/` theo mục đích tương ứng bên dưới.
+> ⚠️ **Đây là Child Theme (`lacadev-client`)**. Sửa core code LUÔN thực hiện trên Parent Theme (`lacadev`) trước, sau đó mới sync sang.
 
 ### `app/` — Core Backend
-- **`app/routes/web.php`**: Frontend route duy nhất hiện dùng `Route::all()` để giữ WordPress template hierarchy.
+- **`app/routes/`**: Định nghĩa Routing trỏ tới các xử lý trong `app/src/`.
 - **`app/hooks.php`**: Khai báo Action/Filter hooks ngắn. **KHÔNG đặt logic phức tạp ở đây.**
 - **`app/config.php`**: Cấu hình chung của ứng dụng.
 - **`app/helpers.php`**: Bootstrap load toàn bộ files trong `app/helpers/`.
+- **`app/views.php`**: Đăng ký View templates với WPEmerge.
 - **`app/helpers/`** *(13 files)*: Các hàm tiện ích gọi mọi nơi. Quan trọng nhất:
   - `theResponsivePostThumbnail('mobile|tablet|full', $attr)` — render ảnh bài viết tối ưu WebP/srcset.
   - `theResponsiveImage($id, 'size')` — render ảnh từ Media ID.
@@ -22,21 +23,22 @@ Kiến trúc dự án bám sát chuẩn OOP, module hóa và phân tách Fronten
   - `getOption('option_name')` — lấy Theme Option (tự map theo ngôn ngữ WPML).
 
 ### `app/src/` — OOP Classes (PSR-4, namespace `App\`)
-- **`Bootstrap/`**: Registry boot feature/module đang active.
 - **`Abstracts/`**: Base Classes để kế thừa (extend). Không tạo code trực tiếp ở đây.
 - **`PostTypes/`**: Đăng ký Custom Post Type dùng thư viện `Extended CPTs`.
 - **`Settings/`**: Carbon Fields Meta Boxes và các tính năng Admin panel.
-- **`Features/`**: Feature theo domain như Contact Form, Dynamic CPT, Smart Search, CTA, Related Posts.
-- **`Databases/`**: Custom DB table và schema version manager.
 - **`Models/`**: Query/Data-access layer truy vấn dữ liệu CPT.
 - **`Validators/`**: Validate input từ form hoặc AJAX request.
 - **`Widgets/`**: WordPress Sidebar Widgets tùy chỉnh.
+- **`View/`**: View helpers/partials theo kiến trúc MVC.
+- **`Routing/`**: Routing logic bổ sung nâng cao.
 - **`Helpers/`**: Helper Classes dạng OOP (khác với `app/helpers/` dạng functions).
+- **`Features/`** ❌ **KHÔNG TỒN TẠI Ở CHILD THEME**: Portal Client, Project Management, AI Tracking chỉ ở Parent và bị EXCLUDE khi sync.
+- **`Databases/`** ❌ **KHÔNG TỒN TẠI Ở CHILD THEME**: Custom DB Tables chỉ ở Parent Theme.
 
 ### Theme Templates & Frontend
 - **`theme/`**: File template chuẩn WP (`single.php`, `header.php`, `footer.php`, `archive.php`, ...).
 - **`theme/setup/`**: Cấu hình WP core — Menu Walker, Theme Supports, reCAPTCHA, Security, SEO, Sidebars.
-- **`theme/loop_templates/`, `theme/layouts/`, `theme/page_templates/`**: Partial layout, loop output và page template tái sử dụng.
+- **`theme/template-parts/`**: Các partial layout tái sử dụng (breadcrumb, page-hero, post-hero, loop-post, loop-service, share_box, ...).
 - **`resources/scripts/` & `resources/styles/`**: Mã nguồn JS Vanilla và SCSS/Tailwind. Compile qua Webpack → `dist/`.
 - **`block-gutenberg/`**: Mã nguồn Custom Gutenberg Blocks (mỗi block = 1 thư mục con).
 - **`theme-server/`**: Cấu hình server-side đặc thù cho môi trường production của client.
@@ -93,12 +95,12 @@ Mỗi Block mới phải được tạo một thư mục con riêng biệt tại
 3. Đăng ký Class này trong Application khởi tạo (Provider/Bootstrap).
 4. Viết Carbon Fields để cho admin nhập liệu tương ứng vào `app/src/Features/[FeatureName]/`.
 5. Tạo giao diện trang chủ CPT (`archive-[cpt].php`) và bài viết CPT (`single-[cpt].php`) trong thư mục `theme/`.
-6. Tách rời vòng lặp ra `theme/loop_templates/loop-[cpt].php` hoặc một partial phù hợp để tái sử dụng.
+6. Tách rời vòng lặp ra `theme/template-parts/loop-[cpt].php` để tái sử dụng.
 
 ### 🔄 3.3. Update Theme (Parent vs Child Theme)
-- Xác minh môi trường deploy trước khi sửa các phần liên quan parent/child theme.
-- `lacadev-client` hiện là theme package độc lập trong workspace này; các phần sync/update vẫn có logic tương thích child theme ở một số class.
-- Khi thay đổi chức năng core, cập nhật `FeatureRegistry`, tests và `doc/THEME-STRUCTURE-INVENTORY.md` cùng lúc.
+- Sửa core code **LUÔN** thực hiện trên Parent Theme (`lacadev`).
+- Child theme (`lacadev-child`) chỉ dành riêng cho việc cập nhật theo vòng đời từ Parent sang các site con qua Auto-updater của WordPress. Cập nhật được Build bằng script Bash `./build-release.sh <version> "Mô tả"` (trong folder Child).
+- **Lưu Ý Đặc Biệt:** Chức năng Portal Client, Project Management, AI Tracking được code ở Parent Theme cho tool phân tích riêng, **Chức năng này không được bao gồm (Exclude)** lúc Sync script tạo Child Themes qua môi trường khách hàng thực sự.
 
 ---
 

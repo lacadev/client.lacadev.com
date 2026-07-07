@@ -12,28 +12,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require_once dirname( __DIR__ ) . '/utils/render-helpers.php';
+if ( ! function_exists( 'lacadev_video_normalize_spacing_value' ) ) {
+	function lacadev_video_normalize_spacing_value( $value ): string {
+		if ( is_numeric( $value ) ) {
+			return $value . 'px';
+		}
 
-if ( ! function_exists( 'lacadev_block_attr_to_bool' ) ) {
-	/**
-	 * Normalize Gutenberg attribute values to boolean safely.
-	 *
-	 * @param mixed $value Raw attribute value.
-	 * @param bool  $default Fallback value.
-	 * @return bool
-	 */
-	function lacadev_block_attr_to_bool( $value, bool $default = false ): bool {
-		if ( is_bool( $value ) ) {
+		$value = trim( (string) $value );
+		if ( '' === $value ) {
+			return '';
+		}
+
+		if ( preg_match( '/^-?\d+(\.\d+)?(px|rem|em|vw|vh|%)$/', $value ) ) {
 			return $value;
 		}
 
-		if ( null === $value ) {
-			return $default;
-		}
-
-		$normalized = filter_var( $value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE );
-
-		return null === $normalized ? $default : $normalized;
+		return '';
 	}
 }
 
@@ -49,10 +43,10 @@ $source_type     = isset( $attributes['sourceType'] ) ? $attributes['sourceType'
 $video_url       = isset( $attributes['videoUrl'] ) ? esc_url( $attributes['videoUrl'] ) : '';
 $video_file      = isset( $attributes['videoFileUrl'] ) ? esc_url( $attributes['videoFileUrl'] ) : '';
 $poster_url      = isset( $attributes['posterUrl'] ) ? esc_url( $attributes['posterUrl'] ) : '';
-$autoplay        = lacadev_block_attr_to_bool( $attributes['autoplay'] ?? false, false );
-$loop            = lacadev_block_attr_to_bool( $attributes['loop'] ?? false, false );
-$muted           = lacadev_block_attr_to_bool( $attributes['muted'] ?? false, false );
-$controls        = lacadev_block_attr_to_bool( $attributes['controls'] ?? true, true );
+$autoplay        = ! empty( $attributes['autoplay'] );
+$loop            = ! empty( $attributes['loop'] );
+$muted           = ! empty( $attributes['muted'] );
+$controls        = isset( $attributes['controls'] ) ? (bool) $attributes['controls'] : true;
 
 // Overlay
 $overlay_enabled = ! empty( $attributes['overlayEnabled'] );
@@ -74,18 +68,44 @@ if ( ! $has_video ) {
 	return;
 }
 
+$style_vars = [];
+$spacing    = is_array( $attributes['spacing'] ?? null ) ? $attributes['spacing'] : [];
 $raw_attrs  = is_array( $block->parsed_block['attrs'] ?? null ) ? $block->parsed_block['attrs'] : [];
-$style_vars = lacadev_block_get_spacing_style_vars(
-	$attributes,
-	'--laca-video',
-	$raw_attrs
-);
-$section_header = lacadev_block_render_section_header(
-	$attributes,
-	'laca-block-section-header laca-video-block__header',
-	'laca-video-block__heading',
-	'laca-video-block__subheading'
-);
+$devices    = [ 'desktop', 'tablet', 'mobile' ];
+$types      = [ 'margin', 'padding' ];
+$sides      = [ 'top', 'left', 'bottom', 'right' ];
+
+foreach ( $devices as $device ) {
+	foreach ( $types as $type ) {
+		foreach ( $sides as $side ) {
+			$raw_value = $spacing[ $device ][ $type ][ $side ] ?? '';
+			$value     = lacadev_video_normalize_spacing_value( $raw_value );
+			if ( '' === $value ) {
+				continue;
+			}
+
+			$var_name      = '--laca-video-' . $type . '-' . $side;
+			$device_suffix = 'desktop' === $device ? '' : '-' . $device;
+			$style_vars[]  = $var_name . $device_suffix . ':' . $value;
+		}
+	}
+}
+
+if ( empty( $style_vars ) ) {
+	// Backward compatibility: only use legacy spacing when values were explicitly saved in block attrs.
+	if ( array_key_exists( 'marginTop', $raw_attrs ) ) {
+		$style_vars[] = '--laca-video-margin-top:' . intval( $attributes['marginTop'] ) . 'px';
+	}
+	if ( array_key_exists( 'marginBottom', $raw_attrs ) ) {
+		$style_vars[] = '--laca-video-margin-bottom:' . intval( $attributes['marginBottom'] ) . 'px';
+	}
+	if ( array_key_exists( 'paddingTop', $raw_attrs ) ) {
+		$style_vars[] = '--laca-video-padding-top:' . intval( $attributes['paddingTop'] ) . 'px';
+	}
+	if ( array_key_exists( 'paddingBottom', $raw_attrs ) ) {
+		$style_vars[] = '--laca-video-padding-bottom:' . intval( $attributes['paddingBottom'] ) . 'px';
+	}
+}
 
 $wrapper_args = [ 'class' => 'laca-video-block' ];
 if ( ! empty( $style_vars ) ) {
@@ -102,7 +122,7 @@ if ( ! function_exists( 'lacadev_parse_video_url' ) ) {
 		$result = [ 'type' => 'unknown', 'embed' => '' ];
 
 		// YouTube
-			if ( preg_match( '/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/', $url, $m ) ) {
+		if ( preg_match( '/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/', $url, $m ) ) {
 			$result['type']  = 'youtube';
 			$result['embed'] = 'https://www.youtube.com/embed/' . $m[1];
 			return $result;
@@ -123,10 +143,6 @@ if ( ! function_exists( 'lacadev_parse_video_url' ) ) {
 
 <section <?php echo $wrapper_attrs; ?>>
     <div class="laca-video-block__inner" style="background:<?php echo esc_attr($bg_rgba); ?>;">
-        <?php if ( '' !== $section_header ) : ?>
-            <?php echo $section_header; ?>
-        <?php endif; ?>
-
         <div class="laca-video-block__media-wrap">
         <?php if ( 'url' === $source_type && $video_url ) :
             $parsed = lacadev_parse_video_url( $video_url );
@@ -135,34 +151,12 @@ if ( ! function_exists( 'lacadev_parse_video_url' ) ) {
                 $embed_url = $parsed['embed'];
 
                 // Thêm params autoplay / loop
-				$params = [];
-
-					if ( 'youtube' === $parsed['type'] ) {
-						$params['autoplay']        = $autoplay ? '1' : '0';
-						$params['controls']        = $controls ? '1' : '0';
-						$params['fs']              = $controls ? '1' : '0';
-						$params['disablekb']       = $controls ? '0' : '1';
-						$params['iv_load_policy']  = $controls ? '1' : '3';
-						$params['loop']            = $loop ? '1' : '0';
-						$params['mute']            = $muted ? '1' : '0';
-						$params['modestbranding']  = '1';
-						$params['playsinline']     = '1';
-						$params['rel']             = '0';
-					if ( $loop && ! empty( $parsed['embed'] ) ) {
-						$params['playlist'] = preg_replace( '#^https://www\.youtube\.com/embed/#', '', $parsed['embed'] );
-					}
-					} else {
-						$params['autoplay'] = $autoplay ? '1' : '0';
-						$params['loop']     = $loop ? '1' : '0';
-						$params['muted']    = $muted ? '1' : '0';
-						$params['controls'] = $controls ? '1' : '0';
-						$params['title']    = $controls ? '1' : '0';
-						$params['byline']   = $controls ? '1' : '0';
-						$params['portrait'] = $controls ? '1' : '0';
-					}
-
-				$embed_url = add_query_arg( $params, $embed_url );
-	            ?>
+                $params = [];
+                if ( $autoplay ) $params[] = 'autoplay=1';
+                if ( $loop )     $params[] = 'loop=1';
+                if ( $muted )    $params[] = ( 'youtube' === $parsed['type'] ) ? 'mute=1' : 'muted=1';
+                if ( $params )   $embed_url .= '?' . implode( '&', $params );
+            ?>
                 <div class="laca-video-block__iframe-wrap">
                     <iframe
                         src="<?php echo esc_url( $embed_url ); ?>"

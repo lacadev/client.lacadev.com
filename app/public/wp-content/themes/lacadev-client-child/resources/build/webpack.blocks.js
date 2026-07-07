@@ -1,17 +1,16 @@
 const defaultConfig = require('@wordpress/scripts/config/webpack.config');
 const path = require('path');
 const fs = require('fs');
-const parent = require('./lib/parent-path');
+
+// === PARENT THEME RESOURCES PATH ===
+const parentResourcesDir = path.resolve(__dirname, '../../../lacadev-client/resources');
 
 /**
- * Patch sass-loader rules trong default config để thêm @parent alias.
- * Dùng legacy Dart Sass importer (sass-loader v12 + @wordpress/scripts v27).
+ * Patch sass-loader rules trong default config để thêm @parent alias
+ * Dùng legacy Dart Sass importer (sass-loader v12 + @wordpress/scripts v27)
  */
 function patchSassLoader(config) {
   if (!config.module || !config.module.rules) return config;
-
-  const parentResourcesDir = parent.resources();
-  const childNodeModulesDir = path.resolve(__dirname, '../../node_modules');
 
   const patchedRules = config.module.rules.map(rule => {
     if (!rule.use || !Array.isArray(rule.use)) return rule;
@@ -29,15 +28,15 @@ function patchSassLoader(config) {
           sassOptions: {
             ...(existingOptions.sassOptions || {}),
             includePaths: [
-              childNodeModulesDir,
               parentResourcesDir,
-              parent.styles(),
+              path.join(parentResourcesDir, 'styles'),
             ],
             // Legacy importer: resolve @parent/* → parent theme resources/*
-            importer: function(url) {
+            importer: function(url, prev) {
               if (url.startsWith('@parent/')) {
                 const resolvedPath = url.replace('@parent/', parentResourcesDir + '/');
-                const dir  = path.dirname(resolvedPath);
+                // Thử tìm file SCSS (có hoặc không có underscore prefix)
+                const dir = path.dirname(resolvedPath);
                 const base = path.basename(resolvedPath);
                 const candidates = [
                   resolvedPath + '.scss',
@@ -70,44 +69,45 @@ const childBlocksDir = path.resolve(__dirname, '../../block-gutenberg');
 let childBlockConfigs = [];
 
 if (fs.existsSync(childBlocksDir)) {
-  const blocks = fs.readdirSync(childBlocksDir).filter(dir =>
-    fs.statSync(path.join(childBlocksDir, dir)).isDirectory() &&
-    fs.existsSync(path.join(childBlocksDir, dir, 'block.json'))
-  );
+  const blocks = fs.readdirSync(childBlocksDir).filter(dir => {
+    return fs.statSync(path.join(childBlocksDir, dir)).isDirectory() && fs.existsSync(path.join(childBlocksDir, dir, 'block.json'));
+  });
 
-  childBlockConfigs = blocks.map(block =>
-    patchSassLoader({
+  childBlockConfigs = blocks.map(block => {
+    const config = patchSassLoader({
       ...defaultConfig,
       entry: {
-        index: path.join(childBlocksDir, block, 'index.js'),
+        index: path.join(childBlocksDir, block, 'index.js')
       },
       output: {
         ...defaultConfig.output,
-        path:     path.join(childBlocksDir, block, 'build'),
-        filename: '[name].js',
-      },
-    })
-  );
+        path: path.join(childBlocksDir, block, 'build'),
+        filename: '[name].js'
+      }
+    });
+    return config;
+  });
 }
 
-// === Global Gutenberg bundle: Parent theme blocks → dist/gutenberg/ of Child ===
+// === Global Gutenberg bundle: Parent theme → dist/gutenberg/ của Child ===
+const parentBlocksDir = path.resolve(__dirname, '../../../lacadev-client/block-gutenberg');
 const gutenbergLegacyConfig = patchSassLoader({
   ...defaultConfig,
   entry: {
-    index: path.join(parent.root('block-gutenberg'), 'index.js'),
+    index: path.join(parentBlocksDir, 'index.js'),
   },
   output: {
     ...defaultConfig.output,
-    path:     path.resolve(__dirname, '../../dist/gutenberg'),
+    path: path.resolve(__dirname, '../../dist/gutenberg'),
     filename: '[name].js',
   },
   resolve: {
     ...defaultConfig.resolve,
     modules: [
       ...(defaultConfig.resolve?.modules || ['node_modules']),
-      path.resolve(__dirname, '../../node_modules'),
-    ],
-  },
+      path.resolve(__dirname, '../../node_modules')
+    ]
+  }
 });
 
 module.exports = [...childBlockConfigs, gutenbergLegacyConfig];

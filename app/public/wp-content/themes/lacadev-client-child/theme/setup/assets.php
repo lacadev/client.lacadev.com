@@ -5,9 +5,6 @@
  * Parent theme đã enqueue tất cả assets chính.
  * File này chỉ thêm child-specific overrides.
  *
- * QUAN TRỌNG: Dùng App\Contracts\AssetHandles constants thay magic strings.
- * Nếu parent đổi tên handle → chỉ cần cập nhật constant value, không sửa file này.
- *
  * @package LacaDevClientChild
  */
 
@@ -15,75 +12,92 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-use App\Contracts\AssetHandles;
-
 /**
  * Enqueue child theme frontend assets.
- * Chạy SAU parent's app_action_theme_enqueue_assets() nhờ priority 20.
+ * Chạy SAU parent's app_action_theme_enqueue_assets() nhờ priority cao hơn.
  */
-function child_enqueue_frontend_assets(): void
+function child_enqueue_frontend_assets()
 {
-    $v   = wp_get_theme()->get('Version');
-    $uri = get_stylesheet_directory_uri();
-    $dir = get_stylesheet_directory();
+    $child_version = wp_get_theme()->get('Version');
+    $child_dir_uri = dirname(get_stylesheet_directory_uri());
 
+	// ------------------------------------------------------------------
+    // Theme style.css (cho phép viết CSS trực tiếp vào theme/style.css)
+    // ------------------------------------------------------------------
+    wp_enqueue_style(
+        'child-style',
+        get_stylesheet_uri(),
+        ['theme-css-bundle'], // load sau parent CSS
+        $child_version
+    );
+	
     // ------------------------------------------------------------------
     // CSS override từ resources/ (dùng khi không có build step)
     // ------------------------------------------------------------------
-    $child_css_file = $dir . '/resources/styles/child.css';
+    $child_css_file = CHILD_RESOURCES_DIR . 'styles' . DIRECTORY_SEPARATOR . 'child.css';
     if (file_exists($child_css_file)) {
         wp_enqueue_style(
             'child-theme-css',
-            $uri . '/resources/styles/child.css',
-            [AssetHandles::THEME_CSS],
-            $v
+            $child_dir_uri . '/resources/styles/child.css',
+            ['theme-css-bundle'], // load sau parent CSS
+            $child_version
         );
     }
 
     // ------------------------------------------------------------------
     // CSS từ dist/ (dùng khi có Webpack/PostCSS build)
     // ------------------------------------------------------------------
-    $dist_css = $dir . '/dist/styles/child.css';
-    if (file_exists($dist_css)) {
+    $child_dist_css = CHILD_DIST_DIR . 'styles' . DIRECTORY_SEPARATOR . 'child.css';
+    if (file_exists($child_dist_css)) {
         wp_enqueue_style(
             'child-dist-css',
-            $uri . '/dist/styles/child.css',
-            [AssetHandles::THEME_CSS],
-            filemtime($dist_css)
+            $child_dir_uri . '/dist/styles/child.css',
+            ['theme-css-bundle'],
+            $child_version
         );
     }
 
     // ------------------------------------------------------------------
     // JS từ dist/ (nếu có custom JS)
     // ------------------------------------------------------------------
-    $dist_js = $dir . '/dist/child.js';
-    if (file_exists($dist_js)) {
+    $child_dist_js = CHILD_DIST_DIR . 'child.js';
+    if (file_exists($child_dist_js)) {
         wp_enqueue_script(
             'child-theme-js',
-            $uri . '/dist/child.js',
-            [AssetHandles::THEME_JS],
-            filemtime($dist_js),
+            $child_dir_uri . '/dist/child.js',
+            ['theme-js-bundle'], // load sau parent JS
+            filemtime($child_dist_js), // cache-bust khi file thay đổi
+            true // in footer
+        );
+    }
+    // Stats Counter Block animation script — enqueue trực tiếp
+    $sc_js = get_stylesheet_directory() . '/block-gutenberg/block-stats-counter/stats-counter.js';
+    if ( file_exists( $sc_js ) ) {
+        wp_enqueue_script(
+            'block-stats-counter-js',
+            get_stylesheet_directory_uri() . '/block-gutenberg/block-stats-counter/stats-counter.js',
+            [],
+            filemtime( $sc_js ),
             true
         );
     }
 }
-add_action('wp_enqueue_scripts', 'child_enqueue_frontend_assets', 20);
+add_action('wp_enqueue_scripts', 'child_enqueue_frontend_assets', 20); // priority 20 — sau parent (10)
 
 /**
- * Enqueue child theme admin assets.
+ * Enqueue child theme admin assets (nếu cần ghi đè admin UI).
  */
-function child_enqueue_admin_assets(): void
+function child_enqueue_admin_assets()
 {
-    $uri = get_stylesheet_directory_uri();
-    $dir = get_stylesheet_directory();
+    $child_dir_uri = dirname(get_stylesheet_directory_uri());
 
-    $admin_css = $dir . '/dist/styles/admin-child.css';
-    if (file_exists($admin_css)) {
+    $child_admin_css = CHILD_DIST_DIR . 'styles' . DIRECTORY_SEPARATOR . 'admin-child.css';
+    if (file_exists($child_admin_css)) {
         wp_enqueue_style(
             'child-admin-css',
-            $uri . '/dist/styles/admin-child.css',
-            [AssetHandles::ADMIN_CSS],
-            filemtime($admin_css)
+            $child_dir_uri . '/dist/styles/admin-child.css',
+            ['theme-admin-css-bundle'],
+            wp_get_theme()->get('Version')
         );
     }
 }

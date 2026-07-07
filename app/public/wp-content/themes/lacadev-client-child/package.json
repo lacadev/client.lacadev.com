@@ -38,7 +38,6 @@
     "@wordpress/element": "^5.0.0",
     "@wordpress/i18n": "^4.0.0",
     "@wordpress/scripts": "^27.0.0",
-    "fuse.js": "^7.0.0",
     "aos": "^3.0.0-beta.6",
     "autoprefixer": "^10.4.17",
     "babel-loader": "^9.1.3",

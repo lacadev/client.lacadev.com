@@ -10,12 +10,9 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
  * The internal dependencies.
  */
 const utils = require('./lib/utils');
-const parent = require('./lib/parent-path');
 const configLoader = require('./config-loader');
 const postcss = require('./postcss');
 const browsersync = require('./browsersync');
-
-const childNodeModules = utils.themeRootPath('node_modules');
 
 /**
  * Setup the env.
@@ -54,19 +51,19 @@ const plugins = [
     new CopyWebpackPlugin({
         patterns: [
             {
-                from: parent.scripts('sw.js'),
+                from: require('path').resolve(__dirname, '../../../lacadev-client/resources/scripts/sw.js'),
                 to: utils.distPath('sw.js'),
             },
             {
-                from: parent.scripts('lib/instantpage.js'),
+                from: require('path').resolve(__dirname, '../../../lacadev-client/resources/scripts/lib/instantpage.js'),
                 to: utils.distPath('instantpage.js'),
             },
             {
-                from: parent.scripts('lib/smooth-scroll.min.js'),
+                from: require('path').resolve(__dirname, '../../../lacadev-client/resources/scripts/lib/smooth-scroll.min.js'),
                 to: utils.distPath('smooth-scroll.min.js'),
             },
             {
-                from: parent.scripts('lib/lazysizes.min.js'),
+                from: require('path').resolve(__dirname, '../../../lacadev-client/resources/scripts/lib/lazysizes.min.js'),
                 to: utils.distPath('lazysizes.min.js'),
             },
         ],
@@ -162,15 +159,15 @@ module.exports = {
                             api: 'modern-compiler',
                             sassOptions: {
                                 includePaths: [
-                                    childNodeModules,
-                                    parent.resources(),
-                                    parent.styles(),
-                                    parent.nodeModules(),
+                                    require('path').resolve(__dirname, '../../../lacadev-client/resources'),
+                                    require('path').resolve(__dirname, '../../../lacadev-client/resources/styles'),
+                                    require('path').resolve(__dirname, '../../../node_modules')
                                 ],
                                 importers: [{
                                     findFileUrl(url) {
                                         if (url.startsWith('@parent/')) {
-                                            const resolved = require('path').join(parent.resources(), url.slice('@parent/'.length));
+                                            const parentRes = require('path').resolve(__dirname, '../../../lacadev-client/resources');
+                                            const resolved = require('path').join(parentRes, url.slice('@parent/'.length));
                                             return new URL(`file://${resolved}`);
                                         }
                                         return null;

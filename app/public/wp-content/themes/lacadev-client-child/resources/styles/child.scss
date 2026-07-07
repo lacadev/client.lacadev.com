@@ -10,7 +10,7 @@
 @use "@parent/styles/theme/abstracts/mixin" as *;
 
 // === Fonts (child) ===
-// @use "./theme/base/fonts";
+@use "./theme/base/fonts";
 
 // === Layout ===
 @use "./theme/layout/common-blocks";
@@ -19,6 +19,9 @@
 @use "./theme/layout/footer";
 @use "./theme/layout/archive";
 @use "./theme/layout/single-post";
+@use "./theme/layout/archive-project";
+@use "./theme/layout/archive-gallery";
+@use "./theme/layout/single-project";
 
 // === Components ===
 @use "./theme/components/breadcumb";
@@ -27,3 +30,5 @@
 
 // === Pages ===
 @use "./theme/pages/contact";
+
+

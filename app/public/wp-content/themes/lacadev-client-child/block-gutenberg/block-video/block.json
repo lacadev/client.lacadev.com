@@ -108,44 +108,6 @@
             "type": "string",
             "default": ""
         },
-        "headingTag": {
-            "type": "string",
-            "default": "h2",
-            "enum": [
-                "h1",
-                "h2",
-                "h3",
-                "h4",
-                "h5",
-                "h6"
-            ]
-        },
-        "headingAlign": {
-            "type": "string",
-            "default": "left",
-            "enum": [
-                "left",
-                "center",
-                "right"
-            ]
-        },
-        "subheadingAlign": {
-            "type": "string",
-            "default": "left",
-            "enum": [
-                "left",
-                "center",
-                "right"
-            ]
-        },
-        "headingColor": {
-            "type": "string",
-            "default": "#111111"
-        },
-        "subheadingColor": {
-            "type": "string",
-            "default": "#6b7280"
-        },
         "spacing": {
             "type": "object",
             "default": {

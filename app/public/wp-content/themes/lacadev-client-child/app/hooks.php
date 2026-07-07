@@ -20,7 +20,9 @@ if (!defined('ABSPATH')) {
 require_once CHILD_APP_DIR . 'helpers/ajax-pagination-markup.php';
 
 // ── Gallery Archive AJAX Handler ─────────────────────────────────────────────
-// require_once CHILD_APP_DIR . 'src/Ajax/GalleryAjaxHandler.php';
+require_once CHILD_APP_DIR . 'src/Ajax/GalleryAjaxHandler.php';
+require_once CHILD_APP_DIR . 'src/Ajax/PdnTvAjaxHandler.php';
+require_once CHILD_APP_DIR . 'src/Ajax/ProjectAjaxHandler.php';
 
 // Ví dụ: ghi đè excerpt length của parent
 // add_filter('excerpt_length', function($length) {

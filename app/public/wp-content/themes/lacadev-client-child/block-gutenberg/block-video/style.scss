@@ -1,6 +1,5 @@
 @use "@parent/styles/theme/abstracts/variables" as *;
 @use "@parent/styles/theme/abstracts/mixin" as *;
-@use "../common/section-header";
 
 .laca-video-block {
     padding: 0 !important;
@@ -9,19 +8,9 @@
         width: 100%;
     }
 
-	&__preview-shell {
-		display: grid;
-		gap: 1rem;
-	}
-
-	&__preview {
-		border-radius: 0.75rem;
-		overflow: hidden;
-	}
-
-	&__iframe-wrap {
-		position: relative;
-		width: 100%;
+    &__iframe-wrap {
+        position: relative;
+        width: 100%;
         aspect-ratio: 16 / 9;
         overflow: hidden;
         background: #000;
@@ -48,8 +37,8 @@
         }
     }
 
-	    &__placeholder {
-	        min-height: 20rem;
+    &__placeholder {
+        min-height: 20rem;
         border: 2px dashed rgba(0, 0, 0, 0.2);
         border-radius: 1rem;
         display: flex;
@@ -58,85 +47,10 @@
     }
 
     // ── Overlay ───────────────────────────────────────────────────────
-	    &__media-wrap {
-	        position: relative;
-	        width: 100%;
-	    }
-
-	&__editor-video-preview {
-		display: block;
-		aspect-ratio: 16 / 9;
-		background: #000;
-		object-fit: cover;
-	}
-
-	&__embed-preview {
-		position: relative;
-		display: flex;
-		align-items: end;
-		min-height: 24rem;
-		aspect-ratio: 16 / 9;
-		overflow: hidden;
-		background:
-			linear-gradient(135deg, rgba(15, 15, 15, 0.98), rgba(36, 36, 36, 0.92));
-	}
-
-	&__embed-preview--card {
-		align-items: center;
-		justify-content: center;
-		padding: 2rem;
-	}
-
-	&__embed-preview-image {
-		position: absolute;
-		inset: 0;
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		pointer-events: none;
-	}
-
-	&__embed-preview-overlay {
-		position: absolute;
-		inset: 0;
-		background: linear-gradient(180deg, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.7));
-		pointer-events: none;
-	}
-
-	&__embed-preview-content {
-		position: relative;
-		z-index: 1;
-		display: grid;
-		gap: 0.65rem;
-		padding: 1.5rem;
-		color: #fff;
-	}
-
-	&__embed-preview-badge {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		width: fit-content;
-		padding: 0.35rem 0.65rem;
-		border-radius: 999px;
-		background: rgba(255, 255, 255, 0.14);
-		font-size: 0.75rem;
-		font-weight: 700;
-		letter-spacing: 0.04em;
-		text-transform: uppercase;
-	}
-
-	&__embed-preview-title {
-		font-size: 1.35rem;
-		line-height: 1.25;
-	}
-
-	&__embed-preview-caption {
-		max-width: 42rem;
-		font-size: 0.95rem;
-		line-height: 1.55;
-		color: rgba(255, 255, 255, 0.84);
-	}
+    &__media-wrap {
+        position: relative;
+        width: 100%;
+    }
 
     &__overlay {
         position: absolute;

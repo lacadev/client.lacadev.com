@@ -1,0 +1,296 @@
+.laca-woo-page {
+    max-width: 1540px;
+}
+
+.laca-woo-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 22px 0 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #dcdcde;
+}
+
+.laca-woo-header h1 {
+    margin: 0;
+    font-size: 26px;
+    line-height: 1.2;
+}
+
+.laca-woo-header p {
+    margin: 5px 0 0;
+    color: #646970;
+}
+
+.laca-woo-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0 0 14px;
+}
+
+.laca-woo-tabs button,
+.laca-woo-periods button {
+    min-height: 32px;
+    padding: 0 12px;
+    border: 1px solid #c3c4c7;
+    border-radius: 7px;
+    background: #fff;
+    color: #1d2327;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.laca-woo-tabs button.is-active,
+.laca-woo-periods button.is-active {
+    border-color: #2271b1;
+    background: #2271b1;
+    color: #fff;
+}
+
+.laca-woo-panel {
+    display: none;
+}
+
+.laca-woo-panel.is-active {
+    display: block;
+}
+
+.laca-woo-metrics {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.laca-woo-metrics--compact {
+    grid-template-columns: repeat(6, minmax(130px, 1fr));
+}
+
+.laca-woo-metric,
+.laca-woo-card {
+    min-width: 0;
+    border: 1px solid #dcdcde;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.laca-woo-metric {
+    padding: 12px;
+}
+
+.laca-woo-metric span {
+    display: block;
+    color: #646970;
+    font-size: 12px;
+}
+
+.laca-woo-metric strong {
+    display: block;
+    margin-top: 4px;
+    color: #1d2327;
+    font-size: 22px;
+    line-height: 1.1;
+}
+
+.laca-woo-metric__change {
+    margin-top: 7px;
+    font-weight: 700;
+}
+
+.laca-woo-metric__change.is-up {
+    color: #008a20;
+}
+
+.laca-woo-metric__change.is-down {
+    color: #b32d2e;
+}
+
+.laca-woo-grid {
+    display: grid;
+    gap: 14px;
+}
+
+.laca-woo-grid--two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.laca-woo-card {
+    overflow: hidden;
+}
+
+.laca-woo-card header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 14px;
+    border-bottom: 1px solid #dcdcde;
+    background: #fbfbfc;
+}
+
+.laca-woo-card h2 {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.laca-woo-card > div,
+.laca-woo-chart-card > p {
+    margin: 14px;
+}
+
+.laca-woo-chart-card {
+    position: relative;
+}
+
+.laca-woo-chart-card canvas {
+    display: block;
+    margin: 12px 14px 8px;
+    width: calc(100% - 28px) !important;
+    height: 280px !important;
+    min-height: 0;
+    max-height: 280px;
+}
+
+.laca-woo-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+    padding: 10px;
+    border: 1px solid #dcdcde;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.laca-woo-toolbar label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #646970;
+    font-weight: 600;
+}
+
+.laca-woo-periods,
+.laca-woo-custom-range {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+}
+
+.laca-woo-table {
+    border: 0;
+    box-shadow: none;
+}
+
+.laca-woo-table th {
+    font-size: 12px;
+}
+
+.laca-woo-product {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.laca-woo-product img {
+    width: 42px;
+    height: 42px;
+    border-radius: 6px;
+    object-fit: cover;
+    background: #f6f7f7;
+}
+
+.laca-woo-product a {
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.laca-woo-product span {
+    display: block;
+    margin-top: 3px;
+    color: #646970;
+    font-size: 12px;
+}
+
+.laca-woo-stock,
+.laca-woo-pill {
+    display: inline-flex;
+    align-items: center;
+    min-height: 22px;
+    padding: 0 8px;
+    border-radius: 999px;
+    background: #f0f6fc;
+    color: #135e96;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.laca-woo-stock.is-warning {
+    background: #fcf0f1;
+    color: #b32d2e;
+}
+
+.laca-woo-status-list {
+    margin: 0;
+}
+
+.laca-woo-status-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f1;
+}
+
+.laca-woo-status-list li:last-child {
+    border-bottom: 0;
+}
+
+.laca-woo-status-list a {
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.laca-woo-status-list strong {
+    color: #1d2327;
+}
+
+.laca-woo-empty {
+    margin: 0;
+    color: #646970;
+}
+
+.laca-woo-empty.is-error {
+    color: #b32d2e;
+}
+
+@media (max-width: 1200px) {
+    .laca-woo-metrics {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 960px) {
+    .laca-woo-header,
+    .laca-woo-toolbar {
+        display: block;
+    }
+
+    .laca-woo-header .button,
+    .laca-woo-custom-range {
+        margin-top: 10px;
+    }
+
+    .laca-woo-grid--two,
+    .laca-woo-metrics {
+        grid-template-columns: 1fr;
+    }
+}

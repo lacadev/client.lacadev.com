@@ -28,6 +28,15 @@ add_action('admin_head', 'app_action_add_favicon', 5);
 add_filter('upload_dir', 'app_filter_fix_upload_dir_url_schema');
 
 /**
+ * Keep Laca Admin submenu grouped and ordered from one place.
+ */
+add_action('init', function () {
+    if (class_exists('\App\Settings\LacaAdmin\LacaAdminMenuOrganizer')) {
+        (new \App\Settings\LacaAdmin\LacaAdminMenuOrganizer())->register();
+    }
+});
+
+/**
  * Content
  */
 add_filter('excerpt_more', 'app_filter_excerpt_more');

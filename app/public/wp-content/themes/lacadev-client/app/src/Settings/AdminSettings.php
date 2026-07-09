@@ -997,6 +997,14 @@ class AdminSettings
 						->set_attribute('type', 'password')
 						->set_help_text('Secret key riêng của project. Không chia sẻ key này.'),
 
+					Field::make('separator', 'sep_tracker_deep_fim', __('Kiểm tra sâu (nâng cao)', 'laca')),
+
+					Field::make('checkbox', 'laca_tracker_deep_fim', __('Bật kiểm tra sâu mã nguồn (FIM)', 'laca'))
+						->set_width(30),
+					Field::make('html', 'tracker_deep_fim_desc')
+						->set_width(70)
+						->set_html('<i class="fa-regular fa-lightbulb-on"></i> So sánh md5 toàn bộ file .php/.js/.json/.htaccess/.sh trong theme và plugin (không quét <code>uploads</code>) mỗi ngày, phát hiện được cả nội dung bị sửa mà không đổi thời gian chỉnh sửa. Nặng hơn kiểm tra mặc định — chỉ bật nếu cần giám sát chặt.'),
+
 					Field::make('html', 'tracker_save_note', '')
 						->set_html(
 							'<p style="font-size:12px;color:#6b7280;margin-top:4px">'

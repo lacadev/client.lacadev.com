@@ -57,6 +57,16 @@ class LacaDevTrackerClient
      */
     const OPT_KNOWN_UPDATES = '_laca_tracker_known_plugin_updates';
 
+    /**
+     * Carbon Fields field bật/tắt FIM sâu (quét md5 toàn bộ mã nguồn theo
+     * extension, không chỉ mtime của 1 vài file như checkFileIntegrity()).
+     * Mặc định tắt vì nặng hơn — xem checkDeepFileIntegrity().
+     */
+    const CF_DEEP_FIM_ENABLED = 'laca_tracker_deep_fim';
+
+    /** Option key lưu baseline md5 của FIM sâu (riêng với OPT_BASELINE) */
+    const OPT_DEEP_FIM_BASELINE = '_laca_tracker_deep_fim_baseline';
+
     // =========================================================================
     // KHỞI TẠO
     // =========================================================================
@@ -69,6 +79,7 @@ class LacaDevTrackerClient
         add_action('deleted_plugin',            [$this, 'afterDeletePlugin'], 10, 2);
         add_action('activated_plugin',          [$this, 'onActivatePlugin']);
         add_action('deactivated_plugin',        [$this, 'onDeactivatePlugin']);
+        add_action('switch_theme',              [$this, 'onSwitchTheme'], 10, 3);
 
         // --- Phát hiện plugin cần update NGAY KHI WP check (không đợi cron) ---
         // Filter set_site_transient_update_plugins chạy mỗi khi WP lưu kết quả
@@ -265,6 +276,24 @@ class LacaDevTrackerClient
             'type'    => 'plugin_deactivate',
             'content' => "🔴 Tắt plugin: {$name}",
             'level'   => 'warning',
+        ]]);
+    }
+
+    /**
+     * Theme đang active vừa bị đổi. Level 'info' vì đổi theme hợp lệ (do admin
+     * chủ động) không cần cảnh báo ngay — chỉ cần ghi log để hub biết, đúng
+     * hành vi gốc từng có ở ClientTracker\Tracker (đã gộp vào đây).
+     */
+    public function onSwitchTheme(string $newName, \WP_Theme $newTheme, \WP_Theme $oldTheme): void
+    {
+        $this->sendLogs([[
+            'type'    => 'theme_switched',
+            'content' => sprintf(
+                '🎨 Đổi theme: "%s" → "%s"',
+                $oldTheme->get('Name') ?: $oldTheme->get_stylesheet(),
+                $newName
+            ),
+            'level'   => 'info',
         ]]);
     }
 
@@ -504,6 +533,30 @@ class LacaDevTrackerClient
             // nhưng vẫn cần lưu baseline ngay để lần chạy sau so sánh được.
             update_option(self::OPT_BASELINE, $fim['baseline'], false);
         }
+
+        // --- Nhóm 3: FIM sâu (tùy chọn, mặc định tắt) ---
+        $deepFimEnabled = function_exists('carbon_get_theme_option')
+            ? carbon_get_theme_option(self::CF_DEEP_FIM_ENABLED)
+            : false;
+
+        if ($deepFimEnabled === 'yes' || $deepFimEnabled === true) {
+            $deepFim = $this->checkDeepFileIntegrity();
+
+            if (!empty($deepFim['changed'])) {
+                $list        = implode("\n", array_map(fn($f) => "  - {$f}", $deepFim['changed']));
+                $deepFimLogs = [[
+                    'type'    => 'file_changed',
+                    'content' => "🔎 [FIM sâu] Phát hiện thay đổi trong mã nguồn:\n{$list}",
+                    'level'   => 'critical',
+                ]];
+
+                if ($this->sendLogs($deepFimLogs, blocking: true)) {
+                    update_option(self::OPT_DEEP_FIM_BASELINE, $deepFim['baseline'], false);
+                }
+            } elseif ($deepFim['isFirstRun']) {
+                update_option(self::OPT_DEEP_FIM_BASELINE, $deepFim['baseline'], false);
+            }
+        }
     }
 
     /**
@@ -668,6 +721,68 @@ class LacaDevTrackerClient
         }
 
         return $paths;
+    }
+
+    /**
+     * FIM sâu (tùy chọn, mặc định tắt — bật qua Carbon Fields
+     * CF_DEEP_FIM_ENABLED). Khác với checkFileIntegrity() (chỉ so mtime của
+     * 1 vài file theme/plugin đang active), hàm này so md5 nội dung của toàn
+     * bộ file mã nguồn trong theme/plugin/mu-plugin, phát hiện được cả
+     * modified/added/deleted — nhưng KHÔNG quét `uploads` (đã có
+     * runHourlyScan() lo phần đó theo kiểu match tên file khả nghi, hash
+     * toàn bộ media trong uploads sẽ quá nặng cho hosting chia sẻ).
+     *
+     * Tái dùng App\Settings\Security\FileIntegrityMonitor::getFileList() —
+     * danh sách file đã lọc theo extension (php/js/json/htaccess/sh) và loại
+     * trừ uploads/cache/backups/updraft — thay vì viết lại logic quét từ đầu.
+     * Baseline lưu riêng ở OPT_DEEP_FIM_BASELINE, không đụng tới option
+     * `laca_file_baseline` mà trang Security thủ công đang dùng.
+     *
+     * @return array{changed: string[], baseline: array<string,string>, isFirstRun: bool}
+     */
+    private function checkDeepFileIntegrity(): array
+    {
+        $baseline = get_option(self::OPT_DEEP_FIM_BASELINE, []);
+        $current  = [];
+        $changed  = [];
+
+        if (!class_exists('\App\Settings\Security\FileIntegrityMonitor')) {
+            return ['changed' => [], 'baseline' => $baseline, 'isFirstRun' => empty($baseline)];
+        }
+
+        $files = \App\Settings\Security\FileIntegrityMonitor::getFileList();
+
+        foreach ($files as $relPath => $absPath) {
+            $hash = @md5_file($absPath);
+            if ($hash === false) {
+                continue;
+            }
+            $current[$relPath] = $hash;
+
+            if (!empty($baseline[$relPath]) && $baseline[$relPath] !== $hash) {
+                $changed[] = $relPath . ' (nội dung thay đổi)';
+            }
+        }
+
+        foreach ($current as $relPath => $hash) {
+            if (!isset($baseline[$relPath])) {
+                $changed[] = $relPath . ' [file mới]';
+            }
+        }
+
+        foreach ($baseline as $relPath => $hash) {
+            if (!isset($current[$relPath])) {
+                $changed[] = $relPath . ' [đã xoá]';
+            }
+        }
+
+        $isFirstRun = empty($baseline);
+
+        return [
+            'changed'    => $isFirstRun ? [] : $changed,
+            'baseline'   => $current,
+            'isFirstRun' => $isFirstRun,
+        ];
     }
 
     // =========================================================================

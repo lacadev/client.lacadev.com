@@ -213,12 +213,6 @@ function lacadev_register_search_query_vars($vars)
 add_filter('query_vars', 'lacadev_register_search_query_vars');
 
 // =============================================================================
-// CLIENT TRACKER — báo cáo thay đổi plugin/theme/file về lacadev master
-// =============================================================================
-// Cấu hình URL webhook tại: Settings > General > laca_tracker_webhook_url
-(new \App\Features\ClientTracker\Tracker())->init();
-
-// =============================================================================
 // CUSTOM POST TYPES
 // =============================================================================
 // Dynamic CPT — đăng ký CPT được tạo qua admin panel (Appearance > Custom Post Types)

@@ -98,6 +98,19 @@ add_action('init', static function () {
 });
 
 /**
+ * Dọn cron mồ côi `laca_fim_scan` để lại sau khi gỡ App\Features\ClientTracker\Tracker
+ * (đã gộp chức năng theme_switched + FIM sâu vào LacaDevTrackerClient — xem
+ * doc/TRACKER_HUB_CLIENT_SYNC.md, Giai đoạn 3). Chỉ chạy 1 lần rồi tự đánh dấu,
+ * không chạy lại mỗi request.
+ */
+add_action('init', function () {
+    if (!get_option('_laca_tracker_fim_cron_cleaned')) {
+        wp_clear_scheduled_hook('laca_fim_scan');
+        update_option('_laca_tracker_fim_cron_cleaned', 1, false);
+    }
+}, 1);
+
+/**
  * Block Sync Receiver — REST API endpoint nhận blocks từ lacadev.com
  * Chạy cả frontend để REST API hoạt động đúng
  */

@@ -21,10 +21,6 @@ class Security
             $this->disableWpEmbed();
         }
 
-        if (get_option('_disable_wp_cron') === 'yes') {
-            $this->disableWpCron();
-        }
-
         if (get_option('_disable_x_pingback') === 'yes') {
             $this->disableXPingback();
         }

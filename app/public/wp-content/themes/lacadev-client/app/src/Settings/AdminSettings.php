@@ -1009,6 +1009,17 @@ class AdminSettings
 							. 'Sau khi lưu, tracker sẽ tự động gửi log khi có cập nhật plugin/theme/core hoặc phát hiện file PHP lạ trong <code>wp-content/uploads</code>.'
 							. '</p>'
 						),
+
+					Field::make('separator', 'sep_tracker_real_cron', __('Cron hệ thống thật (site ít traffic)', 'laca')),
+
+					Field::make('html', 'tracker_cron_url_desc')
+						->set_html('<i class="fa-regular fa-lightbulb-on"></i> WordPress mặc định chỉ chạy cron khi có người truy cập site (pseudo-cron). Site ít traffic nên thêm URL dưới đây vào Cron Jobs của hosting, chạy mỗi 15 phút, để tracker luôn chạy đều dù không có traffic.'),
+
+					Field::make('html', 'tracker_cron_url')
+						->set_html(static function () {
+							$url = esc_url(home_url('wp-cron.php?doing_wp_cron'));
+							return '<div class="laca-form-group laca-copyable-input"><label>' . esc_html__('Cron URL', 'laca') . '</label><input type="text" readonly value="' . $url . '"></div>';
+						}),
 				]);
 
 			// Google reCAPTCHA

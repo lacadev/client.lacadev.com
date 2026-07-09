@@ -91,6 +91,23 @@ Mục tiêu: xoá `App\Features\ClientTracker\Tracker` (không có UI cấu hìn
 
 Kết quả: chỉ còn **1 hệ tracker duy nhất** (`LacaDevTrackerClient`), 1 endpoint, 1 secret, 1 pipeline gửi có retry-safety (Giai đoạn 2). Không còn option-name collision (`laca_tracker_secret_key` không-prefix vs Carbon Fields) hay 2 cron chạy song song không đồng bộ.
 
+## Cron hệ thống thật cho site ít traffic
+
+WordPress mặc định chỉ chạy cron khi có người truy cập site (pseudo-cron qua `wp-cron.php`) — site khách ít traffic có thể khiến `laca_tracker_hourly_scan`/`laca_tracker_daily_digest` (client) hoặc `laca_project_manager_daily_cron` (hub) không tự chạy đều trong nhiều ngày, âm thầm không ai biết.
+
+**Đã có sẵn (code):**
+- Mỗi cron giờ tự ghi lại thời điểm chạy gần nhất (`LacaDevTrackerClient::renderCronHealthNotice()` phía client, `ProjectNotificationHandler::renderCronHealthNotice()` phía hub) — nếu trễ quá ngưỡng (6h cho cron hourly, 3 ngày cho cron daily), wp-admin tự hiện cảnh báo màu vàng ở đầu trang.
+- Trang `Laca Admin → 📡 Tracker` (client) có sẵn ô "Cron URL" copy được — chính là URL cần thêm vào Cron Jobs của hosting.
+
+**Cần làm thủ công trên hosting (không phải code):**
+1. Vào phần Cron Jobs của hosting (cPanel/DirectAdmin/hosting panel khác), thêm 1 dòng chạy mỗi 15 phút gọi URL đã lấy ở trang Tracker, ví dụ:
+   ```bash
+   wget -q -O /dev/null "https://domain-site/wp-cron.php?doing_wp_cron"
+   ```
+   hoặc dùng `curl -s -o /dev/null "..."` nếu hosting không có `wget`.
+2. **Chỉ sau khi** xác nhận cron thật đã chạy ổn (không còn thấy cảnh báo "cron trễ" trong wp-admin), mới thêm `define('DISABLE_WP_CRON', true);` vào `wp-config.php` để tắt pseudo-cron — tránh trường hợp chạy 2 lần cùng lúc (pseudo-cron + cron thật) trước khi xác nhận cron thật hoạt động.
+3. Nếu hosting có SSH/WP-CLI (không phải mặc định cho mọi client), có thể dùng `wp cron event run --due-now` trong crontab thay cho gọi URL — hiệu quả hơn vì không tốn 1 lượt HTTP request, nhưng đây là lựa chọn nâng cao, không bắt buộc.
+
 ## Chủ động bỏ qua trong các giai đoạn trên (đã cân nhắc)
 
 - Dọn code "chết" `BlockSyncSender`/hook CPT `project` còn sót trong theme client (không có Project CPT nào đăng ký ở đó) — rác code, không ảnh hưởng chức năng.

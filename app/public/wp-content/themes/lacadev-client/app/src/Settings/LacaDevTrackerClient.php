@@ -748,8 +748,10 @@ class LacaDevTrackerClient
         $action    = sanitize_key($params['action'] ?? '');
         $slug      = sanitize_text_field($params['slug'] ?? '');
 
-        // 1) Xác thực secret key
-        if (empty($secretKey) || $secretKey !== self::getSecretKey()) {
+        // 1) Xác thực secret key (so sánh constant-time, chặn cả trường hợp
+        // secret chưa được cấu hình để tránh hash_equals('', '') === true)
+        $storedSecret = self::getSecretKey();
+        if (empty($secretKey) || empty($storedSecret) || !hash_equals($storedSecret, $secretKey)) {
             return new \WP_REST_Response(['success' => false, 'message' => 'Unauthorized'], 401);
         }
 

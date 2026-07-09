@@ -83,9 +83,19 @@ if (is_admin()) {
     add_action('init', static function () {
         new \App\Settings\ThemeUpdater();
         new \App\Widgets\BlockSyncWidget();
-        new \App\Settings\LacaDevTrackerClient(); // Gửi logs & alerts về lacadev CMS
     });
 }
+
+/**
+ * LacaDev Tracker Client — gửi logs & alerts về lacadev CMS.
+ * Phải đăng ký vô điều kiện (không bọc is_admin()) vì cron (wp-cron.php)
+ * và REST request (/laca/v1/remote-update) không đi qua wp-admin nên
+ * is_admin() luôn false ở đó — nếu bọc trong is_admin(), cron và route
+ * REST của tracker sẽ không bao giờ đăng ký được.
+ */
+add_action('init', static function () {
+    new \App\Settings\LacaDevTrackerClient();
+});
 
 /**
  * Block Sync Receiver — REST API endpoint nhận blocks từ lacadev.com

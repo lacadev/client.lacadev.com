@@ -112,41 +112,38 @@ class LacaDevTrackerClient
     {
         // Không có response = không có plugin cần update
         if (empty($value->response) || !is_array($value->response)) {
-            // KHÔNG delete known list — giữ để tránh re-alert khi WP check lại
             return $value;
         }
 
-        $currentKeys = array_keys($value->response); // vd: ['litespeed-cache/litespeed-cache.php',...]
-        sort($currentKeys);
+        // Chống lặp thông báo bằng transient tạm (6h) thay vì ghi option vĩnh
+        // viễn — OPT_KNOWN_UPDATES giờ chỉ được chốt ở runDailyDigest() sau
+        // khi xác nhận gửi thành công, để 1 lần gửi lỗi ở đây không làm mất
+        // vĩnh viễn khả năng phát hiện lại plugin đó ở lần chạy cron kế tiếp.
+        $logs = [];
+        foreach ($value->response as $pluginFile => $info) {
+            $newVersion = $info->new_version ?? '?';
+            $dedupeKey  = '_laca_tracker_alerted_' . md5($pluginFile . '|' . $newVersion);
 
-        $knownKeys = (array) get_option(self::OPT_KNOWN_UPDATES, []);
-        sort($knownKeys);
-
-        // Tìm plugin MỚI (chưa có trong lần check trước)
-        $newlyFound = array_diff($currentKeys, $knownKeys);
-
-        if (!empty($newlyFound)) {
-            $logs = [];
-            foreach ($newlyFound as $pluginFile) {
-                $data       = get_plugin_data(WP_PLUGIN_DIR . '/' . $pluginFile, false, false);
-                $name       = $data['Name']    ?? $pluginFile;
-                $current    = $data['Version'] ?? '?';
-                $newVersion = $value->response[$pluginFile]->new_version ?? '?';
-
-                $logs[] = [
-                    'type'    => 'update_pending',
-                    'content' => "⚠️ Plugin cần update: {$name}\n  Phiên bản hiện tại: {$current} → Bản mới: {$newVersion}",
-                    'level'   => 'warning',
-                ];
+            if (get_transient($dedupeKey)) {
+                continue;
             }
 
-            if (!empty($logs)) {
-                $this->sendLogs($logs);
-            }
+            $data    = get_plugin_data(WP_PLUGIN_DIR . '/' . $pluginFile, false, false);
+            $name    = $data['Name']    ?? $pluginFile;
+            $current = $data['Version'] ?? '?';
+
+            $logs[] = [
+                'type'    => 'update_pending',
+                'content' => "⚠️ Plugin cần update: {$name}\n  Phiên bản hiện tại: {$current} → Bản mới: {$newVersion}",
+                'level'   => 'warning',
+            ];
+
+            set_transient($dedupeKey, 1, 6 * HOUR_IN_SECONDS);
         }
 
-        // Cập nhật danh sách đã biết (dù có mới hay không) để tránh re-alert
-        update_option(self::OPT_KNOWN_UPDATES, $currentKeys, false);
+        if (!empty($logs)) {
+            $this->sendLogs($logs);
+        }
 
         return $value;
     }
@@ -436,57 +433,76 @@ class LacaDevTrackerClient
      */
     public function runDailyDigest(): void
     {
-        $logs = [];
+        // Tách 2 nhóm gửi độc lập (update-pending vs. file-integrity) và chỉ
+        // chốt state cục bộ của từng nhóm khi gửi thành công (blocking +
+        // kiểm tra response) — để 1 lần hub gián đoạn không làm mất vĩnh
+        // viễn khả năng phát hiện lại ở lần chạy cron kế tiếp, và lỗi ở
+        // nhóm này không kéo theo việc gửi nhầm lại dữ liệu nhóm kia.
 
-        // 1. Kiểm tra plugin chờ update — chỉ gửi plugin MỚI so với known list
+        // --- Nhóm 1: plugin/theme/core chờ update ---
+        $updateLogs = [];
+
         $pluginUpdates = $this->getPendingPluginUpdates();
-        $knownKeys = (array) get_option(self::OPT_KNOWN_UPDATES, []);
-        $newPlugins = array_filter($pluginUpdates, function ($p) use ($knownKeys) {
+        $knownKeys     = (array) get_option(self::OPT_KNOWN_UPDATES, []);
+        $newPlugins    = array_filter($pluginUpdates, function ($p) use ($knownKeys) {
             return !in_array($p['slug'] ?? '', $knownKeys, true);
         });
         if (!empty($newPlugins)) {
-            $list   = implode("\n", array_map(fn($p) => "  - {$p['name']}: {$p['current']} → {$p['new']}", $newPlugins));
-            $logs[] = [
+            $list         = implode("\n", array_map(fn($p) => "  - {$p['name']}: {$p['current']} → {$p['new']}", $newPlugins));
+            $updateLogs[] = [
                 'type'    => 'update_pending',
                 'content' => "Plugin mới chờ update (" . count($newPlugins) . "):\n{$list}",
                 'level'   => 'warning',
             ];
         }
 
-        // 2. Kiểm tra theme chờ update
         $themeUpdates = $this->getPendingThemeUpdates();
         if (!empty($themeUpdates)) {
-            $list   = implode("\n", array_map(fn($t) => "  - {$t['name']}: {$t['current']} → {$t['new']}", $themeUpdates));
-            $logs[] = [
+            $list         = implode("\n", array_map(fn($t) => "  - {$t['name']}: {$t['current']} → {$t['new']}", $themeUpdates));
+            $updateLogs[] = [
                 'type'    => 'update_pending',
                 'content' => "🎨 Có " . count($themeUpdates) . " theme chờ update:\n{$list}",
                 'level'   => 'warning',
             ];
         }
 
-        // 3. Kiểm tra WordPress Core có update không
         $coreUpdate = $this->getPendingCoreUpdate();
         if ($coreUpdate) {
-            $logs[] = [
+            $updateLogs[] = [
                 'type'    => 'update_pending',
                 'content' => "🔄 WordPress Core: {$coreUpdate['current']} → {$coreUpdate['new']} (có bản mới)",
                 'level'   => 'warning',
             ];
         }
 
-        // 4. File integrity: check theme đang active và plugins đang bật
-        $modifiedFiles = $this->checkFileIntegrity();
-        if (!empty($modifiedFiles)) {
-            $list   = implode("\n", array_map(fn($f) => "  - {$f}", $modifiedFiles));
-            $logs[] = [
+        if (!empty($updateLogs)) {
+            if ($this->sendLogs($updateLogs, blocking: true)) {
+                // Chốt theo toàn bộ danh sách plugin đang pending hiện tại (không
+                // chỉ phần mới) — plugin đã update xong sẽ tự rụng khỏi danh sách
+                // này ở lần chạy sau. Nếu gửi thất bại, known list giữ nguyên nên
+                // các plugin "mới" ở trên vẫn được phát hiện lại lần sau.
+                update_option(self::OPT_KNOWN_UPDATES, array_column($pluginUpdates, 'slug'), false);
+            }
+        }
+
+        // --- Nhóm 2: file integrity của theme đang active + plugins đang bật ---
+        $fim = $this->checkFileIntegrity();
+
+        if (!empty($fim['changed'])) {
+            $list    = implode("\n", array_map(fn($f) => "  - {$f}", $fim['changed']));
+            $fimLogs = [[
                 'type'    => 'file_changed',
                 'content' => "📝 Phát hiện file theme/plugin bị thay đổi:\n{$list}",
                 'level'   => 'critical',
-            ];
-        }
+            ]];
 
-        if (!empty($logs)) {
-            $this->sendLogs($logs);
+            if ($this->sendLogs($fimLogs, blocking: true)) {
+                update_option(self::OPT_BASELINE, $fim['baseline'], false);
+            }
+        } elseif ($fim['isFirstRun']) {
+            // Lần đầu chưa có baseline để so sánh — không có gì để cảnh báo,
+            // nhưng vẫn cần lưu baseline ngay để lần chạy sau so sánh được.
+            update_option(self::OPT_BASELINE, $fim['baseline'], false);
         }
     }
 
@@ -566,6 +582,12 @@ class LacaDevTrackerClient
     /**
      * Kiểm tra file integrity của theme đang active + plugins đang bật
      * Dùng baseline filemtime: lần đầu lưu baseline, lần sau so sánh.
+     *
+     * Không tự ghi OPT_BASELINE nữa — trả dữ liệu để caller (runDailyDigest)
+     * chỉ chốt baseline mới sau khi xác nhận gửi cảnh báo thành công, tránh
+     * mất dấu thay đổi khi hub tạm thời không phản hồi được.
+     *
+     * @return array{changed: string[], baseline: array<string,int>, isFirstRun: bool}
      */
     private function checkFileIntegrity(): array
     {
@@ -595,15 +617,14 @@ class LacaDevTrackerClient
             }
         }
 
-        // Lưu baseline mới
-        update_option(self::OPT_BASELINE, $current, false);
+        $isFirstRun = empty($baseline);
 
-        // Bỏ qua lần đầu (baseline chưa có = không có gì để so)
-        if (empty($baseline)) {
-            return [];
-        }
-
-        return $changed;
+        return [
+            // Bỏ qua lần đầu (baseline chưa có = không có gì để so)
+            'changed'    => $isFirstRun ? [] : $changed,
+            'baseline'   => $current,
+            'isFirstRun' => $isFirstRun,
+        ];
     }
 
     /**
@@ -654,31 +675,48 @@ class LacaDevTrackerClient
     // =========================================================================
 
     /**
-     * Gửi mảng logs về REST API của lacadev CMS
+     * Gửi mảng logs về REST API của lacadev CMS.
+     *
+     * $blocking = false (mặc định): bắn rồi quên, dùng cho các hook do người
+     * dùng chủ động kích hoạt (cần phản hồi nhanh, không có state cục bộ nào
+     * phụ thuộc kết quả gửi) — luôn trả về true vì không thể xác nhận.
+     *
+     * $blocking = true: dùng cho các nơi cần biết chắc đã gửi thành công
+     * trước khi chốt state cục bộ (baseline, danh sách đã biết) — nếu không,
+     * một lần hub gián đoạn sẽ làm mất dữ liệu vĩnh viễn vì state đã trót
+     * cập nhật dù log chưa tới nơi.
      *
      * @param array<array{type: string, content: string, level?: string}> $logs
      */
-    private function sendLogs(array $logs): void
+    private function sendLogs(array $logs, bool $blocking = false): bool
     {
         $endpoint  = self::getEndpoint();
         $secretKey = self::getSecretKey();
 
         if (empty($endpoint) || empty($secretKey) || empty($logs)) {
-            return;
+            return false;
         }
 
         $siteUrl = get_bloginfo('url');
 
-        wp_remote_post($endpoint, [
+        $response = wp_remote_post($endpoint, [
             'body'    => wp_json_encode([
                 'secret_key' => $secretKey,
                 'site_url'   => $siteUrl,
                 'logs'       => $logs,
             ], JSON_UNESCAPED_UNICODE),
-            'headers' => ['Content-Type' => 'application/json'],
-            'timeout' => 8,
-            'blocking' => false, // Fire-and-forget — không làm chậm admin
+            'headers'  => ['Content-Type' => 'application/json'],
+            'timeout'  => $blocking ? 15 : 8,
+            'blocking' => $blocking,
         ]);
+
+        if (!$blocking) {
+            return true; // Không thể xác nhận, coi như đã gửi.
+        }
+
+        return !is_wp_error($response)
+            && wp_remote_retrieve_response_code($response) >= 200
+            && wp_remote_retrieve_response_code($response) < 300;
     }
 
     // =========================================================================

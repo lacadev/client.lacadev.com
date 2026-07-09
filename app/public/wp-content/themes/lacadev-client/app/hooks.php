@@ -37,6 +37,16 @@ add_action('init', function () {
 });
 
 /**
+ * Xếp mọi custom post type (tĩnh lẫn tạo qua Dynamic CPT) nằm liền kề
+ * ngay sau "Laca Theme" trong sidebar, thay vì rải rác theo menu_position.
+ */
+add_action('init', function () {
+    if (class_exists('\App\Settings\LacaAdmin\CptMenuGrouper')) {
+        (new \App\Settings\LacaAdmin\CptMenuGrouper())->register();
+    }
+});
+
+/**
  * Content
  */
 add_filter('excerpt_more', 'app_filter_excerpt_more');

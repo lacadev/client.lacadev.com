@@ -709,13 +709,11 @@ class AdminSettings
 
 					Field::make('separator', 'smtp_separator_2', __('Thông tin email hệ thống', 'laca')),
 					Field::make('text', 'smtp_username', __('Địa chỉ email', 'laca'))
-						->set_width(50)
-						->set_default_value('mooms.dev@gmail.com'),
+						->set_width(50),
 					Field::make('text', 'smtp_password', __('Mật khẩu', 'laca'))
 						->set_width(50)
 						->set_attribute('type', 'password')
-						->set_attribute('data-field', 'password-field')
-						->set_default_value('utakxthdfibquxos'),
+						->set_attribute('data-field', 'password-field'),
 				])
 				->add_tab(__('LOGIN', 'laca'), [
 					Field::make('image', 'login_logo', __('Login logo', 'laca'))

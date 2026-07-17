@@ -17,7 +17,7 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: /public_html/ # deploy thẳng vào public_html
+          server-dir: /clients.lacadev.com/ # deploy thẳng vào clients.lacadev.com
 
           # Chỉ deploy nội dung bên trong app/public
           local-dir: app/public/

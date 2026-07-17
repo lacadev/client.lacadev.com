@@ -19,13 +19,16 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           server-dir: /clients.lacadev.com/ # deploy thẳng vào clients.lacadev.com
 
-          # Chỉ deploy nội dung bên trong app/public
-          local-dir: app/public/
-
+         # Chỉ deploy 2 thư mục quan trọng
+          include: |
+            app/public/wp-content/themes/lacadev/**
+            app/public/wp-content/plugins/**
+          
+          # Loại trừ những thứ không cần
           exclude: |
             .git/
             .github/
             *.md
             .cpanel.yml
             .gitignore
-            wp-content/uploads/**
+            app/public/wp-content/uploads/**

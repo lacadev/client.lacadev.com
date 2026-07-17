@@ -24,6 +24,18 @@ require_once CHILD_APP_DIR . 'src/Ajax/GalleryAjaxHandler.php';
 require_once CHILD_APP_DIR . 'src/Ajax/PdnTvAjaxHandler.php';
 require_once CHILD_APP_DIR . 'src/Ajax/ProjectAjaxHandler.php';
 
+// ── Theme Updater — tự động check & nhận update từ client.lacadev.com ────────
+// Dùng lại class \App\Settings\ThemeUpdater của theme cha (đã autoload sẵn
+// qua Composer PSR-4 chung — theme con không cần composer/vendor riêng).
+if (is_admin()) {
+    add_action('init', static function () {
+        new \App\Settings\ThemeUpdater(
+            'lacadev-client-child/theme',
+            'https://client.lacadev.com/theme-updates/lacadev-client-child.json'
+        );
+    });
+}
+
 // Ví dụ: ghi đè excerpt length của parent
 // add_filter('excerpt_length', function($length) {
 //     return 25;

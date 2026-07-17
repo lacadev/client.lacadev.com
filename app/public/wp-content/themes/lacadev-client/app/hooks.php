@@ -86,12 +86,15 @@ add_filter('login_message', 'app_login_google_admin_message');
 add_action('carbon_fields_register_fields', 'app_bootstrap_carbon_fields_register_fields');
 
 /**
- * Theme Updater — tự động check & nhận update từ lacadev.com
+ * Theme Updater — tự động check & nhận update từ client.lacadev.com
  * Chỉ chạy ở admin để tiết kiệm tài nguyên frontend
  */
 if (is_admin()) {
     add_action('init', static function () {
-        new \App\Settings\ThemeUpdater();
+        new \App\Settings\ThemeUpdater(
+            'lacadev-client/theme',
+            'https://client.lacadev.com/theme-updates/lacadev-client.json'
+        );
         new \App\Widgets\BlockSyncWidget();
     });
 }

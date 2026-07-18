@@ -92,6 +92,10 @@ class SecurityManager
         ?>
         <div class="wrap">
             <h1>🔒 Bảo mật</h1>
+            <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;padding:14px 16px;margin:8px 0">
+                <p style="margin:0 0 8px;font-weight:600;color:#0369a1">🔧 Bảo mật website</p>
+                <p style="margin:0;font-size:13px;color:#374151">Trang này tập hợp các công cụ giúp bảo vệ site: kiểm tra điểm bảo mật tổng quan, giám sát file bị thay đổi, quét mã độc, phát hiện tài khoản admin ẩn, đổi URL đăng nhập để tránh dò mật khẩu, và bật xác thực 2 bước (2FA) cho tài khoản quản trị.</p>
+            </div>
             <nav class="nav-tab-wrapper">
                 <?php foreach ($tabs as $key => $label): ?>
                     <a href="<?php echo esc_url(add_query_arg(['page' => 'laca-security', 'tab' => $key], admin_url('admin.php'))); ?>"

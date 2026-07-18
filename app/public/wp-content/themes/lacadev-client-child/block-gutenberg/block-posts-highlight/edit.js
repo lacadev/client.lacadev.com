@@ -23,17 +23,6 @@ import { useInserterPreview, BlockPreviewMock } from '../utils/preview';
 
 export default function Edit( { attributes, setAttributes } ) {
 	const isPreview = useInserterPreview( attributes );
-	if ( isPreview ) {
-		return (
-			<BlockPreviewMock
-				kicker={ __( 'Posts Highlight', 'laca' ) }
-				title={
-					attributes.sectionTitle || __( 'Bài viết nổi bật', 'laca' )
-				}
-				columns={ 3 }
-			/>
-		);
-	}
 
 	const {
 		sectionTitle,
@@ -181,8 +170,12 @@ export default function Edit( { attributes, setAttributes } ) {
 		[ mode, postType, selectedPosts.join( ',' ) ]
 	);
 
-	// Reset khi đổi postType
+	// Reset khi đổi postType (bỏ qua ở chế độ preview — không cần side-effect
+	// khi block chỉ đang được render làm thumbnail trong inserter)
 	useEffect( () => {
+		if ( isPreview ) {
+			return;
+		}
 		setAttributes( { selectedTerms: [], taxonomy: '' } );
 	}, [ postType ] );
 
@@ -256,6 +249,16 @@ export default function Edit( { attributes, setAttributes } ) {
 		{ label: __( '— Không lọc —', 'laca' ), value: '' },
 		...taxonomies.map( ( tx ) => ( { label: tx.label, value: tx.value } ) ),
 	];
+
+	if ( isPreview ) {
+		return (
+			<BlockPreviewMock
+				kicker={ __( 'Posts Highlight', 'laca' ) }
+				title={ sectionTitle || __( 'Bài viết nổi bật', 'laca' ) }
+				columns={ 3 }
+			/>
+		);
+	}
 
 	return (
 		<>
@@ -520,7 +523,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					/>
 				</PanelBody>
 			</InspectorControls>
-			<div { ...useBlockProps() }>
+			<div { ...blockProps }>
 				<ServerSideRender
 					block="lacadev/posts-highlight-block"
 					attributes={ attributes }

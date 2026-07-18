@@ -14,16 +14,6 @@ import { useInserterPreview, BlockPreviewMock } from '../utils/preview';
 
 export default function Edit( { attributes, setAttributes } ) {
 	const isPreview = useInserterPreview( attributes );
-	if ( isPreview ) {
-		return (
-			<BlockPreviewMock
-				kicker={ __( 'Stats Counter', 'laca' ) }
-				title={ attributes.heading || __( 'Thống kê nổi bật', 'laca' ) }
-				columns={ 3 }
-			/>
-		);
-	}
-
 	const {
 		items,
 
@@ -40,6 +30,16 @@ export default function Edit( { attributes, setAttributes } ) {
 	const blockProps = useBlockProps( {
 		className: 'wp-block-lacadev-stats-counter-block',
 	} );
+
+	if ( isPreview ) {
+		return (
+			<BlockPreviewMock
+				kicker={ __( 'Stats Counter', 'laca' ) }
+				title={ attributes.heading || __( 'Thống kê nổi bật', 'laca' ) }
+				columns={ 3 }
+			/>
+		);
+	}
 
 	const updateItem = ( index, key, value ) => {
 		const newItems = items.map( ( item, i ) =>
@@ -224,7 +224,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					/>
 				</PanelBody>
 			</InspectorControls>
-			<div { ...useBlockProps() }>
+			<div { ...blockProps }>
 				<ServerSideRender
 					block="lacadev/stats-counter-block"
 					attributes={ attributes }

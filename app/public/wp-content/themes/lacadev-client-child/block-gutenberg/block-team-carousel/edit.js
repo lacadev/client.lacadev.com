@@ -13,19 +13,6 @@ import { useInserterPreview, BlockPreviewMock } from '../utils/preview';
 
 export default function Edit( { attributes, setAttributes } ) {
 	const isPreview = useInserterPreview( attributes );
-	if ( isPreview ) {
-		return (
-			<BlockPreviewMock
-				kicker={ __( 'Team Carousel', 'laca' ) }
-				title={
-					attributes.sectionTitle ||
-					__( 'Đội ngũ của chúng tôi', 'laca' )
-				}
-				columns={ 3 }
-			/>
-		);
-	}
-
 	const {
 		sectionTitle,
 		slides,
@@ -42,6 +29,16 @@ export default function Edit( { attributes, setAttributes } ) {
 	const blockProps = useBlockProps( {
 		style: { background: bgColor || '#ffffff' },
 	} );
+
+	if ( isPreview ) {
+		return (
+			<BlockPreviewMock
+				kicker={ __( 'Team Carousel', 'laca' ) }
+				title={ sectionTitle || __( 'Đội ngũ của chúng tôi', 'laca' ) }
+				columns={ 3 }
+			/>
+		);
+	}
 
 	/* ── Media picker ── */
 	const openMedia = ( index ) => {
@@ -275,7 +272,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					/>
 				</PanelBody>
 			</InspectorControls>
-			<div { ...useBlockProps() }>
+			<div { ...blockProps }>
 				<ServerSideRender
 					block="lacadev/team-carousel-block"
 					attributes={ attributes }

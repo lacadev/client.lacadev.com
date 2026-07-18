@@ -262,19 +262,33 @@ export default function Edit( { attributes, setAttributes } ) {
 													} }
 												>
 													{ item.thumbnailUrl ? (
-														<img
-															src={
-																item.thumbnailUrl
-															}
-															style={ {
-																width: '100px',
-																height: 'auto',
-																cursor: 'pointer',
-																borderRadius:
-																	'4px',
-															} }
+														<button
+															type="button"
 															onClick={ open }
-														/>
+															style={ {
+																padding: 0,
+																border: 0,
+																background:
+																	'none',
+																cursor: 'pointer',
+															} }
+														>
+															<img
+																src={
+																	item.thumbnailUrl
+																}
+																alt={ __(
+																	'Đổi ảnh thumbnail',
+																	'laca'
+																) }
+																style={ {
+																	width: '100px',
+																	height: 'auto',
+																	borderRadius:
+																		'4px',
+																} }
+															/>
+														</button>
 													) : (
 														<Button
 															variant="secondary"
@@ -410,6 +424,7 @@ export default function Edit( { attributes, setAttributes } ) {
 											aria-label={
 												name
 													? sprintf(
+															// translators: %s là tên người feedback trong video.
 															__(
 																'Xem video: %s',
 																'laca'

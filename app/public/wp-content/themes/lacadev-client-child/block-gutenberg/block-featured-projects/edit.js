@@ -2,7 +2,6 @@ import { __ } from '@wordpress/i18n';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import {
 	PanelBody,
-	PanelRow,
 	TextControl,
 	RangeControl,
 	SelectControl,
@@ -18,18 +17,6 @@ import { useInserterPreview, BlockPreviewMock } from '../utils/preview';
 
 export default function Edit( { attributes, setAttributes } ) {
 	const isPreview = useInserterPreview( attributes );
-	if ( isPreview ) {
-		return (
-			<BlockPreviewMock
-				kicker={ __( 'Featured Projects', 'laca' ) }
-				title={
-					attributes.sectionTitle || __( 'Dự án nổi bật', 'laca' )
-				}
-				columns={ 3 }
-			/>
-		);
-	}
-
 	const {
 		sectionTitle,
 		badges,
@@ -72,8 +59,8 @@ export default function Edit( { attributes, setAttributes } ) {
 		[ postType ]
 	);
 
-	// Preview posts (auto mode)
-	const previewPosts = useSelect(
+	// Kích hoạt resolver lấy preview posts (auto mode) — giữ nguyên thứ tự hook
+	useSelect(
 		( select ) => {
 			if ( mode !== 'auto' ) {
 				return [];
@@ -89,10 +76,15 @@ export default function Edit( { attributes, setAttributes } ) {
 		[ mode, postType, postsCount, orderBy ]
 	);
 
-	const postsToShow =
-		mode === 'manual'
-			? availablePosts.filter( ( p ) => postIds.includes( p.id ) )
-			: previewPosts;
+	if ( isPreview ) {
+		return (
+			<BlockPreviewMock
+				kicker={ __( 'Featured Projects', 'laca' ) }
+				title={ sectionTitle || __( 'Dự án nổi bật', 'laca' ) }
+				columns={ 3 }
+			/>
+		);
+	}
 
 	const updateBadge = ( index, key, value ) => {
 		const updated = badges.map( ( b, i ) =>
@@ -316,7 +308,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					/>
 				</PanelBody>
 			</InspectorControls>
-			<div { ...useBlockProps() }>
+			<div { ...blockProps }>
 				<ServerSideRender
 					block="lacadev/featured-projects-block"
 					attributes={ attributes }

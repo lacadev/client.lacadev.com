@@ -19,18 +19,6 @@ import { hexToRgba } from '../utils/style';
 
 export default function Edit( { attributes, setAttributes } ) {
 	const isPreview = useInserterPreview( attributes );
-	if ( isPreview ) {
-		return (
-			<BlockPreviewMock
-				kicker={ __( 'Team Leaders', 'laca' ) }
-				title={
-					attributes.sectionTitle || __( 'Đội ngũ lãnh đạo', 'laca' )
-				}
-				columns={ 3 }
-			/>
-		);
-	}
-
 	const { sectionTitle, leaders, bgColor, bgOpacity } = attributes;
 	const leadersList = Array.isArray( leaders ) ? leaders : [];
 	const previewCols = Math.max( 1, Math.min( leadersList.length || 1, 4 ) );
@@ -41,6 +29,16 @@ export default function Edit( { attributes, setAttributes } ) {
 			background: hexToRgba( bgColor || '#0f0f0f', bgOpacity ?? 100 ),
 		},
 	} );
+
+	if ( isPreview ) {
+		return (
+			<BlockPreviewMock
+				kicker={ __( 'Team Leaders', 'laca' ) }
+				title={ sectionTitle || __( 'Đội ngũ lãnh đạo', 'laca' ) }
+				columns={ 3 }
+			/>
+		);
+	}
 
 	const updateLeader = ( index, key, value ) => {
 		const updated = leadersList.map( ( l, i ) =>

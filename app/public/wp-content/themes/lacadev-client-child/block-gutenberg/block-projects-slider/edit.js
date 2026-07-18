@@ -19,20 +19,6 @@ import { useInserterPreview, BlockPreviewMock } from '../utils/preview';
 
 export default function Edit( { attributes, setAttributes } ) {
 	const isPreview = useInserterPreview( attributes );
-	if ( isPreview ) {
-		return (
-			<BlockPreviewMock
-				kicker={
-					attributes.sectionBadge || __( 'Dự Án Tiêu Biểu', 'laca' )
-				}
-				title={
-					attributes.sectionTitle ||
-					__( 'Dự Án Sử Dụng Sản Phẩm', 'laca' )
-				}
-				columns={ 3 }
-			/>
-		);
-	}
 
 	// ── Local state ──────────────────────────────────────────────────────────
 	const [ postSearch, setPostSearch ] = useState( '' );
@@ -180,8 +166,11 @@ export default function Edit( { attributes, setAttributes } ) {
 		[ mode, postType, taxonomy, selectedTerms, postsCount, orderBy, order ]
 	);
 
-	// ── Reset khi đổi postType ──────────────────────────────────────────────
+	// ── Reset khi đổi postType (bỏ qua ở chế độ preview) ────────────────────
 	useEffect( () => {
+		if ( isPreview ) {
+			return;
+		}
 		setAttributes( { selectedTerms: [], taxonomy: '' } );
 	}, [ postType ] );
 
@@ -303,6 +292,16 @@ export default function Edit( { attributes, setAttributes } ) {
 				</div>
 			</div>
 		) );
+
+	if ( isPreview ) {
+		return (
+			<BlockPreviewMock
+				kicker={ sectionBadge || __( 'Dự Án Tiêu Biểu', 'laca' ) }
+				title={ sectionTitle || __( 'Dự Án Sử Dụng Sản Phẩm', 'laca' ) }
+				columns={ 3 }
+			/>
+		);
+	}
 
 	return (
 		<>
@@ -716,7 +715,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					) }
 				</PanelBody>
 			</InspectorControls>
-			<div { ...useBlockProps() }>
+			<div { ...blockProps }>
 				<ServerSideRender
 					block="lacadev/projects-slider-block"
 					attributes={ attributes }

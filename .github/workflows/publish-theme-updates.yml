@@ -22,29 +22,21 @@ jobs:
         working-directory: app/public/wp-content/themes/lacadev-client
         run: composer install --no-dev --optimize-autoloader --prefer-dist
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20.x
-
-      - name: Build child theme (lacadev-client-child)
-        working-directory: app/public/wp-content/themes/lacadev-client-child
-        run: |
-          cp config.json.dist config.json
-          yarn install --frozen-lockfile
-          yarn build
-
-      - name: Read theme versions
+      - name: Read theme version
         id: versions
         working-directory: app/public/wp-content/themes
         run: |
           PARENT_VERSION=$(grep -m1 '^ \* Version:' lacadev-client/theme/style.css | sed -E 's/^ \* Version:[[:space:]]*//')
-          CHILD_VERSION=$(grep -m1 '^ \* Version:' lacadev-client-child/theme/style.css | sed -E 's/^ \* Version:[[:space:]]*//')
           echo "parent=$PARENT_VERSION" >> "$GITHUB_OUTPUT"
-          echo "child=$CHILD_VERSION" >> "$GITHUB_OUTPUT"
           echo "date=$(date -u +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
 
-      - name: Package theme zips
+      # Chỉ đóng gói & publish theme CHA (lacadev-client). Theme con
+      # (lacadev-client-child) KHÔNG được tự động cập nhật xuống site khách —
+      # mỗi site khách có bộ file theme con khác nhau (theme-options.php,
+      # header/footer, archive-*, single-*, block-gutenberg...), nên không có
+      # khái niệm "1 bản chuẩn" để phát tán hàng loạt. Chỉ theme cha (code
+      # dùng chung) mới được phân phối qua kênh update tự động này.
+      - name: Package parent theme zip
         working-directory: app/public/wp-content/themes
         run: |
           mkdir -p "$GITHUB_WORKSPACE/publish"
@@ -55,16 +47,9 @@ jobs:
             -x "lacadev-client/node_modules/*" \
             -x "lacadev-client/*.md"
 
-          zip -r "$GITHUB_WORKSPACE/publish/lacadev-client-child.zip" lacadev-client-child \
-            -x "lacadev-client-child/.git/*" \
-            -x "lacadev-client-child/.github/*" \
-            -x "lacadev-client-child/node_modules/*" \
-            -x "lacadev-client-child/*.md"
-
-      - name: Generate update JSON files
+      - name: Generate update JSON file
         env:
           PARENT_VERSION: ${{ steps.versions.outputs.parent }}
-          CHILD_VERSION: ${{ steps.versions.outputs.child }}
           BUILD_DATE: ${{ steps.versions.outputs.date }}
         run: |
           cat > "$GITHUB_WORKSPACE/publish/lacadev-client.json" <<EOF
@@ -77,20 +62,6 @@ jobs:
             "requires_php": "8.0",
             "last_updated": "$BUILD_DATE",
             "description": "Theme cha La Cà Dev - Client — cập nhật tự động từ client.lacadev.com",
-            "changelog": ""
-          }
-          EOF
-
-          cat > "$GITHUB_WORKSPACE/publish/lacadev-client-child.json" <<EOF
-          {
-            "name": "La Cà Dev - Client Child",
-            "version": "$CHILD_VERSION",
-            "download_url": "https://client.lacadev.com/theme-updates/lacadev-client-child.zip",
-            "details_url": "https://client.lacadev.com",
-            "requires": "6.0",
-            "requires_php": "8.0",
-            "last_updated": "$BUILD_DATE",
-            "description": "Theme con La Cà Dev - Client Child — cập nhật tự động từ client.lacadev.com",
             "changelog": ""
           }
           EOF

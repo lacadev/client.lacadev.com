@@ -96,6 +96,14 @@ if (is_admin()) {
             'https://client.lacadev.com/theme-updates/lacadev-client.json'
         );
         new \App\Widgets\BlockSyncWidget();
+
+        // Block Marketplace — trang "Laca Theme → Block Marketplace" cho
+        // site khách browse + yêu cầu đồng bộ block từ client.lacadev.com
+        // (qua hub). Chỉ cần đăng ký AJAX handler ở đây, phần render page
+        // được gọi trực tiếp từ theme-options.php (child theme).
+        if (class_exists('\App\Settings\BlockMarketplace')) {
+            new \App\Settings\BlockMarketplace();
+        }
     });
 }
 
@@ -133,6 +141,13 @@ add_action('init', static function () {
     // lacadev_child_register_synced_blocks() at init priority 15.
     // Having both causes duplicate "already registered" notices → "headers already sent" → admin 403/404.
     // new \App\Settings\BlockAutoloader();
+
+    // Block Catalog Provider — REST API đọc-chỉ phục vụ danh mục block cho
+    // hub (lacadev.com) đọc, dùng cho tính năng "site khách yêu cầu đồng bộ
+    // block". Chạy trên mọi site dùng theme này, tự bảo vệ bằng Catalog Key
+    // riêng — chỉ site nào có key đúng (client.lacadev.com) mới thực sự được
+    // hub gọi tới trong thực tế.
+    new \App\Settings\BlockCatalogProvider();
 }, 5);
 
 /**

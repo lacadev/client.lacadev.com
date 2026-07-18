@@ -909,6 +909,45 @@ class LacaDevTrackerClient
     }
 
     /**
+     * Gửi yêu cầu đồng bộ 1 Gutenberg block lên hub (lacadev.com) — dùng lại
+     * đúng kênh tracker log hiện có (endpoint + secret key đã cấu hình sẵn),
+     * chỉ khác `type = 'block_sync_request'` để hub route đúng vào hàng chờ
+     * duyệt (xem TrackerEndpointHandler::handleBlockSyncRequest() phía hub).
+     *
+     * Dùng `blocking: true` vì Block Marketplace cần biết ngay kết quả gửi
+     * để hiện thông báo cho admin, khác với các log tự động khác (bắn rồi quên).
+     */
+    public static function requestBlockSync(string $blockName): bool
+    {
+        $endpoint  = self::getEndpoint();
+        $secretKey = self::getSecretKey();
+
+        if (empty($endpoint) || empty($secretKey) || empty($blockName)) {
+            return false;
+        }
+
+        $response = wp_remote_post($endpoint, [
+            'body'     => wp_json_encode([
+                'secret_key' => $secretKey,
+                'site_url'   => get_bloginfo('url'),
+                'logs'       => [[
+                    'type'    => 'block_sync_request',
+                    'content' => "🧩 Yêu cầu đồng bộ block: {$blockName}",
+                    'level'   => 'info',
+                    'meta'    => ['block_name' => $blockName],
+                ]],
+            ], JSON_UNESCAPED_UNICODE),
+            'headers'  => ['Content-Type' => 'application/json'],
+            'timeout'  => 15,
+            'blocking' => true,
+        ]);
+
+        return !is_wp_error($response)
+            && wp_remote_retrieve_response_code($response) >= 200
+            && wp_remote_retrieve_response_code($response) < 300;
+    }
+
+    /**
      * Đăng ký hooks — gọi từ hooks.php
      */
     public static function register(): void

@@ -218,7 +218,6 @@ $footer_contact_image_alt = $footer_contact_image_id ? get_post_meta($footer_con
                   ?>
                   <li class="footer__contact-item">
                       <?php echo nl2br(esc_html($addr['address'])); ?>
-                    </span>
                   </li>
                 <?php endif; ?>
               <?php endforeach; ?>

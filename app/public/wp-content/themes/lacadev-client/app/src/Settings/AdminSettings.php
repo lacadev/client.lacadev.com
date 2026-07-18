@@ -957,6 +957,27 @@ class AdminSettings
 								. '<p style="margin:8px 0 0;font-size:12px;color:#4b5563">Dán URL này vào trường <strong>Sync Endpoint URL</strong> trong project tương ứng trên lacadev.com.</p>'
 								. '</div>';
 						}),
+
+					Field::make('separator', 'sep_block_catalog_heading', __('Block Catalog — chỉ dùng trên client.lacadev.com', 'laca')),
+
+					Field::make('html', 'block_catalog_key_display', __('Catalog Key', 'laca'))
+						->set_html(static function () {
+							$key = \App\Settings\BlockCatalogProvider::ensureApiKey();
+							return '<div style="background:#fefce8;border:1px solid #fde68a;border-radius:6px;padding:12px 16px;margin:8px 0">'
+								. '<p style="margin:0 0 6px;font-weight:600;color:#854d0e">🔑 Catalog Key của site này:</p>'
+								. '<code style="font-size:13px;word-break:break-all;background:#fef9c3;padding:6px 10px;border-radius:4px;display:block">' . esc_html($key) . '</code>'
+								. '<p style="margin:8px 0 0;font-size:12px;color:#4b5563">Chỉ cấu hình trên <strong>lacadev.com</strong> (hub) để hub đọc danh mục block từ <strong>chính site client.lacadev.com này</strong> — không liên quan tới project của khách hàng.</p>'
+								. '</div>';
+						}),
+
+					Field::make('html', 'block_catalog_endpoint_info', '')
+						->set_html(static function () {
+							$endpoint = rest_url('lacadev/v1/blocks-catalog');
+							return '<div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;padding:12px 16px;margin:8px 0">'
+								. '<p style="margin:0 0 6px;font-weight:600;color:#0369a1">🌐 Catalog Endpoint URL:</p>'
+								. '<code style="font-size:13px;word-break:break-all;background:#e0f2fe;padding:6px 10px;border-radius:4px;display:block">' . esc_html($endpoint) . '</code>'
+								. '</div>';
+						}),
 				]);
 
 			// Tracker Settings — kết nối gửi log về lacadev CMS
@@ -1095,6 +1116,9 @@ class AdminSettings
             ->set_page_parent($options)
             ->set_page_file(__('laca-login-socials', 'laca'))
             ->add_tab(__('Google', 'laca'), [
+                Field::make('html', 'login_socials_google_info', '')
+                    ->set_html('<div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;padding:14px 16px;margin:8px 0"><p style="margin:0 0 8px;font-weight:600;color:#0369a1">🔧 Đăng nhập bằng Google</p><p style="margin:0;font-size:13px;color:#374151">Cho phép người dùng đăng nhập vào site bằng tài khoản Google thay vì username/mật khẩu. Bạn cần tạo <strong>Client ID</strong> và <strong>Client Secret</strong> trên Google Cloud Console, dán vào bên dưới, rồi cấu hình <strong>Redirect URI</strong> (đã điền sẵn) trong đó.</p></div>'),
+
                 Field::make('checkbox', 'enable_login_google', __('Bật Login Google', 'laca')),
                 Field::make('text', 'google_client_id', __('Client ID', 'laca'))
                     ->set_width(50),

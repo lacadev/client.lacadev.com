@@ -16,6 +16,9 @@ $optionsPage = Container::make('theme_options', __('Laca Theme', 'laca'))
 	->set_page_file('app-theme-options.php')
 	->set_page_menu_position(3)
 	->add_tab(__('Branding | Thương hiệu', 'laca'), [
+		Field::make('html', 'branding_intro', __('', 'laca'))
+			->set_html('<div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;padding:14px 16px;margin:8px 0"><p style="margin:0 0 8px;font-weight:600;color:#0369a1">🔧 Thương hiệu</p><p style="margin:0;font-size:13px;color:#374151">Thiết lập màu sắc và logo dùng chung cho toàn bộ website. Các màu và logo ở đây sẽ hiển thị đồng bộ trên mọi trang, mọi giao diện của site.</p></div>'),
+
 		Field::make('color', 'primary_color', __('Primary color', 'laca'))
 			->set_width(33.33),
 		Field::make('color', 'secondary_color', __('Secondary color', 'laca'))
@@ -32,6 +35,9 @@ $optionsPage = Container::make('theme_options', __('Laca Theme', 'laca'))
 	])
 
 	->add_tab(__('Contact | Liên hệ', 'laca'), [
+		Field::make('html', 'contact_intro', __('', 'laca'))
+			->set_html('<div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;padding:14px 16px;margin:8px 0"><p style="margin:0 0 8px;font-weight:600;color:#0369a1">🔧 Liên hệ</p><p style="margin:0;font-size:13px;color:#374151">Nhập thông tin liên hệ của công ty (địa chỉ, số điện thoại, hotline, giờ làm việc, mạng xã hội). Các thông tin này sẽ tự động hiển thị ở footer và các khối liên hệ trên site.</p></div>'),
+
 		Field::make('html', 'info', __('', 'laca'))
 			->set_html('----<i> Information | Thông tin </i>----'),
 		
@@ -81,6 +87,9 @@ $optionsPage = Container::make('theme_options', __('Laca Theme', 'laca'))
 	])
 
 	->add_tab(__('Scripts', 'laca'), [
+		Field::make('html', 'scripts_intro', __('', 'laca'))
+			->set_html('<div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;padding:14px 16px;margin:8px 0"><p style="margin:0 0 8px;font-weight:600;color:#0369a1">🔧 Scripts</p><p style="margin:0;font-size:13px;color:#374151">Chèn mã theo dõi vào đầu (header) hoặc cuối (footer) trang, ví dụ Google Analytics, Facebook Pixel. Lưu ý: nhập sai định dạng mã có thể làm lỗi hiển thị toàn bộ website, chỉ dán mã bạn tin tưởng.</p></div>'),
+
 		Field::make('header_scripts', 'crb_header_script', __('Header Script', 'laca')),
 		Field::make('footer_scripts', 'crb_footer_script', __('Footer Script', 'laca')),
 	])
@@ -126,6 +135,9 @@ $optionsPage = Container::make('theme_options', __('Laca Theme', 'laca'))
 	])
 
 	->add_tab(__('Footer menu(Child)', 'laca'), [
+		Field::make('html', 'footer_menu_intro', __('', 'laca'))
+			->set_html('<div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;padding:14px 16px;margin:8px 0"><p style="margin:0 0 8px;font-weight:600;color:#0369a1">🔧 Footer menu (Child)</p><p style="margin:0;font-size:13px;color:#374151">Cấu hình 5 cột menu ở footer: Về chúng tôi, Dịch vụ, Chính sách, Showroom & Nhà máy, Dự án tiêu biểu và Đối tác. Nội dung khai báo ở đây sẽ hiển thị ở cuối mọi trang trên website.</p></div>'),
+
 		//Menu Về chúng tôi
 		Field::make('html', 'about_footer', __('', 'laca'))
 			->set_html('----<i> MENU VỀ CHÚNG TÔI </i>----'),
@@ -196,4 +208,13 @@ $optionsPage = Container::make('theme_options', __('Laca Theme', 'laca'))
 				Field::make('text', 'url', __('', 'laca'))->set_width(50)
 				->set_attribute('placeholder', 'URL'),
 			])->set_header_template('<% if (name) { %><%- name %><% } %>'),
+	])
+
+	->add_tab(__('🛒 Block Marketplace', 'laca'), [
+		Field::make('html', 'block_marketplace', __('', 'laca'))
+			->set_html(static function () {
+				return class_exists('\App\Settings\BlockMarketplace')
+					? \App\Settings\BlockMarketplace::renderPage()
+					: '<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:6px;padding:14px 16px;color:#991b1b">Không tìm thấy class BlockMarketplace.</div>';
+			}),
 	]);

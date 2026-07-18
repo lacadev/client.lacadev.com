@@ -627,7 +627,6 @@ function lacadev_child_register_synced_blocks(): void
             $indexCss = "{$childThemeUri}/block-gutenberg/{$blockName}/build/index.css";
             $styleCss = "{$childThemeUri}/block-gutenberg/{$blockName}/build/style-index.css";
 
-            error_log("lacadev_child_register: Registering script $scriptHandle with URL $indexJs");
             wp_register_script($scriptHandle, $indexJs, $asset['dependencies'] ?? [], $asset['version'] ?? null);
 
             if (file_exists("{$childBlocksDir}/{$blockName}/build/index.css")) {
@@ -644,8 +643,6 @@ function lacadev_child_register_synced_blocks(): void
         }
 
         $blockArgs['category'] = lacadev_resolve_block_category($registered_block_name, 'lacadev-blocks');
-
-        error_log("lacadev_child_register: Registering block {$registered_block_name} with editor_script {$blockArgs['editor_script']}");
 
         if (file_exists($renderPhp)) {
             $blockArgs['render_callback'] = static function ($attributes, $content) use ($renderPhp) {

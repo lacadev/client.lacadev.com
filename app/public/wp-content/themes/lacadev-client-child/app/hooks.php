@@ -24,17 +24,13 @@ require_once CHILD_APP_DIR . 'src/Ajax/GalleryAjaxHandler.php';
 require_once CHILD_APP_DIR . 'src/Ajax/PdnTvAjaxHandler.php';
 require_once CHILD_APP_DIR . 'src/Ajax/ProjectAjaxHandler.php';
 
-// ── Theme Updater — tự động check & nhận update từ client.lacadev.com ────────
-// Dùng lại class \App\Settings\ThemeUpdater của theme cha (đã autoload sẵn
-// qua Composer PSR-4 chung — theme con không cần composer/vendor riêng).
-if (is_admin()) {
-    add_action('init', static function () {
-        new \App\Settings\ThemeUpdater(
-            'lacadev-client-child/theme',
-            'https://client.lacadev.com/theme-updates/lacadev-client-child.json'
-        );
-    });
-}
+// Theme con KHÔNG tự động cập nhật — mỗi site khách có bộ file theme con
+// khác nhau (theme-options.php, header/footer, archive-*, single-*,
+// block-gutenberg...), không có "1 bản chuẩn" để phát tán hàng loạt như
+// theme cha. Đã cố tình bỏ ThemeUpdater ở đây (từng đăng ký nhầm, xem audit
+// lacadev-client-child) — chỉ theme cha (lacadev-client) mới nhận update tự
+// động qua client.lacadev.com. Block Marketplace vẫn là cách DUY NHẤT được
+// phép ghi file vào theme con, và chỉ ghi đúng 1 block/lần khi admin duyệt.
 
 // Ví dụ: ghi đè excerpt length của parent
 // add_filter('excerpt_length', function($length) {

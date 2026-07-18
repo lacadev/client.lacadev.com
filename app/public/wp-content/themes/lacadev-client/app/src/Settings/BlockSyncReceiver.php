@@ -114,10 +114,21 @@ class BlockSyncReceiver
             return new \WP_REST_Response(['success' => false, 'message' => 'API Key không hợp lệ.'], 401);
         }
 
-        return new \WP_REST_Response([
+        $response = [
             'success'   => true,
             'installed' => get_option(self::INST_OPTION, []),
-        ], 200);
+        ];
+
+        // Nếu hub hỏi kèm ?block=xxx, trả thêm checksum nội dung hiện tại của
+        // block đó trên đĩa — dùng để hub phát hiện site khách đã tự sửa file
+        // trước khi ghi đè (xem BlockSyncSender::detectConflict() phía hub).
+        $blockName = sanitize_key($request->get_param('block') ?? '');
+        if (!empty($blockName)) {
+            $blockDir = dirname(get_stylesheet_directory()) . '/block-gutenberg/' . $blockName;
+            $response['checksum'] = is_dir($blockDir) ? $this->computeChecksum($blockDir) : null;
+        }
+
+        return new \WP_REST_Response($response, 200);
     }
 
     // =========================================================================
@@ -184,6 +195,38 @@ class BlockSyncReceiver
 
             file_put_contents($targetPath, $content);
         }
+    }
+
+    /**
+     * Tính checksum nội dung hiện tại của 1 block trên đĩa — md5 của toàn bộ
+     * md5(file) theo từng path tương đối, đã sắp xếp để thứ tự đọc thư mục
+     * không ảnh hưởng kết quả. Phải cùng thuật toán với
+     * BlockSyncSender::computeChecksumFromFiles() phía hub (hash trên nội
+     * dung đã giải mã base64) để 2 bên so sánh được trực tiếp.
+     */
+    private function computeChecksum(string $blockDir): string
+    {
+        $hashes   = [];
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($blockDir, \FilesystemIterator::SKIP_DOTS),
+            \RecursiveIteratorIterator::SELF_FIRST
+        );
+
+        foreach ($iterator as $file) {
+            /** @var \SplFileInfo $file */
+            if (!$file->isFile()) {
+                continue;
+            }
+            $relPath = ltrim(str_replace($blockDir, '', $file->getPathname()), '/');
+            $hash    = md5_file($file->getPathname());
+            if ($hash !== false) {
+                $hashes[$relPath] = $hash;
+            }
+        }
+
+        ksort($hashes);
+
+        return md5((string) wp_json_encode($hashes));
     }
 
     /**

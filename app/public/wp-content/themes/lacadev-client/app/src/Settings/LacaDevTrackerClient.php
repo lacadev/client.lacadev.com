@@ -353,6 +353,21 @@ class LacaDevTrackerClient
     {
         update_option(self::OPT_LAST_RUN_HOURLY, time(), false);
 
+        // Heartbeat — báo cho hub biết site này vẫn đang sống, độc lập với
+        // việc có phát hiện file đáng ngờ hay không. Không có bước này thì
+        // hub sẽ mãi mãi hiện "Chưa kết nối" dù mọi log khác vẫn gửi bình
+        // thường, vì trước đây không loại log nào có type = 'heartbeat'.
+        // Kèm theo wp_version/php_version để hiển thị ở card "Client health".
+        $this->sendLogs([[
+            'type'    => 'heartbeat',
+            'content' => '💓 Heartbeat — site đang hoạt động bình thường',
+            'level'   => 'info',
+            'meta'    => [
+                'wp_version'  => get_bloginfo('version'),
+                'php_version' => PHP_VERSION,
+            ],
+        ]]);
+
         $found = [];
 
         foreach (self::SUSPICIOUS_DIRS as $relDir) {

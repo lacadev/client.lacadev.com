@@ -164,6 +164,17 @@ class BlockSyncReceiver
             $realStyleDir = $childBlockGutenberg;
         }
 
+        // Xóa sạch thư mục block CŨ (nếu có) trước khi ghi bản mới. Nếu
+        // không làm vậy, file bị xóa/đổi tên giữa các phiên bản (vd refactor
+        // block) sẽ nằm lại trên đĩa mãi mãi — khiến checksum tính từ disk
+        // (getStatus()) không bao giờ khớp với checksum hub lưu từ đúng
+        // payload vừa push, gây báo nhầm "site khách đã tự sửa" ở lần push
+        // kế tiếp dù khách không hề đụng vào file nào.
+        $realBlockDir = realpath($blockDir);
+        if ($realBlockDir !== false && str_starts_with($realBlockDir, (string) $realStyleDir)) {
+            $this->deleteDirectoryContents($realBlockDir);
+        }
+
         foreach ($files as $relativePath => $base64Content) {
             // Sanitize path: loại bỏ ký tự nguy hiểm
             $cleanPath = preg_replace('/[^a-zA-Z0-9\/_\-.]/u', '', $relativePath);
@@ -227,6 +238,33 @@ class BlockSyncReceiver
         ksort($hashes);
 
         return md5((string) wp_json_encode($hashes));
+    }
+
+    /**
+     * Xóa toàn bộ nội dung 1 thư mục (đệ quy) nhưng giữ lại thư mục gốc.
+     * Chỉ gọi sau khi đã xác nhận $dir nằm trong phạm vi an toàn
+     * block-gutenberg/ của child theme (xem writeBlockFiles()).
+     */
+    private function deleteDirectoryContents(string $dir): void
+    {
+        $items = scandir($dir);
+        if ($items === false) {
+            return;
+        }
+
+        foreach ($items as $item) {
+            if ($item === '.' || $item === '..') {
+                continue;
+            }
+
+            $path = $dir . '/' . $item;
+            if (is_dir($path)) {
+                $this->deleteDirectoryContents($path);
+                @rmdir($path);
+            } else {
+                @unlink($path);
+            }
+        }
     }
 
     /**

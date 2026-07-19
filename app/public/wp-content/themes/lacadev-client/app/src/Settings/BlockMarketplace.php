@@ -82,9 +82,21 @@ class BlockMarketplace
 
         // Endpoint tracker có dạng .../wp-json/laca/v1/tracker/log — đổi
         // sang đúng route catalog cùng namespace REST, không cần thêm 1
-        // trường cấu hình URL riêng cho Block Marketplace.
-        $catalogUrl = str_replace('/tracker/log', '/blocks-catalog', $endpoint);
-        $url        = add_query_arg('secret_key', $secret, $catalogUrl);
+        // trường cấu hình URL riêng cho Block Marketplace. Trim trailing
+        // slash trước khi thay thế (URL dán tay có thể có dấu / thừa ở
+        // cuối, str_replace cũ giữ nguyên dấu / đó khiến route REST 404),
+        // và so khớp không phân biệt hoa/thường ở cuối chuỗi cho chắc.
+        $normalizedEndpoint = rtrim(trim($endpoint), '/');
+        $catalogUrl         = preg_replace('#/tracker/log$#i', '/blocks-catalog', $normalizedEndpoint);
+
+        // Endpoint không đúng định dạng mong đợi (không kết thúc bằng
+        // /tracker/log) — không thể suy ra URL catalog, dừng sớm thay vì
+        // gọi nhầm sang chính endpoint POST-only.
+        if ($catalogUrl === $normalizedEndpoint) {
+            return null;
+        }
+
+        $url = add_query_arg('secret_key', $secret, $catalogUrl);
 
         $response = wp_remote_get($url, ['timeout' => 15]);
 

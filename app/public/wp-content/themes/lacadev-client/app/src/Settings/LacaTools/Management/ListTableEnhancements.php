@@ -28,10 +28,9 @@ class ListTableEnhancements
      */
     public function addViewsColumn(): void
     {
-        $post_types   = $this->auditService->getDashboardPostTypes();
-        if (!in_array('page', $post_types)) {
-            $post_types[] = 'page';
-        }
+        // Lượt xem chỉ áp dụng cho post và custom post type — page không có
+        // khái niệm "bài viết được xem nhiều", nên loại hẳn ra khỏi danh sách.
+        $post_types = array_diff($this->auditService->getDashboardPostTypes(), ['page']);
 
         foreach ($post_types as $post_type) {
             add_filter("manage_{$post_type}_posts_columns", function ($columns) {
@@ -61,7 +60,6 @@ class ListTableEnhancements
         };
 
         add_action('manage_posts_custom_column', $render_views_col, 10, 2);
-        add_action('manage_pages_custom_column', $render_views_col, 10, 2);
 
         add_action('pre_get_posts', function ($query) {
             if (!is_admin() || !$query->is_main_query() || $query->get('orderby') !== 'laca_views') {

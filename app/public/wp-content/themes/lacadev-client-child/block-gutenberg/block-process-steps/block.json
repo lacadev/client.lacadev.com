@@ -1,0 +1,98 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "lacadev/process-steps-block",
+    "version": "1.0.0",
+    "title": "Process Steps Block",
+    "category": "lacadev-blocks",
+    "description": "Hiển thị quy trình các bước dạng số thứ tự với đường nối đứt nét trên desktop.",
+    "keywords": [
+        "process",
+        "steps",
+        "quy trình",
+        "quy trinh"
+    ],
+    "textdomain": "laca",
+    "supports": {
+        "html": false,
+        "align": [
+            "wide",
+            "full"
+        ]
+    },
+    "attributes": {
+        "sectionTitle": {
+            "type": "string",
+            "default": "Quy trình điều trị chuyên nghiệp"
+        },
+        "steps": {
+            "type": "array",
+            "default": [
+                {
+                    "title": "Thăm khám & Tư vấn",
+                    "description": "Chụp X-quang, CT 3D để xác định tình trạng răng miệng và nhu cầu khách hàng."
+                },
+                {
+                    "title": "Lập phác đồ",
+                    "description": "Thiết kế phác đồ điều trị cá nhân hóa, báo giá chi tiết và thời gian thực hiện."
+                },
+                {
+                    "title": "Tiến hành điều trị",
+                    "description": "Thực hiện thủ thuật với công nghệ hiện đại, đảm bảo không đau và hiệu quả cao."
+                }
+            ]
+        },
+        "circleColor": {
+            "type": "string",
+            "default": "#0d631b"
+        },
+        "circleTextColor": {
+            "type": "string",
+            "default": "#ffffff"
+        },
+        "titleColor": {
+            "type": "string",
+            "default": "#263238"
+        },
+        "descColor": {
+            "type": "string",
+            "default": "#40493d"
+        },
+        "lineColor": {
+            "type": "string",
+            "default": "#0d631b"
+        },
+        "sectionBgColor": {
+            "type": "string",
+            "default": "#eceeec"
+        },
+        "__isPreview": {
+            "type": "boolean",
+            "default": false
+        },
+        "heading": {
+            "type": "string",
+            "default": ""
+        },
+        "subheading": {
+            "type": "string",
+            "default": ""
+        },
+        "marginTop": {
+            "type": "number",
+            "default": 0
+        },
+        "marginBottom": {
+            "type": "number",
+            "default": 0
+        }
+    },
+    "editorScript": "block-block-process-steps-editor",
+    "style": "block-block-process-steps",
+    "example": {
+        "viewportWidth": 800,
+        "attributes": {
+            "__isPreview": true
+        }
+    }
+}

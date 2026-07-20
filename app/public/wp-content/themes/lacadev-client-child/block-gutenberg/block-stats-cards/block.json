@@ -1,0 +1,106 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "lacadev/stats-cards-block",
+    "version": "1.0.0",
+    "title": "Stats Cards Block",
+    "category": "lacadev-blocks",
+    "description": "Hiển thị lưới thẻ thống kê (icon + số liệu + nhãn) dùng chung cho nhiều loại hình kinh doanh.",
+    "keywords": [
+        "stats",
+        "cards",
+        "số liệu",
+        "thống kê"
+    ],
+    "textdomain": "laca",
+    "supports": {
+        "html": false,
+        "align": [
+            "wide",
+            "full"
+        ]
+    },
+    "attributes": {
+        "items": {
+            "type": "array",
+            "default": [
+                {
+                    "icon": { "type": "svg", "svg": "", "imageId": 0, "imageUrl": "" },
+                    "number": "10",
+                    "suffix": "+",
+                    "label": "Năm kinh nghiệm"
+                },
+                {
+                    "icon": { "type": "svg", "svg": "", "imageId": 0, "imageUrl": "" },
+                    "number": "5000",
+                    "suffix": "+",
+                    "label": "Khách hàng tin tưởng"
+                },
+                {
+                    "icon": { "type": "svg", "svg": "", "imageId": 0, "imageUrl": "" },
+                    "number": "98",
+                    "suffix": "%",
+                    "label": "Khách hàng hài lòng"
+                },
+                {
+                    "icon": { "type": "svg", "svg": "", "imageId": 0, "imageUrl": "" },
+                    "number": "100",
+                    "suffix": "%",
+                    "label": "Vật liệu chính hãng"
+                }
+            ]
+        },
+        "iconColor": {
+            "type": "string",
+            "default": "#0d631b"
+        },
+        "numberColor": {
+            "type": "string",
+            "default": "#263238"
+        },
+        "labelColor": {
+            "type": "string",
+            "default": "#40493d"
+        },
+        "cardBgColor": {
+            "type": "string",
+            "default": "#ffffff"
+        },
+        "bgColor": {
+            "type": "string",
+            "default": "transparent"
+        },
+        "pullUpOverlap": {
+            "type": "number",
+            "default": 60
+        },
+        "__isPreview": {
+            "type": "boolean",
+            "default": false
+        },
+        "heading": {
+            "type": "string",
+            "default": ""
+        },
+        "subheading": {
+            "type": "string",
+            "default": ""
+        },
+        "marginTop": {
+            "type": "number",
+            "default": 0
+        },
+        "marginBottom": {
+            "type": "number",
+            "default": 0
+        }
+    },
+    "editorScript": "block-block-stats-cards-editor",
+    "style": "block-block-stats-cards",
+    "example": {
+        "viewportWidth": 800,
+        "attributes": {
+            "__isPreview": true
+        }
+    }
+}

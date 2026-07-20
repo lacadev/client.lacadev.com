@@ -1,0 +1,107 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "lacadev/icon-features-block",
+    "version": "1.0.0",
+    "title": "Icon Features Block",
+    "category": "lacadev-blocks",
+    "description": "Hiển thị lưới lý do/ưu điểm nổi bật, mỗi mục gồm icon, tiêu đề và mô tả ngắn. Dùng chung cho mọi loại hình kinh doanh (Why choose us, USP, tính năng nổi bật...).",
+    "keywords": [
+        "why choose us",
+        "features",
+        "icon",
+        "tại sao chọn chúng tôi",
+        "ưu điểm"
+    ],
+    "textdomain": "laca",
+    "supports": {
+        "html": false,
+        "align": [
+            "wide",
+            "full"
+        ]
+    },
+    "attributes": {
+        "sectionTitle": {
+            "type": "string",
+            "default": "Tại sao nên chọn chúng tôi?"
+        },
+        "items": {
+            "type": "array",
+            "default": [
+                {
+                    "icon": { "type": "svg", "svg": "", "imageId": 0, "imageUrl": "" },
+                    "title": "Đội ngũ Thạc sĩ/Bác sĩ",
+                    "description": "Hơn 10 năm kinh nghiệm, tu nghiệp chuyên sâu tại các bệnh viện lớn."
+                },
+                {
+                    "icon": { "type": "svg", "svg": "", "imageId": 0, "imageUrl": "" },
+                    "title": "Công nghệ hiện đại",
+                    "description": "Hệ thống máy móc nhập khẩu từ Châu Âu: CT Cone Beam 3D, Scan iTero."
+                },
+                {
+                    "icon": { "type": "svg", "svg": "", "imageId": 0, "imageUrl": "" },
+                    "title": "Vô trùng tuyệt đối",
+                    "description": "Quy trình kiểm soát nhiễm khuẩn nghiêm ngặt, đảm bảo an toàn tối đa."
+                },
+                {
+                    "icon": { "type": "svg", "svg": "", "imageId": 0, "imageUrl": "" },
+                    "title": "Chi phí minh bạch",
+                    "description": "Tư vấn kỹ lưỡng, giá cả công khai, cam kết không phát sinh chi phí."
+                }
+            ]
+        },
+        "iconColor": {
+            "type": "string",
+            "default": "#0d631b"
+        },
+        "iconBgColor": {
+            "type": "string",
+            "default": "#e8f5e9"
+        },
+        "titleColor": {
+            "type": "string",
+            "default": "#263238"
+        },
+        "descColor": {
+            "type": "string",
+            "default": "#40493d"
+        },
+        "cardBgColor": {
+            "type": "string",
+            "default": "#ffffff"
+        },
+        "sectionBgColor": {
+            "type": "string",
+            "default": "#f2f4f2"
+        },
+        "__isPreview": {
+            "type": "boolean",
+            "default": false
+        },
+        "heading": {
+            "type": "string",
+            "default": ""
+        },
+        "subheading": {
+            "type": "string",
+            "default": ""
+        },
+        "marginTop": {
+            "type": "number",
+            "default": 0
+        },
+        "marginBottom": {
+            "type": "number",
+            "default": 0
+        }
+    },
+    "editorScript": "block-block-icon-features-editor",
+    "style": "block-block-icon-features",
+    "example": {
+        "viewportWidth": 800,
+        "attributes": {
+            "__isPreview": true
+        }
+    }
+}

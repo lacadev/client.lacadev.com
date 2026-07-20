@@ -1,0 +1,108 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "lacadev/booking-form-block",
+    "version": "1.0.0",
+    "title": "Booking Form Block",
+    "category": "lacadev-blocks",
+    "description": "Section đăng ký đặt hẹn với thông tin liên hệ bên trái và form đặt lịch bên phải.",
+    "keywords": [
+        "booking",
+        "form",
+        "đặt lịch",
+        "đặt hẹn"
+    ],
+    "textdomain": "laca",
+    "supports": {
+        "html": false,
+        "align": [
+            "wide",
+            "full"
+        ]
+    },
+    "attributes": {
+        "sectionTitle": {
+            "type": "string",
+            "default": "Đăng ký đặt hẹn ngay hôm nay"
+        },
+        "sectionDescription": {
+            "type": "string",
+            "default": "Để lại thông tin để được đội ngũ chuyên gia của chúng tôi tư vấn miễn phí và nhận ưu đãi đặc biệt dành cho khách hàng đăng ký online."
+        },
+        "hotlineLabel": {
+            "type": "string",
+            "default": "Hotline 24/7"
+        },
+        "hotlineValue": {
+            "type": "string",
+            "default": "0905 122 456"
+        },
+        "addressLabel": {
+            "type": "string",
+            "default": "Địa chỉ"
+        },
+        "addressValue": {
+            "type": "string",
+            "default": "168 Âu Cơ, Quận Liên Chiểu, Đà Nẵng"
+        },
+        "serviceOptions": {
+            "type": "array",
+            "default": [
+                { "label": "Chọn dịch vụ" },
+                { "label": "Cấy ghép Implant" },
+                { "label": "Niềng răng thẩm mỹ" },
+                { "label": "Bọc răng sứ" },
+                { "label": "Tẩy trắng răng" },
+                { "label": "Khác" }
+            ]
+        },
+        "submitButtonText": {
+            "type": "string",
+            "default": "GỬI ĐĂNG KÝ"
+        },
+        "primaryColor": {
+            "type": "string",
+            "default": "#0d631b"
+        },
+        "bgColor": {
+            "type": "string",
+            "default": "#f0f9f0"
+        },
+        "__isPreview": {
+            "type": "boolean",
+            "default": false
+        },
+        "heading": {
+            "type": "string",
+            "default": ""
+        },
+        "subheading": {
+            "type": "string",
+            "default": ""
+        },
+        "marginTop": {
+            "type": "number",
+            "default": 0
+        },
+        "marginBottom": {
+            "type": "number",
+            "default": 0
+        },
+        "paddingTop": {
+            "type": "number",
+            "default": 0
+        },
+        "paddingBottom": {
+            "type": "number",
+            "default": 0
+        }
+    },
+    "editorScript": "block-block-booking-form-editor",
+    "style": "block-block-booking-form",
+    "example": {
+        "viewportWidth": 800,
+        "attributes": {
+            "__isPreview": true
+        }
+    }
+}

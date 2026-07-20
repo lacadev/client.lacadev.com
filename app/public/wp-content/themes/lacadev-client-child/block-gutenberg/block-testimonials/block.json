@@ -1,0 +1,118 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "lacadev/testimonials-block",
+    "version": "1.0.0",
+    "title": "Testimonials Block",
+    "category": "lacadev-blocks",
+    "description": "Hiển thị đánh giá của khách hàng dạng lưới 3 cột với avatar tròn, sao đánh giá và trích dẫn.",
+    "keywords": [
+        "testimonials",
+        "reviews",
+        "đánh giá",
+        "khách hàng"
+    ],
+    "textdomain": "laca",
+    "supports": {
+        "html": false,
+        "align": [
+            "wide",
+            "full"
+        ]
+    },
+    "attributes": {
+        "sectionTitle": {
+            "type": "string",
+            "default": "Khách hàng nói gì về chúng tôi?"
+        },
+        "testimonials": {
+            "type": "array",
+            "default": [
+                {
+                    "avatarImageId": 0,
+                    "avatarImageUrl": "",
+                    "quote": "Tôi rất hài lòng với dịch vụ trồng răng Implant tại đây. Bác sĩ Hùng tư vấn rất kỹ, quá trình làm không hề đau như tôi tưởng. Cảm ơn đội ngũ nha khoa!",
+                    "name": "Chị Minh Anh",
+                    "location": "Quận Hải Châu, Đà Nẵng",
+                    "rating": 5
+                },
+                {
+                    "avatarImageId": 0,
+                    "avatarImageUrl": "",
+                    "quote": "Niềng răng ở Thiện Phước là quyết định đúng đắn nhất của mình. Răng giờ đã đều tăm tắp, bác sĩ Thủy cực kỳ tận tâm. Cơ sở vật chất ở đây rất hiện đại.",
+                    "name": "Bạn Thanh Thảo",
+                    "location": "Sinh viên ĐH Đà Nẵng",
+                    "rating": 5
+                },
+                {
+                    "avatarImageId": 0,
+                    "avatarImageUrl": "",
+                    "quote": "Tẩy trắng răng nhanh gọn, không ê buốt. Nhân viên nhiệt tình, không gian sạch sẽ chuyên nghiệp. Rất đáng để trải nghiệm dịch vụ nha khoa chất lượng cao.",
+                    "name": "Anh Tuấn Kiệt",
+                    "location": "Quận Liên Chiểu, Đà Nẵng",
+                    "rating": 5
+                }
+            ]
+        },
+        "starColor": {
+            "type": "string",
+            "default": "#0d631b"
+        },
+        "quoteColor": {
+            "type": "string",
+            "default": "#40493d"
+        },
+        "nameColor": {
+            "type": "string",
+            "default": "#263238"
+        },
+        "locationColor": {
+            "type": "string",
+            "default": "#78716c"
+        },
+        "cardBgColor": {
+            "type": "string",
+            "default": "#ffffff"
+        },
+        "borderColor": {
+            "type": "string",
+            "default": "#e1e3e1"
+        },
+        "__isPreview": {
+            "type": "boolean",
+            "default": false
+        },
+        "heading": {
+            "type": "string",
+            "default": ""
+        },
+        "subheading": {
+            "type": "string",
+            "default": ""
+        },
+        "marginTop": {
+            "type": "number",
+            "default": 0
+        },
+        "marginBottom": {
+            "type": "number",
+            "default": 0
+        },
+        "paddingTop": {
+            "type": "number",
+            "default": 0
+        },
+        "paddingBottom": {
+            "type": "number",
+            "default": 0
+        }
+    },
+    "editorScript": "block-block-testimonials-editor",
+    "style": "block-block-testimonials",
+    "example": {
+        "viewportWidth": 800,
+        "attributes": {
+            "__isPreview": true
+        }
+    }
+}

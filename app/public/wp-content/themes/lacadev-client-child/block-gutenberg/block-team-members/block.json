@@ -1,0 +1,109 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "lacadev/team-members-block",
+    "version": "1.0.0",
+    "title": "Team Members Block",
+    "category": "lacadev-blocks",
+    "description": "Section đội ngũ nhân sự/bác sĩ/chuyên gia — ảnh 3:4, tên, chức danh/chuyên môn và mô tả ngắn. Dùng chung cho nhiều loại hình kinh doanh.",
+    "keywords": [
+        "team",
+        "doctor",
+        "staff",
+        "bác sĩ",
+        "đội ngũ",
+        "nhân sự"
+    ],
+    "textdomain": "laca",
+    "supports": {
+        "html": false,
+        "align": [
+            "wide",
+            "full"
+        ]
+    },
+    "attributes": {
+        "sectionTitle": {
+            "type": "string",
+            "default": "Đội ngũ bác sĩ chuyên môn cao"
+        },
+        "doctors": {
+            "type": "array",
+            "default": [
+                {
+                    "imageId": 0,
+                    "imageUrl": "",
+                    "name": "ThS.BS Nguyễn Văn Hùng",
+                    "specialty": "Chuyên khoa Implant",
+                    "bio": "Giám đốc chuyên môn với hơn 15 năm kinh nghiệm phục hình răng."
+                },
+                {
+                    "imageId": 0,
+                    "imageUrl": "",
+                    "name": "BS.CKI Trần Thị Thủy",
+                    "specialty": "Chuyên khoa Chỉnh nha",
+                    "bio": "Chuyên gia niềng răng mắc cài và Invisalign với hàng nghìn ca thành công."
+                },
+                {
+                    "imageId": 0,
+                    "imageUrl": "",
+                    "name": "BS Nguyễn Hoàng Nam",
+                    "specialty": "Chuyên khoa Răng sứ",
+                    "bio": "Bác sĩ chuyên sâu về phục hình thẩm mỹ và thiết kế nụ cười."
+                }
+            ]
+        },
+        "specialtyColor": {
+            "type": "string",
+            "default": "#0d631b"
+        },
+        "nameColor": {
+            "type": "string",
+            "default": "#263238"
+        },
+        "cardBgColor": {
+            "type": "string",
+            "default": "#ffffff"
+        },
+        "borderColor": {
+            "type": "string",
+            "default": "#bfcaba"
+        },
+        "__isPreview": {
+            "type": "boolean",
+            "default": false
+        },
+        "heading": {
+            "type": "string",
+            "default": ""
+        },
+        "subheading": {
+            "type": "string",
+            "default": ""
+        },
+        "marginTop": {
+            "type": "number",
+            "default": 0
+        },
+        "marginBottom": {
+            "type": "number",
+            "default": 0
+        },
+        "paddingTop": {
+            "type": "number",
+            "default": 60
+        },
+        "paddingBottom": {
+            "type": "number",
+            "default": 55
+        }
+    },
+    "editorScript": "block-block-team-members-editor",
+    "style": "block-block-team-members",
+    "example": {
+        "viewportWidth": 800,
+        "attributes": {
+            "__isPreview": true
+        }
+    }
+}

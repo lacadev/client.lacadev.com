@@ -1,0 +1,159 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "lacadev/feature-cards-block",
+    "version": "1.0.0",
+    "title": "Feature Cards Block",
+    "category": "lacadev-blocks",
+    "description": "Section lưới thẻ tính năng/dịch vụ — grid thẻ đối xứng, mỗi thẻ có ảnh 16:9, tiêu đề, mô tả và link Xem chi tiết. Hỗ trợ nhập thủ công hoặc lấy tự động từ custom post type.",
+    "keywords": [
+        "features",
+        "services",
+        "dịch vụ",
+        "tính năng",
+        "grid"
+    ],
+    "textdomain": "laca",
+    "supports": {
+        "html": false,
+        "align": [
+            "wide",
+            "full"
+        ]
+    },
+    "attributes": {
+        "sectionTitle": {
+            "type": "string",
+            "default": "Dịch vụ chuyên sâu – Nụ cười hoàn hảo"
+        },
+        "sectionSubtitle": {
+            "type": "string",
+            "default": "Chúng tôi mang đến giải pháp toàn diện cho sức khỏe răng miệng của bạn với công nghệ hiện đại nhất."
+        },
+        "services": {
+            "type": "array",
+            "default": [
+                {
+                    "imageId": 0,
+                    "imageUrl": "",
+                    "title": "Cấy Ghép Implant",
+                    "description": "Giải pháp tối ưu phục hồi răng đã mất, đảm bảo chức năng ăn nhai và thẩm mỹ như răng thật.",
+                    "link": "",
+                    "ctaText": "Xem chi tiết"
+                },
+                {
+                    "imageId": 0,
+                    "imageUrl": "",
+                    "title": "Niềng Răng Thẩm Mỹ",
+                    "description": "Cải thiện khớp cắn, điều chỉnh răng khấp khểnh mang lại nụ cười đều đẹp tự tin.",
+                    "link": "",
+                    "ctaText": "Xem chi tiết"
+                },
+                {
+                    "imageId": 0,
+                    "imageUrl": "",
+                    "title": "Tẩy Trắng Răng",
+                    "description": "Sử dụng công nghệ Laser hiện đại, bật tông nhanh chóng, an toàn và không gây ê buốt.",
+                    "link": "",
+                    "ctaText": "Xem chi tiết"
+                },
+                {
+                    "imageId": 0,
+                    "imageUrl": "",
+                    "title": "Bọc Răng Sứ",
+                    "description": "Phục hình răng hư tổn, tạo hình nụ cười rạng rỡ với chất liệu sứ cao cấp, bền bỉ.",
+                    "link": "",
+                    "ctaText": "Xem chi tiết"
+                }
+            ]
+        },
+        "mode": {
+            "type": "string",
+            "default": "custom"
+        },
+        "postType": {
+            "type": "string",
+            "default": "post"
+        },
+        "taxonomy": {
+            "type": "string",
+            "default": ""
+        },
+        "selectedTerms": {
+            "type": "array",
+            "default": []
+        },
+        "postsCount": {
+            "type": "number",
+            "default": 4
+        },
+        "orderBy": {
+            "type": "string",
+            "default": "date"
+        },
+        "order": {
+            "type": "string",
+            "default": "DESC"
+        },
+        "selectedPosts": {
+            "type": "array",
+            "default": []
+        },
+        "ctaText": {
+            "type": "string",
+            "default": "Xem chi tiết"
+        },
+        "columns": {
+            "type": "number",
+            "default": 4
+        },
+        "bgColor": {
+            "type": "string",
+            "default": "#ffffff"
+        },
+        "titleColor": {
+            "type": "string",
+            "default": "#263238"
+        },
+        "accentColor": {
+            "type": "string",
+            "default": "#0d631b"
+        },
+        "__isPreview": {
+            "type": "boolean",
+            "default": false
+        },
+        "heading": {
+            "type": "string",
+            "default": ""
+        },
+        "subheading": {
+            "type": "string",
+            "default": ""
+        },
+        "marginTop": {
+            "type": "number",
+            "default": 0
+        },
+        "marginBottom": {
+            "type": "number",
+            "default": 0
+        },
+        "paddingTop": {
+            "type": "number",
+            "default": 60
+        },
+        "paddingBottom": {
+            "type": "number",
+            "default": 60
+        }
+    },
+    "editorScript": "block-block-feature-cards-editor",
+    "style": "block-block-feature-cards",
+    "example": {
+        "viewportWidth": 800,
+        "attributes": {
+            "__isPreview": true
+        }
+    }
+}

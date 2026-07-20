@@ -21,10 +21,27 @@ export function useInserterPreview( attributes = {} ) {
  * @param {string} props.kicker  Small label above title.
  * @param {string} props.title   Main preview heading.
  * @param {number} props.columns Number of mock cards.
+ * @param {string} props.image   URL ảnh preview.png thật của block (import
+ *                               từ edit.js) — nếu có, hiện ảnh này thay vì
+ *                               khối mock chung (nền đen + card xám).
  * @return {JSX.Element} Inserter preview markup.
  */
-export function BlockPreviewMock( { kicker = '', title = '', columns = 3 } ) {
+export function BlockPreviewMock( { kicker = '', title = '', columns = 3, image = '' } ) {
 	const safeColumns = Math.max( 1, Math.min( 4, Number( columns ) || 3 ) );
+
+	if ( image ) {
+		return (
+			<img
+				src={ image }
+				alt={ title || kicker || '' }
+				style={ {
+					display: 'block',
+					width: '100%',
+					height: 'auto',
+				} }
+			/>
+		);
+	}
 
 	return (
 		<div

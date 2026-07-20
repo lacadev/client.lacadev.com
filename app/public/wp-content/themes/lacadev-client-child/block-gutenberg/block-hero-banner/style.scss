@@ -1,0 +1,229 @@
+@use "@parent/styles/theme/abstracts/variables" as *;
+
+.block-clinic-hero {
+    width: 100%;
+    font-family: 'Manrope', sans-serif;
+    overflow: hidden;
+    position: relative;
+
+    &__inner {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 5rem 2rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+        align-items: center;
+    }
+
+    &__content {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2rem;
+        z-index: 1;
+    }
+
+    &__badge {
+        display: inline-block;
+        padding: 0.4rem 1.1rem;
+        background-color: rgba(13, 99, 27, 0.12);
+        color: var(--clinic-hero-primary, #0d631b);
+        border-radius: 9999px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+    }
+
+    &__headline {
+        font-size: clamp(2rem, 4vw, 3rem);
+        font-weight: 700;
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+        margin: 0;
+    }
+
+    &__headline-highlight {
+        display: inline-block;
+    }
+
+    &__checklist {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    &__checklist-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    &__checklist-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        overflow: visible;
+        font-size: 1.25rem;
+        flex-shrink: 0;
+    }
+
+    &__checklist-text {
+        font-size: 1rem;
+        color: #40493d;
+    }
+
+    &__cta-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    &__cta {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem 2rem;
+        border-radius: 0.5rem;
+        font-weight: 700;
+        font-size: 0.9rem;
+        letter-spacing: 0.02em;
+        text-decoration: none;
+        transition: all 0.2s ease;
+
+        &--primary {
+            color: #fff;
+            border: 2px solid transparent;
+
+            &:hover {
+                box-shadow: 0 10px 25px -8px rgba(13, 99, 27, 0.4);
+                opacity: 0.92;
+            }
+        }
+
+        &--secondary {
+            background-color: transparent;
+            border: 2px solid var(--clinic-hero-primary, #0d631b);
+
+            &:hover {
+                background-color: rgba(13, 99, 27, 0.05);
+            }
+        }
+    }
+
+    &__social-proof {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding-top: 0.5rem;
+    }
+
+    &__avatars {
+        display: flex;
+    }
+
+    &__avatar {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 9999px;
+        border: 2px solid #fff;
+        background-color: #e1e3e1;
+        overflow: hidden;
+        margin-left: -0.75rem;
+
+        &:first-child {
+            margin-left: 0;
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 9999px;
+        }
+
+        &--placeholder {
+            background-color: #d8dad9;
+        }
+    }
+
+    &__rating {
+        display: flex;
+        flex-direction: column;
+        gap: 0.15rem;
+    }
+
+    &__stars {
+        display: flex;
+        color: #f5c400;
+    }
+
+    &__star {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        overflow: visible;
+        font-size: 1rem;
+    }
+
+    &__rating-text {
+        margin: 0;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        color: #40493d;
+    }
+
+    &__media {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    &__glow {
+        position: absolute;
+        width: 80%;
+        aspect-ratio: 1 / 1;
+        bottom: -3rem;
+        right: -1.5rem;
+        border-radius: 9999px;
+        opacity: 0.1;
+        filter: blur(64px);
+        z-index: 0;
+    }
+
+    &__image {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        border-radius: 1.5rem;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+
+    @media (max-width: 768px) {
+        &__inner {
+            grid-template-columns: 1fr;
+            padding: 3rem 1.5rem;
+            gap: 2.5rem;
+        }
+
+        &__content {
+            align-items: flex-start;
+        }
+
+        &__headline {
+            font-size: 2rem;
+        }
+
+        &__media {
+            order: -1;
+        }
+    }
+}

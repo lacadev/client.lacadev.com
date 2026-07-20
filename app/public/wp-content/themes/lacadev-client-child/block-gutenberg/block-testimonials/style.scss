@@ -1,0 +1,93 @@
+@use "@parent/styles/theme/abstracts/variables" as *;
+
+.block-testimonials {
+    width: 100%;
+    font-family: 'Manrope', sans-serif;
+    padding: 5rem 0;
+
+    &__inner {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
+
+    &__title {
+        text-align: center;
+        margin: 0 0 3rem;
+        font-size: clamp(1.75rem, 3vw, 2.5rem);
+        font-weight: 700;
+    }
+
+    &__grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+
+        @media (min-width: 992px) {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    &__card {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        background-color: #ffffff;
+        border: 1px solid #e1e3e1;
+        border-radius: 1rem;
+        padding: 2rem;
+    }
+
+    &__stars {
+        display: flex;
+        gap: 0.25rem;
+
+        .lcdc-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            overflow: visible;
+            font-size: 1.25rem;
+        }
+    }
+
+    &__quote {
+        font-style: italic;
+        font-size: 1rem;
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    &__author {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    &__avatar {
+        width: 3rem;
+        height: 3rem;
+        border-radius: 50%;
+        object-fit: cover;
+        flex-shrink: 0;
+
+        &--placeholder {
+            background-color: #e1e3e1;
+        }
+    }
+
+    &__author-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__name {
+        font-size: 0.95rem;
+        font-weight: 700;
+    }
+
+    &__location {
+        font-size: 0.8rem;
+        color: #78716c;
+    }
+}

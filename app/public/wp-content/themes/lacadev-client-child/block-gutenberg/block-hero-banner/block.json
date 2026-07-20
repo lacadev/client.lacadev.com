@@ -1,0 +1,127 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "lacadev/hero-banner-block",
+    "version": "1.0.0",
+    "title": "Hero Banner Block",
+    "category": "lacadev-blocks",
+    "description": "Hero section trang chủ dùng chung cho nhiều loại hình kinh doanh — badge, headline 2 dòng, checklist, 2 CTA, avatar khách hàng + rating, ảnh lớn bên phải.",
+    "keywords": [
+        "hero",
+        "banner",
+        "trang chủ",
+        "cta"
+    ],
+    "textdomain": "laca",
+    "supports": {
+        "html": false,
+        "align": [
+            "wide",
+            "full"
+        ]
+    },
+    "attributes": {
+        "badgeText": {
+            "type": "string",
+            "default": "Chuẩn quốc tế tại Đà Nẵng"
+        },
+        "headlineLine1": {
+            "type": "string",
+            "default": "Kiến tạo nụ cười"
+        },
+        "headlineLine2": {
+            "type": "string",
+            "default": "khỏe đẹp chuẩn quốc tế"
+        },
+        "checklistItems": {
+            "type": "array",
+            "default": [
+                {
+                    "text": "Bác sĩ chuyên môn cao - giàu kinh nghiệm"
+                },
+                {
+                    "text": "Công nghệ hiện đại - Điều trị nhẹ nhàng, chính xác"
+                },
+                {
+                    "text": "Chi phí minh bạch - Cam kết không phát sinh"
+                }
+            ]
+        },
+        "primaryCtaText": {
+            "type": "string",
+            "default": "ĐẶT LỊCH MIỄN PHÍ"
+        },
+        "primaryCtaLink": {
+            "type": "string",
+            "default": "#dat-lich"
+        },
+        "secondaryCtaText": {
+            "type": "string",
+            "default": "NHẬN TƯ VẤN NGAY"
+        },
+        "secondaryCtaLink": {
+            "type": "string",
+            "default": "#lien-he"
+        },
+        "avatarImageIds": {
+            "type": "array",
+            "default": [ 0, 0, 0 ]
+        },
+        "avatarImageUrls": {
+            "type": "array",
+            "default": [ "", "", "" ]
+        },
+        "ratingText": {
+            "type": "string",
+            "default": "5000+ khách hàng hài lòng"
+        },
+        "heroImageId": {
+            "type": "number",
+            "default": 0
+        },
+        "heroImageUrl": {
+            "type": "string",
+            "default": ""
+        },
+        "primaryColor": {
+            "type": "string",
+            "default": "#0d631b"
+        },
+        "charcoalColor": {
+            "type": "string",
+            "default": "#263238"
+        },
+        "bgColor": {
+            "type": "string",
+            "default": "#f2f4f2"
+        },
+        "__isPreview": {
+            "type": "boolean",
+            "default": false
+        },
+        "heading": {
+            "type": "string",
+            "default": ""
+        },
+        "subheading": {
+            "type": "string",
+            "default": ""
+        },
+        "marginTop": {
+            "type": "number",
+            "default": 0
+        },
+        "marginBottom": {
+            "type": "number",
+            "default": 0
+        }
+    },
+    "editorScript": "block-block-hero-banner-editor",
+    "style": "block-block-hero-banner",
+    "example": {
+        "viewportWidth": 800,
+        "attributes": {
+            "__isPreview": true
+        }
+    }
+}

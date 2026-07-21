@@ -29,7 +29,7 @@ tên mới, KHÔNG tự sửa ngầm.
 ## 2. Block thiết kế riêng cho 1 site phải gán `category` = site đó
 
 Kho `block-gutenberg/` này chứa thiết kế của NHIỀU site khác nhau cùng lúc
-(site dev/tham chiếu client.lacadev.com dùng chung 1 thư mục cho tất cả).
+(site dev/tham chiếu clients.lacadev.com dùng chung 1 thư mục cho tất cả).
 Nhiều block dễ trùng Ý NGHĨA (hero banner, stats, team…) nhưng khác hẳn giao
 diện giữa các site — nếu không phân loại, khi cần tìm "bộ block đã làm cho
 site X" để sync/tham khảo sẽ rất khó vì tất cả gộp chung 1 danh sách phẳng.

@@ -6,11 +6,11 @@ namespace App\Settings;
  * BlockMarketplace
  *
  * Trang "Laca Theme → Block Marketplace" cho site khách hàng browse danh
- * mục Gutenberg block của client.lacadev.com, xem preview, và bấm "Yêu cầu
+ * mục Gutenberg block của clients.lacadev.com, xem preview, và bấm "Yêu cầu
  * đồng bộ" (block mới) / "Cập nhật" (block đã cài có bản mới).
  *
  * Chỉ nói chuyện với HUB (lacadev.com) qua kênh tracker log đã cấu hình sẵn
- * (Laca Admin → 📡 Tracker) — không gọi thẳng client.lacadev.com, giữ đúng
+ * (Laca Admin → 📡 Tracker) — không gọi thẳng clients.lacadev.com, giữ đúng
  * nguyên tắc "site khách chỉ có 1 điểm liên hệ duy nhất là hub".
  */
 class BlockMarketplace
@@ -126,7 +126,7 @@ class BlockMarketplace
         <div id="laca-marketplace-wrap">
             <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;padding:14px 16px;margin:8px 0 16px">
                 <p style="margin:0 0 8px;font-weight:600;color:#0369a1">🛒 Block Marketplace</p>
-                <p style="margin:0;font-size:13px;color:#374151">Đây là danh sách các khối (block) giao diện có sẵn từ client.lacadev.com mà bạn có thể thêm vào site của mình. Bấm <strong>"🧩 Yêu cầu đồng bộ"</strong> ở block muốn dùng — quản trị viên sẽ xem xét và duyệt, sau đó block sẽ tự động xuất hiện trong trình soạn thảo bài viết/trang của bạn. Nếu block đã có trên site và có bản mới hơn, nút <strong>"🔄 Cập nhật"</strong> sẽ hiện ra để bạn cập nhật ngay (không cần chờ duyệt lại).</p>
+                <p style="margin:0;font-size:13px;color:#374151">Đây là danh sách các khối (block) giao diện có sẵn từ clients.lacadev.com mà bạn có thể thêm vào site của mình. Bấm <strong>"🧩 Yêu cầu đồng bộ"</strong> ở block muốn dùng — quản trị viên sẽ xem xét và duyệt, sau đó block sẽ tự động xuất hiện trong trình soạn thảo bài viết/trang của bạn. Nếu block đã có trên site và có bản mới hơn, nút <strong>"🔄 Cập nhật"</strong> sẽ hiện ra để bạn cập nhật ngay (không cần chờ duyệt lại).</p>
             </div>
 
             <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">

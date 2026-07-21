@@ -86,19 +86,19 @@ add_filter('login_message', 'app_login_google_admin_message');
 add_action('carbon_fields_register_fields', 'app_bootstrap_carbon_fields_register_fields');
 
 /**
- * Theme Updater — tự động check & nhận update từ client.lacadev.com
+ * Theme Updater — tự động check & nhận update từ clients.lacadev.com
  * Chỉ chạy ở admin để tiết kiệm tài nguyên frontend
  */
 if (is_admin()) {
     add_action('init', static function () {
         new \App\Settings\ThemeUpdater(
             'lacadev-client/theme',
-            'https://client.lacadev.com/theme-updates/lacadev-client.json'
+            'https://clients.lacadev.com/theme-updates/lacadev-client.json'
         );
         new \App\Widgets\BlockSyncWidget();
 
         // Block Marketplace — trang "Laca Theme → Block Marketplace" cho
-        // site khách browse + yêu cầu đồng bộ block từ client.lacadev.com
+        // site khách browse + yêu cầu đồng bộ block từ clients.lacadev.com
         // (qua hub). Chỉ cần đăng ký AJAX handler ở đây, phần render page
         // được gọi trực tiếp từ theme-options.php (child theme).
         if (class_exists('\App\Settings\BlockMarketplace')) {
@@ -145,7 +145,7 @@ add_action('init', static function () {
     // Block Catalog Provider — REST API đọc-chỉ phục vụ danh mục block cho
     // hub (lacadev.com) đọc, dùng cho tính năng "site khách yêu cầu đồng bộ
     // block". Chạy trên mọi site dùng theme này, tự bảo vệ bằng Catalog Key
-    // riêng — chỉ site nào có key đúng (client.lacadev.com) mới thực sự được
+    // riêng — chỉ site nào có key đúng (clients.lacadev.com) mới thực sự được
     // hub gọi tới trong thực tế.
     new \App\Settings\BlockCatalogProvider();
 }, 5);

@@ -56,12 +56,12 @@ jobs:
           {
             "name": "La Cà Dev - Client",
             "version": "$PARENT_VERSION",
-            "download_url": "https://client.lacadev.com/theme-updates/lacadev-client.zip",
-            "details_url": "https://client.lacadev.com",
+            "download_url": "https://clients.lacadev.com/theme-updates/lacadev-client.zip",
+            "details_url": "https://clients.lacadev.com",
             "requires": "6.0",
             "requires_php": "8.0",
             "last_updated": "$BUILD_DATE",
-            "description": "Theme cha La Cà Dev - Client — cập nhật tự động từ client.lacadev.com",
+            "description": "Theme cha La Cà Dev - Client — cập nhật tự động từ clients.lacadev.com",
             "changelog": ""
           }
           EOF

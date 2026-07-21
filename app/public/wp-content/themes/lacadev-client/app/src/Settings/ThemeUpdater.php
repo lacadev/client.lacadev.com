@@ -9,12 +9,12 @@ if (!defined('ABSPATH')) {
 /**
  * LacaDev Theme Updater
  *
- * Tự động check phiên bản mới của theme (cha hoặc con) từ client.lacadev.com
+ * Tự động check phiên bản mới của theme (cha hoặc con) từ clients.lacadev.com
  * và hiện thông báo update trong WP Admin — giống plugin update.
  *
  * Cách hoạt động:
  *   1. WordPress gọi pre_set_site_transient_update_themes mỗi 12h
- *   2. Class này fetch info.json từ client.lacadev.com
+ *   2. Class này fetch info.json từ clients.lacadev.com
  *   3. So sánh version → nếu mới hơn, thêm vào queue update của WP
  *   4. Admin thấy thông báo, click "Cập nhật ngay" → WP tự download & cài
  */
@@ -32,7 +32,7 @@ class ThemeUpdater
      *                              trúc lồng cấp (root thật nằm ở thư mục con `theme/`),
      *                              slug đúng có dạng 'lacadev-client/theme', không phải
      *                              chỉ 'lacadev-client'.
-     * @param string $updateInfoUrl URL file info.json đặt trên client.lacadev.com.
+     * @param string $updateInfoUrl URL file info.json đặt trên clients.lacadev.com.
      */
     public function __construct(
         private string $themeSlug,

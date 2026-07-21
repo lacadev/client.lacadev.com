@@ -958,7 +958,7 @@ class AdminSettings
 								. '</div>';
 						}),
 
-					Field::make('separator', 'sep_block_catalog_heading', __('Block Catalog — chỉ dùng trên client.lacadev.com', 'laca')),
+					Field::make('separator', 'sep_block_catalog_heading', __('Block Catalog — chỉ dùng trên clients.lacadev.com', 'laca')),
 
 					Field::make('html', 'block_catalog_key_display', __('Catalog Key', 'laca'))
 						->set_html(static function () {
@@ -966,7 +966,7 @@ class AdminSettings
 							return '<div style="background:#fefce8;border:1px solid #fde68a;border-radius:6px;padding:12px 16px;margin:8px 0">'
 								. '<p style="margin:0 0 6px;font-weight:600;color:#854d0e">🔑 Catalog Key của site này:</p>'
 								. '<code style="font-size:13px;word-break:break-all;background:#fef9c3;padding:6px 10px;border-radius:4px;display:block">' . esc_html($key) . '</code>'
-								. '<p style="margin:8px 0 0;font-size:12px;color:#4b5563">Chỉ cấu hình trên <strong>lacadev.com</strong> (hub) để hub đọc danh mục block từ <strong>chính site client.lacadev.com này</strong> — không liên quan tới project của khách hàng.</p>'
+								. '<p style="margin:8px 0 0;font-size:12px;color:#4b5563">Chỉ cấu hình trên <strong>lacadev.com</strong> (hub) để hub đọc danh mục block từ <strong>chính site clients.lacadev.com này</strong> — không liên quan tới project của khách hàng.</p>'
 								. '</div>';
 						}),
 

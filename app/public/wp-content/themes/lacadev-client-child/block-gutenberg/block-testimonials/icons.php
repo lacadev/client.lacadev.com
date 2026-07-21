@@ -42,7 +42,7 @@ if (!function_exists('lcdc_dental_icon')) {
 
         // Gắn kích thước NGAY trên thẻ <svg> (width/height/style="1em") thay
         // vì chỉ trông chờ vào 1 class CSS ngoài (.lcdc-icon) — nếu site nào
-        // đó chưa có class này (vd site tham chiếu client.lacadev.com khi
+        // đó chưa có class này (vd site tham chiếu clients.lacadev.com khi
         // đang test block trực tiếp ở đây, khác với site khách hàng đã có
         // sẵn CSS) thì SVG vẫn hiện đúng kích thước thay vì mất tích/co về
         // kích thước mặc định trình duyệt (300x150px).

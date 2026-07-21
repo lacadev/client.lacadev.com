@@ -41,7 +41,7 @@ function lacadev_get_custom_block_categories($post = null) {
      * vào mảng này cho gọn, cùng 1 cơ chế với các category theo site khác).
      *
      * Khi 1 kho block-gutenberg dùng chung (vd site dev/tham chiếu
-     * client.lacadev.com) chứa thiết kế của NHIỀU site/dự án khác nhau cùng
+     * clients.lacadev.com) chứa thiết kế của NHIỀU site/dự án khác nhau cùng
      * lúc, category ở đây cho phép lọc/tìm block theo site trong ô tìm kiếm
      * của trình chèn block, tránh nhầm lẫn khi block trùng tên dạng (hero
      * banner, stats...) nhưng khác giao diện giữa các site.

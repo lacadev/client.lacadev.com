@@ -347,4 +347,3 @@ if (!defined('ABSPATH')) {
 				</div>
 			</header>
 		<?php endif; ?>
-		<div data-barba="container" data-barba-namespace="default">

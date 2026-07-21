@@ -275,7 +275,6 @@ $footer_contact_image_alt = $footer_contact_image_id ? get_post_meta($footer_con
 </footer>
 <!-- footer end -->
 
-</div><!-- barba container end -->
 </div>
 <!-- container-wrapper end -->
 

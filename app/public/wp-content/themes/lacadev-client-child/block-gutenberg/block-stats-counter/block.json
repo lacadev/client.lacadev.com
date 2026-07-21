@@ -4,7 +4,7 @@
     "name": "lacadev/stats-counter-block",
     "version": "1.0.0",
     "title": "Stats Counter Block",
-    "category": "lacadev-blocks",
+    "category": "site-unclassified",
     "description": "Hiển thị hàng số thống kê với animation count-up khi cuộn vào viewport.",
     "keywords": [
         "stats",

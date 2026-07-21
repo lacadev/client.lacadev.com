@@ -4,7 +4,7 @@
     "name": "lacadev/process-steps-block",
     "version": "1.0.0",
     "title": "Process Steps Block",
-    "category": "lacadev-blocks",
+    "category": "site-nhakhoathienphuoc",
     "description": "Hiển thị quy trình các bước dạng số thứ tự với đường nối đứt nét trên desktop.",
     "keywords": [
         "process",

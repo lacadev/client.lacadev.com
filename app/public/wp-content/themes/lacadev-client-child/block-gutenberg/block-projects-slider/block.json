@@ -4,7 +4,7 @@
     "name": "lacadev/projects-slider-block",
     "version": "1.0.0",
     "title": "Projects Slider Block",
-    "category": "lacadev-blocks",
+    "category": "site-unclassified",
     "description": "Hiển thị danh sách dự án dạng Swiper slider fullwidth — chọn post type, danh mục, số lượng; hỗ trợ auto/manual.",
     "keywords": [
         "project",

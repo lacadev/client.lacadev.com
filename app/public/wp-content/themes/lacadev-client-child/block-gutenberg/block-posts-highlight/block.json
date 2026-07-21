@@ -3,7 +3,7 @@
     "apiVersion": 3,
     "name": "lacadev/posts-highlight-block",
     "title": "Posts Highlight Block",
-    "category": "lacadev-blocks",
+    "category": "site-nhakhoathienphuoc",
     "icon": "layout",
     "editorScript": "block-block-posts-highlight-editor",
     "style": "block-block-posts-highlight",

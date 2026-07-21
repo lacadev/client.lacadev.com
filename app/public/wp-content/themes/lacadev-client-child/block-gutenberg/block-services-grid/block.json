@@ -4,7 +4,7 @@
     "name": "lacadev/services-grid-block",
     "version": "1.0.0",
     "title": "Services Grid Block",
-    "category": "lacadev-blocks",
+    "category": "site-unclassified",
     "description": "Section DỊCH VỤ — layout bất đối xứng 3 nhóm dịch vụ, mỗi nhóm có layout riêng.",
     "keywords": [
         "services",

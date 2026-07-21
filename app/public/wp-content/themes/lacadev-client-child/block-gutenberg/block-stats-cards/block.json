@@ -4,7 +4,7 @@
     "name": "lacadev/stats-cards-block",
     "version": "1.0.0",
     "title": "Stats Cards Block",
-    "category": "lacadev-blocks",
+    "category": "site-nhakhoathienphuoc",
     "description": "Hiển thị lưới thẻ thống kê (icon + số liệu + nhãn) dùng chung cho nhiều loại hình kinh doanh.",
     "keywords": [
         "stats",

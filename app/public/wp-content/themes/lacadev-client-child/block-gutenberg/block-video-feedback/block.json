@@ -3,7 +3,7 @@
     "apiVersion": 3,
     "name": "lacadev/video-feedback-block",
     "title": "Video Feedback Slider",
-    "category": "lacadev-blocks",
+    "category": "site-unclassified",
     "icon": "video-alt3",
     "editorScript": "block-block-video-feedback-editor",
     "style": "block-block-video-feedback",

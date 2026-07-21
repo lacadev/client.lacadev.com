@@ -4,7 +4,7 @@
     "name": "lacadev/team-leaders-block",
     "version": "1.0.0",
     "title": "Team Leaders Block",
-    "category": "lacadev-blocks",
+    "category": "site-unclassified",
     "description": "Hiển thị section lãnh đạo — ảnh cutout, tên, chức vụ và quote.",
     "keywords": [
         "team",

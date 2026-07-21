@@ -4,7 +4,7 @@
     "name": "lacadev/feature-cards-block",
     "version": "1.0.0",
     "title": "Feature Cards Block",
-    "category": "lacadev-blocks",
+    "category": "site-nhakhoathienphuoc",
     "description": "Section lưới thẻ tính năng/dịch vụ — grid thẻ đối xứng, mỗi thẻ có ảnh 16:9, tiêu đề, mô tả và link Xem chi tiết. Hỗ trợ nhập thủ công hoặc lấy tự động từ custom post type.",
     "keywords": [
         "features",

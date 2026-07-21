@@ -3,7 +3,7 @@
     "apiVersion": 3,
     "name": "lacadev/journey-gallery-block",
     "title": "Journey Gallery",
-    "category": "lacadev-blocks",
+    "category": "site-unclassified",
     "icon": "editor-ol",
     "editorScript": "block-block-journey-gallery-editor",
     "style": "block-block-journey-gallery",

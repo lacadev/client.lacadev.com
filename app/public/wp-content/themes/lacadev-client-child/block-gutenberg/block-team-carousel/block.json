@@ -3,7 +3,7 @@
     "apiVersion": 3,
     "name": "lacadev/team-carousel-block",
     "title": "Team Carousel",
-    "category": "lacadev-blocks",
+    "category": "site-unclassified",
     "icon": "groups",
     "editorScript": "block-block-team-carousel-editor",
     "style": "block-block-team-carousel",

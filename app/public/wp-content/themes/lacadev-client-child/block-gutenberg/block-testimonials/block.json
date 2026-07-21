@@ -4,7 +4,7 @@
     "name": "lacadev/testimonials-block",
     "version": "1.0.0",
     "title": "Testimonials Block",
-    "category": "lacadev-blocks",
+    "category": "site-nhakhoathienphuoc",
     "description": "Hiển thị đánh giá của khách hàng dạng lưới 3 cột với avatar tròn, sao đánh giá và trích dẫn.",
     "keywords": [
         "testimonials",

@@ -46,10 +46,37 @@ function lacadev_get_custom_block_categories($post = null) {
     }
     $project_category = wp_parse_args($project_category, $default_project_category);
 
-    return [
-        $default_base_category,
-        $project_category,
-    ];
+    /**
+     * Category riêng cho từng site khi 1 kho block-gutenberg dùng chung
+     * (vd site dev/tham chiếu client.lacadev.com) chứa thiết kế của NHIỀU
+     * site khác nhau cùng lúc — cho phép lọc/tìm block theo site trong ô
+     * tìm kiếm của trình chèn block, tránh nhầm lẫn khi block trùng tên
+     * dạng (hero banner, stats...) nhưng khác giao diện giữa các site.
+     * Đăng ký category MỚI ở đây khi bắt đầu 1 site mới, rồi gán
+     * "category": "site-xxx" trong block.json của từng block thuộc site đó.
+     */
+    $site_categories = apply_filters('lacadev_site_block_categories', [
+        [
+            'slug'  => 'site-nhakhoathienphuoc',
+            'title' => __('Nha Khoa Thiện Phước', 'laca'),
+            'icon'  => 'store',
+        ],
+        [
+            'slug'  => 'site-unclassified',
+            'title' => __('Site khác (chưa phân loại)', 'laca'),
+            'icon'  => 'category',
+        ],
+    ], $post);
+
+    if (!is_array($site_categories)) {
+        $site_categories = [];
+    }
+
+    return array_merge(
+        [ $default_base_category ],
+        $site_categories,
+        [ $project_category ]
+    );
 }
 
 /**

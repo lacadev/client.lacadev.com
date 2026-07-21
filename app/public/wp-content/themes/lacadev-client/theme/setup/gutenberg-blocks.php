@@ -34,28 +34,28 @@ function lacadev_get_custom_block_categories($post = null) {
         'icon'  => 'admin-customizer',
     ];
 
-    $default_project_category = [
-        'slug'  => 'project-blocks',
-        'title' => __('Project Blocks', 'laca'),
-        'icon'  => 'screenoptions',
-    ];
-
-    $project_category = apply_filters('lacadev_project_block_category_config', $default_project_category, $post);
-    if (!is_array($project_category)) {
-        $project_category = $default_project_category;
-    }
-    $project_category = wp_parse_args($project_category, $default_project_category);
-
     /**
-     * Category riêng cho từng site khi 1 kho block-gutenberg dùng chung
-     * (vd site dev/tham chiếu client.lacadev.com) chứa thiết kế của NHIỀU
-     * site khác nhau cùng lúc — cho phép lọc/tìm block theo site trong ô
-     * tìm kiếm của trình chèn block, tránh nhầm lẫn khi block trùng tên
-     * dạng (hero banner, stats...) nhưng khác giao diện giữa các site.
-     * Đăng ký category MỚI ở đây khi bắt đầu 1 site mới, rồi gán
-     * "category": "site-xxx" trong block.json của từng block thuộc site đó.
+     * TOÀN BỘ category "theo site/dự án" gom về 1 chỗ DUY NHẤT ở đây để dễ
+     * quản lý/cập nhật — kể cả 'pdn-blocks' (trước đây đăng ký riêng qua 1
+     * filter khác `lacadev_project_block_category_config`, nay gộp chung
+     * vào mảng này cho gọn, cùng 1 cơ chế với các category theo site khác).
+     *
+     * Khi 1 kho block-gutenberg dùng chung (vd site dev/tham chiếu
+     * client.lacadev.com) chứa thiết kế của NHIỀU site/dự án khác nhau cùng
+     * lúc, category ở đây cho phép lọc/tìm block theo site trong ô tìm kiếm
+     * của trình chèn block, tránh nhầm lẫn khi block trùng tên dạng (hero
+     * banner, stats...) nhưng khác giao diện giữa các site.
+     *
+     * Đăng ký category MỚI ở đây khi bắt đầu 1 site/dự án mới, rồi gán
+     * "category": "site-xxx" (hoặc slug tương ứng) trong block.json của
+     * từng block thuộc site/dự án đó.
      */
     $site_categories = apply_filters('lacadev_site_block_categories', [
+        [
+            'slug'  => 'site-phucdainam',
+            'title' => __('Phúc Đại Nam', 'laca'),
+            'icon'  => 'screenoptions',
+        ],
         [
             'slug'  => 'site-nhakhoathienphuoc',
             'title' => __('Nha Khoa Thiện Phước', 'laca'),
@@ -74,8 +74,7 @@ function lacadev_get_custom_block_categories($post = null) {
 
     return array_merge(
         [ $default_base_category ],
-        $site_categories,
-        [ $project_category ]
+        $site_categories
     );
 }
 
@@ -538,58 +537,18 @@ function lacadev_register_custom_blocks() {
 add_action('init', 'lacadev_register_custom_blocks', 10);
 
 /**
- * Register custom block category
+ * Register custom block categories with WordPress core (dùng chung ĐÚNG 1
+ * nguồn với lacadev_get_custom_block_categories() — trang admin "Block
+ * Categories" và trình chèn block trong editor phải luôn thấy CÙNG 1 danh
+ * sách category, không định nghĩa lại ở 2 nơi để tránh lệch nhau).
  */
 function lacadev_register_block_category($categories, $post) {
-    $default_base_category = [
-        'slug'  => 'lacadev-blocks',
-        'title' => __('La Cà Blocks', 'laca'),
-        'icon'  => 'admin-customizer',
-    ];
-
-    /**
-     * Allow project to define its primary project category.
-     *
-     * Example:
-     * add_filter('lacadev_project_block_category_config', function ($config) {
-     *     $config['slug'] = 'pdn-blocks';
-     *     $config['title'] = __('PĐN Blocks', 'laca');
-     *     return $config;
-     * });
-     */
-    $default_project_category = [
-        'slug'  => 'project-blocks',
-        'title' => __('Project Blocks', 'laca'),
-        'icon'  => 'screenoptions',
-    ];
-
-    $project_category = apply_filters('lacadev_project_block_category_config', $default_project_category, $post);
-
-    if (!is_array($project_category)) {
-        $project_category = $default_project_category;
-    }
-
-    $project_category = wp_parse_args($project_category, $default_project_category);
-
     return array_merge(
-        [
-            $default_base_category,
-            $project_category,
-        ],
+        lacadev_get_custom_block_categories($post),
         $categories
     );
 }
 add_filter('block_categories_all', 'lacadev_register_block_category', 10, 2);
-
-/**
- * Project-level Gutenberg category config for demo-pdn.
- */
-add_filter('lacadev_project_block_category_config', function ($config) {
-    $config['slug']  = 'pdn-blocks';
-    $config['title'] = __('PĐN Blocks', 'laca');
-    $config['icon']  = 'screenoptions';
-    return $config;
-});
 
 /**
  * Đăng ký các blocks đã được sync về từ lacadev server.

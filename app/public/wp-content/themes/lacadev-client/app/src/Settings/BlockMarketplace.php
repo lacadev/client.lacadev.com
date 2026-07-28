@@ -139,7 +139,10 @@ class BlockMarketplace
             <div id="laca-mp-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px">
                 <?php foreach ($blocks as $block): ?>
                     <?php
-                    $name          = (string) $block['name'];
+                    // Định danh gửi lên server (path đầy đủ nếu block nằm trong 1
+                    // bucket theo site, fallback về "name" cho nguồn catalog cũ
+                    // chưa có field "path"). "name"/"title" vẫn dùng để hiển thị.
+                    $name          = (string) ($block['path'] ?? $block['name']);
                     $localVersion  = $installed[$name] ?? null;
                     $isInstalled   = $localVersion !== null;
                     $hasUpdate     = $isInstalled && version_compare((string) $block['version'], (string) $localVersion, '>');
@@ -262,7 +265,7 @@ class BlockMarketplace
             wp_send_json_error(['message' => 'Không có quyền'], 403);
         }
 
-        $blockName = sanitize_key($_POST['block'] ?? '');
+        $blockName = self::sanitizeBlockRelativePath((string) ($_POST['block'] ?? ''));
         if (empty($blockName)) {
             wp_send_json_error(['message' => 'Thiếu tên block'], 400);
         }
@@ -284,5 +287,21 @@ class BlockMarketplace
         delete_transient(self::CACHE_KEY);
 
         wp_send_json_success(['message' => 'Đã gửi yêu cầu đồng bộ.']);
+    }
+
+    /**
+     * Làm sạch "block relative path" — tên block phẳng (không "/") hoặc
+     * "{bucket}/{block}" (đúng 1 dấu "/"). Dùng thay cho sanitize_key() vì
+     * sanitize_key() xoá sạch dấu "/" và sẽ phá path có bucket.
+     */
+    private static function sanitizeBlockRelativePath(string $raw): string
+    {
+        $raw = strtolower(trim($raw));
+        $segments = array_filter(explode('/', $raw), static fn ($s) => $s !== '');
+        $segments = array_map(static fn ($s) => preg_replace('/[^a-z0-9_-]/', '', $s), $segments);
+        $segments = array_filter($segments, static fn ($s) => $s !== '' && $s !== '.' && $s !== '..');
+        $segments = array_slice($segments, 0, 2);
+
+        return implode('/', $segments);
     }
 }

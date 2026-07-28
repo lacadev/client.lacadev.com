@@ -72,10 +72,22 @@ function lacadev_get_custom_block_categories($post = null) {
         $site_categories = [];
     }
 
-    return array_merge(
-        [ $default_base_category ],
-        $site_categories
-    );
+    // Tự phát hiện thêm category từ các thư mục bucket-theo-site vật lý —
+    // slug lấy trực tiếp từ tên thư mục, không cần đăng ký tay ở mảng trên.
+    // Nếu trùng slug với entry tay ở trên, bản tự phát hiện THẮNG (ưu tiên
+    // dữ liệu tươi từ category.json đi theo thư mục bucket).
+    $merged = [];
+    foreach (array_merge([ $default_base_category ], $site_categories) as $category) {
+        $slug = sanitize_key((string) ($category['slug'] ?? ''));
+        if ($slug !== '') {
+            $merged[$slug] = $category;
+        }
+    }
+    foreach (lacadev_discover_bucket_categories() as $category) {
+        $merged[$category['slug']] = $category;
+    }
+
+    return array_values($merged);
 }
 
 /**
@@ -154,6 +166,151 @@ function lacadev_read_block_metadata($block_json_path) {
 }
 
 /**
+ * Quét 1 thư mục block-gutenberg, trả về relative path của từng block tìm
+ * được — hỗ trợ song song 2 dạng: block nằm phẳng ngay dưới root (chưa phân
+ * loại site) VÀ block nằm trong 1 thư mục "bucket" theo site (vd
+ * nhakhoathienphuoc-blocks-site/), lồng đúng 1 cấp.
+ *
+ * Quy ước: 1 thư mục có block.json ngay bên trong = 1 block; 1 thư mục
+ * KHÔNG có block.json bên trong = 1 bucket, quét thêm 1 cấp con để tìm
+ * block (không hỗ trợ lồng sâu hơn 1 cấp).
+ *
+ * @return string[] Relative path (có thể chứa '/') tính từ $rootDir.
+ */
+function lacadev_scan_block_relative_paths(string $rootDir): array {
+    if (!is_dir($rootDir)) {
+        return [];
+    }
+
+    $relative_paths = [];
+    $entries = scandir($rootDir);
+
+    foreach ($entries as $entry) {
+        if ($entry === '.' || $entry === '..') {
+            continue;
+        }
+
+        $entry_path = "{$rootDir}/{$entry}";
+        if (!is_dir($entry_path)) {
+            continue;
+        }
+
+        if (file_exists("{$entry_path}/block.json")) {
+            $relative_paths[] = $entry;
+            continue;
+        }
+
+        $sub_entries = scandir($entry_path);
+        if (!is_array($sub_entries)) {
+            continue;
+        }
+
+        foreach ($sub_entries as $sub_entry) {
+            if ($sub_entry === '.' || $sub_entry === '..') {
+                continue;
+            }
+
+            $sub_entry_path = "{$entry_path}/{$sub_entry}";
+            if (is_dir($sub_entry_path) && file_exists("{$sub_entry_path}/block.json")) {
+                $relative_paths[] = "{$entry}/{$sub_entry}";
+            }
+        }
+    }
+
+    return $relative_paths;
+}
+
+/**
+ * Đọc title/icon category cho 1 bucket từ file category.json trong chính
+ * thư mục bucket (nếu có) — file này ĐI THEO thư mục khi bucket được
+ * copy/đồng bộ sang site khác, nên site khác tự có tên đẹp không cần đăng
+ * ký gì thêm. Không có file → tự suy title từ tên thư mục (bỏ hậu tố
+ * -blocks-site/-site/-blocks, đổi -/_ thành khoảng trắng, viết hoa từng chữ).
+ *
+ * @return array{title:string,icon:string}
+ */
+function lacadev_get_bucket_category_info(string $bucketDir): array {
+    $configPath = $bucketDir . '/category.json';
+    if (file_exists($configPath)) {
+        $decoded = lacadev_read_block_metadata($configPath);
+        if (!empty($decoded['title'])) {
+            return [
+                'title' => (string) $decoded['title'],
+                'icon'  => !empty($decoded['icon']) ? (string) $decoded['icon'] : 'category',
+            ];
+        }
+    }
+
+    $bucketName = basename($bucketDir);
+    $pretty = preg_replace('/-(blocks-site|site|blocks)$/', '', $bucketName);
+    $pretty = str_replace(['-', '_'], ' ', (string) $pretty);
+    $pretty = ucwords(trim($pretty));
+
+    return [
+        'title' => $pretty !== '' ? $pretty : $bucketName,
+        'icon'  => 'category',
+    ];
+}
+
+/**
+ * Tự phát hiện category từ các thư mục "bucket" theo site nằm dưới
+ * block-gutenberg/ của child theme — 1 thư mục KHÔNG có block.json trực
+ * tiếp nhưng có ít nhất 1 block con = 1 bucket. Slug = tên thư mục bucket
+ * (sanitize_key), title/icon lấy từ lacadev_get_bucket_category_info(). Nhờ
+ * vậy chỉ cần git mv 1 block vào 1 thư mục mới là nó tự có category, không
+ * cần đăng ký gì thêm ở đây.
+ *
+ * @return array[] Mỗi entry: ['slug' => ..., 'title' => ..., 'icon' => ...]
+ */
+function lacadev_discover_bucket_categories(): array {
+    $childBlocksDir = dirname(get_stylesheet_directory()) . '/block-gutenberg';
+    if (!is_dir($childBlocksDir)) {
+        return [];
+    }
+
+    $entries = scandir($childBlocksDir);
+    if (!is_array($entries)) {
+        return [];
+    }
+
+    $categories = [];
+    foreach ($entries as $entry) {
+        if ($entry === '.' || $entry === '..') {
+            continue;
+        }
+
+        $entryPath = "{$childBlocksDir}/{$entry}";
+        if (!is_dir($entryPath) || file_exists("{$entryPath}/block.json")) {
+            continue; // không phải bucket (là block phẳng hoặc không phải thư mục)
+        }
+
+        $hasBlockChild = false;
+        foreach ((scandir($entryPath) ?: []) as $subEntry) {
+            if ($subEntry === '.' || $subEntry === '..') {
+                continue;
+            }
+            if (is_dir("{$entryPath}/{$subEntry}") && file_exists("{$entryPath}/{$subEntry}/block.json")) {
+                $hasBlockChild = true;
+                break;
+            }
+        }
+
+        if (!$hasBlockChild) {
+            continue;
+        }
+
+        $info = lacadev_get_bucket_category_info($entryPath);
+        $categories[] = [
+            'slug'  => sanitize_key($entry),
+            'title' => $info['title'],
+            'icon'  => $info['icon'],
+        ];
+    }
+
+    return $categories;
+}
+
+/**
  * Safe block registration — prevents duplicate "already registered" notices.
  *
  * WP_Block_Type_Registry::register() emits _doing_it_wrong() when a block is
@@ -210,9 +367,13 @@ function lacadev_collect_blocks_for_category_mapping() {
             continue;
         }
 
-        $entries = scandir($dir);
-        if (!is_array($entries)) {
-            continue;
+        if ($source === 'synced') {
+            $entries = lacadev_scan_block_relative_paths($dir);
+        } else {
+            $entries = scandir($dir);
+            if (!is_array($entries)) {
+                continue;
+            }
         }
 
         foreach ($entries as $entry) {
@@ -231,7 +392,13 @@ function lacadev_collect_blocks_for_category_mapping() {
                 continue;
             }
 
-            $default_slug = ($source === 'synced') ? 'lacadev-blocks' : 'pdn-blocks';
+            if ($source === 'synced' && strpos($entry, '/') !== false) {
+                $default_slug = sanitize_key(dirname($entry));
+            } elseif ($source === 'synced') {
+                $default_slug = !empty($metadata['category']) ? sanitize_key((string) $metadata['category']) : 'site-unclassified';
+            } else {
+                $default_slug = 'pdn-blocks';
+            }
             $title = !empty($metadata['title']) ? (string) $metadata['title'] : $block_name;
 
             if (!isset($blocks[$block_name])) {
@@ -244,7 +411,7 @@ function lacadev_collect_blocks_for_category_mapping() {
             } elseif ($source === 'synced') {
                 // Prefer synced source metadata when the same block exists in both places.
                 $blocks[$block_name]['source'] = 'synced';
-                $blocks[$block_name]['default_slug'] = 'lacadev-blocks';
+                $blocks[$block_name]['default_slug'] = $default_slug;
             }
         }
     }
@@ -522,7 +689,8 @@ function lacadev_register_custom_blocks() {
                 };
             }
 
-            $block_args['category'] = lacadev_resolve_block_category($block_name, 'pdn-blocks');
+            $declared_category = !empty($metadata['category']) ? sanitize_key((string) $metadata['category']) : 'pdn-blocks';
+            $block_args['category'] = lacadev_resolve_block_category($block_name, $declared_category);
             
             // Use safe wrapper — prevents "already registered" notices that break headers.
             $result = lacadev_safe_register_block($block_json, $block_args);
@@ -573,13 +741,8 @@ function lacadev_child_register_synced_blocks(): void
     $childThemeUri = get_stylesheet_directory_uri();
     $childThemeUri = preg_replace('#/theme/?$#', '', $childThemeUri);
 
-    $entries = scandir($childBlocksDir);
-    foreach ($entries as $blockName) {
-        if ($blockName === '.' || $blockName === '..') {
-            continue;
-        }
-
-        $blockJson = "{$childBlocksDir}/{$blockName}/block.json";
+    foreach (lacadev_scan_block_relative_paths($childBlocksDir) as $blockRelPath) {
+        $blockJson = "{$childBlocksDir}/{$blockRelPath}/block.json";
         if (!file_exists($blockJson)) {
             continue;
         }
@@ -598,29 +761,33 @@ function lacadev_child_register_synced_blocks(): void
             continue;
         }
 
+        // Tên thư mục CỦA CHÍNH BLOCK (không kèm bucket site) — dùng cho tên
+        // handle, theo đúng quy ước block-block-{ten-thu-muc}-editor.
+        $blockSlug = basename($blockRelPath);
+
         $blockArgs   = [];
-        $renderPhp   = "{$childBlocksDir}/{$blockName}/render.php";
-        $hasBuild    = is_dir("{$childBlocksDir}/{$blockName}/build");
+        $renderPhp   = "{$childBlocksDir}/{$blockRelPath}/render.php";
+        $hasBuild    = is_dir("{$childBlocksDir}/{$blockRelPath}/build");
 
         if ($hasBuild) {
-            $assetFile = "{$childBlocksDir}/{$blockName}/build/index.asset.php";
+            $assetFile = "{$childBlocksDir}/{$blockRelPath}/build/index.asset.php";
             $asset     = file_exists($assetFile) ? require $assetFile : ['dependencies' => [], 'version' => null];
 
-            $scriptHandle = 'block-' . $blockName . '-editor';
-            $styleHandle  = 'block-' . $blockName;
+            $scriptHandle = 'block-' . $blockSlug . '-editor';
+            $styleHandle  = 'block-' . $blockSlug;
 
-            $indexJs  = "{$childThemeUri}/block-gutenberg/{$blockName}/build/index.js";
-            $indexCss = "{$childThemeUri}/block-gutenberg/{$blockName}/build/index.css";
-            $styleCss = "{$childThemeUri}/block-gutenberg/{$blockName}/build/style-index.css";
+            $indexJs  = "{$childThemeUri}/block-gutenberg/{$blockRelPath}/build/index.js";
+            $indexCss = "{$childThemeUri}/block-gutenberg/{$blockRelPath}/build/index.css";
+            $styleCss = "{$childThemeUri}/block-gutenberg/{$blockRelPath}/build/style-index.css";
 
             wp_register_script($scriptHandle, $indexJs, $asset['dependencies'] ?? [], $asset['version'] ?? null);
 
-            if (file_exists("{$childBlocksDir}/{$blockName}/build/index.css")) {
+            if (file_exists("{$childBlocksDir}/{$blockRelPath}/build/index.css")) {
                 wp_register_style($scriptHandle, $indexCss, [], $asset['version'] ?? null);
                 $blockArgs['editor_style'] = $scriptHandle;
             }
 
-            if (file_exists("{$childBlocksDir}/{$blockName}/build/style-index.css")) {
+            if (file_exists("{$childBlocksDir}/{$blockRelPath}/build/style-index.css")) {
                 wp_register_style($styleHandle, $styleCss, [], $asset['version'] ?? null);
                 $blockArgs['style'] = $styleHandle;
             }
@@ -628,7 +795,16 @@ function lacadev_child_register_synced_blocks(): void
             $blockArgs['editor_script'] = $scriptHandle;
         }
 
-        $blockArgs['category'] = lacadev_resolve_block_category($registered_block_name, 'lacadev-blocks');
+        // Block nằm trong 1 bucket theo site → category = tên thư mục bucket
+        // (tự động, xem lacadev_discover_bucket_categories()). Block phẳng
+        // (chưa phân loại site) → giữ hành vi cũ: đọc field "category" khai
+        // báo tay trong block.json, không có thì rơi về site-unclassified.
+        if (strpos($blockRelPath, '/') !== false) {
+            $declaredCategory = sanitize_key(dirname($blockRelPath));
+        } else {
+            $declaredCategory = !empty($metadata['category']) ? sanitize_key((string) $metadata['category']) : 'site-unclassified';
+        }
+        $blockArgs['category'] = lacadev_resolve_block_category($registered_block_name, $declaredCategory);
 
         if (file_exists($renderPhp)) {
             $blockArgs['render_callback'] = static function ($attributes, $content) use ($renderPhp) {

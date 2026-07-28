@@ -55,7 +55,7 @@ class BlockSyncReceiver
         }
 
         // --- Validate payload ---
-        $blockName = sanitize_key($request->get_param('block_name') ?? '');
+        $blockName = self::sanitizeBlockRelativePath((string) ($request->get_param('block_name') ?? ''));
         $version   = sanitize_text_field($request->get_param('version') ?? '1.0.0');
         $files     = $request->get_param('files') ?? [];
 
@@ -122,7 +122,7 @@ class BlockSyncReceiver
         // Nếu hub hỏi kèm ?block=xxx, trả thêm checksum nội dung hiện tại của
         // block đó trên đĩa — dùng để hub phát hiện site khách đã tự sửa file
         // trước khi ghi đè (xem BlockSyncSender::detectConflict() phía hub).
-        $blockName = sanitize_key($request->get_param('block') ?? '');
+        $blockName = self::sanitizeBlockRelativePath((string) ($request->get_param('block') ?? ''));
         if (!empty($blockName)) {
             $blockDir = dirname(get_stylesheet_directory()) . '/block-gutenberg/' . $blockName;
             $response['checksum'] = is_dir($blockDir) ? $this->computeChecksum($blockDir) : null;
@@ -145,6 +145,22 @@ class BlockSyncReceiver
         }
 
         return hash_equals($storedKey, $requestKey);
+    }
+
+    /**
+     * Làm sạch "block relative path" — tên block phẳng (không "/") hoặc
+     * "{bucket}/{block}" (đúng 1 dấu "/"). Dùng thay cho sanitize_key() vì
+     * sanitize_key() xoá sạch dấu "/" và sẽ phá path có bucket.
+     */
+    private static function sanitizeBlockRelativePath(string $raw): string
+    {
+        $raw = strtolower(trim($raw));
+        $segments = array_filter(explode('/', $raw), static fn ($s) => $s !== '');
+        $segments = array_map(static fn ($s) => preg_replace('/[^a-z0-9_-]/', '', $s), $segments);
+        $segments = array_filter($segments, static fn ($s) => $s !== '' && $s !== '.' && $s !== '..');
+        $segments = array_slice($segments, 0, 2);
+
+        return implode('/', $segments);
     }
 
     /**

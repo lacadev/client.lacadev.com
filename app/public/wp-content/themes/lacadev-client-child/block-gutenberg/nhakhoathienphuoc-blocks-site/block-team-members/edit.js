@@ -13,7 +13,7 @@ import {
 	Button,
 	ColorPicker,
 } from '@wordpress/components';
-import { useInserterPreview, BlockPreviewMock } from '../utils/preview';
+import { useInserterPreview, BlockPreviewMock } from '../../utils/preview';
 import previewImage from './preview.png';
 
 const MAX_DOCTORS = 8;

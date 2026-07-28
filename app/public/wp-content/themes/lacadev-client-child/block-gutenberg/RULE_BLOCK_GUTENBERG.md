@@ -56,6 +56,38 @@ tạm gán `site-unclassified` (category "Site khác (chưa phân loại)") thay
 đoán bừa — sửa lại đúng site khi xác nhận được, đừng để mãi ở trạng thái
 tạm.
 
+### Thư mục theo site (tổ chức vật lý — chỉ để dễ nhìn, KHÔNG quyết định category)
+
+`block-gutenberg/` cho phép gom các block đã xác định rõ site vào 1 thư mục
+con riêng theo site (vd `nhakhoathienphuoc-blocks-site/`, `lacadev-blocks-site/`
+cho block dùng chung) để dễ tìm trong file explorer khi kho này chứa thiết kế
+của nhiều site cùng lúc. Quy ước quét (dùng chung ở webpack build,
+`lacadev_child_register_synced_blocks()`, `lacadev_collect_blocks_for_category_
+mapping()`, `BlockCatalogProvider`): **1 thư mục có `block.json` ngay bên
+trong = 1 block; 1 thư mục KHÔNG có `block.json` bên trong = 1 "bucket" theo
+site, quét thêm ĐÚNG 1 CẤP con để tìm block** — không hỗ trợ lồng sâu hơn 1
+cấp, và không cần đặt tên bucket theo 1 pattern cố định (tạo site mới chỉ cần
+tạo 1 thư mục mới, không cần sửa code).
+
+Quan trọng: đưa 1 block vào bucket site **không** tự gán category — category
+vẫn luôn đọc từ field `"category"` trong `block.json` của chính block đó (xem
+mục trên). Vị trí thư mục và category là 2 thứ tách biệt, phải khớp tay với
+nhau.
+
+Khi `git mv` 1 block vào bucket site, block đó lồng thêm 1 cấp thư mục — mọi
+import JS dùng chung ở mục 3 (`../utils/xxx`) phải đổi thành `../../utils/xxx`
+(thêm 1 cấp `../`), nếu không webpack build sẽ lỗi "Module not found" vì
+đường dẫn tương đối lúc này trỏ sai chỗ. Chạy lại
+`npx wp-scripts build --config resources/build/webpack.blocks.js` ngay sau khi
+di chuyển để phát hiện ngay nếu quên sửa.
+
+`BlockSyncReceiver` (nhận block push từ hub) luôn ghi block mới **phẳng** ở
+ngay root `block-gutenberg/` — payload sync không mang thông tin site nên
+không thể tự quyết định bucket. Sau khi nhận 1 block mới (category mặc định
+rơi về `site-unclassified` nếu không có mapping tay), làm CÙNG LÚC 2 việc khi
+xác nhận được site: `git mv` block vào đúng bucket + sửa `"category"` trong
+`block.json` — tránh để lệch giữa vị trí thư mục và category đã gán.
+
 ## 3. Mọi PHP helper dùng chung phải COPY vào từng thư mục block, không được `require` chéo qua `utils/`
 
 Cơ chế Block Marketplace sync (`BlockSyncSender::encodeDirectoryFiles()` /

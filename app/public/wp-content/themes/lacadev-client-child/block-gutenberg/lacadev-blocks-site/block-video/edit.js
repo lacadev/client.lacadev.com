@@ -18,10 +18,10 @@ import {
 	RangeControl,
 } from '@wordpress/components';
 
-import { getVideoEmbedUrl } from '../utils/video';
-import { useInserterPreview, BlockPreviewMock } from '../utils/preview';
-import { hexToRgba, getSpacingVars } from '../utils/style';
-import { BlockConfigPanel, AppearancePanel } from '../utils/inspector-panels';
+import { getVideoEmbedUrl } from '../../utils/video';
+import { useInserterPreview, BlockPreviewMock } from '../../utils/preview';
+import { hexToRgba, getSpacingVars } from '../../utils/style';
+import { BlockConfigPanel, AppearancePanel } from '../../utils/inspector-panels';
 
 const dividerStyle = {
 	borderTop: '1px solid #dcdcde',

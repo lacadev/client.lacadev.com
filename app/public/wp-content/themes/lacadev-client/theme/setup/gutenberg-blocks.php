@@ -19,7 +19,8 @@ const LACADEV_BLOCK_CATEGORY_MAP_OPTION = 'lacadev_block_category_map';
 /**
  * Normalize Gutenberg block name (namespace/block-name).
  */
-function lacadev_normalize_block_name($block_name) {
+function lacadev_normalize_block_name($block_name)
+{
     $block_name = strtolower(trim((string) $block_name));
     return preg_replace('/[^a-z0-9_\\-\\/]/', '', $block_name);
 }
@@ -27,44 +28,35 @@ function lacadev_normalize_block_name($block_name) {
 /**
  * Get custom block categories used by this project.
  */
-function lacadev_get_custom_block_categories($post = null) {
+function lacadev_get_custom_block_categories($post = null)
+{
     $default_base_category = [
-        'slug'  => 'lacadev-blocks',
+        'slug' => 'lacadev-blocks',
         'title' => __('La Cà Blocks', 'laca'),
-        'icon'  => 'admin-customizer',
+        'icon' => 'admin-customizer',
     ];
 
     /**
-     * TOÀN BỘ category "theo site/dự án" gom về 1 chỗ DUY NHẤT ở đây để dễ
-     * quản lý/cập nhật — kể cả 'pdn-blocks' (trước đây đăng ký riêng qua 1
-     * filter khác `lacadev_project_block_category_config`, nay gộp chung
-     * vào mảng này cho gọn, cùng 1 cơ chế với các category theo site khác).
-     *
-     * Khi 1 kho block-gutenberg dùng chung (vd site dev/tham chiếu
-     * clients.lacadev.com) chứa thiết kế của NHIỀU site/dự án khác nhau cùng
-     * lúc, category ở đây cho phép lọc/tìm block theo site trong ô tìm kiếm
-     * của trình chèn block, tránh nhầm lẫn khi block trùng tên dạng (hero
-     * banner, stats...) nhưng khác giao diện giữa các site.
-     *
-     * Đăng ký category MỚI ở đây khi bắt đầu 1 site/dự án mới, rồi gán
-     * "category": "site-xxx" (hoặc slug tương ứng) trong block.json của
-     * từng block thuộc site/dự án đó.
+     * TOÀN BỘ category "theo dự án" gom về 1 chỗ DUY NHẤT ở đây để dễ quản
+     * lý/cập nhật — kể cả 'pdn-blocks' (trước đây đăng ký riêng qua 1 filter
+     * khác `lacadev_project_block_category_config`, nay gộp chung vào mảng
+     * này cho gọn).
      */
     $site_categories = apply_filters('lacadev_site_block_categories', [
         [
-            'slug'  => 'site-phucdainam',
+            'slug' => 'site-phucdainam',
             'title' => __('Phúc Đại Nam', 'laca'),
-            'icon'  => 'screenoptions',
+            'icon' => 'screenoptions',
         ],
         [
-            'slug'  => 'site-nhakhoathienphuoc',
+            'slug' => 'site-nhakhoathienphuoc',
             'title' => __('Nha Khoa Thiện Phước', 'laca'),
-            'icon'  => 'store',
+            'icon' => 'store',
         ],
         [
-            'slug'  => 'site-unclassified',
+            'slug' => 'site-unclassified',
             'title' => __('Site khác (chưa phân loại)', 'laca'),
-            'icon'  => 'category',
+            'icon' => 'category',
         ],
     ], $post);
 
@@ -77,7 +69,7 @@ function lacadev_get_custom_block_categories($post = null) {
     // Nếu trùng slug với entry tay ở trên, bản tự phát hiện THẮNG (ưu tiên
     // dữ liệu tươi từ category.json đi theo thư mục bucket).
     $merged = [];
-    foreach (array_merge([ $default_base_category ], $site_categories) as $category) {
+    foreach (array_merge([$default_base_category], $site_categories) as $category) {
         $slug = sanitize_key((string) ($category['slug'] ?? ''));
         if ($slug !== '') {
             $merged[$slug] = $category;
@@ -93,7 +85,8 @@ function lacadev_get_custom_block_categories($post = null) {
 /**
  * Get block category map saved from Admin UI.
  */
-function lacadev_get_block_category_map() {
+function lacadev_get_block_category_map()
+{
     $raw = get_option(LACADEV_BLOCK_CATEGORY_MAP_OPTION, []);
     if (!is_array($raw)) {
         return [];
@@ -115,7 +108,8 @@ function lacadev_get_block_category_map() {
 /**
  * Resolve final category for a block from admin mapping.
  */
-function lacadev_resolve_block_category($block_name, $default_slug, $post = null) {
+function lacadev_resolve_block_category($block_name, $default_slug, $post = null)
+{
     $default_slug = sanitize_key((string) $default_slug);
     if (empty($block_name)) {
         return $default_slug;
@@ -139,7 +133,8 @@ function lacadev_resolve_block_category($block_name, $default_slug, $post = null
 /**
  * Parse block.json metadata.
  */
-function lacadev_read_block_metadata($block_json_path) {
+function lacadev_read_block_metadata($block_json_path)
+{
     if (!file_exists($block_json_path)) {
         return [];
     }
@@ -324,9 +319,10 @@ function lacadev_discover_bucket_categories(): array {
  * @param array  $block_args  Extra args forwarded to register_block_type_from_metadata().
  * @return \WP_Block_Type|false
  */
-function lacadev_safe_register_block(string $block_json, array $block_args = []) {
+function lacadev_safe_register_block(string $block_json, array $block_args = [])
+{
     $metadata = lacadev_read_block_metadata($block_json);
-    $name     = isset($metadata['name']) ? lacadev_normalize_block_name($metadata['name']) : '';
+    $name = isset($metadata['name']) ? lacadev_normalize_block_name($metadata['name']) : '';
 
     if ($name === '') {
         return false;
@@ -343,19 +339,20 @@ function lacadev_safe_register_block(string $block_json, array $block_args = [])
 /**
  * Collect blocks from parent and synced child directories for admin mapping.
  */
-function lacadev_collect_blocks_for_category_mapping() {
+function lacadev_collect_blocks_for_category_mapping()
+{
     $blocks = [];
 
     $sources = [];
     if (defined('APP_DIR')) {
         $sources[] = [
-            'dir'    => trailingslashit(APP_DIR) . 'block-gutenberg',
+            'dir' => trailingslashit(APP_DIR) . 'block-gutenberg',
             'source' => 'project',
         ];
     }
 
     $sources[] = [
-        'dir'    => dirname(get_stylesheet_directory()) . '/block-gutenberg',
+        'dir' => dirname(get_stylesheet_directory()) . '/block-gutenberg',
         'source' => 'synced',
     ];
 
@@ -403,9 +400,9 @@ function lacadev_collect_blocks_for_category_mapping() {
 
             if (!isset($blocks[$block_name])) {
                 $blocks[$block_name] = [
-                    'name'         => $block_name,
-                    'title'        => $title,
-                    'source'       => $source,
+                    'name' => $block_name,
+                    'title' => $title,
+                    'source' => $source,
                     'default_slug' => $default_slug,
                 ];
             } elseif ($source === 'synced') {
@@ -423,7 +420,8 @@ function lacadev_collect_blocks_for_category_mapping() {
 /**
  * Register admin page under Laca Admin for block-category mapping.
  */
-function lacadev_register_block_category_mapping_admin_page() {
+function lacadev_register_block_category_mapping_admin_page()
+{
     add_submenu_page(
         'laca-admin',
         __('Block Categories', 'laca'),
@@ -438,7 +436,8 @@ add_action('admin_menu', 'lacadev_register_block_category_mapping_admin_page', 9
 /**
  * Render block-category mapping admin page.
  */
-function lacadev_render_block_category_mapping_admin_page() {
+function lacadev_render_block_category_mapping_admin_page()
+{
     if (!current_user_can('manage_options')) {
         return;
     }
@@ -490,14 +489,17 @@ function lacadev_render_block_category_mapping_admin_page() {
     ?>
     <div class="wrap">
         <h1><?php echo esc_html__('Block Categories', 'laca'); ?></h1>
-        <p><?php echo esc_html__('Chọn category cho từng block. Nếu để "Mặc định", hệ thống sẽ tự gán theo nguồn block.', 'laca'); ?></p>
+        <p><?php echo esc_html__('Chọn category cho từng block. Nếu để "Mặc định", hệ thống sẽ tự gán theo nguồn block.', 'laca'); ?>
+        </p>
         <ul style="list-style: disc; margin-left: 20px;">
             <li><?php echo esc_html__('Block local của dự án: mặc định vào PĐN Blocks.', 'laca'); ?></li>
             <li><?php echo esc_html__('Block sync từ lacadev: mặc định vào La Cà Blocks.', 'laca'); ?></li>
         </ul>
 
-        <?php if (!empty($notice)) : ?>
-            <div class="notice notice-success is-dismissible"><p><?php echo esc_html($notice); ?></p></div>
+        <?php if (!empty($notice)): ?>
+            <div class="notice notice-success is-dismissible">
+                <p><?php echo esc_html($notice); ?></p>
+            </div>
         <?php endif; ?>
 
         <form method="post">
@@ -512,10 +514,12 @@ function lacadev_render_block_category_mapping_admin_page() {
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if (empty($blocks)) : ?>
-                        <tr><td colspan="4"><?php echo esc_html__('Chưa tìm thấy block nào.', 'laca'); ?></td></tr>
-                    <?php else : ?>
-                        <?php foreach ($blocks as $block) : ?>
+                    <?php if (empty($blocks)): ?>
+                        <tr>
+                            <td colspan="4"><?php echo esc_html__('Chưa tìm thấy block nào.', 'laca'); ?></td>
+                        </tr>
+                    <?php else: ?>
+                        <?php foreach ($blocks as $block): ?>
                             <?php
                             $block_name = $block['name'];
                             $default_slug = $block['default_slug'];
@@ -532,7 +536,7 @@ function lacadev_render_block_category_mapping_admin_page() {
                                 <td>
                                     <select name="<?php echo esc_attr('lacadev_block_category_map[' . $block_name . ']'); ?>">
                                         <option value=""><?php echo esc_html__('Mặc định', 'laca'); ?></option>
-                                        <?php foreach ($category_labels as $slug => $label) : ?>
+                                        <?php foreach ($category_labels as $slug => $label): ?>
                                             <option value="<?php echo esc_attr($slug); ?>" <?php selected($selected_slug, $slug); ?>>
                                                 <?php echo esc_html($label); ?>
                                             </option>
@@ -557,7 +561,8 @@ function lacadev_render_block_category_mapping_admin_page() {
 /**
  * Register Gutenberg blocks scripts and styles
  */
-function lacadev_register_gutenberg_blocks_assets() {
+function lacadev_register_gutenberg_blocks_assets()
+{
     // Theme root is one level above `theme/` folder (see APP_DIR constant in `theme/functions.php`)
     if (!defined('APP_DIR')) {
         return;
@@ -565,13 +570,13 @@ function lacadev_register_gutenberg_blocks_assets() {
 
     // Legacy/global bundle (only used for blocks that don't have their own build folder)
     $asset_file = trailingslashit(APP_DIR) . 'dist/gutenberg/index.asset.php';
-    
+
     if (!file_exists($asset_file)) {
         return;
     }
-    
+
     $asset = require $asset_file;
-    
+
     // URL root of theme (one level above `theme/`)
     $theme_root_uri = get_template_directory_uri();
     $theme_root_uri = preg_replace('#/theme/?$#', '', $theme_root_uri);
@@ -590,10 +595,11 @@ add_action('init', 'lacadev_register_gutenberg_blocks_assets', 5);
 /**
  * Register all custom blocks
  */
-function lacadev_register_custom_blocks() {
+function lacadev_register_custom_blocks()
+{
     // First, register assets
     lacadev_register_gutenberg_blocks_assets();
-    
+
     // Get all block directories - use file path, not URL
     if (!defined('APP_DIR')) {
         return;
@@ -604,22 +610,22 @@ function lacadev_register_custom_blocks() {
     // đảm bảo asset link đúng kể cả khi dùng child theme.
     $theme_root_uri = get_template_directory_uri();
     $theme_root_uri = preg_replace('#/theme/?$#', '', $theme_root_uri);
-    
+
     if (!is_dir($blocks_dir)) {
         return;
     }
-    
+
     $blocks = scandir($blocks_dir);
     $registered_count = 0;
-    
+
     foreach ($blocks as $block) {
         // Skip . and .. and index.js
         if ($block === '.' || $block === '..' || $block === 'index.js' || $block === 'debug.js') {
             continue;
         }
-        
+
         $block_json = $blocks_dir . '/' . $block . '/block.json';
-        
+
         if (file_exists($block_json)) {
             $metadata = lacadev_read_block_metadata($block_json);
             $block_name = isset($metadata['name']) ? lacadev_normalize_block_name($metadata['name']) : '';
@@ -630,12 +636,12 @@ function lacadev_register_custom_blocks() {
 
             // Check if block has render.php for dynamic rendering
             $render_php = $blocks_dir . '/' . $block . '/render.php';
-            
+
             // Check if block has a specific build folder (self-contained block)
             $has_individual_build = is_dir($blocks_dir . '/' . $block . '/build');
-            
+
             $block_args = [];
-            
+
             if ($has_individual_build) {
                 $asset_file = $blocks_dir . '/' . $block . '/build/index.asset.php';
                 $asset = [
@@ -679,10 +685,10 @@ function lacadev_register_custom_blocks() {
                 // Backward compatibility for blocks that haven't been refactored
                 $block_args['editor_script'] = 'lacadev-gutenberg-blocks';
             }
-            
+
             // Add render callback if render.php exists
             if (file_exists($render_php)) {
-                $block_args['render_callback'] = function($attributes, $content) use ($render_php) {
+                $block_args['render_callback'] = function ($attributes, $content) use ($render_php) {
                     ob_start();
                     require $render_php;
                     return ob_get_clean();
@@ -691,16 +697,16 @@ function lacadev_register_custom_blocks() {
 
             $declared_category = !empty($metadata['category']) ? sanitize_key((string) $metadata['category']) : 'pdn-blocks';
             $block_args['category'] = lacadev_resolve_block_category($block_name, $declared_category);
-            
+
             // Use safe wrapper — prevents "already registered" notices that break headers.
             $result = lacadev_safe_register_block($block_json, $block_args);
-            
+
             if ($result) {
                 $registered_count++;
             }
         }
     }
-    
+
 }
 add_action('init', 'lacadev_register_custom_blocks', 10);
 
@@ -710,7 +716,8 @@ add_action('init', 'lacadev_register_custom_blocks', 10);
  * Categories" và trình chèn block trong editor phải luôn thấy CÙNG 1 danh
  * sách category, không định nghĩa lại ở 2 nơi để tránh lệch nhau).
  */
-function lacadev_register_block_category($categories, $post) {
+function lacadev_register_block_category($categories, $post)
+{
     return array_merge(
         lacadev_get_custom_block_categories($post),
         $categories
@@ -765,18 +772,18 @@ function lacadev_child_register_synced_blocks(): void
         // handle, theo đúng quy ước block-block-{ten-thu-muc}-editor.
         $blockSlug = basename($blockRelPath);
 
-        $blockArgs   = [];
-        $renderPhp   = "{$childBlocksDir}/{$blockRelPath}/render.php";
-        $hasBuild    = is_dir("{$childBlocksDir}/{$blockRelPath}/build");
+        $blockArgs = [];
+        $renderPhp = "{$childBlocksDir}/{$blockRelPath}/render.php";
+        $hasBuild = is_dir("{$childBlocksDir}/{$blockRelPath}/build");
 
         if ($hasBuild) {
             $assetFile = "{$childBlocksDir}/{$blockRelPath}/build/index.asset.php";
-            $asset     = file_exists($assetFile) ? require $assetFile : ['dependencies' => [], 'version' => null];
+            $asset = file_exists($assetFile) ? require $assetFile : ['dependencies' => [], 'version' => null];
 
             $scriptHandle = 'block-' . $blockSlug . '-editor';
-            $styleHandle  = 'block-' . $blockSlug;
+            $styleHandle = 'block-' . $blockSlug;
 
-            $indexJs  = "{$childThemeUri}/block-gutenberg/{$blockRelPath}/build/index.js";
+            $indexJs = "{$childThemeUri}/block-gutenberg/{$blockRelPath}/build/index.js";
             $indexCss = "{$childThemeUri}/block-gutenberg/{$blockRelPath}/build/index.css";
             $styleCss = "{$childThemeUri}/block-gutenberg/{$blockRelPath}/build/style-index.css";
 
@@ -830,48 +837,49 @@ add_action('init', 'lacadev_child_register_synced_blocks', 15);
  *
  * Usage in edit.js: `term.image_url`
  */
-function lacadev_register_term_image_rest_field() {
-    $taxonomies = get_taxonomies( [ 'public' => true ], 'names' );
+function lacadev_register_term_image_rest_field()
+{
+    $taxonomies = get_taxonomies(['public' => true], 'names');
 
-    foreach ( $taxonomies as $taxonomy ) {
+    foreach ($taxonomies as $taxonomy) {
         register_rest_field(
             $taxonomy,
             'image_url',
             [
-                'get_callback' => static function ( $term_data ) {
-                    $tid = absint( $term_data['id'] );
+                'get_callback' => static function ($term_data) {
+                    $tid = absint($term_data['id']);
                     $tax = $term_data['taxonomy'] ?? '';
 
                     // ACF
-                    if ( function_exists( 'get_field' ) ) {
-                        $acf = get_field( 'term_image', $tax . '_' . $tid );
-                        if ( $acf ) {
-                            return is_array( $acf ) ? $acf['url'] : $acf;
+                    if (function_exists('get_field')) {
+                        $acf = get_field('term_image', $tax . '_' . $tid);
+                        if ($acf) {
+                            return is_array($acf) ? $acf['url'] : $acf;
                         }
                     }
 
                     // Custom meta
-                    $url = get_term_meta( $tid, 'term_image_url', true );
-                    if ( $url ) {
+                    $url = get_term_meta($tid, 'term_image_url', true);
+                    if ($url) {
                         return $url;
                     }
 
                     // WooCommerce / taxonomy image plugins (thumbnail_id)
-                    $thumb_id = get_term_meta( $tid, 'thumbnail_id', true );
-                    if ( $thumb_id ) {
-                        return wp_get_attachment_image_url( absint( $thumb_id ), 'large' ) ?: '';
+                    $thumb_id = get_term_meta($tid, 'thumbnail_id', true);
+                    if ($thumb_id) {
+                        return wp_get_attachment_image_url(absint($thumb_id), 'large') ?: '';
                     }
 
                     return '';
                 },
                 'schema' => [
                     'description' => 'Term image URL (WooCommerce, ACF, or custom meta)',
-                    'type'        => 'string',
-                    'readonly'    => true,
+                    'type' => 'string',
+                    'readonly' => true,
                 ],
             ]
         );
     }
 }
-add_action( 'rest_api_init', 'lacadev_register_term_image_rest_field' );
+add_action('rest_api_init', 'lacadev_register_term_image_rest_field');
 

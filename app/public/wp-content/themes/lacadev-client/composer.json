@@ -1,11 +1,11 @@
 {
-	"name": "moomsdev/wp-theme",
-	"description": "Wordpress theme made by MOOMS.DEV",
+	"name": "lacadev/wp-theme",
+	"description": "Wordpress theme made by lacadev.com",
 	"version": "1.0.0",
 	"type": "wordpress-theme",
 	"keywords": [
 		"wordpress",
-		"moomsdev",
+		"lacadev",
 		"travel",
 		"blog",
 		"website"

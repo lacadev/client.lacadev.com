@@ -15,13 +15,11 @@ class ThemeSettings {
     }
 
     /**
-     * Tự động tăng lượt xem khi vào trang single (post/custom post type).
-     * Không đếm cho page — page không hiển thị cột Lượt xem ở admin nữa
-     * (xem ListTableEnhancements::addViewsColumn()), nên cũng không cần đếm.
+     * Tự động tăng lượt xem khi vào trang single
      */
     public function trackPostViews() {
         add_action('wp_head', function() {
-            if (is_single()) {
+            if (is_single() || is_page()) {
                 if (function_exists('updateViewCount')) {
                     updateViewCount(get_the_ID());
                 }

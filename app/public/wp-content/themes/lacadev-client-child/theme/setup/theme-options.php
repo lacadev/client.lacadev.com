@@ -14,7 +14,7 @@ use Carbon_Fields\Field\Field;
 
 $optionsPage = Container::make('theme_options', __('Laca Theme', 'laca'))
 	->set_page_file('app-theme-options.php')
-	->set_page_menu_position(3)
+	->set_page_menu_position(3.1)
 	->add_tab(__('Branding | Thương hiệu', 'laca'), [
 		Field::make('html', 'branding_intro', __('', 'laca'))
 			->set_html('<div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;padding:14px 16px;margin:8px 0"><p style="margin:0 0 8px;font-weight:600;color:#0369a1">🔧 Thương hiệu</p><p style="margin:0;font-size:13px;color:#374151">Thiết lập màu sắc và logo dùng chung cho toàn bộ website. Các màu và logo ở đây sẽ hiển thị đồng bộ trên mọi trang, mọi giao diện của site.</p></div>'),
@@ -40,7 +40,7 @@ $optionsPage = Container::make('theme_options', __('Laca Theme', 'laca'))
 
 		Field::make('html', 'info', __('', 'laca'))
 			->set_html('----<i> Information | Thông tin </i>----'),
-		
+
 		Field::make('text', 'address' . currentLanguage(), __('', 'laca'))->set_width(50)
 			->set_attribute('placeholder', 'Address | Địa chỉ'),
 		Field::make('textarea', 'googlemap' . currentLanguage(), __('', 'laca'))

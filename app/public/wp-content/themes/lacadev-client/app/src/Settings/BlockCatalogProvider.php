@@ -14,14 +14,8 @@ namespace App\Settings;
  * bản mới nhất/tùy biến).
  *
  * Endpoint:
- *   GET /wp-json/lacadev/v1/blocks-catalog          — danh sách block + metadata + preview
- *   GET /wp-json/lacadev/v1/blocks-catalog/files?block=... — toàn bộ file nguồn của 1 block (base64)
- *
- * `block` (cả ở listBlocks()'s field "path" lẫn query param của getBlockFiles())
- * là "block relative path" — tên block phẳng (không có "/") HOẶC
- * "{bucket}/{block}" nếu block nằm trong 1 thư mục bucket theo site. Nhận
- * qua QUERY PARAM (không phải URL path segment) để tránh rủi ro web server
- * xử lý sai ký tự "/" đã encode (%2F) trong path segment.
+ *   GET /wp-json/lacadev/v1/blocks-catalog             — danh sách block + metadata + preview
+ *   GET /wp-json/lacadev/v1/blocks-catalog/{block}/files — toàn bộ file nguồn của 1 block (base64)
  *
  * Xác thực: header X-Laca-Catalog-Key, so khớp option `laca_catalog_key`
  * (khác với `laca_sync_key` của BlockSyncReceiver — 2 vai trò khác nhau:
@@ -47,7 +41,7 @@ class BlockCatalogProvider
             'permission_callback' => '__return_true', // Auth được xử lý trong callback
         ]);
 
-        register_rest_route(self::NAMESPACE, '/' . self::ROUTE . '/files', [
+        register_rest_route(self::NAMESPACE, '/' . self::ROUTE . '/(?P<block>[a-zA-Z0-9_-]+)/files', [
             'methods'             => \WP_REST_Server::READABLE,
             'callback'            => [$this, 'getBlockFiles'],
             'permission_callback' => '__return_true',
@@ -72,21 +66,17 @@ class BlockCatalogProvider
         // Quét theme cha trước, theme con sau — nếu trùng tên, bản con ghi
         // đè bản cha (coi bản con là mới nhất/tùy biến).
         foreach ($this->resolveBlockDirs() as $dir) {
-            foreach ($this->scanBlockDirs($dir) as $blockDir) {
-                $data = json_decode((string) file_get_contents("{$blockDir}/block.json"), true);
+            foreach ((glob("{$dir}/*/block.json") ?: []) as $file) {
+                $data = json_decode((string) file_get_contents($file), true);
                 if (!is_array($data)) {
                     continue;
                 }
 
-                $name = basename($blockDir);
-                // Relative path (có thể chứa "/" nếu block nằm trong 1 bucket
-                // theo site) — dùng làm định danh DUY NHẤT, tránh 2 block
-                // trùng tên lá ở 2 bucket khác nhau ghi đè lẫn nhau.
-                $path = ltrim(substr($blockDir, strlen($dir)), '/');
+                $blockDir = dirname($file);
+                $name     = basename($blockDir);
 
-                $blocks[$path] = [
+                $blocks[$name] = [
                     'name'        => $name,
-                    'path'        => $path,
                     'title'       => $data['title'] ?? $name,
                     'description' => $data['description'] ?? '',
                     'version'     => $data['version'] ?? '1.0.0',
@@ -109,7 +99,7 @@ class BlockCatalogProvider
             return new \WP_REST_Response(['success' => false, 'message' => 'Catalog Key không hợp lệ.'], 401);
         }
 
-        $blockName = self::sanitizeBlockRelativePath((string) ($request->get_param('block') ?? ''));
+        $blockName = sanitize_key($request->get_param('block') ?? '');
         $blockDir  = $this->findBlockDir($blockName);
 
         if (!$blockDir) {
@@ -133,7 +123,6 @@ class BlockCatalogProvider
         return new \WP_REST_Response([
             'success'    => true,
             'block_name' => $blockName,
-            'path'       => $blockName,
             'version'    => $version,
             'files'      => $files,
         ], 200);
@@ -180,79 +169,13 @@ class BlockCatalogProvider
     {
         // Quét theo thứ tự con trước (ưu tiên bản con nếu trùng tên ở cả 2 nơi)
         foreach (array_reverse($this->resolveBlockDirs()) as $dir) {
-            foreach ($this->scanBlockDirs($dir) as $blockDir) {
-                $path = ltrim(substr($blockDir, strlen($dir)), '/');
-                if ($path === $blockName) {
-                    return $blockDir;
-                }
+            $candidate = "{$dir}/{$blockName}";
+            if (is_dir($candidate) && file_exists("{$candidate}/block.json")) {
+                return $candidate;
             }
         }
 
         return null;
-    }
-
-    /**
-     * Làm sạch "block relative path" — tên block phẳng (không "/") hoặc
-     * "{bucket}/{block}" (đúng 1 dấu "/"). Dùng thay cho sanitize_key() ở
-     * mọi nơi nhận định danh block từ request, vì sanitize_key() xoá sạch
-     * dấu "/" và sẽ phá path có bucket.
-     */
-    private static function sanitizeBlockRelativePath(string $raw): string
-    {
-        $raw = strtolower(trim($raw));
-        $segments = array_filter(explode('/', $raw), static fn ($s) => $s !== '');
-        $segments = array_map(static fn ($s) => preg_replace('/[^a-z0-9_-]/', '', $s), $segments);
-        $segments = array_filter($segments, static fn ($s) => $s !== '' && $s !== '.' && $s !== '..');
-        $segments = array_slice($segments, 0, 2);
-
-        return implode('/', $segments);
-    }
-
-    /**
-     * Quét 1 thư mục block-gutenberg, trả về absolute path của từng block
-     * tìm được — hỗ trợ song song 2 dạng: block nằm phẳng ngay dưới root
-     * (chưa phân loại site) VÀ block nằm trong 1 thư mục "bucket" theo site
-     * (vd nhakhoathienphuoc-blocks-site/), lồng đúng 1 cấp.
-     *
-     * Quy ước: 1 thư mục có block.json ngay bên trong = 1 block; 1 thư mục
-     * KHÔNG có block.json bên trong = 1 bucket, quét thêm 1 cấp con để tìm
-     * block (không hỗ trợ lồng sâu hơn 1 cấp).
-     *
-     * @return string[]
-     */
-    private function scanBlockDirs(string $root): array
-    {
-        $blockDirs = [];
-        $entries   = scandir($root) ?: [];
-
-        foreach ($entries as $entry) {
-            if ($entry === '.' || $entry === '..') {
-                continue;
-            }
-
-            $entryPath = "{$root}/{$entry}";
-            if (!is_dir($entryPath)) {
-                continue;
-            }
-
-            if (file_exists("{$entryPath}/block.json")) {
-                $blockDirs[] = $entryPath;
-                continue;
-            }
-
-            foreach ((scandir($entryPath) ?: []) as $subEntry) {
-                if ($subEntry === '.' || $subEntry === '..') {
-                    continue;
-                }
-
-                $subEntryPath = "{$entryPath}/{$subEntry}";
-                if (is_dir($subEntryPath) && file_exists("{$subEntryPath}/block.json")) {
-                    $blockDirs[] = $subEntryPath;
-                }
-            }
-        }
-
-        return $blockDirs;
     }
 
     private function encodePreview(string $blockDir): ?string

@@ -19,7 +19,6 @@ body {
   font-family: $themeFont !important;
   font-weight: $regular !important;
   line-height: 1.5em !important;
-  color: $primaryColor !important;
 
   &.overflow-hidden {
     overflow: hidden;
@@ -74,10 +73,6 @@ img {
 
 a {
   text-decoration: none !important;
-
-  &:hover {
-    color: $primaryColor;
-  }
 }
 
 a,
@@ -197,7 +192,6 @@ a:focus-visible {
 
 p a,
 .wp-block-list.has-marker a {
-  color: $primaryColor;
   text-decoration: underline !important;
   text-underline-position: under;
   text-decoration-color: #0064d1 !important;

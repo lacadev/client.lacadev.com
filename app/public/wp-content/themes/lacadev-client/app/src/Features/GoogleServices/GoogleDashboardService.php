@@ -58,7 +58,7 @@ class GoogleDashboardService
         if (empty($siteUrl)) {
             return [
                 'connected' => true,
-                'error'     => __('Chưa chọn Property Google Search Console.', 'lacadev'),
+                'error'     => __('Chưa chọn Property Google Search Console.', 'laca'),
                 'setup_url' => admin_url('admin.php?page=laca-google-search-console'),
             ];
         }
@@ -69,14 +69,14 @@ class GoogleDashboardService
             $msg = $result->get_error_message();
             if ($status === 404) {
                 $msg = sprintf(
-                    __('Không tìm thấy property "%s" trong Google Search Console. Hãy kiểm tra lại hoặc chọn property khác.', 'lacadev'),
+                    __('Không tìm thấy property "%s" trong Google Search Console. Hãy kiểm tra lại hoặc chọn property khác.', 'laca'),
                     $siteUrl
                 );
             } elseif ($status === 403) {
                 $email = GscOAuth::getConnectedEmail();
-                $emailDisplay = !empty($email) ? $email : __('Chưa rõ email, hãy kết nối lại để hiển thị', 'lacadev');
+                $emailDisplay = !empty($email) ? $email : __('Chưa rõ email, hãy kết nối lại để hiển thị', 'laca');
                 $msg = sprintf(
-                    __('Tài khoản %s chưa có property này. Ngắt kết nối và đăng nhập bằng tài khoản sở hữu site, hoặc thêm %s vào Search Console → Cài đặt → Người dùng và quyền.', 'lacadev'),
+                    __('Tài khoản %s chưa có property này. Ngắt kết nối và đăng nhập bằng tài khoản sở hữu site, hoặc thêm %s vào Search Console → Cài đặt → Người dùng và quyền.', 'laca'),
                     $emailDisplay,
                     $emailDisplay
                 );
@@ -128,11 +128,11 @@ class GoogleDashboardService
             'queries'           => $queries,
             'pages'             => $pages,
             'isCollecting'      => $isCollecting,
-            'collectingNotice'  => $isCollecting ? __('Đang thu thập dữ liệu (Google cần 24–48 giờ)', 'lacadev') : null,
+            'collectingNotice'  => $isCollecting ? __('Đang thu thập dữ liệu (Google cần 24–48 giờ)', 'laca') : null,
             'isZeroData'        => ($isZeroData && $hasDataEver),
-            'zeroDataNotice'    => ($isZeroData && $hasDataEver) ? __('Chưa có lượt truy cập trong khoảng này', 'lacadev') : null,
+            'zeroDataNotice'    => ($isZeroData && $hasDataEver) ? __('Chưa có lượt truy cập trong khoảng này', 'laca') : null,
             'dataDate'          => (string) ($result['dataDate'] ?? date('d/m', strtotime($result['endDate'] ?? '-1 day'))),
-            'lagNotice'         => sprintf(__('Dữ liệu đến ngày %s', 'lacadev'), (string) ($result['dataDate'] ?? date('d/m', strtotime($result['endDate'] ?? '-1 day')))),
+            'lagNotice'         => sprintf(__('Dữ liệu đến ngày %s', 'laca'), (string) ($result['dataDate'] ?? date('d/m', strtotime($result['endDate'] ?? '-1 day')))),
         ];
     }
 
@@ -238,7 +238,7 @@ class GoogleDashboardService
                 : (!empty($summary['engagementRate']) ? number_format((float) $summary['engagementRate'] * 100, 1) . '%' : '—');
         } else {
             $organicUsers = 0;
-            $organicNote = __('Chưa ghi nhận người dùng từ tìm kiếm tự nhiên trong khoảng này', 'lacadev');
+            $organicNote = __('Chưa ghi nhận người dùng từ tìm kiếm tự nhiên trong khoảng này', 'laca');
         }
 
         $formattedTopPages = [];
@@ -370,9 +370,9 @@ class GoogleDashboardService
             'topPages'             => array_slice($formattedTopPages, 0, 5),
             'realtimeUsers'        => $realtimeUsers,
             'isCollecting'         => $isCollecting,
-            'collectingNotice'     => $isCollecting ? __('Đang thu thập dữ liệu (Google cần 24–48 giờ)', 'lacadev') : null,
+            'collectingNotice'     => $isCollecting ? __('Đang thu thập dữ liệu (Google cần 24–48 giờ)', 'laca') : null,
             'isZeroData'           => ($isZeroData && $hasDataEver),
-            'zeroDataNotice'       => ($isZeroData && $hasDataEver) ? __('Chưa có lượt truy cập trong khoảng này', 'lacadev') : null,
+            'zeroDataNotice'       => ($isZeroData && $hasDataEver) ? __('Chưa có lượt truy cập trong khoảng này', 'laca') : null,
             'summary'              => $summary,
             'chartSeries'          => $chartSeries,
             'organicSearch'        => [
@@ -562,7 +562,7 @@ class GoogleDashboardService
                 ['url' => '/lien-he/', 'clicks' => (int) round(120 * $multipliers), 'impressions' => (int) round(1900 * $multipliers), 'ctr' => 6.32],
             ],
             'dataDate'          => date('d/m', strtotime('-1 day')),
-            'lagNotice'         => sprintf(__('Dữ liệu đến ngày %s', 'lacadev'), date('d/m', strtotime('-1 day'))),
+            'lagNotice'         => sprintf(__('Dữ liệu đến ngày %s', 'laca'), date('d/m', strtotime('-1 day'))),
         ];
     }
 
@@ -717,16 +717,16 @@ class GoogleDashboardService
             'keyMetrics'           => GaClient::parseKeyMetricsReports(GaClient::getMockKeyMetricsRawResponse()['reports'] ?? [], (int) round(5260 * $multipliers)),
             'businessKpis'         => [
                 [
-                    'title' => __('Bấm Đăng ký / Tư vấn dịch vụ', 'lacadev'),
+                    'title' => __('Bấm Đăng ký / Tư vấn dịch vụ', 'laca'),
                     'value' => (int) round(186 * $multipliers),
                     'delta' => '+18.5% so với kỳ trước',
-                    'badge' => __('Tư vấn', 'lacadev'),
+                    'badge' => __('Tư vấn', 'laca'),
                 ],
                 [
-                    'title' => __('Gửi Form liên hệ', 'lacadev'),
+                    'title' => __('Gửi Form liên hệ', 'laca'),
                     'value' => (int) round(62 * $multipliers),
                     'delta' => '6.5% tỷ lệ trên trang liên hệ',
-                    'badge' => __('Liên hệ', 'lacadev'),
+                    'badge' => __('Liên hệ', 'laca'),
                 ],
             ],
             'topPages'             => [

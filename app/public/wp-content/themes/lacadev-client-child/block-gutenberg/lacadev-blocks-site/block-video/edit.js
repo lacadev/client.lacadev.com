@@ -67,8 +67,8 @@ export default function Edit( { attributes, setAttributes } ) {
 	if ( isPreview ) {
 		return (
 			<BlockPreviewMock
-				kicker={ __( 'Video Block', 'lacadev' ) }
-				title={ __( 'Nhúng video từ URL hoặc file', 'lacadev' ) }
+				kicker={ __( 'Video Block', 'laca' ) }
+				title={ __( 'Nhúng video từ URL hoặc file', 'laca' ) }
 				columns={ 2 }
 			/>
 		);
@@ -125,15 +125,15 @@ export default function Edit( { attributes, setAttributes } ) {
 					initialOpen={ true }
 				>
 					<SelectControl
-						label={ __( 'Nguồn Video', 'lacadev' ) }
+						label={ __( 'Nguồn Video', 'laca' ) }
 						value={ sourceType }
 						options={ [
 							{
-								label: __( 'URL (YouTube, Vimeo…)', 'lacadev' ),
+								label: __( 'URL (YouTube, Vimeo…)', 'laca' ),
 								value: 'url',
 							},
 							{
-								label: __( 'File Upload', 'lacadev' ),
+								label: __( 'File Upload', 'laca' ),
 								value: 'file',
 							},
 						] }
@@ -144,7 +144,7 @@ export default function Edit( { attributes, setAttributes } ) {
 
 					{ sourceType === 'url' && (
 						<TextControl
-							label={ __( 'URL Video', 'lacadev' ) }
+							label={ __( 'URL Video', 'laca' ) }
 							value={ videoUrl }
 							placeholder="https://www.youtube.com/watch?v=..."
 							onChange={ ( val ) =>
@@ -184,7 +184,7 @@ export default function Edit( { attributes, setAttributes } ) {
 													>
 														{ __(
 															'Thay video',
-															'lacadev'
+															'laca'
 														) }
 													</Button>
 
@@ -197,7 +197,7 @@ export default function Edit( { attributes, setAttributes } ) {
 													>
 														{ __(
 															'Xoá',
-															'lacadev'
+															'laca'
 														) }
 													</Button>
 												</>
@@ -208,7 +208,7 @@ export default function Edit( { attributes, setAttributes } ) {
 												>
 													{ __(
 														'Chọn File Video',
-														'lacadev'
+														'laca'
 													) }
 												</Button>
 											) }
@@ -233,7 +233,7 @@ export default function Edit( { attributes, setAttributes } ) {
 												src={ posterUrl }
 												alt={ __(
 													'Poster',
-													'lacadev'
+													'laca'
 												) }
 												style={ {
 													width: '100%',
@@ -250,7 +250,7 @@ export default function Edit( { attributes, setAttributes } ) {
 											>
 												{ __(
 													'Thay poster',
-													'lacadev'
+													'laca'
 												) }
 											</Button>
 											<Button
@@ -258,7 +258,7 @@ export default function Edit( { attributes, setAttributes } ) {
 												isDestructive
 												onClick={ handleRemovePoster }
 											>
-												{ __( 'Xoá', 'lacadev' ) }
+												{ __( 'Xoá', 'laca' ) }
 											</Button>
 										</>
 									) : (
@@ -268,7 +268,7 @@ export default function Edit( { attributes, setAttributes } ) {
 										>
 											{ __(
 												'Chọn Ảnh Poster',
-												'lacadev'
+												'laca'
 											) }
 										</Button>
 									) }
@@ -279,7 +279,7 @@ export default function Edit( { attributes, setAttributes } ) {
 
 					<VideoControlDivider />
 					<ToggleControl
-						label={ __( 'Hiển thị controls', 'lacadev' ) }
+						label={ __( 'Hiển thị controls', 'laca' ) }
 						checked={ controls }
 						onChange={ ( val ) =>
 							setAttributes( { controls: val } )
@@ -287,7 +287,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					/>
 					<VideoControlDivider />
 					<ToggleControl
-						label={ __( 'Tự động phát', 'lacadev' ) }
+						label={ __( 'Tự động phát', 'laca' ) }
 						checked={ autoplay }
 						onChange={ ( val ) =>
 							setAttributes( { autoplay: val } )
@@ -295,20 +295,20 @@ export default function Edit( { attributes, setAttributes } ) {
 					/>
 					<VideoControlDivider />
 					<ToggleControl
-						label={ __( 'Tắt tiếng', 'lacadev' ) }
+						label={ __( 'Tắt tiếng', 'laca' ) }
 						checked={ muted }
 						onChange={ ( val ) => setAttributes( { muted: val } ) }
 					/>
 					<VideoControlDivider />
 					<ToggleControl
-						label={ __( 'Lặp lại', 'lacadev' ) }
+						label={ __( 'Lặp lại', 'laca' ) }
 						checked={ loop }
 						onChange={ ( val ) => setAttributes( { loop: val } ) }
 					/>
 
 					<VideoControlDivider />
 					<ToggleControl
-						label={ __( 'Bật overlay', 'lacadev' ) }
+						label={ __( 'Bật overlay', 'laca' ) }
 						checked={ overlayEnabled }
 						onChange={ ( val ) =>
 							setAttributes( { overlayEnabled: val } )
@@ -326,7 +326,7 @@ export default function Edit( { attributes, setAttributes } ) {
 									color: '#1e1e1e',
 								} }
 							>
-								{ __( 'Màu overlay', 'lacadev' ) }
+								{ __( 'Màu overlay', 'laca' ) }
 							</p>
 							<ColorPalette
 								value={ overlayColor }
@@ -337,7 +337,7 @@ export default function Edit( { attributes, setAttributes } ) {
 								}
 							/>
 							<RangeControl
-								label={ __( 'Độ mờ overlay (%)', 'lacadev' ) }
+								label={ __( 'Độ mờ overlay (%)', 'laca' ) }
 								value={ overlayOpacity }
 								min={ 0 }
 								max={ 100 }
@@ -347,7 +347,7 @@ export default function Edit( { attributes, setAttributes } ) {
 								}
 							/>
 							<RangeControl
-								label={ __( 'Cỡ chữ overlay (px)', 'lacadev' ) }
+								label={ __( 'Cỡ chữ overlay (px)', 'laca' ) }
 								value={ overlayFontSize }
 								min={ 10 }
 								max={ 120 }
@@ -366,7 +366,7 @@ export default function Edit( { attributes, setAttributes } ) {
 									marginTop: '16px',
 								} }
 							>
-								{ __( 'Màu chữ', 'lacadev' ) }
+								{ __( 'Màu chữ', 'laca' ) }
 							</p>
 							<ColorPalette
 								value={ overlayTextColor }
@@ -377,19 +377,19 @@ export default function Edit( { attributes, setAttributes } ) {
 								}
 							/>
 							<SelectControl
-								label={ __( 'Căn ngang', 'lacadev' ) }
+								label={ __( 'Căn ngang', 'laca' ) }
 								value={ overlayTextAlign }
 								options={ [
 									{
-										label: __( 'Trái', 'lacadev' ),
+										label: __( 'Trái', 'laca' ),
 										value: 'flex-start',
 									},
 									{
-										label: __( 'Giữa', 'lacadev' ),
+										label: __( 'Giữa', 'laca' ),
 										value: 'center',
 									},
 									{
-										label: __( 'Phải', 'lacadev' ),
+										label: __( 'Phải', 'laca' ),
 										value: 'flex-end',
 									},
 								] }
@@ -398,19 +398,19 @@ export default function Edit( { attributes, setAttributes } ) {
 								}
 							/>
 							<SelectControl
-								label={ __( 'Căn dọc', 'lacadev' ) }
+								label={ __( 'Căn dọc', 'laca' ) }
 								value={ overlayVerticalAlign }
 								options={ [
 									{
-										label: __( 'Trên', 'lacadev' ),
+										label: __( 'Trên', 'laca' ),
 										value: 'flex-start',
 									},
 									{
-										label: __( 'Giữa', 'lacadev' ),
+										label: __( 'Giữa', 'laca' ),
 										value: 'center',
 									},
 									{
-										label: __( 'Dưới', 'lacadev' ),
+										label: __( 'Dưới', 'laca' ),
 										value: 'flex-end',
 									},
 								] }
@@ -429,10 +429,10 @@ export default function Edit( { attributes, setAttributes } ) {
 				{ ! hasVideo ? (
 					<Placeholder
 						icon="video-alt3"
-						label={ __( 'Video Block', 'lacadev' ) }
+						label={ __( 'Video Block', 'laca' ) }
 						instructions={ __(
 							'Chọn nguồn video ở thanh bên phải (URL hoặc file upload)',
-							'lacadev'
+							'laca'
 						) }
 						className="laca-video-block__placeholder"
 					/>

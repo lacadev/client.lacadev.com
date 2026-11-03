@@ -1,0 +1,2986 @@
+# Copyright (C) 2026 La Cà Dev
+# This file is distributed under the same license as the La Cà Dev - Client Child theme.
+msgid ""
+msgstr ""
+"Project-Id-Version: La Cà Dev - Client Child 1.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/theme/lacadev-client-child\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-11-03T08:41:45+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: laca\n"
+
+#. Theme Name of the theme
+#: theme
+msgid "La Cà Dev - Client Child"
+msgstr ""
+
+#. Theme URI of the theme
+#. Author URI of the theme
+#: theme
+msgid "https://lacadev.com"
+msgstr ""
+
+#. Description of the theme
+#: theme
+msgid "Child theme của La Cà Dev - Client. Dùng để tùy chỉnh giao diện mà không ảnh hưởng đến theme gốc."
+msgstr ""
+
+#. Author of the theme
+#: theme
+msgid "La Cà Dev"
+msgstr ""
+
+#: app/helpers/ajax-pagination-markup.php:38
+msgid "Phân trang"
+msgstr ""
+
+#: app/src/Ajax/GalleryAjaxHandler.php:64
+#: theme/archive-gallery.php:204
+msgid "Chưa có thư viện thiết kế nào."
+msgstr ""
+
+#: app/src/Ajax/GalleryAjaxHandler.php:72
+#: app/src/Ajax/PdnTvAjaxHandler.php:68
+#: app/src/Ajax/ProjectAjaxHandler.php:68
+#: app/src/Newsletter/NewsletterAdminPage.php:112
+#: theme/archive-gallery.php:29
+#: theme/archive-gallery.php:95
+#: theme/archive-pdn_tv.php:35
+#: theme/archive-pdn_tv.php:87
+#: theme/archive-project.php:25
+#: theme/archive-project.php:78
+msgid "Tất cả"
+msgstr ""
+
+#: app/src/Ajax/GalleryAjaxHandler.php:188
+#: app/src/Ajax/PdnTvAjaxHandler.php:164
+#: app/src/Ajax/ProjectAjaxHandler.php:147
+#: theme/archive-gallery.php:166
+#: theme/archive-project.php:115
+msgid "Chủ đầu tư:"
+msgstr ""
+
+#: app/src/Ajax/GalleryAjaxHandler.php:194
+#: app/src/Ajax/PdnTvAjaxHandler.php:167
+#: theme/archive-gallery.php:172
+msgid "Diện tích:"
+msgstr ""
+
+#: app/src/Ajax/GalleryAjaxHandler.php:200
+#: app/src/Ajax/PdnTvAjaxHandler.php:170
+#: theme/archive-gallery.php:178
+msgid "Địa chỉ:"
+msgstr ""
+
+#: app/src/Ajax/GalleryAjaxHandler.php:206
+#: app/src/Ajax/PdnTvAjaxHandler.php:173
+#: app/src/Ajax/ProjectAjaxHandler.php:153
+#: theme/archive-gallery.php:184
+#: theme/archive-project.php:121
+msgid "Số tầng:"
+msgstr ""
+
+#: app/src/Ajax/GalleryAjaxHandler.php:213
+msgid "Xem chi tiết"
+msgstr ""
+
+#: app/src/Ajax/PdnTvAjaxHandler.php:61
+#: theme/archive-pdn_tv.php:144
+msgid "Chưa có video nào."
+msgstr ""
+
+#: app/src/Ajax/ProjectAjaxHandler.php:61
+#: block-gutenberg/block-projects-slider/render.php:194
+#: theme/archive-project.php:139
+msgid "Chưa có dự án nào."
+msgstr ""
+
+#: app/src/Ajax/ProjectAjaxHandler.php:150
+#: theme/archive-project.php:118
+msgid "Địa điểm:"
+msgstr ""
+
+#: app/src/Ajax/ProjectAjaxHandler.php:156
+#: theme/archive-project.php:124
+msgid "Mặt tiền:"
+msgstr ""
+
+#: app/src/Newsletter/NewsletterAdminPage.php:32
+msgid "Đã đăng ký"
+msgstr ""
+
+#: app/src/Newsletter/NewsletterAdminPage.php:33
+msgid "Đã huỷ"
+msgstr ""
+
+#: app/src/Newsletter/NewsletterAdminPage.php:48
+#: app/src/Newsletter/NewsletterAdminPage.php:49
+msgid "Newsletter"
+msgstr ""
+
+#: app/src/Newsletter/NewsletterAdminPage.php:81
+msgid "Newsletter — Email đăng ký"
+msgstr ""
+
+#. translators: %s: tên trạng thái
+#: app/src/Newsletter/NewsletterAdminPage.php:85
+#, php-format
+msgid "Xuất CSV (%s)"
+msgstr ""
+
+#: app/src/Newsletter/NewsletterAdminPage.php:86
+msgid "Xuất CSV"
+msgstr ""
+
+#: app/src/Newsletter/NewsletterAdminPage.php:90
+msgid "Ghi lại toàn bộ danh sách hiện tại lên Google Sheet (cập nhật trạng thái từng email)?"
+msgstr ""
+
+#: app/src/Newsletter/NewsletterAdminPage.php:90
+msgid "Đồng bộ lại Google Sheet"
+msgstr ""
+
+#: app/src/Newsletter/NewsletterAdminPage.php:95
+msgid "Đã xoá email khỏi website (và gỡ khỏi Google Sheet / Mailchimp / Brevo nếu có kết nối). Email này có thể đăng ký lại từ đầu."
+msgstr ""
+
+#: app/src/Newsletter/NewsletterAdminPage.php:101
+msgid "Đã đồng bộ lại toàn bộ danh sách lên Google Sheet."
+msgstr ""
+
+#: app/src/Newsletter/NewsletterAdminPage.php:103
+msgid "Đồng bộ lại thất bại."
+msgstr ""
+
+#: app/src/Newsletter/NewsletterAdminPage.php:132
+#: app/src/Newsletter/NewsletterAdminPage.php:134
+msgid "Tìm email"
+msgstr ""
+
+#: app/src/Newsletter/NewsletterAdminPage.php:141
+#: theme/page_templates/template-contact.php:42
+msgid "Email"
+msgstr ""
+
+#: app/src/Newsletter/NewsletterAdminPage.php:142
+msgid "Trạng thái"
+msgstr ""
+
+#: app/src/Newsletter/NewsletterAdminPage.php:143
+msgid "Ngôn ngữ"
+msgstr ""
+
+#: app/src/Newsletter/NewsletterAdminPage.php:144
+msgid "Trang đăng ký"
+msgstr ""
+
+#: app/src/Newsletter/NewsletterAdminPage.php:145
+msgid "Đăng ký lúc"
+msgstr ""
+
+#: app/src/Newsletter/NewsletterAdminPage.php:146
+msgid "Cập nhật trạng thái"
+msgstr ""
+
+#: app/src/Newsletter/NewsletterAdminPage.php:147
+msgid "Thao tác"
+msgstr ""
+
+#: app/src/Newsletter/NewsletterAdminPage.php:155
+msgid "Không tìm thấy email nào khớp."
+msgstr ""
+
+#: app/src/Newsletter/NewsletterAdminPage.php:156
+msgid "Chưa có email nào đăng ký."
+msgstr ""
+
+#: app/src/Newsletter/NewsletterAdminPage.php:182
+msgid "Xoá email này khỏi danh sách?"
+msgstr ""
+
+#: app/src/Newsletter/NewsletterAdminPage.php:182
+#: block-gutenberg/lacadev-blocks-site/block-video/edit.js:198
+#: block-gutenberg/lacadev-blocks-site/block-video/edit.js:261
+msgid "Xoá"
+msgstr ""
+
+#: app/src/Newsletter/NewsletterAdminPage.php:211
+msgid "Email cảm ơn (SMTP)"
+msgstr ""
+
+#: app/src/Newsletter/NewsletterAdminPage.php:224
+msgid "Lưu email vào website"
+msgstr ""
+
+#: app/src/Newsletter/NewsletterAdminPage.php:230
+msgid "chưa có lần gửi/đồng bộ nào."
+msgstr ""
+
+#. translators: %s: thời gian
+#: app/src/Newsletter/NewsletterAdminPage.php:234
+#, php-format
+msgid "lần gần nhất thành công lúc %s."
+msgstr ""
+
+#. translators: 1: thời gian, 2: thông báo lỗi
+#: app/src/Newsletter/NewsletterAdminPage.php:238
+#, php-format
+msgid "lỗi lúc %1$s — %2$s"
+msgstr ""
+
+#: app/src/Newsletter/NewsletterAdminPage.php:255
+#: app/src/Newsletter/NewsletterAdminPage.php:292
+#: app/src/Newsletter/NewsletterAdminPage.php:311
+msgid "Bạn không có quyền thực hiện thao tác này."
+msgstr ""
+
+#: app/src/Newsletter/NewsletterEndpoints.php:197
+msgid "Bản tin"
+msgstr ""
+
+#: app/src/Newsletter/NewsletterMailer.php:67
+msgid "wp_mail() không gửi được email cảm ơn — kiểm tra cấu hình SMTP ở Laca Admin → SMTP."
+msgstr ""
+
+#: app/src/Newsletter/NewsletterSync.php:168
+msgid "Chưa cấu hình URL Apps Script."
+msgstr ""
+
+#: app/src/Newsletter/NewsletterSync.php:178
+#: app/src/Newsletter/NewsletterSync.php:221
+msgid "Chuỗi bí mật không khớp với SECRET trong Apps Script."
+msgstr ""
+
+#: app/src/Newsletter/NewsletterSync.php:179
+msgid "Apps Script chưa hỗ trợ đồng bộ lại — dán lại đoạn code mới ở Laca Theme → Newsletter rồi tạo phiên bản triển khai mới (hoặc chuỗi bí mật không khớp)."
+msgstr ""
+
+#. translators: %d: mã HTTP
+#: app/src/Newsletter/NewsletterSync.php:226
+#, php-format
+msgid "Apps Script trả về phản hồi lạ (HTTP %d) — kiểm tra lại URL và quyền truy cập \"Bất kỳ ai\"."
+msgstr ""
+
+#: app/src/Newsletter/NewsletterSync.php:246
+msgid "Thiếu hoặc sai API key / Audience ID Mailchimp."
+msgstr ""
+
+#: app/src/Newsletter/NewsletterSync.php:291
+msgid "Thiếu API key hoặc List ID Brevo."
+msgstr ""
+
+#: app/src/Newsletter/NewsletterTexts.php:36
+msgid "Đăng ký nhận bản tin"
+msgstr ""
+
+#: app/src/Newsletter/NewsletterTexts.php:37
+#: theme/page_templates/template-contact.php:133
+msgid "Địa chỉ email của bạn"
+msgstr ""
+
+#: app/src/Newsletter/NewsletterTexts.php:38
+msgid "Đăng ký"
+msgstr ""
+
+#: app/src/Newsletter/NewsletterTexts.php:39
+msgid "Khi đăng ký, bạn đồng ý nhận email từ chúng tôi. Bạn có thể huỷ đăng ký bất cứ lúc nào."
+msgstr ""
+
+#: app/src/Newsletter/NewsletterTexts.php:40
+msgid "Cảm ơn bạn đã đăng ký! Email chào mừng đang được gửi tới hộp thư của bạn."
+msgstr ""
+
+#: app/src/Newsletter/NewsletterTexts.php:41
+msgid "Email này đã được đăng ký."
+msgstr ""
+
+#: app/src/Newsletter/NewsletterTexts.php:42
+msgid "Vui lòng nhập địa chỉ email hợp lệ."
+msgstr ""
+
+#: app/src/Newsletter/NewsletterTexts.php:43
+msgid "Bạn đã thử quá nhiều lần. Vui lòng thử lại sau vài phút."
+msgstr ""
+
+#: app/src/Newsletter/NewsletterTexts.php:44
+msgid "Không thể xác minh yêu cầu của bạn. Vui lòng tải lại trang và thử lại."
+msgstr ""
+
+#: app/src/Newsletter/NewsletterTexts.php:45
+msgid "Đã có lỗi xảy ra. Vui lòng thử lại."
+msgstr ""
+
+#: app/src/Newsletter/NewsletterTexts.php:48
+msgid "Cảm ơn bạn đã đăng ký nhận tin"
+msgstr ""
+
+#: app/src/Newsletter/NewsletterTexts.php:49
+msgid ""
+"Cảm ơn bạn đã đăng ký nhận tin!\n"
+"Từ bây giờ, bạn sẽ nhận được tin tức, thông tin và cập nhật mới nhất từ chúng tôi. Rất vui được đồng hành cùng bạn."
+msgstr ""
+
+#: app/src/Newsletter/NewsletterTexts.php:52
+msgid "Bạn muốn ngừng nhận email từ chúng tôi?"
+msgstr ""
+
+#: app/src/Newsletter/NewsletterTexts.php:53
+msgid "Huỷ đăng ký"
+msgstr ""
+
+#: app/src/Newsletter/NewsletterTexts.php:54
+msgid "Bạn đã huỷ đăng ký thành công. Rất tiếc khi phải chia tay bạn."
+msgstr ""
+
+#: app/src/Newsletter/NewsletterTexts.php:55
+msgid "Liên kết không hợp lệ hoặc đã hết hạn."
+msgstr ""
+
+#: app/src/PostTypes/DynamicMeta/gallery-meta.php:12
+msgid "Thông tin gallery"
+msgstr ""
+
+#: app/src/PostTypes/DynamicMeta/gallery-meta.php:18
+msgid "Chủ đầu tư"
+msgstr ""
+
+#: app/src/PostTypes/DynamicMeta/gallery-meta.php:21
+msgid "Số tầng"
+msgstr ""
+
+#: app/src/PostTypes/DynamicMeta/gallery-meta.php:24
+#: theme/page_templates/template-contact.php:66
+#: theme/setup/theme-options.php:117
+msgid "Địa điểm"
+msgstr ""
+
+#: app/src/PostTypes/DynamicMeta/gallery-meta.php:28
+msgid "Tổng diện tích"
+msgstr ""
+
+#: app/src/PostTypes/DynamicMeta/gallery-meta.php:32
+msgid "Thư viện ảnh dự án"
+msgstr ""
+
+#: app/src/PostTypes/DynamicMeta/pdn_tv-meta.php:12
+msgid "Thông tin PĐN TV"
+msgstr ""
+
+#: app/src/PostTypes/DynamicMeta/pdn_tv-meta.php:18
+msgid "Youtube url"
+msgstr ""
+
+#: app/src/PostTypes/DynamicMeta/project-meta.php:12
+msgid "Thong tin Du an"
+msgstr ""
+
+#: app/src/PostTypes/DynamicMeta/project-meta.php:18
+msgid "Chu dau tu"
+msgstr ""
+
+#: app/src/PostTypes/DynamicMeta/project-meta.php:21
+msgid "So tang"
+msgstr ""
+
+#: app/src/PostTypes/DynamicMeta/project-meta.php:24
+msgid "Dia diem"
+msgstr ""
+
+#: app/src/PostTypes/DynamicMeta/project-meta.php:28
+msgid "Tong dien tich"
+msgstr ""
+
+#: app/src/PostTypes/DynamicMeta/project-meta.php:31
+msgid "Dien tich nha"
+msgstr ""
+
+#: app/src/PostTypes/DynamicMeta/project-meta.php:34
+msgid "Mat tien"
+msgstr ""
+
+#: app/src/PostTypes/DynamicMeta/project-meta.php:38
+msgid "Nam thuc hien"
+msgstr ""
+
+#: app/src/PostTypes/DynamicMeta/project-meta.php:41
+msgid "Loai thiet ke"
+msgstr ""
+
+#: app/src/PostTypes/DynamicMeta/project-meta.php:44
+msgid "Cong nang su dung"
+msgstr ""
+
+#: app/src/PostTypes/DynamicMeta/project-meta.php:47
+msgid "Thu vien anh du an"
+msgstr ""
+
+#: app/src/PostTypes/DynamicMeta/project-meta.php:51
+msgid "Anh"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/render.php:174
+msgid "Dự án trước"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/render.php:182
+msgid "Dự án tiếp theo"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/render.php:442
+#: block-gutenberg/block-video-feedback/render.php:146
+#: theme/header.php:217
+msgid "Đóng"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/render.php:451
+msgid "Nhận Tư Vấn Ngay"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/render.php:461
+#: theme/footer.php:110
+msgid "Địa chỉ xây dựng"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/render.php:465
+msgid "Quy mô xây dựng"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/render.php:469
+msgid "Ngân sách"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/render.php:478
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/render.php:67
+#: theme/page_templates/template-contact.php:101
+#: theme/single.php:76
+msgid "Họ và tên"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/render.php:482
+msgid "Số điện thoại liên hệ"
+msgstr ""
+
+#: block-gutenberg/block-team-carousel/render.php:101
+msgid "Trước"
+msgstr ""
+
+#: block-gutenberg/block-team-carousel/render.php:107
+msgid "Tiếp theo"
+msgstr ""
+
+#. translators: %s là tên người feedback trong video.
+#: block-gutenberg/block-video-feedback/render.php:102
+#: block-gutenberg/block-video-feedback/build/index.js:4
+#: block-gutenberg/block-video-feedback/edit.js:428
+#, php-format,js-format
+msgid "Xem video: %s"
+msgstr ""
+
+#: block-gutenberg/block-video-feedback/render.php:103
+#: block-gutenberg/block-video-feedback/build/index.js:4
+#: block-gutenberg/block-video-feedback/edit.js:434
+msgid "Xem video"
+msgstr ""
+
+#: block-gutenberg/block-video-feedback/render.php:143
+#: block-gutenberg/block-video-feedback/build/index.js:1
+#: block-gutenberg/block-video-feedback/edit.js:207
+msgid "Video"
+msgstr ""
+
+#: block-gutenberg/lacadev-blocks-site/block-video/render.php:167
+msgid "Video nhúng"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/render.php:68
+msgid "Nhập tên của bạn"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/render.php:71
+#: theme/page_templates/template-contact.php:114
+#: theme/single.php:79
+msgid "Số điện thoại"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/render.php:72
+msgid "Nhập số điện thoại"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/render.php:77
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/edit.js:122
+msgid "Dịch vụ quan tâm"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/render.php:86
+msgid "Ghi chú thêm"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/render.php:87
+msgid "Yêu cầu cụ thể của bạn..."
+msgstr ""
+
+#: theme/archive-gallery.php:76
+#: theme/archive-pdn_tv.php:78
+#: theme/archive-project.php:69
+msgid "Lọc danh mục"
+msgstr ""
+
+#: theme/archive-gallery.php:90
+#: theme/archive-pdn_tv.php:86
+#: theme/archive-project.php:77
+msgid "Danh mục"
+msgstr ""
+
+#: theme/archive.php:114
+msgid "Chưa có bài viết nào trong mục này."
+msgstr ""
+
+#: theme/footer.php:82
+msgid "NHẬN TƯ VẤN NGAY"
+msgstr ""
+
+#: theme/footer.php:83
+msgid "GỬI YÊU CẦU"
+msgstr ""
+
+#: theme/footer.php:87
+msgid "Dưới 1 tỷ"
+msgstr ""
+
+#: theme/footer.php:88
+msgid "1 - 3 tỷ"
+msgstr ""
+
+#: theme/footer.php:89
+msgid "3 - 5 tỷ"
+msgstr ""
+
+#: theme/footer.php:90
+msgid "5 - 10 tỷ"
+msgstr ""
+
+#: theme/footer.php:91
+msgid "Trên 10 tỷ"
+msgstr ""
+
+#: theme/footer.php:115
+msgid "Số điện thoại của bạn"
+msgstr ""
+
+#: theme/footer.php:120
+msgid "Mức đầu tư dự kiến"
+msgstr ""
+
+#: theme/footer.php:129
+msgid "Ghi chú thêm về yêu cầu của bạn..."
+msgstr ""
+
+#: theme/footer.php:150
+msgid "Form liên hệ"
+msgstr ""
+
+#: theme/footer.php:288
+msgid "Lên đầu trang"
+msgstr ""
+
+#: theme/footer.php:297
+msgid "Gọi điện"
+msgstr ""
+
+#: theme/footer.php:314
+msgid "Liên hệ"
+msgstr ""
+
+#: theme/header.php:68
+msgid "Chuyển đến nội dung chính"
+msgstr ""
+
+#: theme/header.php:86
+msgid "Menu chính"
+msgstr ""
+
+#: theme/header.php:143
+msgid "Menu phụ"
+msgstr ""
+
+#: theme/header.php:158
+#: theme/header.php:215
+#: theme/header.php:225
+msgid "Tìm kiếm"
+msgstr ""
+
+#: theme/header.php:168
+msgid "Mở menu"
+msgstr ""
+
+#: theme/header.php:182
+msgid "Đóng menu"
+msgstr ""
+
+#: theme/header.php:186
+msgid "Menu chính trên di động"
+msgstr ""
+
+#: theme/header.php:223
+msgid "Bạn đang tìm gì…"
+msgstr ""
+
+#: theme/header.php:233
+msgid "Đang tìm kiếm…"
+msgstr ""
+
+#. Template Name of the theme
+msgid "Contact Page"
+msgstr ""
+
+#: theme/page_templates/template-contact.php:26
+msgid "Liên hệ với chúng tôi"
+msgstr ""
+
+#: theme/page_templates/template-contact.php:27
+msgid "Bạn có câu hỏi, thắc mắc hoặc cần tư vấn? Đừng ngần ngại liên hệ với chúng tôi để được hỗ trợ nhanh chóng nhất!"
+msgstr ""
+
+#: theme/page_templates/template-contact.php:54
+msgid "Điện thoại"
+msgstr ""
+
+#: theme/page_templates/template-contact.php:106
+msgid "Họ và tên của bạn"
+msgstr ""
+
+#: theme/page_templates/template-contact.php:119
+msgid "09xx xxx xxx"
+msgstr ""
+
+#: theme/page_templates/template-contact.php:128
+msgid "Email liên hệ"
+msgstr ""
+
+#: theme/page_templates/template-contact.php:139
+#: block-gutenberg/block-featured-projects/build/index.js:1
+#: block-gutenberg/block-featured-projects/edit.js:118
+#: block-gutenberg/block-video-feedback/build/index.js:1
+#: block-gutenberg/block-video-feedback/edit.js:106
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/edit.js:68
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-process-steps/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-process-steps/edit.js:68
+msgid "Nội dung"
+msgstr ""
+
+#: theme/page_templates/template-contact.php:144
+msgid "Nội dung bạn muốn gửi..."
+msgstr ""
+
+#: theme/page_templates/template-contact.php:159
+msgid "Trang này được bảo vệ bởi reCAPTCHA và tuân thủ"
+msgstr ""
+
+#: theme/page_templates/template-contact.php:160
+#: theme/template-parts/newsletter-form.php:78
+msgid "Chính sách bảo mật"
+msgstr ""
+
+#: theme/page_templates/template-contact.php:161
+msgid "và"
+msgstr ""
+
+#: theme/page_templates/template-contact.php:162
+msgid "Điều khoản dịch vụ"
+msgstr ""
+
+#: theme/page_templates/template-contact.php:163
+msgid "của Google."
+msgstr ""
+
+#: theme/page_templates/template-contact.php:176
+msgid "Gửi tin nhắn"
+msgstr ""
+
+#: theme/search.php:71
+msgid "Sản phẩm"
+msgstr ""
+
+#: theme/search.php:92
+msgid "Bài viết"
+msgstr ""
+
+#: theme/search.php:112
+msgid "Trang"
+msgstr ""
+
+#. translators: 1: số kết quả, 2: từ khóa tìm kiếm
+#: theme/search.php:163
+#, php-format
+msgid "%1$d kết quả cho \"%2$s\""
+msgstr ""
+
+#: theme/search.php:171
+msgid "Lọc theo loại kết quả"
+msgstr ""
+
+#: theme/search.php:188
+#, php-format
+msgid "%s liên quan"
+msgstr ""
+
+#. translators: 1: số kết quả đang hiển thị, 2: tổng số kết quả.
+#: theme/search.php:191
+#, php-format
+msgid "(hiển thị %1$d/%2$d)"
+msgstr ""
+
+#: theme/search.php:218
+msgid "Xem thêm"
+msgstr ""
+
+#: theme/search.php:227
+#, php-format
+msgid "Không tìm thấy kết quả nào cho \"%s\""
+msgstr ""
+
+#: theme/search.php:229
+msgid "Vui lòng thử lại với từ khóa khác."
+msgstr ""
+
+#: theme/setup/menus.php:21
+msgid "Header Right Menu"
+msgstr ""
+
+#: theme/setup/page_meta.php:19
+msgid "Breadcrumb"
+msgstr ""
+
+#: theme/setup/page_meta.php:24
+msgid "Ẩn breadcrumb trên trang này"
+msgstr ""
+
+#: theme/setup/page_meta.php:26
+msgid "Mặc định breadcrumb vẫn hiện — tick vào đây nếu muốn ẩn riêng cho Page này."
+msgstr ""
+
+#: theme/setup/theme-options.php:57
+msgid "Laca Theme"
+msgstr ""
+
+#: theme/setup/theme-options.php:60
+msgid "Branding | Thương hiệu"
+msgstr ""
+
+#: theme/setup/theme-options.php:64
+msgid "Primary color"
+msgstr ""
+
+#: theme/setup/theme-options.php:66
+msgid "Secondary color"
+msgstr ""
+
+#: theme/setup/theme-options.php:68
+#: block-gutenberg/block-journey-gallery/build/index.js:1
+#: block-gutenberg/lacadev-blocks-site/block-video/build/index.js:1
+#: block-gutenberg/utils/inspector-panels.js:415
+msgid "Background color"
+msgstr ""
+
+#: theme/setup/theme-options.php:71
+msgid "Logo chính (mặc định / tối)"
+msgstr ""
+
+#: theme/setup/theme-options.php:73
+msgid "Hiển thị trên nền sáng hoặc khi cuộn trang"
+msgstr ""
+
+#: theme/setup/theme-options.php:74
+msgid "Logo trắng"
+msgstr ""
+
+#: theme/setup/theme-options.php:76
+msgid "Hiển thị trên nền tối / Top Hero"
+msgstr ""
+
+#: theme/setup/theme-options.php:77
+msgid "Logo Footer"
+msgstr ""
+
+#: theme/setup/theme-options.php:79
+msgid "Default image | Hình ảnh mặc định"
+msgstr ""
+
+#: theme/setup/theme-options.php:83
+#: block-gutenberg/block-featured-projects/build/index.js:1
+#: block-gutenberg/block-featured-projects/edit.js:283
+#: block-gutenberg/block-projects-slider/build/index.js:1
+#: block-gutenberg/block-projects-slider/edit.js:380
+#: block-gutenberg/block-services-grid/build/index.js:1
+#: block-gutenberg/block-services-grid/edit.js:325
+#: block-gutenberg/block-stats-counter/build/index.js:1
+#: block-gutenberg/block-stats-counter/edit.js:199
+#: block-gutenberg/block-team-carousel/build/index.js:1
+#: block-gutenberg/block-team-carousel/edit.js:247
+#: block-gutenberg/block-team-leaders/build/index.js:1
+#: block-gutenberg/block-team-leaders/edit.js:219
+#: block-gutenberg/block-video-feedback/build/index.js:1
+#: block-gutenberg/block-video-feedback/edit.js:369
+#: block-gutenberg/lacadev-blocks-site/block-shortcode-widget/build/index.js:1
+#: block-gutenberg/lacadev-blocks-site/block-shortcode-widget/edit.js:69
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/edit.js:172
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/edit.js:498
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-process-steps/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-process-steps/edit.js:127
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/edit.js:221
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/edit.js:221
+msgid "Giao diện"
+msgstr ""
+
+#: theme/setup/theme-options.php:87
+msgid "Khung giao diện website"
+msgstr ""
+
+#: theme/setup/theme-options.php:89
+msgid "Fluid (Toàn chiều rộng + lề chuẩn)"
+msgstr ""
+
+#: theme/setup/theme-options.php:90
+msgid "Boxed (Cố định chiều rộng tối đa, căn giữa)"
+msgstr ""
+
+#: theme/setup/theme-options.php:93
+msgid "Mặc định website dùng Fluid (toàn rộng). Chọn Boxed nếu muốn giới hạn độ rộng tối đa toàn site."
+msgstr ""
+
+#: theme/setup/theme-options.php:96
+msgid "Contact | Liên hệ"
+msgstr ""
+
+#: theme/setup/theme-options.php:108
+msgid "Số hotline"
+msgstr ""
+
+#: theme/setup/theme-options.php:148
+msgid "🦶 Footer"
+msgstr ""
+
+#: theme/setup/theme-options.php:152
+msgid "Tên công ty"
+msgstr ""
+
+#: theme/setup/theme-options.php:155
+msgid "Giấy CNĐKKD số"
+msgstr ""
+
+#: theme/setup/theme-options.php:159
+msgid "Cột liên kết 1"
+msgstr ""
+
+#: theme/setup/theme-options.php:163
+#: theme/setup/theme-options.php:179
+#: theme/setup/theme-options.php:195
+msgid "Tên hiển thị"
+msgstr ""
+
+#: theme/setup/theme-options.php:164
+#: theme/setup/theme-options.php:180
+#: theme/setup/theme-options.php:196
+msgid "Đường dẫn"
+msgstr ""
+
+#: theme/setup/theme-options.php:175
+msgid "Cột liên kết 2"
+msgstr ""
+
+#: theme/setup/theme-options.php:191
+msgid "Đăng ký / Chứng nhận"
+msgstr ""
+
+#: theme/setup/theme-options.php:201
+msgid "Huy hiệu DMCA / Mã nhúng chứng nhận (HTML)"
+msgstr ""
+
+#: theme/setup/theme-options.php:204
+msgid "Mã nhúng HTML huy hiệu DMCA hoặc chứng nhận"
+msgstr ""
+
+#: theme/setup/theme-options.php:207
+msgid "Tuỳ chỉnh giao diện (Child)"
+msgstr ""
+
+#: theme/setup/theme-options.php:208
+msgid "Ngân sách form liên hệ footer"
+msgstr ""
+
+#: theme/setup/theme-options.php:210
+msgid "Mỗi dòng là một lựa chọn ngân sách."
+msgstr ""
+
+#: theme/setup/theme-options.php:212
+msgid "Hình ảnh form liên hệ footer"
+msgstr ""
+
+#: theme/setup/theme-options.php:214
+msgid "Ảnh hiển thị bên phải form liên hệ ở footer."
+msgstr ""
+
+#: theme/setup/theme-options.php:217
+msgid "Footer menu(Child)"
+msgstr ""
+
+#: theme/setup/theme-options.php:293
+msgid "📧 Newsletter"
+msgstr ""
+
+#: theme/setup/theme-options.php:297
+msgid "Hiển thị form Newsletter ở footer"
+msgstr ""
+
+#: theme/setup/theme-options.php:301
+msgid "Form ở footer"
+msgstr ""
+
+#: theme/setup/theme-options.php:302
+#: block-gutenberg/block-journey-gallery/build/index.js:1
+#: block-gutenberg/block-journey-gallery/edit.js:132
+#: block-gutenberg/block-services-grid/build/index.js:1
+#: block-gutenberg/block-services-grid/edit.js:179
+#: block-gutenberg/block-team-leaders/build/index.js:1
+#: block-gutenberg/block-team-leaders/edit.js:83
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/edit.js:72
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/edit.js:402
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-process-steps/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-process-steps/edit.js:95
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/edit.js:139
+#: block-gutenberg/utils/inspector-panels.js:465
+#: block-gutenberg/utils/post-source-controls.js:255
+msgid "Tiêu đề"
+msgstr ""
+
+#: theme/setup/theme-options.php:304
+msgid "Chữ gợi ý trong ô email"
+msgstr ""
+
+#: theme/setup/theme-options.php:307
+msgid "Chữ nút bấm"
+msgstr ""
+
+#: theme/setup/theme-options.php:310
+msgid "Dòng đồng ý nhận email"
+msgstr ""
+
+#: theme/setup/theme-options.php:313
+msgid "Hiện nhỏ dưới form — cần có theo Nghị định 13/2023 về dữ liệu cá nhân. Để trống để ẩn."
+msgstr ""
+
+#: theme/setup/theme-options.php:314
+msgid "Link chính sách bảo mật (không bắt buộc)"
+msgstr ""
+
+#: theme/setup/theme-options.php:317
+msgid "Thông báo: đăng ký thành công"
+msgstr ""
+
+#: theme/setup/theme-options.php:319
+msgid "Thông báo: email đã đăng ký"
+msgstr ""
+
+#: theme/setup/theme-options.php:322
+msgid "Thông báo: email không hợp lệ"
+msgstr ""
+
+#: theme/setup/theme-options.php:325
+msgid "Thông báo: lỗi chung"
+msgstr ""
+
+#: theme/setup/theme-options.php:328
+msgid "Thông báo: gửi quá nhiều lần"
+msgstr ""
+
+#: theme/setup/theme-options.php:331
+msgid "Mỗi IP được gửi tối đa 5 lần trong 10 phút."
+msgstr ""
+
+#: theme/setup/theme-options.php:332
+msgid "Thông báo: không qua được reCAPTCHA"
+msgstr ""
+
+#: theme/setup/theme-options.php:334
+msgid "reCAPTCHA v3 tự bật cho form này khi đã nhập đủ Site Key + Secret Key ở Laca Admin → Google reCAPTCHA."
+msgstr ""
+
+#: theme/setup/theme-options.php:336
+msgid "Email cảm ơn sau khi đăng ký"
+msgstr ""
+
+#: theme/setup/theme-options.php:337
+msgid "Tiêu đề email"
+msgstr ""
+
+#: theme/setup/theme-options.php:339
+msgid "Nội dung email"
+msgstr ""
+
+#: theme/setup/theme-options.php:342
+msgid "Mỗi dòng là 1 đoạn. Link huỷ đăng ký được tự thêm ở cuối email."
+msgstr ""
+
+#: theme/setup/theme-options.php:344
+msgid "Trang sau khi bấm link huỷ đăng ký trong email"
+msgstr ""
+
+#: theme/setup/theme-options.php:345
+msgid "Hỏi lại trước khi huỷ"
+msgstr ""
+
+#: theme/setup/theme-options.php:348
+msgid "Chữ nút / link huỷ đăng ký"
+msgstr ""
+
+#: theme/setup/theme-options.php:351
+msgid "Đã huỷ đăng ký"
+msgstr ""
+
+#: theme/setup/theme-options.php:354
+msgid "Link không hợp lệ"
+msgstr ""
+
+#: theme/setup/theme-options.php:374
+msgid "URL Apps Script Web App"
+msgstr ""
+
+#: theme/setup/theme-options.php:377
+msgid "Chỉ chấp nhận địa chỉ https://script.google.com/…"
+msgstr ""
+
+#: theme/setup/theme-options.php:378
+msgid "Chuỗi bí mật (trùng SECRET trong Apps Script)"
+msgstr ""
+
+#: theme/setup/theme-options.php:384
+msgid "Dịch vụ"
+msgstr ""
+
+#: theme/setup/theme-options.php:386
+msgid "Không dùng"
+msgstr ""
+
+#: theme/setup/theme-options.php:392
+msgid "Mailchimp API key"
+msgstr ""
+
+#: theme/setup/theme-options.php:396
+msgid "Mailchimp → Profile → Extras → API keys. Key phải có đuôi dạng \"-us21\"."
+msgstr ""
+
+#: theme/setup/theme-options.php:398
+msgid "Audience ID"
+msgstr ""
+
+#: theme/setup/theme-options.php:401
+msgid "Audience → Settings → Audience name and defaults → Audience ID."
+msgstr ""
+
+#: theme/setup/theme-options.php:410
+msgid "Brevo API key"
+msgstr ""
+
+#: theme/setup/theme-options.php:414
+msgid "Brevo → SMTP & API → API Keys."
+msgstr ""
+
+#: theme/setup/theme-options.php:416
+msgid "List ID"
+msgstr ""
+
+#: theme/setup/theme-options.php:420
+msgid "Contacts → Lists → số ID của danh sách."
+msgstr ""
+
+#: theme/setup/theme-options.php:430
+msgid "AI Translation | Dịch thuật AI"
+msgstr ""
+
+#: theme/setup/theme-options.php:434
+msgid "Gemini API Key"
+msgstr ""
+
+#: theme/setup/theme-options.php:437
+msgid "Groq API Key"
+msgstr ""
+
+#: theme/setup/theme-options.php:440
+msgid "OpenRouter API Key"
+msgstr ""
+
+#: theme/setup/theme-options.php:443
+msgid "Cloudflare Account ID"
+msgstr ""
+
+#: theme/setup/theme-options.php:446
+msgid "Cloudflare API Token"
+msgstr ""
+
+#: theme/setup/theme-options.php:449
+msgid "Mistral API Key"
+msgstr ""
+
+#: theme/setup/theme-options.php:452
+msgid "Cohere API Key"
+msgstr ""
+
+#: theme/setup/theme-options.php:455
+msgid "NVIDIA NIM API Key"
+msgstr ""
+
+#: theme/setup/theme-options.php:458
+msgid "DeepSeek API Key"
+msgstr ""
+
+#: theme/setup/theme-options.php:461
+msgid "OpenAI API Key"
+msgstr ""
+
+#: theme/setup/theme-options.php:464
+msgid "Anthropic API Key"
+msgstr ""
+
+#: theme/setup/theme-options.php:467
+msgid "Bộ xử lý ưu tiên"
+msgstr ""
+
+#: theme/setup/theme-options.php:484
+msgid "🛒 Block Marketplace"
+msgstr ""
+
+#: theme/setup/theme-options.php:493
+msgid "Scripts"
+msgstr ""
+
+#: theme/setup/theme-options.php:497
+msgid "Header Script"
+msgstr ""
+
+#: theme/setup/theme-options.php:498
+msgid "Footer Script"
+msgstr ""
+
+#: theme/single.php:70
+msgid "Liên hệ tư vấn"
+msgstr ""
+
+#: theme/single.php:72
+msgid "Để lại thông tin liên hệ của bạn hoặc gọi hotline để được tư vấn sớm nhất."
+msgstr ""
+
+#: theme/single.php:82
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/edit.js:113
+msgid "Địa chỉ"
+msgstr ""
+
+#: theme/single.php:84
+msgid "Gửi thông tin ngay"
+msgstr ""
+
+#: theme/single.php:104
+msgid "Bài viết liên quan"
+msgstr ""
+
+#: theme/template-parts/page-hero.php:78
+msgid "lượt xem"
+msgstr ""
+
+#: theme/template-parts/rating-box.php:8
+msgid "Đánh giá bài viết"
+msgstr ""
+
+#: block-gutenberg/block-featured-projects/build/index.js:1
+#: block-gutenberg/block-featured-projects/edit.js:82
+msgid "Featured Projects"
+msgstr ""
+
+#: block-gutenberg/block-featured-projects/build/index.js:1
+#: block-gutenberg/block-featured-projects/edit.js:83
+msgid "Dự án nổi bật"
+msgstr ""
+
+#: block-gutenberg/block-featured-projects/build/index.js:1
+#: block-gutenberg/block-featured-projects/edit.js:122
+#: block-gutenberg/block-team-carousel/build/index.js:1
+#: block-gutenberg/block-team-carousel/edit.js:93
+#: block-gutenberg/block-team-leaders/build/index.js:1
+#: block-gutenberg/block-team-leaders/edit.js:79
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/edit.js:272
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-process-steps/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-process-steps/edit.js:72
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/edit.js:135
+msgid "Tiêu đề section"
+msgstr ""
+
+#: block-gutenberg/block-featured-projects/build/index.js:1
+#: block-gutenberg/block-featured-projects/edit.js:135
+msgid "Badges"
+msgstr ""
+
+#: block-gutenberg/block-featured-projects/build/index.js:1
+#: block-gutenberg/block-featured-projects/edit.js:147
+#: block-gutenberg/block-services-grid/build/index.js:1
+#: block-gutenberg/block-services-grid/edit.js:277
+#: block-gutenberg/block-stats-counter/build/index.js:1
+#: block-gutenberg/block-stats-counter/edit.js:97
+msgid "Label"
+msgstr ""
+
+#: block-gutenberg/block-featured-projects/build/index.js:1
+#: block-gutenberg/block-featured-projects/edit.js:154
+msgid "Sub-label"
+msgstr ""
+
+#: block-gutenberg/block-featured-projects/build/index.js:1
+#: block-gutenberg/block-featured-projects/edit.js:165
+#: block-gutenberg/block-stats-counter/build/index.js:1
+#: block-gutenberg/block-stats-counter/edit.js:110
+#: block-gutenberg/block-team-leaders/build/index.js:1
+#: block-gutenberg/block-team-leaders/edit.js:205
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/edit.js:149
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-process-steps/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-process-steps/edit.js:117
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/edit.js:208
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/edit.js:210
+msgid "Xóa"
+msgstr ""
+
+#: block-gutenberg/block-featured-projects/build/index.js:1
+#: block-gutenberg/block-featured-projects/edit.js:170
+msgid "+ Thêm badge"
+msgstr ""
+
+#: block-gutenberg/block-featured-projects/build/index.js:1
+#: block-gutenberg/block-featured-projects/edit.js:173
+msgid "CTA Text"
+msgstr ""
+
+#: block-gutenberg/block-featured-projects/build/index.js:1
+#: block-gutenberg/block-featured-projects/edit.js:179
+msgid "CTA URL"
+msgstr ""
+
+#: block-gutenberg/block-featured-projects/build/index.js:1
+#: block-gutenberg/block-featured-projects/edit.js:186
+msgid "Dự án"
+msgstr ""
+
+#: block-gutenberg/block-featured-projects/build/index.js:1
+#: block-gutenberg/block-featured-projects/edit.js:190
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/edit.js:291
+#: block-gutenberg/utils/post-source-controls.js:152
+msgid "Chế độ"
+msgstr ""
+
+#: block-gutenberg/block-featured-projects/build/index.js:1
+#: block-gutenberg/block-featured-projects/edit.js:201
+#: block-gutenberg/block-featured-projects/edit.js:236
+msgid "Post Type"
+msgstr ""
+
+#: block-gutenberg/block-featured-projects/build/index.js:1
+#: block-gutenberg/block-featured-projects/edit.js:209
+msgid "Số lượng"
+msgstr ""
+
+#: block-gutenberg/block-featured-projects/build/index.js:1
+#: block-gutenberg/block-featured-projects/edit.js:218
+#: block-gutenberg/block-projects-slider/build/index.js:1
+#: block-gutenberg/block-projects-slider/edit.js:677
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/edit.js:394
+#: block-gutenberg/utils/post-source-controls.js:251
+msgid "Sắp xếp theo"
+msgstr ""
+
+#: block-gutenberg/block-featured-projects/build/index.js:1
+#: block-gutenberg/block-featured-projects/edit.js:247
+msgid "Chọn bài viết"
+msgstr ""
+
+#: block-gutenberg/block-featured-projects/build/index.js:1
+#: block-gutenberg/block-featured-projects/edit.js:268
+#: block-gutenberg/block-stats-counter/build/index.js:1
+#: block-gutenberg/block-stats-counter/edit.js:150
+#: block-gutenberg/block-team-leaders/build/index.js:1
+#: block-gutenberg/block-team-leaders/edit.js:92
+msgid "Style"
+msgstr ""
+
+#: block-gutenberg/block-featured-projects/build/index.js:1
+#: block-gutenberg/block-featured-projects/edit.js:272
+#: block-gutenberg/block-services-grid/build/index.js:1
+#: block-gutenberg/block-services-grid/edit.js:153
+#: block-gutenberg/block-stats-counter/build/index.js:1
+#: block-gutenberg/block-stats-counter/edit.js:154
+#: block-gutenberg/block-team-leaders/build/index.js:1
+#: block-gutenberg/block-team-leaders/edit.js:96
+msgid "Màu nền"
+msgstr ""
+
+#: block-gutenberg/block-featured-projects/build/index.js:1
+#: block-gutenberg/block-featured-projects/edit.js:293
+#: block-gutenberg/block-projects-slider/build/index.js:1
+#: block-gutenberg/block-projects-slider/edit.js:390
+#: block-gutenberg/block-services-grid/build/index.js:1
+#: block-gutenberg/block-services-grid/edit.js:335
+#: block-gutenberg/block-stats-counter/build/index.js:1
+#: block-gutenberg/block-stats-counter/edit.js:209
+#: block-gutenberg/block-team-carousel/build/index.js:1
+#: block-gutenberg/block-team-carousel/edit.js:102
+#: block-gutenberg/block-team-carousel/edit.js:257
+#: block-gutenberg/block-team-leaders/build/index.js:1
+#: block-gutenberg/block-team-leaders/edit.js:229
+#: block-gutenberg/block-video-feedback/build/index.js:1
+#: block-gutenberg/block-video-feedback/edit.js:379
+#: block-gutenberg/lacadev-blocks-site/block-shortcode-widget/build/index.js:1
+#: block-gutenberg/lacadev-blocks-site/block-shortcode-widget/edit.js:79
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/edit.js:186
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/edit.js:508
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-process-steps/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-process-steps/edit.js:131
+msgid "Màu nền section"
+msgstr ""
+
+#: block-gutenberg/block-featured-projects/build/index.js:1
+#: block-gutenberg/block-featured-projects/edit.js:302
+#: block-gutenberg/block-projects-slider/build/index.js:1
+#: block-gutenberg/block-projects-slider/edit.js:399
+#: block-gutenberg/block-services-grid/build/index.js:1
+#: block-gutenberg/block-services-grid/edit.js:344
+#: block-gutenberg/block-stats-counter/build/index.js:1
+#: block-gutenberg/block-stats-counter/edit.js:218
+#: block-gutenberg/block-team-carousel/build/index.js:1
+#: block-gutenberg/block-team-carousel/edit.js:266
+#: block-gutenberg/block-team-leaders/build/index.js:1
+#: block-gutenberg/block-team-leaders/edit.js:238
+#: block-gutenberg/block-video-feedback/build/index.js:1
+#: block-gutenberg/block-video-feedback/edit.js:388
+#: block-gutenberg/lacadev-blocks-site/block-shortcode-widget/build/index.js:1
+#: block-gutenberg/lacadev-blocks-site/block-shortcode-widget/edit.js:88
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/edit.js:517
+msgid "Độ mờ nền (%) — 0 = trong suốt"
+msgstr ""
+
+#: block-gutenberg/block-journey-gallery/build/index.js:1
+#: block-gutenberg/lacadev-blocks-site/block-video/build/index.js:1
+#: block-gutenberg/utils/inspector-panels.js:21
+msgid "top"
+msgstr ""
+
+#: block-gutenberg/block-journey-gallery/build/index.js:1
+#: block-gutenberg/lacadev-blocks-site/block-video/build/index.js:1
+#: block-gutenberg/utils/inspector-panels.js:22
+msgid "left"
+msgstr ""
+
+#: block-gutenberg/block-journey-gallery/build/index.js:1
+#: block-gutenberg/lacadev-blocks-site/block-video/build/index.js:1
+#: block-gutenberg/utils/inspector-panels.js:23
+msgid "bottom"
+msgstr ""
+
+#: block-gutenberg/block-journey-gallery/build/index.js:1
+#: block-gutenberg/lacadev-blocks-site/block-video/build/index.js:1
+#: block-gutenberg/utils/inspector-panels.js:24
+msgid "right"
+msgstr ""
+
+#: block-gutenberg/block-journey-gallery/build/index.js:1
+#: block-gutenberg/lacadev-blocks-site/block-video/build/index.js:1
+#: block-gutenberg/utils/inspector-panels.js:28
+msgid "Desktop"
+msgstr ""
+
+#: block-gutenberg/block-journey-gallery/build/index.js:1
+#: block-gutenberg/lacadev-blocks-site/block-video/build/index.js:1
+#: block-gutenberg/utils/inspector-panels.js:29
+#: block-gutenberg/utils/inspector-panels.js:43
+msgid "Tablet"
+msgstr ""
+
+#: block-gutenberg/block-journey-gallery/build/index.js:1
+#: block-gutenberg/lacadev-blocks-site/block-video/build/index.js:1
+#: block-gutenberg/utils/inspector-panels.js:30
+#: block-gutenberg/utils/inspector-panels.js:44
+msgid "Mobile"
+msgstr ""
+
+#: block-gutenberg/block-journey-gallery/build/index.js:1
+#: block-gutenberg/lacadev-blocks-site/block-video/build/index.js:1
+#: block-gutenberg/utils/inspector-panels.js:242
+msgid "Responsive"
+msgstr ""
+
+#: block-gutenberg/block-journey-gallery/build/index.js:1
+#: block-gutenberg/lacadev-blocks-site/block-video/build/index.js:1
+#: block-gutenberg/utils/inspector-panels.js:261
+msgid "Margin"
+msgstr ""
+
+#: block-gutenberg/block-journey-gallery/build/index.js:1
+#: block-gutenberg/lacadev-blocks-site/block-video/build/index.js:1
+#: block-gutenberg/utils/inspector-panels.js:308
+msgid "Padding"
+msgstr ""
+
+#: block-gutenberg/block-journey-gallery/build/index.js:1
+#: block-gutenberg/lacadev-blocks-site/block-video/build/index.js:1
+#: block-gutenberg/utils/inspector-panels.js:425
+msgid "Opacity (0 = transparent)"
+msgstr ""
+
+#: block-gutenberg/block-journey-gallery/build/index.js:1
+#: block-gutenberg/utils/inspector-panels.js:497
+msgid "Phụ đề"
+msgstr ""
+
+#: block-gutenberg/block-journey-gallery/build/index.js:1
+#: block-gutenberg/lacadev-blocks-site/block-video/build/index.js:1
+#: block-gutenberg/utils/inspector-panels.js:532
+#: block-gutenberg/utils/inspector-panels.js:591
+msgid "Cấu hình block"
+msgstr ""
+
+#: block-gutenberg/block-journey-gallery/build/index.js:1
+#: block-gutenberg/lacadev-blocks-site/block-video/build/index.js:1
+#: block-gutenberg/utils/inspector-panels.js:42
+msgid "PC"
+msgstr ""
+
+#: block-gutenberg/block-journey-gallery/build/index.js:1
+#: block-gutenberg/block-journey-gallery/edit.js:20
+msgid "Journey Gallery"
+msgstr ""
+
+#: block-gutenberg/block-journey-gallery/build/index.js:1
+#: block-gutenberg/block-journey-gallery/edit.js:22
+msgid "HÀNH TRÌNH XÂY NHÀ"
+msgstr ""
+
+#: block-gutenberg/block-journey-gallery/build/index.js:1
+#: block-gutenberg/block-journey-gallery/edit.js:104
+msgid "Nội dung block"
+msgstr ""
+
+#: block-gutenberg/block-journey-gallery/build/index.js:1
+#: block-gutenberg/block-journey-gallery/edit.js:108
+msgid "Thiết lập nội dung chính của block ở đây."
+msgstr ""
+
+#: block-gutenberg/block-journey-gallery/build/index.js:1
+#: block-gutenberg/block-journey-gallery/edit.js:129
+msgid "Bước"
+msgstr ""
+
+#: block-gutenberg/block-journey-gallery/build/index.js:1
+#: block-gutenberg/block-journey-gallery/edit.js:140
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/edit.js:79
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-process-steps/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-process-steps/edit.js:104
+msgid "Mô tả"
+msgstr ""
+
+#: block-gutenberg/block-journey-gallery/build/index.js:1
+#: block-gutenberg/block-journey-gallery/edit.js:37
+#: block-gutenberg/block-journey-gallery/edit.js:173
+#: block-gutenberg/block-services-grid/build/index.js:1
+#: block-gutenberg/block-services-grid/edit.js:66
+#: block-gutenberg/block-team-carousel/build/index.js:1
+#: block-gutenberg/block-team-carousel/edit.js:49
+#: block-gutenberg/block-team-carousel/edit.js:209
+#: block-gutenberg/block-team-leaders/build/index.js:1
+#: block-gutenberg/block-team-leaders/edit.js:158
+#: block-gutenberg/block-video-feedback/build/index.js:1
+#: block-gutenberg/block-video-feedback/edit.js:297
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/edit.js:61
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/edit.js:61
+#: block-gutenberg/utils/icon-input.js:101
+msgid "Chọn ảnh"
+msgstr ""
+
+#: block-gutenberg/block-journey-gallery/build/index.js:1
+#: block-gutenberg/block-journey-gallery/edit.js:38
+#: block-gutenberg/block-team-carousel/build/index.js:1
+#: block-gutenberg/block-team-carousel/edit.js:50
+msgid "Dùng ảnh này"
+msgstr ""
+
+#: block-gutenberg/block-journey-gallery/build/index.js:1
+#: block-gutenberg/block-journey-gallery/edit.js:172
+#: block-gutenberg/block-services-grid/build/index.js:1
+#: block-gutenberg/block-services-grid/edit.js:65
+#: block-gutenberg/block-team-carousel/build/index.js:1
+#: block-gutenberg/block-team-carousel/edit.js:208
+#: block-gutenberg/block-team-leaders/build/index.js:1
+#: block-gutenberg/block-team-leaders/edit.js:157
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/edit.js:60
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/edit.js:60
+#: block-gutenberg/utils/icon-input.js:100
+msgid "Đổi ảnh"
+msgstr ""
+
+#: block-gutenberg/block-journey-gallery/build/index.js:1
+#: block-gutenberg/block-journey-gallery/edit.js:190
+#: block-gutenberg/block-team-carousel/build/index.js:1
+#: block-gutenberg/block-team-carousel/edit.js:226
+msgid "Xoá ảnh"
+msgstr ""
+
+#: block-gutenberg/block-journey-gallery/build/index.js:1
+#: block-gutenberg/block-journey-gallery/edit.js:200
+msgid "Xoá bước này"
+msgstr ""
+
+#: block-gutenberg/block-journey-gallery/build/index.js:1
+#: block-gutenberg/block-journey-gallery/edit.js:205
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-process-steps/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-process-steps/edit.js:122
+msgid "+ Thêm bước"
+msgstr ""
+
+#: block-gutenberg/block-journey-gallery/build/index.js:1
+#: block-gutenberg/block-journey-gallery/edit.js:224
+msgid "Thêm các bước hành trình trong sidebar →"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/build/index.js:1
+#: block-gutenberg/block-projects-slider/edit.js:299
+msgid "Dự Án Tiêu Biểu"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/build/index.js:1
+#: block-gutenberg/block-projects-slider/edit.js:300
+msgid "Dự Án Sử Dụng Sản Phẩm"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/build/index.js:1
+#: block-gutenberg/block-projects-slider/edit.js:312
+#: block-gutenberg/block-services-grid/build/index.js:1
+#: block-gutenberg/block-services-grid/edit.js:146
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/edit.js:135
+msgid "Tiêu đề Section"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/build/index.js:1
+#: block-gutenberg/block-projects-slider/edit.js:317
+msgid "Badge nhỏ"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/build/index.js:1
+#: block-gutenberg/block-projects-slider/edit.js:326
+msgid "Tiêu đề chính"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/build/index.js:1
+#: block-gutenberg/block-projects-slider/edit.js:335
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/edit.js:279
+msgid "Text nút CTA"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/build/index.js:1
+#: block-gutenberg/block-projects-slider/edit.js:349
+msgid "Màu tiêu đề"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/build/index.js:1
+#: block-gutenberg/block-projects-slider/edit.js:365
+msgid "↺ Reset về primary"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/build/index.js:1
+#: block-gutenberg/block-projects-slider/edit.js:407
+msgid "Dừng slider khi hover"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/build/index.js:1
+#: block-gutenberg/block-projects-slider/edit.js:417
+msgid "Popup Liên Hệ"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/build/index.js:1
+#: block-gutenberg/block-projects-slider/edit.js:421
+msgid "Hiện popup form khi scroll tới"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/build/index.js:1
+#: block-gutenberg/block-projects-slider/edit.js:430
+msgid "Text nút gửi"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/build/index.js:1
+#: block-gutenberg/block-projects-slider/edit.js:443
+msgid "Ngân sách (dropdown)"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/build/index.js:1
+#: block-gutenberg/block-projects-slider/edit.js:466
+msgid "VD: 1 - 3 tỷ"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/build/index.js:1
+#: block-gutenberg/block-projects-slider/edit.js:499
+msgid "+ Thêm mục"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/build/index.js:1
+#: block-gutenberg/block-projects-slider/edit.js:507
+msgid "Nguồn dự án"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/build/index.js:1
+#: block-gutenberg/block-projects-slider/edit.js:513
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/edit.js:308
+#: block-gutenberg/utils/post-source-controls.js:171
+msgid "Loại bài viết (Post Type)"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/build/index.js:1
+#: block-gutenberg/block-projects-slider/edit.js:531
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/edit.js:326
+#: block-gutenberg/utils/post-source-controls.js:189
+msgid "Taxonomy"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/build/index.js:1
+#: block-gutenberg/block-projects-slider/edit.js:535
+msgid "— Tất cả —"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/build/index.js:1
+#: block-gutenberg/block-projects-slider/edit.js:559
+msgid "Chọn danh mục:"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/build/index.js:1
+#: block-gutenberg/block-projects-slider/edit.js:585
+msgid "Chế độ chọn dự án"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/build/index.js:1
+#: block-gutenberg/block-projects-slider/edit.js:589
+msgid "Tự động (theo query)"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/build/index.js:1
+#: block-gutenberg/block-projects-slider/edit.js:593
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/edit.js:299
+msgid "Thủ công (chọn tay)"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/build/index.js:1
+#: block-gutenberg/block-projects-slider/edit.js:613
+msgid "Chọn dự án hiển thị:"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/build/index.js:1
+#: block-gutenberg/block-projects-slider/edit.js:617
+msgid "🔍 Tìm theo tên…"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/build/index.js:1
+#: block-gutenberg/block-projects-slider/edit.js:667
+msgid "Số dự án hiển thị"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/build/index.js:1
+#: block-gutenberg/block-projects-slider/edit.js:681
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/edit.js:398
+#: block-gutenberg/utils/post-source-controls.js:254
+msgid "Ngày đăng"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/build/index.js:1
+#: block-gutenberg/block-projects-slider/edit.js:685
+msgid "Tiêu đề (A-Z)"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/build/index.js:1
+#: block-gutenberg/block-projects-slider/edit.js:689
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/edit.js:406
+#: block-gutenberg/utils/post-source-controls.js:257
+msgid "Menu Order"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/build/index.js:1
+#: block-gutenberg/block-projects-slider/edit.js:698
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/edit.js:420
+#: block-gutenberg/utils/post-source-controls.js:267
+msgid "Thứ tự"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/build/index.js:1
+#: block-gutenberg/block-projects-slider/edit.js:702
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/edit.js:424
+msgid "Mới nhất (DESC)"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/build/index.js:1
+#: block-gutenberg/block-projects-slider/edit.js:706
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/edit.js:428
+msgid "Cũ nhất (ASC)"
+msgstr ""
+
+#: block-gutenberg/block-services-grid/build/index.js:1
+#: block-gutenberg/block-services-grid/edit.js:86
+msgid "Services Grid"
+msgstr ""
+
+#: block-gutenberg/block-services-grid/build/index.js:1
+#: block-gutenberg/block-services-grid/edit.js:87
+msgid "DỊCH VỤ"
+msgstr ""
+
+#: block-gutenberg/block-services-grid/build/index.js:1
+#: block-gutenberg/block-services-grid/edit.js:144
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/edit.js:133
+msgid "Chung"
+msgstr ""
+
+#: block-gutenberg/block-services-grid/build/index.js:1
+#: block-gutenberg/block-services-grid/edit.js:165
+msgid "Nhóm"
+msgstr ""
+
+#: block-gutenberg/block-services-grid/build/index.js:1
+#: block-gutenberg/block-services-grid/edit.js:171
+msgid "Layout"
+msgstr ""
+
+#: block-gutenberg/block-services-grid/build/index.js:1
+#: block-gutenberg/block-services-grid/edit.js:186
+msgid "Link (tùy chọn)"
+msgstr ""
+
+#: block-gutenberg/block-services-grid/build/index.js:1
+#: block-gutenberg/block-services-grid/edit.js:196
+msgid "Ảnh chính"
+msgstr ""
+
+#: block-gutenberg/block-services-grid/build/index.js:1
+#: block-gutenberg/block-services-grid/edit.js:216
+msgid "Ảnh phụ"
+msgstr ""
+
+#: block-gutenberg/block-services-grid/build/index.js:1
+#: block-gutenberg/block-services-grid/edit.js:255
+msgid "Ảnh"
+msgstr ""
+
+#: block-gutenberg/block-services-grid/build/index.js:1
+#: block-gutenberg/block-services-grid/edit.js:289
+msgid "Link"
+msgstr ""
+
+#: block-gutenberg/block-services-grid/build/index.js:1
+#: block-gutenberg/block-services-grid/edit.js:312
+msgid "Xóa nhóm này"
+msgstr ""
+
+#: block-gutenberg/block-services-grid/build/index.js:1
+#: block-gutenberg/block-services-grid/edit.js:319
+msgid "+ Thêm nhóm dịch vụ"
+msgstr ""
+
+#: block-gutenberg/block-stats-counter/build/index.js:1
+#: block-gutenberg/block-stats-counter/edit.js:37
+msgid "Stats Counter"
+msgstr ""
+
+#: block-gutenberg/block-stats-counter/build/index.js:1
+#: block-gutenberg/block-stats-counter/edit.js:38
+msgid "Thống kê nổi bật"
+msgstr ""
+
+#: block-gutenberg/block-stats-counter/build/index.js:1
+#: block-gutenberg/block-stats-counter/edit.js:65
+msgid "Danh sách chỉ số"
+msgstr ""
+
+#: block-gutenberg/block-stats-counter/build/index.js:1
+#: block-gutenberg/block-stats-counter/edit.js:79
+msgid "Số"
+msgstr ""
+
+#: block-gutenberg/block-stats-counter/build/index.js:1
+#: block-gutenberg/block-stats-counter/edit.js:88
+msgid "Hậu tố"
+msgstr ""
+
+#: block-gutenberg/block-stats-counter/build/index.js:1
+#: block-gutenberg/block-stats-counter/edit.js:115
+msgid "+ Thêm chỉ số"
+msgstr ""
+
+#: block-gutenberg/block-stats-counter/build/index.js:1
+#: block-gutenberg/block-stats-counter/edit.js:120
+msgid "Animation"
+msgstr ""
+
+#: block-gutenberg/block-stats-counter/build/index.js:1
+#: block-gutenberg/block-stats-counter/edit.js:124
+msgid "Thời gian count-up (ms)"
+msgstr ""
+
+#: block-gutenberg/block-stats-counter/build/index.js:1
+#: block-gutenberg/block-stats-counter/edit.js:134
+msgid "Trigger"
+msgstr ""
+
+#: block-gutenberg/block-stats-counter/build/index.js:1
+#: block-gutenberg/block-stats-counter/edit.js:162
+msgid "Màu số"
+msgstr ""
+
+#: block-gutenberg/block-stats-counter/build/index.js:1
+#: block-gutenberg/block-stats-counter/edit.js:172
+msgid "Màu label"
+msgstr ""
+
+#: block-gutenberg/block-stats-counter/build/index.js:1
+#: block-gutenberg/block-stats-counter/edit.js:180
+msgid "Padding trên (px)"
+msgstr ""
+
+#: block-gutenberg/block-stats-counter/build/index.js:1
+#: block-gutenberg/block-stats-counter/edit.js:187
+msgid "Padding dưới (px)"
+msgstr ""
+
+#: block-gutenberg/block-team-carousel/build/index.js:1
+#: block-gutenberg/block-team-carousel/edit.js:36
+msgid "Team Carousel"
+msgstr ""
+
+#: block-gutenberg/block-team-carousel/build/index.js:1
+#: block-gutenberg/block-team-carousel/edit.js:37
+msgid "Đội ngũ của chúng tôi"
+msgstr ""
+
+#: block-gutenberg/block-team-carousel/build/index.js:1
+#: block-gutenberg/block-team-carousel/edit.js:89
+msgid "Cài đặt chung"
+msgstr ""
+
+#: block-gutenberg/block-team-carousel/build/index.js:1
+#: block-gutenberg/block-team-carousel/edit.js:98
+msgid "Để trống nếu không cần"
+msgstr ""
+
+#: block-gutenberg/block-team-carousel/build/index.js:1
+#: block-gutenberg/block-team-carousel/edit.js:110
+msgid "Cấu hình Swiper"
+msgstr ""
+
+#: block-gutenberg/block-team-carousel/build/index.js:1
+#: block-gutenberg/block-team-carousel/edit.js:114
+msgid "Loop (lặp vô hạn)"
+msgstr ""
+
+#: block-gutenberg/block-team-carousel/build/index.js:1
+#: block-gutenberg/block-team-carousel/edit.js:119
+msgid "Tự động chạy"
+msgstr ""
+
+#: block-gutenberg/block-team-carousel/build/index.js:1
+#: block-gutenberg/block-team-carousel/edit.js:125
+msgid "Delay autoplay (ms)"
+msgstr ""
+
+#: block-gutenberg/block-team-carousel/build/index.js:1
+#: block-gutenberg/block-team-carousel/edit.js:136
+msgid "Khoảng cách slide (px)"
+msgstr ""
+
+#: block-gutenberg/block-team-carousel/build/index.js:1
+#: block-gutenberg/block-team-carousel/edit.js:146
+msgid "Tỉ lệ slide không active (%)"
+msgstr ""
+
+#: block-gutenberg/block-team-carousel/build/index.js:1
+#: block-gutenberg/block-team-carousel/edit.js:154
+msgid "Slide không active sẽ thu nhỏ xuống tỉ lệ này so với slide active"
+msgstr ""
+
+#: block-gutenberg/block-team-carousel/build/index.js:1
+#: block-gutenberg/block-team-carousel/edit.js:163
+msgid "Danh sách slide"
+msgstr ""
+
+#: block-gutenberg/block-team-carousel/build/index.js:1
+#: block-gutenberg/block-team-carousel/edit.js:181
+msgid "Slide"
+msgstr ""
+
+#: block-gutenberg/block-team-carousel/build/index.js:1
+#: block-gutenberg/block-team-carousel/edit.js:236
+msgid "Xoá slide này"
+msgstr ""
+
+#: block-gutenberg/block-team-carousel/build/index.js:1
+#: block-gutenberg/block-team-carousel/edit.js:241
+msgid "+ Thêm slide"
+msgstr ""
+
+#: block-gutenberg/block-team-leaders/build/index.js:1
+#: block-gutenberg/block-team-leaders/edit.js:36
+msgid "Team Leaders"
+msgstr ""
+
+#: block-gutenberg/block-team-leaders/build/index.js:1
+#: block-gutenberg/block-team-leaders/edit.js:37
+msgid "Đội ngũ lãnh đạo"
+msgstr ""
+
+#: block-gutenberg/block-team-leaders/build/index.js:1
+#: block-gutenberg/block-team-leaders/edit.js:106
+msgid "Danh sách lãnh đạo (tối đa 4)"
+msgstr ""
+
+#: block-gutenberg/block-team-leaders/build/index.js:1
+#: block-gutenberg/block-team-leaders/edit.js:119
+msgid "Lãnh đạo"
+msgstr ""
+
+#: block-gutenberg/block-team-leaders/build/index.js:1
+#: block-gutenberg/block-team-leaders/edit.js:167
+msgid "Prefix (Ông/Bà)"
+msgstr ""
+
+#: block-gutenberg/block-team-leaders/build/index.js:1
+#: block-gutenberg/block-team-leaders/edit.js:176
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/edit.js:179
+msgid "Tên"
+msgstr ""
+
+#: block-gutenberg/block-team-leaders/build/index.js:1
+#: block-gutenberg/block-team-leaders/edit.js:185
+msgid "Chức vụ"
+msgstr ""
+
+#: block-gutenberg/block-team-leaders/build/index.js:1
+#: block-gutenberg/block-team-leaders/edit.js:193
+msgid "Quote"
+msgstr ""
+
+#: block-gutenberg/block-team-leaders/build/index.js:1
+#: block-gutenberg/block-team-leaders/edit.js:212
+msgid "+ Thêm lãnh đạo"
+msgstr ""
+
+#: block-gutenberg/block-team-leaders/build/index.js:1
+#: block-gutenberg/block-team-leaders/edit.js:282
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/edit.js:300
+msgid "Chưa có ảnh"
+msgstr ""
+
+#: block-gutenberg/block-team-leaders/build/index.js:1
+#: block-gutenberg/block-team-leaders/edit.js:307
+msgid "Thêm lãnh đạo trong sidebar (tối đa 4)."
+msgstr ""
+
+#: block-gutenberg/block-video-feedback/build/index.js:1
+#: block-gutenberg/block-video-feedback/edit.js:68
+msgid "Video Feedback"
+msgstr ""
+
+#: block-gutenberg/block-video-feedback/build/index.js:1
+#: block-gutenberg/block-video-feedback/edit.js:71
+msgid "Khách hàng nói gì về chúng tôi"
+msgstr ""
+
+#: block-gutenberg/block-video-feedback/build/index.js:1
+#: block-gutenberg/block-video-feedback/edit.js:110
+#: block-gutenberg/lacadev-blocks-site/block-shortcode-widget/build/index.js:1
+#: block-gutenberg/lacadev-blocks-site/block-shortcode-widget/edit.js:45
+msgid "Tiêu đề block"
+msgstr ""
+
+#: block-gutenberg/block-video-feedback/build/index.js:1
+#: block-gutenberg/block-video-feedback/edit.js:113
+msgid "VD: Khách hàng nói gì về Phúc Đại Nam"
+msgstr ""
+
+#: block-gutenberg/block-video-feedback/build/index.js:1
+#: block-gutenberg/block-video-feedback/edit.js:122
+msgid "Slider Settings"
+msgstr ""
+
+#: block-gutenberg/block-video-feedback/build/index.js:1
+#: block-gutenberg/block-video-feedback/edit.js:126
+msgid "Slides Per View (Desktop)"
+msgstr ""
+
+#: block-gutenberg/block-video-feedback/build/index.js:1
+#: block-gutenberg/block-video-feedback/edit.js:133
+msgid "Mobile: 1.2 / Tablet: 2.2 / Desktop: giá trị này"
+msgstr ""
+
+#: block-gutenberg/block-video-feedback/build/index.js:1
+#: block-gutenberg/block-video-feedback/edit.js:139
+msgid "Space Between (px)"
+msgstr ""
+
+#: block-gutenberg/block-video-feedback/build/index.js:1
+#: block-gutenberg/block-video-feedback/edit.js:148
+msgid "Loop"
+msgstr ""
+
+#: block-gutenberg/block-video-feedback/build/index.js:1
+#: block-gutenberg/block-video-feedback/edit.js:153
+msgid "Autoplay"
+msgstr ""
+
+#: block-gutenberg/block-video-feedback/build/index.js:1
+#: block-gutenberg/block-video-feedback/edit.js:159
+msgid "Autoplay Delay (ms)"
+msgstr ""
+
+#: block-gutenberg/block-video-feedback/build/index.js:1
+#: block-gutenberg/block-video-feedback/edit.js:170
+msgid "Show Pagination (dots)"
+msgstr ""
+
+#: block-gutenberg/block-video-feedback/build/index.js:1
+#: block-gutenberg/block-video-feedback/edit.js:177
+msgid "Show Navigation (prev/next)"
+msgstr ""
+
+#: block-gutenberg/block-video-feedback/build/index.js:1
+#: block-gutenberg/block-video-feedback/edit.js:187
+msgid "Danh sách video"
+msgstr ""
+
+#: block-gutenberg/block-video-feedback/build/index.js:1
+#: block-gutenberg/block-video-feedback/edit.js:210
+msgid "URL YouTube"
+msgstr ""
+
+#: block-gutenberg/block-video-feedback/build/index.js:1
+#: block-gutenberg/block-video-feedback/edit.js:235
+msgid "Ảnh Thumbnail (tùy chọn)"
+msgstr ""
+
+#: block-gutenberg/block-video-feedback/build/index.js:1
+#: block-gutenberg/block-video-feedback/edit.js:280
+msgid "Đổi ảnh thumbnail"
+msgstr ""
+
+#: block-gutenberg/block-video-feedback/build/index.js:1
+#: block-gutenberg/block-video-feedback/edit.js:329
+msgid "Xóa ảnh"
+msgstr ""
+
+#: block-gutenberg/block-video-feedback/build/index.js:1
+#: block-gutenberg/block-video-feedback/edit.js:341
+msgid "Tên người feedback"
+msgstr ""
+
+#: block-gutenberg/block-video-feedback/build/index.js:1
+#: block-gutenberg/block-video-feedback/edit.js:346
+msgid "VD: Mr Thành – Đồng Nai"
+msgstr ""
+
+#: block-gutenberg/block-video-feedback/build/index.js:1
+#: block-gutenberg/block-video-feedback/edit.js:357
+msgid "Xoá video này"
+msgstr ""
+
+#: block-gutenberg/block-video-feedback/build/index.js:1
+#: block-gutenberg/block-video-feedback/edit.js:363
+msgid "+ Thêm video"
+msgstr ""
+
+#: block-gutenberg/block-video-feedback/build/index.js:4
+#: block-gutenberg/block-video-feedback/edit.js:443
+msgid "Video feedback"
+msgstr ""
+
+#: block-gutenberg/block-video-feedback/build/index.js:4
+#: block-gutenberg/block-video-feedback/edit.js:452
+msgid "Chưa có thumbnail"
+msgstr ""
+
+#: block-gutenberg/block-video-feedback/build/index.js:4
+#: block-gutenberg/block-video-feedback/edit.js:494
+msgid "Thêm video feedback trong sidebar."
+msgstr ""
+
+#: block-gutenberg/lacadev-blocks-site/block-shortcode-widget/build/index.js:1
+#: block-gutenberg/lacadev-blocks-site/block-shortcode-widget/edit.js:18
+msgid "Shortcode Widget"
+msgstr ""
+
+#: block-gutenberg/lacadev-blocks-site/block-shortcode-widget/build/index.js:1
+#: block-gutenberg/lacadev-blocks-site/block-shortcode-widget/edit.js:19
+msgid "Widget công cụ"
+msgstr ""
+
+#: block-gutenberg/lacadev-blocks-site/block-shortcode-widget/build/index.js:1
+#: block-gutenberg/lacadev-blocks-site/block-shortcode-widget/edit.js:41
+msgid "Cài đặt"
+msgstr ""
+
+#: block-gutenberg/lacadev-blocks-site/block-shortcode-widget/build/index.js:1
+#: block-gutenberg/lacadev-blocks-site/block-shortcode-widget/edit.js:48
+msgid "VD: Nhận tư vấn trực tiếp từ KTS"
+msgstr ""
+
+#: block-gutenberg/lacadev-blocks-site/block-shortcode-widget/build/index.js:1
+#: block-gutenberg/lacadev-blocks-site/block-shortcode-widget/edit.js:54
+msgid "Shortcode 1"
+msgstr ""
+
+#: block-gutenberg/lacadev-blocks-site/block-shortcode-widget/build/index.js:1
+#: block-gutenberg/lacadev-blocks-site/block-shortcode-widget/edit.js:60
+msgid "Shortcode 2"
+msgstr ""
+
+#: block-gutenberg/lacadev-blocks-site/block-video/edit.js:70
+#: block-gutenberg/lacadev-blocks-site/block-video/edit.js:432
+msgid "Video Block"
+msgstr ""
+
+#: block-gutenberg/lacadev-blocks-site/block-video/edit.js:71
+msgid "Nhúng video từ URL hoặc file"
+msgstr ""
+
+#: block-gutenberg/lacadev-blocks-site/block-video/edit.js:128
+msgid "Nguồn Video"
+msgstr ""
+
+#: block-gutenberg/lacadev-blocks-site/block-video/edit.js:132
+msgid "URL (YouTube, Vimeo…)"
+msgstr ""
+
+#: block-gutenberg/lacadev-blocks-site/block-video/edit.js:136
+msgid "File Upload"
+msgstr ""
+
+#: block-gutenberg/lacadev-blocks-site/block-video/edit.js:147
+msgid "URL Video"
+msgstr ""
+
+#: block-gutenberg/lacadev-blocks-site/block-video/edit.js:185
+msgid "Thay video"
+msgstr ""
+
+#: block-gutenberg/lacadev-blocks-site/block-video/edit.js:209
+msgid "Chọn File Video"
+msgstr ""
+
+#: block-gutenberg/lacadev-blocks-site/block-video/edit.js:234
+msgid "Poster"
+msgstr ""
+
+#: block-gutenberg/lacadev-blocks-site/block-video/edit.js:251
+msgid "Thay poster"
+msgstr ""
+
+#: block-gutenberg/lacadev-blocks-site/block-video/edit.js:269
+msgid "Chọn Ảnh Poster"
+msgstr ""
+
+#: block-gutenberg/lacadev-blocks-site/block-video/edit.js:282
+msgid "Hiển thị controls"
+msgstr ""
+
+#: block-gutenberg/lacadev-blocks-site/block-video/edit.js:290
+msgid "Tự động phát"
+msgstr ""
+
+#: block-gutenberg/lacadev-blocks-site/block-video/edit.js:298
+msgid "Tắt tiếng"
+msgstr ""
+
+#: block-gutenberg/lacadev-blocks-site/block-video/edit.js:304
+msgid "Lặp lại"
+msgstr ""
+
+#: block-gutenberg/lacadev-blocks-site/block-video/edit.js:311
+msgid "Bật overlay"
+msgstr ""
+
+#: block-gutenberg/lacadev-blocks-site/block-video/edit.js:329
+msgid "Màu overlay"
+msgstr ""
+
+#: block-gutenberg/lacadev-blocks-site/block-video/edit.js:340
+msgid "Độ mờ overlay (%)"
+msgstr ""
+
+#: block-gutenberg/lacadev-blocks-site/block-video/edit.js:350
+msgid "Cỡ chữ overlay (px)"
+msgstr ""
+
+#: block-gutenberg/lacadev-blocks-site/block-video/edit.js:369
+msgid "Màu chữ"
+msgstr ""
+
+#: block-gutenberg/lacadev-blocks-site/block-video/edit.js:380
+msgid "Căn ngang"
+msgstr ""
+
+#: block-gutenberg/lacadev-blocks-site/block-video/edit.js:384
+msgid "Trái"
+msgstr ""
+
+#: block-gutenberg/lacadev-blocks-site/block-video/edit.js:388
+#: block-gutenberg/lacadev-blocks-site/block-video/edit.js:409
+msgid "Giữa"
+msgstr ""
+
+#: block-gutenberg/lacadev-blocks-site/block-video/edit.js:392
+msgid "Phải"
+msgstr ""
+
+#: block-gutenberg/lacadev-blocks-site/block-video/edit.js:401
+msgid "Căn dọc"
+msgstr ""
+
+#: block-gutenberg/lacadev-blocks-site/block-video/edit.js:405
+msgid "Trên"
+msgstr ""
+
+#: block-gutenberg/lacadev-blocks-site/block-video/edit.js:413
+msgid "Dưới"
+msgstr ""
+
+#: block-gutenberg/lacadev-blocks-site/block-video/edit.js:433
+msgid "Chọn nguồn video ở thanh bên phải (URL hoặc file upload)"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/edit.js:37
+msgid "Booking Form"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/edit.js:38
+msgid "Đăng ký đặt hẹn"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/edit.js:88
+msgid "Thông tin liên hệ"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/edit.js:92
+msgid "Label Hotline"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/edit.js:99
+msgid "Số Hotline"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/edit.js:106
+msgid "Label Địa chỉ"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/edit.js:136
+msgid "Nhãn"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/edit.js:154
+msgid "+ Thêm dịch vụ"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/edit.js:159
+msgid "Nút gửi"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/edit.js:163
+msgid "Nội dung nút"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/edit.js:176
+msgid "Màu chủ đạo"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/edit.js:249
+#: block-gutenberg/utils/post-source-controls.js:142
+msgid "— Không lọc —"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/edit.js:256
+msgid "Posts Highlight"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/edit.js:257
+msgid "Bài viết nổi bật"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/edit.js:268
+msgid "Hiển thị"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/edit.js:287
+msgid "Nguồn bài viết"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/edit.js:295
+msgid "Tự động (query)"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/edit.js:347
+msgid "Chọn danh mục"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/edit.js:380
+msgid "Số bài viết"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/edit.js:384
+msgid "5 bài đầu: grid nổi bật. Bài 6+: 3 cột phía dưới."
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/edit.js:410
+msgid "Lượt bình luận"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/edit.js:449
+#: block-gutenberg/utils/post-source-controls.js:300
+msgid "Đã chọn: "
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/edit.js:451
+msgid " bài — bài đầu tiên sẽ là ảnh lớn, từ bài 6 hiển 3 cột phía dưới"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/edit.js:457
+#: block-gutenberg/utils/post-source-controls.js:304
+msgid "Tìm bài viết"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/edit.js:460
+msgid "Nhập tên bài…"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-process-steps/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-process-steps/edit.js:36
+msgid "Process Steps"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-process-steps/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-process-steps/edit.js:81
+msgid "Danh sách bước"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-process-steps/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-process-steps/edit.js:141
+msgid "Màu nền vòng tròn số"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-process-steps/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-process-steps/edit.js:151
+msgid "Màu chữ số"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-process-steps/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-process-steps/edit.js:161
+msgid "Màu tiêu đề bước"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-process-steps/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-process-steps/edit.js:171
+msgid "Màu mô tả"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-process-steps/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-process-steps/edit.js:179
+msgid "Màu đường nối (desktop)"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/edit.js:89
+msgid "Doctor Team"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/edit.js:92
+msgid "Đội ngũ bác sĩ chuyên môn cao"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/edit.js:148
+msgid "Danh sách bác sĩ (tối đa 8)"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/edit.js:161
+msgid "Bác sĩ"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/edit.js:188
+msgid "Chuyên khoa"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/edit.js:196
+msgid "Mô tả ngắn"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/edit.js:215
+msgid "+ Thêm bác sĩ"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/edit.js:225
+msgid "Màu tên bác sĩ"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/edit.js:235
+msgid "Màu chuyên khoa"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/edit.js:247
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/edit.js:261
+msgid "Màu nền thẻ"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/edit.js:259
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/edit.js:271
+msgid "Màu viền thẻ"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/edit.js:339
+msgid "Thêm bác sĩ trong sidebar (tối đa 8)."
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/edit.js:90
+msgid "Testimonials"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/edit.js:93
+msgid "Khách hàng nói gì về chúng tôi?"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/edit.js:146
+msgid "Đánh giá"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/edit.js:152
+msgid "Ảnh đại diện"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/edit.js:170
+msgid "Nội dung đánh giá"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/edit.js:179
+msgid "Tên khách hàng"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/edit.js:188
+msgid "Địa chỉ / vai trò"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/edit.js:196
+msgid "Số sao đánh giá"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/edit.js:216
+msgid "+ Thêm đánh giá"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/edit.js:225
+msgid "Màu sao đánh giá"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/edit.js:233
+msgid "Màu nội dung trích dẫn"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/edit.js:243
+msgid "Màu tên khách hàng"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/build/index.js:1
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/edit.js:251
+msgid "Màu địa chỉ / vai trò"
+msgstr ""
+
+#: block-gutenberg/utils/icon-input.js:23
+msgid "Icon"
+msgstr ""
+
+#: block-gutenberg/utils/icon-input.js:29
+msgid "Dán SVG code"
+msgstr ""
+
+#: block-gutenberg/utils/icon-input.js:35
+msgid "Tải ảnh"
+msgstr ""
+
+#: block-gutenberg/utils/icon-input.js:42
+msgid "Dán nguyên code <svg>...</svg> — vd lấy từ fonts.google.com/icons, chọn icon rồi bấm tab \"SVG\" (không phải phần font-embed). Hỗ trợ SVG đơn giản (path/circle/rect/line/polyline/polygon), không hỗ trợ gradient/mask/filter."
+msgstr ""
+
+#: block-gutenberg/utils/inspector-panels.js:660
+#: block-gutenberg/utils/inspector-panels.js:672
+#: block-gutenberg/utils/inspector-panels.js:685
+msgid "Spacing"
+msgstr ""
+
+#: block-gutenberg/utils/inspector-panels.js:687
+msgid "Margin top (px)"
+msgstr ""
+
+#: block-gutenberg/utils/inspector-panels.js:695
+msgid "Margin bottom (px)"
+msgstr ""
+
+#: block-gutenberg/utils/inspector-panels.js:705
+msgid "Padding top (px)"
+msgstr ""
+
+#: block-gutenberg/utils/inspector-panels.js:713
+msgid "Padding bottom (px)"
+msgstr ""
+
+#: block-gutenberg/utils/inspector-panels.js:739
+msgid "Khung"
+msgstr ""
+
+#: block-gutenberg/utils/inspector-panels.js:740
+msgid "Chế độ khung của block: Kế thừa (mặc định), Fluid (toàn rộng) hoặc Boxed (căn giữa 1440px)."
+msgstr ""
+
+#: block-gutenberg/utils/inspector-panels.js:752
+msgid "Kế thừa"
+msgstr ""
+
+#: block-gutenberg/utils/inspector-panels.js:756
+msgid "Fluid (Toàn rộng)"
+msgstr ""
+
+#: block-gutenberg/utils/inspector-panels.js:760
+msgid "Boxed (Cố định chiều rộng, căn giữa)"
+msgstr ""
+
+#: block-gutenberg/utils/post-source-controls.js:148
+msgid "Nguồn nội dung"
+msgstr ""
+
+#: block-gutenberg/utils/post-source-controls.js:157
+msgid "Tự động (theo CPT/taxonomy)"
+msgstr ""
+
+#: block-gutenberg/utils/post-source-controls.js:161
+msgid "Thủ công (tìm & chọn tay)"
+msgstr ""
+
+#: block-gutenberg/utils/post-source-controls.js:210
+msgid "Chọn danh mục (bỏ trống = tất cả)"
+msgstr ""
+
+#: block-gutenberg/utils/post-source-controls.js:243
+msgid "Số bài viết hiển thị"
+msgstr ""
+
+#: block-gutenberg/utils/post-source-controls.js:260
+msgid "Ngẫu nhiên"
+msgstr ""
+
+#: block-gutenberg/utils/post-source-controls.js:271
+msgid "Giảm dần (mới/lớn nhất trước)"
+msgstr ""
+
+#: block-gutenberg/utils/post-source-controls.js:278
+msgid "Tăng dần (cũ/nhỏ nhất trước)"
+msgstr ""
+
+#: block-gutenberg/utils/post-source-controls.js:307
+msgid "Nhập từ khóa…"
+msgstr ""
+
+#: block-gutenberg/utils/post-source-controls.js:343
+msgid "Số cột hiển thị"
+msgstr ""
+
+#: block-gutenberg/block-featured-projects/block.json
+msgctxt "block title"
+msgid "Featured Projects Block"
+msgstr ""
+
+#: block-gutenberg/block-featured-projects/block.json
+msgctxt "block description"
+msgid "Section DỰ ÁN BIỂU TƯỢNG — title lớn góc trái, badges, lưới 2x2 ảnh dự án."
+msgstr ""
+
+#: block-gutenberg/block-featured-projects/block.json
+msgctxt "block keyword"
+msgid "projects"
+msgstr ""
+
+#: block-gutenberg/block-featured-projects/block.json
+msgctxt "block keyword"
+msgid "featured"
+msgstr ""
+
+#: block-gutenberg/block-featured-projects/block.json
+msgctxt "block keyword"
+msgid "dự án"
+msgstr ""
+
+#: block-gutenberg/block-featured-projects/block.json
+#: block-gutenberg/block-projects-slider/block.json
+msgctxt "block keyword"
+msgid "portfolio"
+msgstr ""
+
+#: block-gutenberg/block-journey-gallery/block.json
+msgctxt "block title"
+msgid "Journey Gallery"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/block.json
+msgctxt "block title"
+msgid "Projects Slider Block"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/block.json
+msgctxt "block description"
+msgid "Hiển thị danh sách dự án dạng Swiper slider fullwidth — chọn post type, danh mục, số lượng; hỗ trợ auto/manual."
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/block.json
+msgctxt "block keyword"
+msgid "project"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/block.json
+msgctxt "block keyword"
+msgid "slider"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/block.json
+msgctxt "block keyword"
+msgid "swiper"
+msgstr ""
+
+#: block-gutenberg/block-projects-slider/block.json
+msgctxt "block keyword"
+msgid "du-an"
+msgstr ""
+
+#: block-gutenberg/block-services-grid/block.json
+msgctxt "block title"
+msgid "Services Grid Block"
+msgstr ""
+
+#: block-gutenberg/block-services-grid/block.json
+msgctxt "block description"
+msgid "Section DỊCH VỤ — layout bất đối xứng 3 nhóm dịch vụ, mỗi nhóm có layout riêng."
+msgstr ""
+
+#: block-gutenberg/block-services-grid/block.json
+msgctxt "block keyword"
+msgid "services"
+msgstr ""
+
+#: block-gutenberg/block-services-grid/block.json
+msgctxt "block keyword"
+msgid "dịch vụ"
+msgstr ""
+
+#: block-gutenberg/block-services-grid/block.json
+msgctxt "block keyword"
+msgid "grid"
+msgstr ""
+
+#: block-gutenberg/block-services-grid/block.json
+msgctxt "block keyword"
+msgid "layout"
+msgstr ""
+
+#: block-gutenberg/block-stats-counter/block.json
+msgctxt "block title"
+msgid "Stats Counter Block"
+msgstr ""
+
+#: block-gutenberg/block-stats-counter/block.json
+msgctxt "block description"
+msgid "Hiển thị hàng số thống kê với animation count-up khi cuộn vào viewport."
+msgstr ""
+
+#: block-gutenberg/block-stats-counter/block.json
+msgctxt "block keyword"
+msgid "stats"
+msgstr ""
+
+#: block-gutenberg/block-stats-counter/block.json
+msgctxt "block keyword"
+msgid "counter"
+msgstr ""
+
+#: block-gutenberg/block-stats-counter/block.json
+msgctxt "block keyword"
+msgid "numbers"
+msgstr ""
+
+#: block-gutenberg/block-stats-counter/block.json
+msgctxt "block keyword"
+msgid "thống kê"
+msgstr ""
+
+#: block-gutenberg/block-team-carousel/block.json
+msgctxt "block title"
+msgid "Team Carousel"
+msgstr ""
+
+#: block-gutenberg/block-team-leaders/block.json
+msgctxt "block title"
+msgid "Team Leaders Block"
+msgstr ""
+
+#: block-gutenberg/block-team-leaders/block.json
+msgctxt "block description"
+msgid "Hiển thị section lãnh đạo — ảnh cutout, tên, chức vụ và quote."
+msgstr ""
+
+#: block-gutenberg/block-team-leaders/block.json
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/block.json
+msgctxt "block keyword"
+msgid "team"
+msgstr ""
+
+#: block-gutenberg/block-team-leaders/block.json
+msgctxt "block keyword"
+msgid "leaders"
+msgstr ""
+
+#: block-gutenberg/block-team-leaders/block.json
+msgctxt "block keyword"
+msgid "người"
+msgstr ""
+
+#: block-gutenberg/block-team-leaders/block.json
+msgctxt "block keyword"
+msgid "lãnh đạo"
+msgstr ""
+
+#: block-gutenberg/block-video-feedback/block.json
+msgctxt "block title"
+msgid "Video Feedback Slider"
+msgstr ""
+
+#: block-gutenberg/lacadev-blocks-site/block-shortcode-widget/block.json
+msgctxt "block title"
+msgid "Shortcode Widget"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/block.json
+msgctxt "block title"
+msgid "Booking Form Block"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/block.json
+msgctxt "block description"
+msgid "Section đăng ký đặt hẹn với thông tin liên hệ bên trái và form đặt lịch bên phải."
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/block.json
+msgctxt "block keyword"
+msgid "booking"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/block.json
+msgctxt "block keyword"
+msgid "form"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/block.json
+msgctxt "block keyword"
+msgid "đặt lịch"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-booking-form/block.json
+msgctxt "block keyword"
+msgid "đặt hẹn"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-posts-highlight/block.json
+msgctxt "block title"
+msgid "Posts Highlight Block"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-process-steps/block.json
+msgctxt "block title"
+msgid "Process Steps Block"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-process-steps/block.json
+msgctxt "block description"
+msgid "Hiển thị quy trình các bước dạng số thứ tự với đường nối đứt nét trên desktop."
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-process-steps/block.json
+msgctxt "block keyword"
+msgid "process"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-process-steps/block.json
+msgctxt "block keyword"
+msgid "steps"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-process-steps/block.json
+msgctxt "block keyword"
+msgid "quy trình"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-process-steps/block.json
+msgctxt "block keyword"
+msgid "quy trinh"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/block.json
+msgctxt "block title"
+msgid "Team Members Block"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/block.json
+msgctxt "block description"
+msgid "Section đội ngũ nhân sự/bác sĩ/chuyên gia — ảnh 3:4, tên, chức danh/chuyên môn và mô tả ngắn. Dùng chung cho nhiều loại hình kinh doanh."
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/block.json
+msgctxt "block keyword"
+msgid "doctor"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/block.json
+msgctxt "block keyword"
+msgid "staff"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/block.json
+msgctxt "block keyword"
+msgid "bác sĩ"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/block.json
+msgctxt "block keyword"
+msgid "đội ngũ"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-team-members/block.json
+msgctxt "block keyword"
+msgid "nhân sự"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/block.json
+msgctxt "block title"
+msgid "Testimonials Block"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/block.json
+msgctxt "block description"
+msgid "Hiển thị đánh giá của khách hàng dạng lưới 3 cột với avatar tròn, sao đánh giá và trích dẫn."
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/block.json
+msgctxt "block keyword"
+msgid "testimonials"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/block.json
+msgctxt "block keyword"
+msgid "reviews"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/block.json
+msgctxt "block keyword"
+msgid "đánh giá"
+msgstr ""
+
+#: block-gutenberg/nhakhoathienphuoc-blocks-site/block-testimonials/block.json
+msgctxt "block keyword"
+msgid "khách hàng"
+msgstr ""

@@ -47,7 +47,7 @@ class PostList
              $actions['laca_gsc_inspect'] = sprintf(
                  '<a href="%s" target="_blank" rel="noopener noreferrer">%s</a>',
                  esc_url('https://search.google.com/search-console/inspect?resource_id=' . rawurlencode($resourceId) . '&id=' . rawurlencode($url)),
-                 esc_html__('Kiểm tra Index', 'lacadev')
+                 esc_html__('Kiểm tra Index', 'laca')
              );
          }
          return $actions;
@@ -121,15 +121,15 @@ class PostList
         foreach ($columns as $k => $v) {
             $new[$k] = $v;
             if ($k === 'title') {
-                $new['laca_seo']       = __('SEO', 'lacadev');
-                $new['laca_seo_title'] = __('Tiêu đề SEO', 'lacadev');
-                $new['laca_seo_desc']  = __('Mô tả SEO', 'lacadev');
+                $new['laca_seo']       = __('SEO', 'laca');
+                $new['laca_seo_title'] = __('Tiêu đề SEO', 'laca');
+                $new['laca_seo_desc']  = __('Mô tả SEO', 'laca');
             }
         }
         if (!isset($new['laca_seo'])) {
-            $new['laca_seo']       = __('SEO', 'lacadev');
-            $new['laca_seo_title'] = __('Tiêu đề SEO', 'lacadev');
-            $new['laca_seo_desc']  = __('Mô tả SEO', 'lacadev');
+            $new['laca_seo']       = __('SEO', 'laca');
+            $new['laca_seo_title'] = __('Tiêu đề SEO', 'laca');
+            $new['laca_seo_desc']  = __('Mô tả SEO', 'laca');
         }
         return $new;
     }
@@ -192,7 +192,7 @@ class PostList
                 if ($customTitle !== '') {
                     echo esc_html($customTitle);
                 } else {
-                    echo '<span style="color:#94a3b8;font-style:italic;">' . esc_html__('— Theo mẫu chung —', 'lacadev') . '</span>';
+                    echo '<span style="color:#94a3b8;font-style:italic;">' . esc_html__('— Theo mẫu chung —', 'laca') . '</span>';
                 }
                 break;
 
@@ -201,7 +201,7 @@ class PostList
                 if ($customDesc !== '') {
                     echo esc_html(wp_trim_words($customDesc, 15, '...'));
                 } else {
-                    echo '<span style="color:#94a3b8;font-style:italic;">' . esc_html__('— Theo mẫu chung —', 'lacadev') . '</span>';
+                    echo '<span style="color:#94a3b8;font-style:italic;">' . esc_html__('— Theo mẫu chung —', 'laca') . '</span>';
                 }
                 break;
         }
@@ -220,12 +220,12 @@ class PostList
         $selected = sanitize_key($_GET['laca_seo_filter'] ?? '');
         ?>
         <select name="laca_seo_filter" id="filter-by-laca-seo">
-            <option value=""><?php esc_html_e('Tất cả trạng thái SEO', 'lacadev'); ?></option>
-            <option value="good" <?php selected($selected, 'good'); ?>><?php esc_html_e('SEO Điểm tốt (≥80)', 'lacadev'); ?></option>
-            <option value="ok" <?php selected($selected, 'ok'); ?>><?php esc_html_e('SEO Điểm khá (50–79)', 'lacadev'); ?></option>
-            <option value="bad" <?php selected($selected, 'bad'); ?>><?php esc_html_e('SEO Điểm kém (<50)', 'lacadev'); ?></option>
-            <option value="no_kw" <?php selected($selected, 'no_kw'); ?>><?php esc_html_e('Chưa có từ khoá chính', 'lacadev'); ?></option>
-            <option value="noindex" <?php selected($selected, 'noindex'); ?>><?php esc_html_e('Chỉ thị Noindex', 'lacadev'); ?></option>
+            <option value=""><?php esc_html_e('Tất cả trạng thái SEO', 'laca'); ?></option>
+            <option value="good" <?php selected($selected, 'good'); ?>><?php esc_html_e('SEO Điểm tốt (≥80)', 'laca'); ?></option>
+            <option value="ok" <?php selected($selected, 'ok'); ?>><?php esc_html_e('SEO Điểm khá (50–79)', 'laca'); ?></option>
+            <option value="bad" <?php selected($selected, 'bad'); ?>><?php esc_html_e('SEO Điểm kém (<50)', 'laca'); ?></option>
+            <option value="no_kw" <?php selected($selected, 'no_kw'); ?>><?php esc_html_e('Chưa có từ khoá chính', 'laca'); ?></option>
+            <option value="noindex" <?php selected($selected, 'noindex'); ?>><?php esc_html_e('Chỉ thị Noindex', 'laca'); ?></option>
         </select>
         <?php
     }
@@ -327,21 +327,21 @@ class PostList
         ?>
         <fieldset class="inline-edit-col-right laca-seo-quick-edit-fields">
             <div class="inline-edit-col">
-                <span class="title"><strong><?php esc_html_e('Cấu hình nhanh Laca SEO', 'lacadev'); ?></strong></span>
+                <span class="title"><strong><?php esc_html_e('Cấu hình nhanh Laca SEO', 'laca'); ?></strong></span>
                 <label>
-                    <span class="title"><?php esc_html_e('Tiêu đề SEO', 'lacadev'); ?></span>
+                    <span class="title"><?php esc_html_e('Tiêu đề SEO', 'laca'); ?></span>
                     <span class="input-text-wrap"><input type="text" name="laca_seo[_laca_seo_title]" value=""></span>
                 </label>
                 <label>
-                    <span class="title"><?php esc_html_e('Mô tả SEO', 'lacadev'); ?></span>
+                    <span class="title"><?php esc_html_e('Mô tả SEO', 'laca'); ?></span>
                     <span class="input-text-wrap"><textarea name="laca_seo[_laca_seo_description]" rows="2"></textarea></span>
                 </label>
                 <label>
-                    <span class="title"><?php esc_html_e('Từ khoá chính', 'lacadev'); ?></span>
+                    <span class="title"><?php esc_html_e('Từ khoá chính', 'laca'); ?></span>
                     <span class="input-text-wrap"><input type="text" name="laca_seo[_laca_seo_focus_keyword]" value=""></span>
                 </label>
                 <label>
-                    <span class="title"><?php esc_html_e('Canonical URL', 'lacadev'); ?></span>
+                    <span class="title"><?php esc_html_e('Canonical URL', 'laca'); ?></span>
                     <span class="input-text-wrap"><input type="url" name="laca_seo[_laca_seo_canonical_url]" value=""></span>
                 </label>
             </div>
@@ -365,13 +365,13 @@ class PostList
         ?>
         <fieldset class="inline-edit-col-right">
             <div class="inline-edit-col">
-                <span class="title"><strong><?php esc_html_e('Sửa nhanh hàng loạt Laca SEO', 'lacadev'); ?></strong></span>
+                <span class="title"><strong><?php esc_html_e('Sửa nhanh hàng loạt Laca SEO', 'laca'); ?></strong></span>
                 <label>
-                    <span class="title"><?php esc_html_e('Chỉ thị Robots', 'lacadev'); ?></span>
+                    <span class="title"><?php esc_html_e('Chỉ thị Robots', 'laca'); ?></span>
                     <select name="laca_seo_bulk_robots">
-                        <option value=""><?php esc_html_e('— Không thay đổi —', 'lacadev'); ?></option>
-                        <option value="index"><?php esc_html_e('Đặt thành Index', 'lacadev'); ?></option>
-                        <option value="noindex"><?php esc_html_e('Đặt thành Noindex', 'lacadev'); ?></option>
+                        <option value=""><?php esc_html_e('— Không thay đổi —', 'laca'); ?></option>
+                        <option value="index"><?php esc_html_e('Đặt thành Index', 'laca'); ?></option>
+                        <option value="noindex"><?php esc_html_e('Đặt thành Noindex', 'laca'); ?></option>
                     </select>
                 </label>
             </div>

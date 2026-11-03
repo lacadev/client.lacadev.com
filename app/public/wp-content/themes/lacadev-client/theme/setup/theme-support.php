@@ -22,6 +22,11 @@ if (!defined('ABSPATH')) {
 add_theme_support('automatic-feed-links');
 
 /**
+ * Load theme textdomain.
+ */
+load_theme_textdomain('laca', get_template_directory() . '/languages');
+
+/**
  * Support post thumbnails.
  *
  * @link https://codex.wordpress.org/Post_Thumbnails

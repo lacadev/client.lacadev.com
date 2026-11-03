@@ -671,7 +671,7 @@ class Variables
         $total = (int) self::getPageTotal();
 
         if ($total > 1 && $page > 1) {
-            return sprintf($sep . ' ' . __('Page %1$d of %2$d', 'lacadev'), $page, $total);
+            return sprintf($sep . ' ' . __('Page %1$d of %2$d', 'laca'), $page, $total);
         }
 
         return '';

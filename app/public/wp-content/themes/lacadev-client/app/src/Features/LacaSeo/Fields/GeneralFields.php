@@ -611,9 +611,9 @@ class GeneralFields
                 ->tab('woocommerce')
                 ->group('general')
                 ->choices([
-                    ''              => __('— Chọn phân loại thương hiệu —', 'lacadev'),
-                    'product_brand' => __('Product Brand (product_brand)', 'lacadev'),
-                    'custom'        => __('Tuỳ chỉnh (Custom)', 'lacadev'),
+                    ''              => __('— Chọn phân loại thương hiệu —', 'laca'),
+                    'product_brand' => __('Product Brand (product_brand)', 'laca'),
+                    'custom'        => __('Tuỳ chỉnh (Custom)', 'laca'),
                 ])
                 ->note(
                     'Chỉ định taxonomy nào trên website đang lưu tên thương hiệu/nhà sản xuất của sản phẩm.',
@@ -637,13 +637,13 @@ class GeneralFields
                 ->tab('woocommerce')
                 ->group('general')
                 ->choices([
-                    'gtin'   => __('GTIN', 'lacadev'),
-                    'gtin8'  => __('GTIN-8', 'lacadev'),
-                    'gtin12' => __('GTIN-12 (UPC)', 'lacadev'),
-                    'gtin13' => __('GTIN-13 (EAN)', 'lacadev'),
-                    'gtin14' => __('GTIN-14 (ITF-14)', 'lacadev'),
-                    'isbn'   => __('ISBN (Sách)', 'lacadev'),
-                    'mpn'    => __('MPN (Mã phụ tùng)', 'lacadev'),
+                    'gtin'   => __('GTIN', 'laca'),
+                    'gtin8'  => __('GTIN-8', 'laca'),
+                    'gtin12' => __('GTIN-12 (UPC)', 'laca'),
+                    'gtin13' => __('GTIN-13 (EAN)', 'laca'),
+                    'gtin14' => __('GTIN-14 (ITF-14)', 'laca'),
+                    'isbn'   => __('ISBN (Sách)', 'laca'),
+                    'mpn'    => __('MPN (Mã phụ tùng)', 'laca'),
                 ])
                 ->note(
                     'Chọn chuẩn mã vạch hoặc mã nhận diện sản phẩm sử dụng trong Schema.',
@@ -706,9 +706,9 @@ class GeneralFields
                 ->tab('blocks')
                 ->group('general')
                 ->choices([
-                    'ul'  => __('Danh sách dấu chấm (Unordered List)', 'lacadev'),
-                    'ol'  => __('Danh sách đánh số thứ tự (Numbered List)', 'lacadev'),
-                    'div' => __('Không dùng dấu chấm / số (Plain)', 'lacadev'),
+                    'ul'  => __('Danh sách dấu chấm (Unordered List)', 'laca'),
+                    'ol'  => __('Danh sách đánh số thứ tự (Numbered List)', 'laca'),
+                    'div' => __('Không dùng dấu chấm / số (Plain)', 'laca'),
                 ])
                 ->note(
                     'Kiểu định dạng thẻ danh sách hiển thị các mục con.',
@@ -799,10 +799,10 @@ class GeneralFields
                 ->tab('others')
                 ->group('general')
                 ->choices([
-                    'top'    => __('Đầu bài viết (Above Content)', 'lacadev'),
-                    'bottom' => __('Cuối bài viết (Below Content)', 'lacadev'),
-                    'both'   => __('Cả đầu và cuối (Both)', 'lacadev'),
-                    'custom' => __('Thủ công bằng Shortcode [laca_seo_score]', 'lacadev'),
+                    'top'    => __('Đầu bài viết (Above Content)', 'laca'),
+                    'bottom' => __('Cuối bài viết (Below Content)', 'laca'),
+                    'both'   => __('Cả đầu và cuối (Both)', 'laca'),
+                    'custom' => __('Thủ công bằng Shortcode [laca_seo_score]', 'laca'),
                 ])
                 ->showIf('frontend_seo_score', 'on')
                 ->note(
@@ -816,8 +816,8 @@ class GeneralFields
                 ->tab('others')
                 ->group('general')
                 ->choices([
-                    'circle' => __('Vòng tròn (Circle)', 'lacadev'),
-                    'square' => __('Hình vuông / Thẻ (Square)', 'lacadev'),
+                    'circle' => __('Vòng tròn (Circle)', 'laca'),
+                    'square' => __('Hình vuông / Thẻ (Square)', 'laca'),
                 ])
                 ->showIf('frontend_seo_score', 'on')
                 ->note(
@@ -859,9 +859,9 @@ class GeneralFields
                 ->tab('redirections')
                 ->group('general')
                 ->choices([
-                    'default'  => __('Trang 404 mặc định (Default 404)', 'lacadev'),
-                    'homepage' => __('Chuyển về Trang chủ (Redirect to Homepage)', 'lacadev'),
-                    'custom'   => __('Chuyển hướng tuỳ chỉnh (Custom Redirection)', 'lacadev'),
+                    'default'  => __('Trang 404 mặc định (Default 404)', 'laca'),
+                    'homepage' => __('Chuyển về Trang chủ (Redirect to Homepage)', 'laca'),
+                    'custom'   => __('Chuyển hướng tuỳ chỉnh (Custom Redirection)', 'laca'),
                 ])
                 ->note(
                     'Hành vi tự động khi khách truy cập vào một URL không tồn tại và không khớp với bất kỳ quy tắc chuyển hướng nào.',
@@ -914,8 +914,8 @@ class GeneralFields
                 ->tab('404-monitor')
                 ->group('general')
                 ->choices([
-                    'simple'   => __('Đơn giản (Simple - Chỉ ghi URL và số lượt truy cập)', 'lacadev'),
-                    'advanced' => __('Nâng cao (Advanced - Ghi thêm Referer, User-Agent)', 'lacadev'),
+                    'simple'   => __('Đơn giản (Simple - Chỉ ghi URL và số lượt truy cập)', 'laca'),
+                    'advanced' => __('Nâng cao (Advanced - Ghi thêm Referer, User-Agent)', 'laca'),
                 ])
                 ->note(
                     'Mức độ chi tiết của nhật ký theo dõi lỗi 404.',
@@ -1007,7 +1007,7 @@ class GeneralFields
                 ->tab('podcast')
                 ->group('general')
                 ->choices([
-                    ''                            => __('— Chọn chuyên mục Podcast —', 'lacadev'),
+                    ''                            => __('— Chọn chuyên mục Podcast —', 'laca'),
                     'Arts'                        => 'Arts',
                     'Business'                    => 'Business',
                     'Comedy'                      => 'Comedy',

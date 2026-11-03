@@ -83,7 +83,7 @@ class EntityStats
             if (post_type_exists($postType)) {
                 add_meta_box(
                     'laca_entity_stats_box',
-                    __('Hiệu suất trang — 28 ngày', 'lacadev'),
+                    __('Hiệu suất trang — 28 ngày', 'laca'),
                     [self::class, 'renderMetabox'],
                     $postType,
                     'side',
@@ -122,7 +122,7 @@ class EntityStats
         <div id="laca-entity-metabox" data-post-id="<?php echo esc_attr((string) $post->ID); ?>" data-url="<?php echo esc_url($permalink); ?>" data-ajax-url="<?php echo esc_url($ajaxUrl); ?>" data-nonce="<?php echo esc_attr($nonce); ?>">
             <div class="laca-entity-loading" style="padding: 12px 0; text-align: center; color: var(--laca-fg-muted, #71717a); font-size: 13px;">
                 <span class="dashicons dashicons-update spin" style="margin-right: 4px;" aria-hidden="true"></span>
-                <?php esc_html_e('Đang tải dữ liệu 28 ngày...', 'lacadev'); ?>
+                <?php esc_html_e('Đang tải dữ liệu 28 ngày...', 'laca'); ?>
             </div>
             <div class="laca-entity-content" style="display: none;"></div>
         </div>
@@ -262,10 +262,10 @@ class EntityStats
 
         $wpAdminBar->add_node([
             'id'    => 'laca-google-entity-stats',
-            'title' => '<span class="ab-icon dashicons dashicons-chart-area" style="margin-top: 2px;"></span> <span class="ab-label">' . esc_html__('Google: 28 ngày', 'lacadev') . '</span>',
+            'title' => '<span class="ab-icon dashicons dashicons-chart-area" style="margin-top: 2px;"></span> <span class="ab-label">' . esc_html__('Google: 28 ngày', 'laca') . '</span>',
             'href'  => '#',
             'meta'  => [
-                'title' => __('Xem nhanh số liệu 28 ngày qua từ Google Search Console & GA4', 'lacadev'),
+                'title' => __('Xem nhanh số liệu 28 ngày qua từ Google Search Console & GA4', 'laca'),
                 'class' => 'menupop',
             ],
         ]);
@@ -276,7 +276,7 @@ class EntityStats
 
         $dropdownHtml = '
             <div id="laca-adminbar-stats-container" data-url="' . esc_url($permalink) . '" data-ajax="' . esc_url($ajaxUrl) . '" data-nonce="' . esc_attr($nonce) . '" style="padding: 12px 16px; min-width: 240px; color: #333; background: #fff; font-family: -apple-system, BlinkMacSystemFont, sans-serif;">
-                <div class="laca-ab-loading" style="font-size: 12px; color: #666; text-align: center; padding: 6px 0;">' . esc_html__('Đang tải số liệu...', 'lacadev') . '</div>
+                <div class="laca-ab-loading" style="font-size: 12px; color: #666; text-align: center; padding: 6px 0;">' . esc_html__('Đang tải số liệu...', 'laca') . '</div>
                 <div class="laca-ab-data" style="display: none;"></div>
             </div>
         ';
@@ -372,12 +372,12 @@ class EntityStats
         }
 
         if (!GoogleServices::userCanViewReport()) {
-            wp_send_json_error(['message' => __('Bạn không có quyền xem báo cáo.', 'lacadev')], 403);
+            wp_send_json_error(['message' => __('Bạn không có quyền xem báo cáo.', 'laca')], 403);
         }
 
         $targetUrl = esc_url_raw(wp_unslash($_REQUEST['url'] ?? ''));
         if (empty($targetUrl)) {
-            wp_send_json_error(['message' => __('Thiếu tham số URL.', 'lacadev')], 400);
+            wp_send_json_error(['message' => __('Thiếu tham số URL.', 'laca')], 400);
         }
 
         $cacheKey = 'laca_entity_stats_' . md5($targetUrl);

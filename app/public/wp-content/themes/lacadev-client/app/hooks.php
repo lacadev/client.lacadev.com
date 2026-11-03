@@ -156,7 +156,7 @@ add_action('carbon_fields_register_fields', 'app_bootstrap_carbon_fields_registe
 add_action('carbon_fields_theme_options_container_saved', static function ($user_data, $container) {
     if (!empty($_POST['carbon_fields_auto_save']) || wp_doing_ajax()) {
         wp_send_json_success([
-            'message'   => __('Đã tự động lưu cài đặt thành công.', 'lacadev'),
+            'message'   => __('Đã tự động lưu cài đặt thành công.', 'laca'),
             'timestamp' => current_time('H:i:s'),
         ]);
     }

@@ -164,7 +164,7 @@ if ( ! function_exists( 'lacadev_parse_video_url' ) ) {
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowfullscreen
                         loading="lazy"
-                        title="<?php esc_attr_e( 'Video nhúng', 'lacadev' ); ?>"
+                        title="<?php esc_attr_e( 'Video nhúng', 'laca' ); ?>"
                     ></iframe>
                 </div>
             <?php else : // direct URL — dùng thẻ <video> ?>

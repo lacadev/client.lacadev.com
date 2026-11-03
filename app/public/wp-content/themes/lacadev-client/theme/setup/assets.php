@@ -157,18 +157,18 @@ function app_action_admin_enqueue_assets()
      */
     wp_localize_script('theme-admin-js-bundle', 'adminI18n', [
         // Thumbnail removal
-        'removeThumbnailTitle' => __('Remove Thumbnail?', 'lacadev'),
-        'removeThumbnailText' => __('Are you sure you want to remove this featured image?', 'lacadev'),
-        'removeThumbnailConfirm' => __('Yes, remove it', 'lacadev'),
-        'removeThumbnailCancel' => __('Cancel', 'lacadev'),
-        'removedTitle' => __('Removed!', 'lacadev'),
-        'removedText' => __('Featured image has been removed.', 'lacadev'),
-        'errorTitle' => __('Error!', 'lacadev'),
-        'failedRemove' => __('Failed to remove thumbnail.', 'lacadev'),
+        'removeThumbnailTitle' => __('Remove Thumbnail?', 'laca'),
+        'removeThumbnailText' => __('Are you sure you want to remove this featured image?', 'laca'),
+        'removeThumbnailConfirm' => __('Yes, remove it', 'laca'),
+        'removeThumbnailCancel' => __('Cancel', 'laca'),
+        'removedTitle' => __('Removed!', 'laca'),
+        'removedText' => __('Featured image has been removed.', 'laca'),
+        'errorTitle' => __('Error!', 'laca'),
+        'failedRemove' => __('Failed to remove thumbnail.', 'laca'),
         
         // UI labels
-        'chooseImage' => __('Choose image', 'lacadev'),
-        'setFeaturedImage' => __('Set featured image', 'lacadev'),
+        'chooseImage' => __('Choose image', 'laca'),
+        'setFeaturedImage' => __('Set featured image', 'laca'),
     ]);
 
     /**

@@ -229,7 +229,8 @@ class ThemeUpdater
             $args['headers'] = array_merge($args['headers'], $sigHeaders);
         }
 
-        if (!empty($trackerKey)) {
+        // Chỉ gửi key thô (legacy) khi KHÔNG ký được — tránh lộ key trong header/log khi đã có chữ ký
+        if (!empty($trackerKey) && empty($projectId)) {
             $args['headers']['X-Laca-Key'] = $trackerKey;
         }
 

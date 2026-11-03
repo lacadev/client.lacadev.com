@@ -37,7 +37,10 @@ class RequestSigner
     public const TRANSIENT_PREFIX  = 'laca_sig_';
 
     /**
-     * Chuẩn hoá đường dẫn endpoint về dạng canonical `/wp-json/...`
+     * Chuẩn hoá đường dẫn endpoint về dạng canonical `/wp-json/<route>`
+     *
+     * Quy ước duy nhất: Bắt đầu bằng `/wp-json/`, không trailing slash.
+     * Xử lý được: pretty permalink, query parameter ?rest_route=, thư mục con (/sub/wp-json/...).
      *
      * @param string $pathOrUrl URL đầy đủ hoặc đường dẫn request
      * @return string Đường dẫn canonical không kèm query string, không trailing slash
@@ -48,30 +51,34 @@ class RequestSigner
         $path   = $parsed['path'] ?? '';
         $query  = $parsed['query'] ?? '';
 
-        // Xử lý plain permalink dạng ?rest_route=/laca/v1/...
+        // 1. Xử lý plain permalink dạng ?rest_route=/laca/v1/... hoặc ?rest_route=/lacadev/v1/...
         if (!empty($query)) {
             parse_str($query, $queryParams);
             if (!empty($queryParams['rest_route'])) {
                 $route = (string) $queryParams['rest_route'];
-                return '/wp-json/' . ltrim($route, '/');
+                return rtrim('/wp-json/' . ltrim($route, '/'), '/');
             }
         }
 
-        // Bỏ tiền tố index.php nếu có
-        if (str_starts_with($path, '/index.php/')) {
-            $path = substr($path, 10);
+        // 2. Bỏ tiền tố /index.php nếu có
+        if (preg_match('#^/index\.php(/.*)?$#', $path, $matches)) {
+            $path = $matches[1] ?? '';
         }
 
-        // Đảm bảo có tiền tố /wp-json
-        if (preg_match('#(/wp-json/.*)$#', $path, $matches)) {
-            $path = $matches[1];
-        } elseif (preg_match('#(/laca/v1/.*)$#', $path, $matches)) {
-            $path = '/wp-json' . $matches[1];
+        // 3. Nếu chứa /wp-json/ (bao gồm cả site trong thư mục con như /subsite/wp-json/...)
+        $pos = strpos($path, '/wp-json/');
+        if ($pos !== false) {
+            $path = substr($path, $pos);
+        } elseif ($path === '/wp-json') {
+            $path = '/wp-json';
+        } else {
+            // 4. Nếu là route trần (không có /wp-json, vd /laca/v1/... hoặc /lacadev/v1/...)
+            $path = '/wp-json/' . ltrim($path, '/');
         }
 
         $path = rtrim($path, '/');
 
-        return $path ?: '/';
+        return $path ?: '/wp-json';
     }
 
     /**
@@ -151,8 +158,9 @@ class RequestSigner
             $timestamp = (int) ($request->get_header('x_laca_timestamp') ?: $request->get_header('x-laca-timestamp') ?: 0);
             $signature = (string) ($request->get_header('x_laca_signature') ?: $request->get_header('x-laca-signature') ?: '');
             $method    = $request->get_method();
-            // WP_REST_Request::get_route() trả về route REST (vd /laca/v1/tracker/log)
-            $path      = $request->get_route();
+            // WP_REST_Request::get_route() trả về route REST (vd /laca/v1/tracker/log hoặc /lacadev/v1/sync-block)
+            $route     = $request->get_route();
+            $path      = '/wp-json/' . ltrim($route, '/');
             $body      = (string) $request->get_body();
         } elseif (is_array($request)) {
             $headers   = $request['headers'] ?? [];
@@ -225,3 +233,4 @@ class RequestSigner
         ];
     }
 }
+

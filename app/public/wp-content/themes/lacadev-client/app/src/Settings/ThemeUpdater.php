@@ -38,12 +38,14 @@ class ThemeUpdater
         private string $themeSlug,
         private string $updateInfoUrl,
     ) {
+        $this->updateInfoUrl = (string) apply_filters('laca_theme_update_json_url', $this->updateInfoUrl);
         $this->cacheKey = 'lacadev_theme_update_' . md5($this->themeSlug);
 
         add_filter('pre_set_site_transient_update_themes', [$this, 'checkForUpdate']);
         add_filter('themes_api', [$this, 'themeInfo'], 10, 3);
         add_action('upgrader_process_complete', [$this, 'clearCache'], 10, 2);
         add_filter('upgrader_source_selection', [$this, 'filterSourceSelection'], 10, 4);
+        add_filter('http_request_args', [$this, 'filterDownloadRequestArgs'], 10, 2);
     }
 
     /**
@@ -191,6 +193,49 @@ class ThemeUpdater
         }
 
         return $source;
+    }
+
+    /**
+     * Tự động ký HMAC vào request tải gói cập nhật theme từ Hub
+     *
+     * @param array<string,mixed> $args HTTP request arguments
+     * @param string $url Target URL
+     * @return array<string,mixed>
+     */
+    public function filterDownloadRequestArgs(array $args, string $url): array
+    {
+        $parsed = parse_url($url);
+        $path   = $parsed['path'] ?? '';
+
+        if (!str_contains($path, '/wp-json/laca/v1/theme-package/')) {
+            return $args;
+        }
+
+        $trackerKey = LacaDevTrackerClient::getTrackerKey() ?: LacaDevTrackerClient::getSecretKey();
+        $projectId  = LacaDevTrackerClient::getProjectId();
+
+        if (!isset($args['headers']) || !is_array($args['headers'])) {
+            $args['headers'] = [];
+        }
+
+        if (!empty($trackerKey) && !empty($projectId)) {
+            $sigHeaders = \App\Security\RequestSigner::sign(
+                'GET',
+                $path,
+                '',
+                $trackerKey,
+                $projectId
+            );
+            $args['headers'] = array_merge($args['headers'], $sigHeaders);
+        }
+
+        if (!empty($trackerKey)) {
+            $args['headers']['X-Laca-Key'] = $trackerKey;
+        }
+
+        $args['timeout'] = max((int) ($args['timeout'] ?? 30), 300);
+
+        return $args;
     }
 
     /**

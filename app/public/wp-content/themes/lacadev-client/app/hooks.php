@@ -168,9 +168,13 @@ add_action('carbon_fields_theme_options_container_saved', static function ($user
  */
 if (is_admin()) {
     add_action('init', static function () {
+        $updateJsonUrl = (string) apply_filters(
+            'laca_theme_update_json_url',
+            'https://lacadev.com/theme-updates/lacadev-client.json'
+        );
         new \App\Settings\ThemeUpdater(
             'lacadev-client/theme',
-            'https://clients.lacadev.com/theme-updates/lacadev-client.json'
+            $updateJsonUrl
         );
         new \App\Widgets\BlockSyncWidget();
 

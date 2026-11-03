@@ -1,36 +1,19 @@
 <?php
-	/**
-	 * App Layout: layouts/app.php
-	 *
-	 * This is the template that is used for displaying all posts by default.
-	 *
-	 * @link    https://codex.wordpress.org/Template_Hierarchy
-	 *
-	 * @package WPEmergeTheme
-	 */
+/**
+ * Archive Template
+ *
+ * App Layout: layouts/app.php
+ *
+ * @package LacaDevClientChild
+ */
 
-// ── Query context ────────────────────────────────────────────────────────────
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 global $wp_query;
 
 $current_post_type = get_post_type() ?: 'post';
-$posts_per_page    = (int) get_option( 'posts_per_page', 12 );
-$paged             = (int) max( 1, get_query_var( 'paged', 1 ) );
-
-// ── Term filter params ───────────────────────────────────────────────────────
-$cat_id   = 0;
-$tag_id   = 0;
-$tax_term = 0;
-$taxonomy = '';
-
-if ( is_category() ) {
-	$cat_id = get_queried_object_id();
-} elseif ( is_tag() ) {
-	$tag_id = get_queried_object_id();
-} elseif ( is_tax() ) {
-	$term     = get_queried_object();
-	$tax_term = $term->term_id ?? 0;
-	$taxonomy = $term->taxonomy ?? '';
-}
 
 // ── N+1 prevention trên lần load đầu ────────────────────────────────────────
 if ( ! empty( $wp_query->posts ) ) {
@@ -38,36 +21,29 @@ if ( ! empty( $wp_query->posts ) ) {
 	update_object_term_cache( wp_list_pluck( $wp_query->posts, 'ID' ), $current_post_type );
 }
 
-// ── AJAX config truyền vào JS qua data-* ────────────────────────────────────
-$ajax_config = wp_json_encode( [
-	'action'         => 'lacadev_archive_load',
-	'nonce'          => wp_create_nonce( 'theme_nonce' ),
-	'ajaxurl'        => admin_url( 'admin-ajax.php' ),
-	'post_type'      => esc_js( $current_post_type ),
-	'posts_per_page' => $posts_per_page,
-	'cat_id'         => $cat_id,
-	'tag_id'         => $tag_id,
-	'tax_term'       => $tax_term,
-	'taxonomy'       => esc_js( $taxonomy ),
-	'current_page'   => $paged,
-	'max_pages'      => (int) $wp_query->max_num_pages,
-] );
+$container_class = function_exists('laca_block_layout_class') ? laca_block_layout_class('container') : 'container-fluid';
 ?>
 
 <div class="breadcumb">
-	<div class="container-fluid">
+	<div class="<?php echo esc_attr($container_class); ?>">
 		<?php
-		if ( function_exists( 'rank_math_the_breadcrumbs' ) ) :
+		if ( function_exists( 'laca_seo_breadcrumbs' ) ) :
+			laca_seo_breadcrumbs();
+		elseif ( function_exists( 'rank_math_the_breadcrumbs' ) ) :
 			rank_math_the_breadcrumbs();
 		endif;
 		?>
 	</div>
 </div>
 
-<div class="archive-post laca-news-list-archive" data-archive-config='<?php echo $ajax_config; ?>'>
+<div class="archive-post laca-news-list-archive">
 	<?php get_template_part( 'template-parts/page-hero' ); ?>
 
-	<div class="container-fluid">
+	<?php if ( function_exists('laca_render_dynamic_cpt_archive_intro') ) : ?>
+		<?php laca_render_dynamic_cpt_archive_intro(); ?>
+	<?php endif; ?>
+
+	<div class="<?php echo esc_attr($container_class); ?>">
 
 		<?php if ( have_posts() ) : ?>
 
@@ -82,7 +58,7 @@ $ajax_config = wp_json_encode( [
 
 					$cats     = get_the_terms( $post_id, 'category' );
 					$cat_name = '';
-					$cat_url  = '';
+					$cat_link = '';
 					if ( ! empty( $cats ) && ! is_wp_error( $cats ) ) {
 						$cat_name = esc_html( $cats[0]->name );
 						$cat_link = esc_url( get_term_link( $cats[0] ) );
@@ -113,7 +89,7 @@ $ajax_config = wp_json_encode( [
 
 					<div class="laca-news-list__content">
 						<?php if ( $cat_name ) : ?>
-							<a href="<?php echo $cat_link ?? '#'; ?>" class="laca-news-list__cat"><?php echo $cat_name; ?></a>
+							<a href="<?php echo $cat_link ?: '#'; ?>" class="laca-news-list__cat"><?php echo $cat_name; ?></a>
 						<?php endif; ?>
 
 						<h3 class="laca-news-list__item-title">
@@ -123,14 +99,8 @@ $ajax_config = wp_json_encode( [
 						<?php if ( $excerpt ) : ?>
 							<p class="laca-news-list__excerpt"><?php echo esc_html( $excerpt ); ?></p>
 						<?php endif; ?>
-
-						<!-- <a href="<?php echo esc_url( $post_url ); ?>" class="laca-news-list__read-more">
-							<?php //esc_html_e( 'Xem thêm', 'laca' ); ?>
-						</a> -->
 					</div>
 				</article>
-					<?php
-					?>
 				<?php endwhile; ?>
 			</div><!-- #archive-grid -->
 

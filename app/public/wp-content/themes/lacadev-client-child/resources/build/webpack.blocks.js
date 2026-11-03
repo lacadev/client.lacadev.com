@@ -66,9 +66,9 @@ function patchSassLoader(config) {
 
 // === Scan Child-specific blocks ===
 // Hỗ trợ 2 cấp: block nằm phẳng ngay dưới root (chưa phân loại site) HOẶC
-// nằm trong 1 thư mục "bucket" theo site (vd nhakhoathienphuoc-blocks-site/)
-// — 1 thư mục có block.json ngay trong nó = 1 block, không có = 1 bucket,
-// quét thêm 1 cấp con để tìm block bên trong (không hỗ trợ lồng sâu hơn).
+// nằm trong 1 thư mục "bucket" theo site (vd phucdainam-blocks-site/) — 1
+// thư mục có block.json ngay trong nó = 1 block, không có = 1 bucket, quét
+// thêm 1 cấp con để tìm block bên trong (không hỗ trợ lồng sâu hơn).
 function scanBlockRelativePaths(rootDir) {
   if (!fs.existsSync(rootDir)) return [];
 
@@ -95,6 +95,7 @@ function scanBlockRelativePaths(rootDir) {
 }
 
 const childBlocksDir = path.resolve(__dirname, '../../block-gutenberg');
+const parentBlocksDir = path.resolve(__dirname, '../../../lacadev-client/block-gutenberg');
 
 const childBlockConfigs = scanBlockRelativePaths(childBlocksDir).map(relPath => {
   return patchSassLoader({
@@ -110,8 +111,28 @@ const childBlockConfigs = scanBlockRelativePaths(childBlocksDir).map(relPath => 
   });
 });
 
+const parentBlockConfigs = scanBlockRelativePaths(parentBlocksDir).map(relPath => {
+  return patchSassLoader({
+    ...defaultConfig,
+    entry: {
+      index: path.join(parentBlocksDir, relPath, 'index.js')
+    },
+    output: {
+      ...defaultConfig.output,
+      path: path.join(parentBlocksDir, relPath, 'build'),
+      filename: '[name].js'
+    },
+    resolve: {
+      ...defaultConfig.resolve,
+      modules: [
+        path.resolve(__dirname, '../../node_modules'),
+        ...(defaultConfig.resolve?.modules || ['node_modules'])
+      ]
+    }
+  });
+});
+
 // === Global Gutenberg bundle: Parent theme → dist/gutenberg/ của Child ===
-const parentBlocksDir = path.resolve(__dirname, '../../../lacadev-client/block-gutenberg');
 const gutenbergLegacyConfig = patchSassLoader({
   ...defaultConfig,
   entry: {
@@ -131,4 +152,4 @@ const gutenbergLegacyConfig = patchSassLoader({
   }
 });
 
-module.exports = [...childBlockConfigs, gutenbergLegacyConfig];
+module.exports = [...childBlockConfigs, ...parentBlockConfigs, gutenbergLegacyConfig];

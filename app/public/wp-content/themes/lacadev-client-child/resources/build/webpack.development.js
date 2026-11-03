@@ -28,7 +28,12 @@ const babelLoader = {
         cacheDirectory: true,
         comments      : false,
         presets       : [
-            '@babel/preset-env'
+            '@babel/preset-env',
+            // Cho phép cú pháp JSX trong các file ngoài webpack.blocks.js
+            // (vd resources/scripts/editor/ai-translate-block.js) — @wordpress
+            // components vẫn viết bằng JSX cho dễ đọc/khớp style block khác,
+            // dù entry này không dùng wp-scripts.
+            '@babel/preset-react',
         ],
     },
 };
@@ -84,7 +89,9 @@ module.exports = {
      */
     output: {
         ...require('./webpack/output'),
-        clean: true,
+        // Giữ critical*.css: critical.js chạy SAU webpack và có thể bỏ qua trang
+        // đang "Coming soon" — xoá sạch thì mất luôn bản đã sinh trước đó.
+        clean: { keep: /styles[\\/]critical[^/\\]*\.css$/ },
     },
 
     /**

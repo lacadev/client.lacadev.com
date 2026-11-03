@@ -31,7 +31,10 @@ const babelLoader = {
         cacheDirectory: false,
         comments: false,
         presets: [
-            '@babel/preset-env'
+            '@babel/preset-env',
+            // Cho phép cú pháp JSX trong các file ngoài webpack.blocks.js
+            // (vd resources/scripts/editor/ai-translate-block.js).
+            '@babel/preset-react',
         ],
     },
 };
@@ -152,7 +155,9 @@ module.exports = {
     entry: require('./webpack/entry'),
     output: {
         ...require('./webpack/output'),
-        clean: true,
+        // Giữ critical*.css: critical.js chạy SAU webpack và có thể bỏ qua trang
+        // đang "Coming soon" — xoá sạch thì mất luôn bản đã sinh trước đó.
+        clean: { keep: /styles[\\/]critical[^/\\]*\.css$/ },
     },
     resolve: require('./webpack/resolve'),
     externals: require('./webpack/externals'),

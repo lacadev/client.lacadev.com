@@ -15,9 +15,24 @@ if (process.env.SKIP_CRITICAL === '1') {
 }
 
 // Get dev URL from config or fallback
-const targetUrl = (config.development && config.development.url) ? config.development.url : 'http://lacadev.local';
+const baseUrl = (config.development && config.development.url) ? config.development.url.replace(/\/+$/, '') : 'http://lacadev-client.local';
 
-console.log(`Starting Critical CSS generation from: ${targetUrl}`);
+// Mỗi loại trang 1 file critical-{type}.css — khớp filter lacadev_critical_css_path
+// trong app/hooks.php. "home" đồng thời ghi ra critical.css làm fallback chung.
+// ?lacadev_no_critical=1: lấy CSS gốc dạng blocking; nếu không, link đã bị đổi
+// sang media="print" (async) và critical bỏ sót rule → layout nhảy (CLS).
+const defaultPages = {
+    home: '/',
+    single: '/',
+    page: '/',
+};
+const configuredPages = (config.critical && config.critical.pages) ? config.critical.pages : defaultPages;
+const sampleUrls = {};
+for (const [type, uri] of Object.entries(configuredPages)) {
+    sampleUrls[type] = uri.startsWith('http') ? uri : `${baseUrl}${uri.startsWith('/') ? '' : '/'}${uri}`;
+}
+
+console.log(`Starting Critical CSS generation for ${Object.keys(sampleUrls).length} page types...`);
 
 // Resolve paths
 // theme/dist is where we want to save
@@ -43,9 +58,9 @@ const dimensions = [
     try {
         const { generate } = await import('critical');
         const puppeteer = require('puppeteer');
+        const fs = require('fs');
         // Prefer system Chrome over old bundled Chromium (r722234) which times out on macOS 15+
         const systemChrome = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
-        const fs = require('fs');
         const browserLaunchOptions = {
             headless: true,
             timeout: 120000,
@@ -61,6 +76,11 @@ const dimensions = [
             pageLoadSkipTimeout: 15000,
             // Small buffer to let above-the-fold styles settle.
             renderWaitTime: 1000,
+            // Critical trích từ site LOCAL, mà local thiếu dữ liệu header của
+            // production (logo dạng ảnh, menu trái) → rule header bị loại vì "không
+            // dùng" → trên production logo hiện ảnh gốc 2560px rồi co lại (CLS 0.35).
+            // Header luôn ở màn hình đầu nên giữ toàn bộ rule của nó.
+            forceInclude: [/\.header/, /\.menu-item/],
             // Penthouse supports custom browser via puppeteer.getBrowser.
             // This avoids fallback to old bundled Chromium revisions.
             puppeteer: {
@@ -75,25 +95,76 @@ const dimensions = [
             browserLaunchOptions.executablePath = systemChrome;
         }
 
-        const { css, html, uncritical } = await generate({
-            base: distPath,
-            src: targetUrl,
-            target: 'styles/critical.css',
-            inline: false,
-            extract: false,
-            dimensions: dimensions,
-            // Ignore strict font loading in critical path to avoid FOUT issues
-            ignore: {
-                atrule: ['@font-face'],
-            },
-            penthouse: penthouseArgs,
-        });
+        const stylesDir = path.join(distPath, 'styles');
+        fs.mkdirSync(stylesDir, { recursive: true });
 
-        console.log('✅ Critical CSS generated successfully at: dist/styles/critical.css');
+        // @font-face của child (font thật + fallback metric) phải có ngay trong
+        // critical: thiếu thì lần render đầu dùng sans-serif mặc định rồi nhảy khi
+        // child.css async tải xong. Penthouse bỏ @font-face (ignore bên dưới) vì nó
+        // gom cả Quicksand của parent → tự lấy từ child.css, đổi url tương đối
+        // ../fonts/ sang đường dẫn từ gốc site (inline <style> resolve theo URL trang).
+        const themeDirName = path.basename(path.resolve(__dirname, '../..'));
+        const fontBaseUrl = `/wp-content/themes/${themeDirName}/dist/fonts/`;
+        const childCssPath = path.join(stylesDir, 'child.css');
+        const fontFaceCss = fs.existsSync(childCssPath)
+            ? (fs.readFileSync(childCssPath, 'utf8').match(/@font-face\{[^}]*\}/g) || [])
+                  .join('')
+                  .replace(/url\(\.\.\/fonts\//g, `url(${fontBaseUrl}`)
+            : '';
+
+        const cookie = process.env.CRITICAL_COOKIE || '';
+
+        for (const [type, url] of Object.entries(sampleUrls)) {
+            try {
+                const src = `${url}${url.includes('?') ? '&' : '?'}lacadev_no_critical=1`;
+                let requestHeaders = {};
+                const html = await fetch(src).then((r) => r.text());
+                if (html.includes('woocommerce-coming-soon-store-only')) {
+                    if (!cookie) {
+                        const keptFile = path.join(stylesDir, `critical-${type}.css`);
+                        if (fs.existsSync(keptFile)) {
+                            const kept = fs.readFileSync(keptFile, 'utf8').replace(/@font-face\{[^}]*\}/g, '').replace(/^\n+/, '');
+                            fs.writeFileSync(keptFile, fontFaceCss + '\n' + kept);
+                        }
+                        console.warn(`⚠️ [${type}] đang là trang Coming soon — giữ critical-${type}.css cũ.`);
+                        continue;
+                    }
+                    requestHeaders = { Cookie: cookie };
+                }
+                console.log(`Extracting critical CSS [${type}] from: ${src}`);
+                const result = await generate({
+                    base: distPath,
+                    src,
+                    inline: false,
+                    extract: false,
+                    dimensions: dimensions,
+                    ignore: {
+                        atrule: ['@font-face'],
+                    },
+                    request: { headers: requestHeaders },
+                    penthouse: { ...penthouseArgs, customPageHeaders: requestHeaders },
+                });
+                let css = result && result.css ? result.css : '';
+                if (!css) {
+                    console.warn(`⚠️ Empty critical CSS for ${type}, skipped.`);
+                    continue;
+                }
+
+                if (fontFaceCss) {
+                    css = fontFaceCss + '\n' + css;
+                }
+
+                fs.writeFileSync(path.join(stylesDir, `critical-${type}.css`), css);
+                if (type === 'home') {
+                    fs.writeFileSync(path.join(stylesDir, 'critical.css'), css);
+                }
+                console.log(`✅ critical-${type}.css (${(css.length / 1024).toFixed(1)} KB)`);
+            } catch (pageErr) {
+                console.warn(`⚠️ Warning: could not extract critical CSS for ${url}:`, pageErr.message);
+            }
+        }
     } catch (err) {
         console.error('❌ Critical CSS Generation Failed:', err);
-        // Default to non-fatal so `yarn build` can succeed even if Puppeteer crashes.
-        // Set CRITICAL_STRICT=1 to fail the build on error.
         if (process.env.CRITICAL_STRICT === '1') {
             process.exit(1);
         }

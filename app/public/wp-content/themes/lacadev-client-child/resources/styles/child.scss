@@ -17,18 +17,20 @@
 @use "./theme/layout/general";
 @use "./theme/layout/header";
 @use "./theme/layout/footer";
+@use "./theme/layout/newsletter";
 @use "./theme/layout/archive";
 @use "./theme/layout/single-post";
 @use "./theme/layout/archive-project";
 @use "./theme/layout/archive-gallery";
 @use "./theme/layout/single-project";
+@use "./theme/layout/floating-contact";
 
 // === Components ===
 @use "./theme/components/breadcumb";
 @use "./theme/components/pagination";
 @use "./theme/components/share-post";
+@use "./theme/components/contact-form";
 
 // === Pages ===
 @use "./theme/pages/contact";
-
-
+@use "./theme/pages/search-results";

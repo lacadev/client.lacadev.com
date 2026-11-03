@@ -3,11 +3,13 @@
 
 body:not(.wp-admin) {
   font-family: $mainFont !important;
-  background-color: $bgColor;
-  line-height: 1.2 !important;
+  line-height: 1.7 !important;
+
+  @include resFont(rem(14), rem(16));
+  @include breakText;
 }
 
-main#main_content {
+body:not(.home) main#main_content {
   padding-top: rem(90);
 
   @include maxWidth($md) {
@@ -15,20 +17,83 @@ main#main_content {
   }
 }
 
+:root {
+  --laca-container-max: 100%;
+}
+
+body.laca-layout-boxed {
+  --laca-container-max: #{$xl};
+}
+
+body.laca-layout-fluid {
+  --laca-container-max: 100%;
+}
+
+.is-layout-boxed {
+  --laca-container-max: #{$xl};
+}
+
+.is-layout-fluid {
+  --laca-container-max: 100%;
+}
+
 .container {
-  max-width: $lg;
+  --laca-container-max: #{$xl};
+  max-width: var(--laca-container-max, #{$xl});
+  margin-inline: auto;
 }
 
 .container-fluid {
-  max-width: 95%;
-  margin: 0 auto;
-  padding: 0;
-  padding-right: 0.9375rem;
-  padding-left: 0.9375rem;
+  max-width: var(--laca-container-max, 100%);
+  margin-inline: auto;
+
+  &.is-layout-boxed {
+    --laca-container-max: #{$xl};
+  }
+
+  &.is-layout-fluid {
+    --laca-container-max: 100%;
+  }
+
+  @include container-gutter;
+}
+
+// R5: Khi block Container hoặc block Tabs (vốn có container-fluid ở ngoài) chứa
+// các block con cũng có class .container-fluid bên trong, padding cộng dồn
+// làm block con tụt vào trong, lệch lề với header/footer. Rule này triệt tiêu
+// padding của các container-fluid lồng bên trong.
+.container-fluid .container-fluid {
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+}
+
+// R1 & R3: Vùng nội dung bài viết/trang (.entry-content) không có padding ngang ở wrapper;
+// Các khối con trực tiếp (core blocks, đoạn văn, heading, list...) tự nhận lề qua container-gutter.
+.entry-content {
+  width: 100%;
+
+  > :not(section):not(.alignfull):not(.alignwide) {
+    max-width: var(--laca-container-max, 100%);
+    margin-inline: auto;
+    @include container-gutter;
+  }
+
+  > .alignwide {
+    max-width: $xl;
+    margin-left: auto;
+    margin-right: auto;
+    @include container-gutter;
+  }
+
+  > .alignfull {
+    width: 100vw;
+    max-width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+  }
 }
 
 h1.page-title {
-    color: $secondColor;
     text-transform: uppercase;
     font-size: rem(30);
     font-weight: $semiBold;
@@ -49,4 +114,43 @@ figcaption {
   @include maxWidth($md) {
     padding: 0 0 2rem;
   }
+}
+
+p a,
+.wp-block-list.has-marker a,
+[class*="__desc"] a,
+[class*="__description"] a {
+  color: $primaryColor;
+  text-decoration: underline !important;
+  text-underline-position: under;
+  text-decoration-color: $primaryColor !important;
+}
+
+// Typography heading đồng bộ toàn site (mobile → desktop)
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-transform: uppercase;
+  font-weight: $regular;
+}
+
+h1 {
+  @include resFont(rem(32), rem(48));
+
+}
+
+h2 {
+  @include resFont(rem(20), rem(24));
+}
+
+h3 {
+  @include resFont(rem(16), rem(16));
+}
+
+// Core WP mặc định separator dày 2px, site dùng 1px
+.wp-block-separator:not(.is-style-dots) {
+  border-top-width: 1px;
 }

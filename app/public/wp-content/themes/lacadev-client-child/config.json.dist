@@ -33,6 +33,13 @@
     "url": "http://lacadev-client.local",
     "port": 3000
   },
+  "critical": {
+    "pages": {
+      "home": "/",
+      "single": "/",
+      "page": "/"
+    }
+  },
   "release": {
     "include": [
       "app",

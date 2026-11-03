@@ -12,11 +12,27 @@ module.exports = {
   'theme': path.join(parentSrc, 'theme/index.js'),
   'admin': path.join(parentSrc, 'admin/index.js'),
   'login': path.join(parentSrc, 'login/index.js'),
-  'editor': path.join(parentSrc, 'editor/index.js'),
+  // 'editor' vốn chỉ trỏ vào parent — bundle thêm fonts.scss của
+  // child để trang soạn thảo Gutenberg cũng load được các
+  // font riêng của site, không chỉ frontend. Cùng pattern với entry 'child'.
+  'editor': [
+    path.join(parentSrc, 'editor/index.js'),
+    utils.srcStylesPath('theme/base/_fonts.scss'),
+  ],
   // Child theme: SCSS override + custom JS (archive-gallery, etc.)
   // Dùng array entry để webpack bundle cả 2 vào dist/child.js + dist/styles/child.css
   'child': [
     utils.srcStylesPath('child.scss'),
     path.join(childSrc, 'theme/index.js'),
+  ],
+  // Laca SEO Admin Bundle (Phase 0 & 1)
+  'laca-seo': [
+    path.join(parentSrc, 'admin/laca-seo/index.js'),
+    path.resolve(__dirname, '../../../../lacadev-client/resources/styles/admin/laca-seo/index.scss'),
+  ],
+  // Laca SEO Editor Bundle (Phase 2)
+  'laca-seo-editor': [
+    path.join(parentSrc, 'admin/laca-seo/editor.js'),
+    path.resolve(__dirname, '../../../../lacadev-client/resources/styles/admin/laca-seo/editor.scss'),
   ],
 };

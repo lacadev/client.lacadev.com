@@ -2,8 +2,13 @@
 @forward "@parent/styles/theme/abstracts/variables";
 
 $mainFont: "ShopeeDisplay", sans-serif;
+$subFont: $mainFont;
 
 // Theme colors
 $primaryColor: var(--primary-color);
 $secondColor: var(--second-color);
 $bgColor: var(--bg-color);
+
+$darkColor: #121212;
+$lightColor: #ffffff;
+$errorColor: #e53935;

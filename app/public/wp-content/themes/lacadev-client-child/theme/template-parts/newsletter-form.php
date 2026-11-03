@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-if (!function_exists('getOption') || !getOption('newsletter_enable')) {
+if (!function_exists('carbon_get_theme_option') || !carbon_get_theme_option('newsletter_enable')) {
     return;
 }
 if (!class_exists('NewsletterEndpoints') || !class_exists('NewsletterTexts') || !class_exists('NewsletterAjaxHandler')) {

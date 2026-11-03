@@ -161,17 +161,6 @@ $container_class = function_exists('laca_block_layout_class') ? laca_block_layou
 									<path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
 								</svg>
 							</button>
-
-							<?php if (function_exists('WC') && function_exists('laca_render_mini_cart')) : ?>
-								<button type="button" class="header__icon-btn" id="btn-cart-open"
-									aria-label="<?php esc_attr_e('Giỏ hàng', 'laca'); ?>">
-									<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-										<rect x="5" y="9" width="14" height="11" rx="1" stroke="currentColor" stroke-width="2" />
-										<path d="M9 9V7a3 3 0 016 0v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-									</svg>
-									<span class="header__cart-count"><?php echo (int) WC()->cart->get_cart_contents_count(); ?></span>
-								</button>
-							<?php endif; ?>
 						</div>
 
 						<!-- Hamburger (mobile) -->
@@ -244,27 +233,5 @@ $container_class = function_exists('laca_block_layout_class') ? laca_block_layou
 							data-loading-text="<?php esc_attr_e('Đang tìm kiếm…', 'laca'); ?>"></div>
 					</div>
 				</div>
-
-				<?php if (function_exists('WC') && function_exists('laca_render_mini_cart')) : ?>
-					<!-- Popup giỏ hàng — trượt toàn màn hình từ phải -->
-					<div class="header__popup header__popup--cart" id="header-cart" aria-hidden="true"
-						data-ajax-config='<?php echo esc_attr(wp_json_encode([
-							'ajaxurl' => admin_url('admin-ajax.php'),
-							'nonce'   => wp_create_nonce('theme_nonce'),
-						])); ?>'>
-						<div class="header__popup-backdrop"></div>
-						<div class="header__popup-panel">
-							<div class="header__popup-head">
-								<h2 class="header__popup-title"><?php esc_html_e('Giỏ hàng', 'laca'); ?></h2>
-								<button type="button" class="header__popup-close" id="btn-cart-close">
-									<?php esc_html_e('Đóng', 'laca'); ?>
-								</button>
-							</div>
-							<div class="header__cart-body">
-								<?php laca_render_mini_cart(); ?>
-							</div>
-						</div>
-					</div>
-				<?php endif; ?>
 			</header>
 		<?php endif; ?>

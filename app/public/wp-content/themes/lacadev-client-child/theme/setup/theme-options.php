@@ -294,7 +294,7 @@ $optionsPage = Container::make('theme_options', __('Laca Theme', 'laca'))
 		Field::make('html', 'newsletter_intro', __('', 'laca'))
 			->set_html('<div style="background:#f4f4f5;border:1px solid #e4e4e7;border-radius:6px;padding:14px 16px;margin:8px 0"><p style="margin:0 0 8px;font-weight:600;color:#18181b">🔧 Newsletter ở footer</p><p style="margin:0;font-size:13px;color:#374151">Khách nhập email ở footer và bấm Subscribe là <strong>đăng ký luôn</strong>, không cần xác nhận. Website gửi 1 <strong>email cảm ơn</strong> (qua SMTP ở Laca Admin → SMTP), cuối email có link <strong>huỷ đăng ký</strong>. Xem danh sách theo trạng thái và xuất CSV tại menu <strong>Newsletter</strong> bên trái.</p></div>'),
 
-		Field::make('checkbox', 'newsletter_enable' . currentLanguage(), __('Hiển thị form Newsletter ở footer', 'laca'))
+		Field::make('checkbox', 'newsletter_enable', __('Hiển thị form Newsletter ở footer', 'laca'))
 			->set_option_value('yes')
 			->set_default_value(false),
 

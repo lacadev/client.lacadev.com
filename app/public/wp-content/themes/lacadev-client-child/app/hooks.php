@@ -40,28 +40,28 @@ if (file_exists(CHILD_APP_DIR . 'src/Newsletter/NewsletterTexts.php')) {
 }
 
 add_action('init', function () {
-    if (!file_exists(CHILD_APP_DIR . 'src/Newsletter/NewsletterSubscribers.php')) {
+    $newsletter_enabled = function_exists('carbon_get_theme_option') && carbon_get_theme_option('newsletter_enable');
+    if (!$newsletter_enabled) {
         return;
     }
 
-    require_once CHILD_APP_DIR . 'src/Newsletter/NewsletterSubscribers.php';
-    require_once CHILD_APP_DIR . 'src/Newsletter/NewsletterSync.php';
-
+    if (file_exists(CHILD_APP_DIR . 'src/Newsletter/NewsletterSubscribers.php')) {
+        require_once CHILD_APP_DIR . 'src/Newsletter/NewsletterSubscribers.php';
+    }
+    if (file_exists(CHILD_APP_DIR . 'src/Newsletter/NewsletterSync.php')) {
+        require_once CHILD_APP_DIR . 'src/Newsletter/NewsletterSync.php';
+    }
+    if (file_exists(CHILD_APP_DIR . 'src/Newsletter/NewsletterMailer.php')) {
+        require_once CHILD_APP_DIR . 'src/Newsletter/NewsletterMailer.php';
+    }
+    if (file_exists(CHILD_APP_DIR . 'src/Newsletter/NewsletterEndpoints.php')) {
+        require_once CHILD_APP_DIR . 'src/Newsletter/NewsletterEndpoints.php';
+    }
+    if (file_exists(CHILD_APP_DIR . 'src/Ajax/NewsletterAjaxHandler.php')) {
+        require_once CHILD_APP_DIR . 'src/Ajax/NewsletterAjaxHandler.php';
+    }
     if (is_admin() && file_exists(CHILD_APP_DIR . 'src/Newsletter/NewsletterAdminPage.php')) {
         require_once CHILD_APP_DIR . 'src/Newsletter/NewsletterAdminPage.php';
-    }
-
-    $newsletter_enabled = function_exists('carbon_get_theme_option') && carbon_get_theme_option('newsletter_enable');
-    if ($newsletter_enabled) {
-        if (file_exists(CHILD_APP_DIR . 'src/Newsletter/NewsletterMailer.php')) {
-            require_once CHILD_APP_DIR . 'src/Newsletter/NewsletterMailer.php';
-        }
-        if (file_exists(CHILD_APP_DIR . 'src/Newsletter/NewsletterEndpoints.php')) {
-            require_once CHILD_APP_DIR . 'src/Newsletter/NewsletterEndpoints.php';
-        }
-        if (file_exists(CHILD_APP_DIR . 'src/Ajax/NewsletterAjaxHandler.php')) {
-            require_once CHILD_APP_DIR . 'src/Ajax/NewsletterAjaxHandler.php';
-        }
     }
 }, 1);
 

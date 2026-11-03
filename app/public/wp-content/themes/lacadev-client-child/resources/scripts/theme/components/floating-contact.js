@@ -1,8 +1,6 @@
 /**
  * Nút liên hệ nổi (góc dưới phải): bấm nút chính để mở/đóng nhóm nút con
- * (lên đầu trang / gọi điện / Zalo) — tham khảo cách làm của xliiicoffee
- * (theme/footer.php #show_icon_contact/#show_hidden), viết lại theo quy ước
- * component riêng của site này thay vì nhúng <script> thẳng trong footer.php.
+ * (lên đầu trang / gọi điện / Zalo), viết theo quy ước component riêng của theme.
  */
 
 const SCROLL_SHOW_THRESHOLD = 600;

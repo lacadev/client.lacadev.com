@@ -36,6 +36,7 @@ class AdminSettings
 		// bên trong nên gọi không điều kiện ở đây là an toàn.
 		$this->restrictExtraSuperUserAccess();
 
+		$this->addTrackerConfigParserScript();
 		$this->addDashboardContactWidget();
 		$this->removeDefaultWidgets();
 		$this->removeDashboardWidgets();
@@ -1123,18 +1124,48 @@ class AdminSettings
 							return '<div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:6px;padding:10px 14px;margin:8px 0;color:#c2410c;font-weight:600">⚠️ Chưa cấu hình — nhập Endpoint và Secret Key bên dưới để kích hoạt</div>';
 						}),
 
-					Field::make('separator', 'sep_tracker', __('Kết nối với lacadev.com', 'laca')),
+					Field::make('separator', 'sep_tracker_fast_config', __('⚡ Dán cấu hình nhanh từ Hub (Laca CMS)', 'laca')),
+
+					Field::make('textarea', 'laca_client_config_paste', __('Dán cấu hình JSON từ Hub', 'laca'))
+						->set_rows(4)
+						->set_attribute('placeholder', '{"hub_url": "...", "endpoint": "...", "project_id": "...", "keys": { ... }}')
+						->set_help_text('Dán toàn bộ mã JSON cấu hình sao chép từ Project Workspace trên Hub. Hệ thống sẽ tự động bóc tách và điền vào các trường bên dưới.'),
+
+					Field::make('separator', 'sep_tracker', __('Chi tiết kết nối & Khóa bảo mật (HMAC)', 'laca')),
 
 					Field::make('text', 'laca_tracker_endpoint', __('Tracker Endpoint URL', 'laca'))
 						->set_width(60)
 						->set_attribute('placeholder', 'https://lacadev.com/wp-json/laca/v1/tracker/log')
-						->set_help_text('REST URL của lacadev CMS. Copy từ trang Project → Tracker trên lacadev.com.'),
+						->set_help_text('REST URL của lacadev CMS. Tự động điền khi dán JSON cấu hình.'),
 
-					Field::make('text', 'laca_tracker_secret_key', __('Secret Key', 'laca'))
+					Field::make('text', 'laca_project_id', __('Public Project ID', 'laca'))
 						->set_width(40)
+						->set_attribute('placeholder', 'prj_xxxxxxx')
+						->set_help_text('Mã định danh dự án trên Hub (truyền trong header X-Laca-Project).'),
+
+					Field::make('text', 'laca_key_tracker', __('Tracker Key', 'laca'))
+						->set_width(33.33)
+						->set_attribute('type', 'password')
+						->set_attribute('placeholder', 'Key ký HMAC gửi log')
+						->set_help_text('Dùng để ký chữ ký HMAC khi gửi log và heartbeat lên Hub.'),
+
+					Field::make('text', 'laca_key_catalog', __('Block Catalog Key', 'laca'))
+						->set_width(33.33)
+						->set_attribute('type', 'password')
+						->set_attribute('placeholder', 'Key Block Marketplace')
+						->set_help_text('Dùng để xác thực tải block từ Hub hoặc nhận sync block.'),
+
+					Field::make('text', 'laca_key_remote', __('Remote Update Key', 'laca'))
+						->set_width(33.33)
+						->set_attribute('type', 'password')
+						->set_attribute('placeholder', 'Key nhận lệnh cập nhật từ xa')
+						->set_help_text('Dùng để xác thực lệnh cập nhật plugin/theme/core gửi từ Hub.'),
+
+					Field::make('text', 'laca_tracker_secret_key', __('Secret Key dự phòng (Legacy)', 'laca'))
+						->set_width(100)
 						->set_attribute('placeholder', 'sk_xxxxxxxx')
 						->set_attribute('type', 'password')
-						->set_help_text('Secret key riêng của project. Không chia sẻ key này.'),
+						->set_help_text('Secret key cũ dự phòng nếu không dùng chữ ký HMAC.'),
 
 					Field::make('separator', 'sep_tracker_deep_fim', __('Kiểm tra sâu (nâng cao)', 'laca')),
 
@@ -1354,6 +1385,85 @@ class AdminSettings
 					Field::make('text', 'help_support_email', __('Email', 'laca')),
 					Field::make('text', 'help_support_website', __('Website', 'laca')),
 				]);
+		});
+	}
+
+	/**
+	 * Script tự động phân tích JSON cấu hình khi dán vào ô laca_client_config_paste
+	 */
+	public function addTrackerConfigParserScript(): void
+	{
+		add_action('admin_footer', static function () {
+			$screen = get_current_screen();
+			if (!$screen || strpos((string) $screen->id, 'laca-tracker') === false) {
+				return;
+			}
+			?>
+			<script>
+			document.addEventListener('DOMContentLoaded', function () {
+				function setupParser() {
+					var textarea = document.querySelector('textarea[name*="laca_client_config_paste"]');
+					if (!textarea || textarea.dataset.parsedAttached) {
+						return;
+					}
+					textarea.dataset.parsedAttached = 'true';
+
+					function parseConfig() {
+						var raw = textarea.value.trim();
+						if (!raw || raw.charAt(0) !== '{') {
+							return;
+						}
+						try {
+							var data = JSON.parse(raw);
+							var setVal = function (fieldName, val) {
+								if (!val) return;
+								var input = document.querySelector('input[name*="' + fieldName + '"]');
+								if (input) {
+									input.value = val;
+									input.dispatchEvent(new Event('input', { bubbles: true }));
+									input.dispatchEvent(new Event('change', { bubbles: true }));
+								}
+							};
+
+							if (data.endpoint) {
+								setVal('laca_tracker_endpoint', data.endpoint);
+							} else if (data.hub_url) {
+								setVal('laca_tracker_endpoint', data.hub_url.replace(/\/+$/, '') + '/wp-json/laca/v1/tracker/log');
+							}
+
+							if (data.project_id) {
+								setVal('laca_project_id', data.project_id);
+							}
+
+							if (data.keys) {
+								if (data.keys.tracker) {
+									setVal('laca_key_tracker', data.keys.tracker);
+									setVal('laca_tracker_secret_key', data.keys.tracker);
+								}
+								if (data.keys.catalog) {
+									setVal('laca_key_catalog', data.keys.catalog);
+								}
+								if (data.keys.remote) {
+									setVal('laca_key_remote', data.keys.remote);
+								}
+							}
+						} catch (e) {
+							console.warn('[LacaDev Tracker] Không thể parse JSON cấu hình:', e);
+						}
+					}
+
+					textarea.addEventListener('input', parseConfig);
+					textarea.addEventListener('paste', function () {
+						setTimeout(parseConfig, 60);
+					});
+				}
+
+				setupParser();
+				var observer = new MutationObserver(setupParser);
+				observer.observe(document.body, { childList: true, subtree: true });
+			});
+			</script>
+			<?php
 		});
 	}
 }

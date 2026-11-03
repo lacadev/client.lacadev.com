@@ -23,8 +23,12 @@ if (!defined('ABSPATH')) {
 class LacaDevTrackerClient
 {
     // Carbon Fields field names (dùng với carbon_get_theme_option)
-    const CF_ENDPOINT = 'laca_tracker_endpoint';
-    const CF_SECRET   = 'laca_tracker_secret_key';
+    const CF_ENDPOINT   = 'laca_tracker_endpoint';
+    const CF_SECRET     = 'laca_tracker_secret_key';
+    const CF_PROJECT_ID = 'laca_project_id';
+    const CF_KEY_TRACKER = 'laca_key_tracker';
+    const CF_KEY_CATALOG = 'laca_key_catalog';
+    const CF_KEY_REMOTE  = 'laca_key_remote';
 
     // WP Cron hook names
     const CRON_HOURLY    = 'laca_tracker_hourly_scan';
@@ -930,22 +934,33 @@ class LacaDevTrackerClient
      */
     private function sendLogs(array $logs, bool $blocking = false): bool
     {
-        $endpoint  = self::getEndpoint();
-        $secretKey = self::getSecretKey();
+        $endpoint   = self::getEndpoint();
+        $trackerKey = self::getTrackerKey();
+        $secretKey  = self::getSecretKey();
 
-        if (empty($endpoint) || empty($secretKey) || empty($logs)) {
+        if (empty($endpoint) || (empty($trackerKey) && empty($secretKey)) || empty($logs)) {
             return false;
         }
 
-        $siteUrl = get_bloginfo('url');
+        $siteUrl   = get_bloginfo('url');
+        $projectId = self::getProjectId();
+
+        $bodyJson = wp_json_encode([
+            'secret_key' => $secretKey ?: $trackerKey,
+            'site_url'   => $siteUrl,
+            'logs'       => $logs,
+        ], JSON_UNESCAPED_UNICODE);
+
+        if (!$bodyJson) {
+            return false;
+        }
+
+        $keyForSigning = $trackerKey ?: $secretKey;
+        $headers       = \App\Security\RequestSigner::sign('POST', $endpoint, $bodyJson, $keyForSigning, $projectId);
 
         $response = wp_remote_post($endpoint, [
-            'body'    => wp_json_encode([
-                'secret_key' => $secretKey,
-                'site_url'   => $siteUrl,
-                'logs'       => $logs,
-            ], JSON_UNESCAPED_UNICODE),
-            'headers'  => ['Content-Type' => 'application/json'],
+            'body'     => $bodyJson,
+            'headers'  => $headers,
             'timeout'  => $blocking ? 15 : 8,
             'blocking' => $blocking,
         ]);
@@ -979,9 +994,65 @@ class LacaDevTrackerClient
         return (string) get_option('_' . self::CF_SECRET, '');
     }
 
+    public static function getProjectId(): string
+    {
+        if (function_exists('carbon_get_theme_option')) {
+            $val = (string) (carbon_get_theme_option(self::CF_PROJECT_ID) ?: '');
+            if ($val !== '') {
+                return $val;
+            }
+        }
+        return (string) get_option('_' . self::CF_PROJECT_ID, '');
+    }
+
+    public static function getTrackerKey(): string
+    {
+        if (function_exists('carbon_get_theme_option')) {
+            $val = (string) (carbon_get_theme_option(self::CF_KEY_TRACKER) ?: '');
+            if ($val !== '') {
+                return $val;
+            }
+        }
+        $val = (string) get_option('_' . self::CF_KEY_TRACKER, '');
+        if ($val !== '') {
+            return $val;
+        }
+        return self::getSecretKey();
+    }
+
+    public static function getCatalogKey(): string
+    {
+        if (function_exists('carbon_get_theme_option')) {
+            $val = (string) (carbon_get_theme_option(self::CF_KEY_CATALOG) ?: '');
+            if ($val !== '') {
+                return $val;
+            }
+        }
+        $val = (string) get_option('_' . self::CF_KEY_CATALOG, '');
+        if ($val !== '') {
+            return $val;
+        }
+        return self::getSecretKey();
+    }
+
+    public static function getRemoteKey(): string
+    {
+        if (function_exists('carbon_get_theme_option')) {
+            $val = (string) (carbon_get_theme_option(self::CF_KEY_REMOTE) ?: '');
+            if ($val !== '') {
+                return $val;
+            }
+        }
+        $val = (string) get_option('_' . self::CF_KEY_REMOTE, '');
+        if ($val !== '') {
+            return $val;
+        }
+        return self::getSecretKey();
+    }
+
     public static function isConfigured(): bool
     {
-        return !empty(self::getEndpoint()) && !empty(self::getSecretKey());
+        return !empty(self::getEndpoint()) && (!empty(self::getTrackerKey()) || !empty(self::getSecretKey()));
     }
 
     /**
@@ -1061,15 +1132,28 @@ class LacaDevTrackerClient
     public function handleRemoteUpdate(\WP_REST_Request $request): \WP_REST_Response
     {
         $params    = $request->get_json_params() ?: [];
-        $secretKey = sanitize_text_field($params['secret_key'] ?? '');
         $action    = sanitize_key($params['action'] ?? '');
         $slug      = sanitize_text_field($params['slug'] ?? '');
 
-        // 1) Xác thực secret key (so sánh constant-time, chặn cả trường hợp
-        // secret chưa được cấu hình để tránh hash_equals('', '') === true)
-        $storedSecret = self::getSecretKey();
-        if (empty($secretKey) || empty($storedSecret) || !hash_equals($storedSecret, $secretKey)) {
-            return new \WP_REST_Response(['success' => false, 'message' => 'Unauthorized'], 401);
+        // 1) Xác thực: Ưu tiên HMAC signature (X-Laca-Signature) với remote key
+        $remoteKey = self::getRemoteKey();
+        $sigHeader = $request->get_header('X-Laca-Signature');
+
+        if (!empty($sigHeader)) {
+            if (empty($remoteKey)) {
+                return new \WP_REST_Response(['success' => false, 'message' => 'Remote key chưa được cấu hình'], 401);
+            }
+            $verify = \App\Security\RequestSigner::verify($request, $remoteKey);
+            if (!$verify['valid']) {
+                return new \WP_REST_Response(['success' => false, 'message' => $verify['message']], 401);
+            }
+        } else {
+            // Fallback: Xác thực secret key truyền thống (constant-time)
+            $secretKey    = sanitize_text_field($params['secret_key'] ?? '');
+            $storedSecret = self::getSecretKey();
+            if (empty($secretKey) || empty($storedSecret) || !hash_equals($storedSecret, $secretKey)) {
+                return new \WP_REST_Response(['success' => false, 'message' => 'Unauthorized'], 401);
+            }
         }
 
         // 2) Validate action

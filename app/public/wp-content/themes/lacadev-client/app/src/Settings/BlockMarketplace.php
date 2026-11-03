@@ -73,10 +73,11 @@ class BlockMarketplace
 
     private static function fetchFromHub(): ?array
     {
-        $endpoint = LacaDevTrackerClient::getEndpoint();
-        $secret   = LacaDevTrackerClient::getSecretKey();
+        $endpoint   = LacaDevTrackerClient::getEndpoint();
+        $catalogKey = LacaDevTrackerClient::getCatalogKey();
+        $projectId  = LacaDevTrackerClient::getProjectId();
 
-        if (empty($endpoint) || empty($secret)) {
+        if (empty($endpoint) || empty($catalogKey)) {
             return null;
         }
 
@@ -85,11 +86,12 @@ class BlockMarketplace
         // trường cấu hình URL riêng cho Block Marketplace.
         $catalogUrl = str_replace('/tracker/log', '/blocks-catalog', $endpoint);
 
+        $headers = \App\Security\RequestSigner::sign('GET', $catalogUrl, '', $catalogKey, $projectId);
+        $headers['Accept']     = 'application/json';
+        $headers['X-Laca-Key'] = $catalogKey; // Fallback legacy header
+
         $response = wp_remote_get($catalogUrl, [
-            'headers' => [
-                'X-Laca-Key' => $secret,
-                'Accept'     => 'application/json',
-            ],
+            'headers' => $headers,
             'timeout' => 15,
         ]);
 

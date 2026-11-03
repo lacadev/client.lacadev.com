@@ -157,8 +157,21 @@ class BlockCatalogProvider
 
     private function authenticate(\WP_REST_Request $request): bool
     {
-        $storedKey  = get_option(self::KEY_OPTION, '');
-        $requestKey = $request->get_header('X-Laca-Catalog-Key') ?? '';
+        $catalogKey = LacaDevTrackerClient::getCatalogKey();
+        if (empty($catalogKey)) {
+            $catalogKey = (string) get_option(self::KEY_OPTION, '');
+        }
+
+        $sigHeader = $request->get_header('X-Laca-Signature');
+        if (!empty($sigHeader) && !empty($catalogKey)) {
+            $verify = \App\Security\RequestSigner::verify($request, $catalogKey);
+            if ($verify['valid']) {
+                return true;
+            }
+        }
+
+        $storedKey  = (string) (get_option(self::KEY_OPTION, '') ?: $catalogKey);
+        $requestKey = (string) ($request->get_header('X-Laca-Catalog-Key') ?? $request->get_header('X-Laca-Key') ?? '');
 
         if (empty($storedKey) || empty($requestKey)) {
             return false;

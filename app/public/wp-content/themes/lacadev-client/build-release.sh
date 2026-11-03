@@ -18,7 +18,7 @@ set -euo pipefail
 # ── Cấu hình ──────────────────────────────────────────────────────────────────
 THEME_SLUG="lacadev-client"
 THEME_DIR="$(cd "$(dirname "$0")" && pwd)"
-BUILD_DIR="/tmp/${THEME_SLUG}-build"
+BUILD_DIR="/tmp/${THEME_SLUG}"
 OUTPUT_DIR="${THEME_DIR}/releases"
 
 # ── Đọc tham số ───────────────────────────────────────────────────────────────
@@ -48,7 +48,7 @@ rm -f "${STYLE_CSS}.bak"
 # ── Bước 2: Cập nhật info.json ────────────────────────────────────────────────
 echo "📝 Cập nhật lacadev-client.json"
 
-DOWNLOAD_URL="https://lacadev.com/theme-updates/${ZIP_FILENAME}"
+DOWNLOAD_URL="https://clients.lacadev.com/theme-updates/${ZIP_FILENAME}"
 CHANGELOG_HTML="<h4>${NEW_VERSION} (${TODAY})</h4><ul><li>${CHANGELOG}</li></ul>"
 
 # Đọc changelog cũ và prepend
@@ -97,7 +97,7 @@ find "$BUILD_DIR" -name ".DS_Store" -delete
 find "$BUILD_DIR" -name "*.map" -delete
 
 # Tạo zip với tên thư mục đúng
-(cd /tmp && zip -r "$ZIP_PATH" "${THEME_SLUG}-build/" -x "*.git*" -x "__MACOSX*")
+(cd /tmp && zip -r "$ZIP_PATH" "${THEME_SLUG}/" -x "*.git*" -x "__MACOSX*")
 rm -rf "$BUILD_DIR"
 
 ZIP_SIZE=$(du -sh "$ZIP_PATH" | cut -f1)
@@ -106,17 +106,17 @@ echo "   ✅ Đã tạo: ${ZIP_PATH} (${ZIP_SIZE})"
 # ── Bước 4: Hướng dẫn upload ─────────────────────────────────────────────────
 echo ""
 echo "════════════════════════════════════════════════════════"
-echo "✅ Build xong! Tiếp theo upload lên lacadev.com:"
+echo "✅ Build xong! Tiếp theo upload lên clients.lacadev.com:"
 echo "════════════════════════════════════════════════════════"
 echo ""
 echo "1. Upload ZIP:"
-echo "   scp '${ZIP_PATH}' user@lacadev.com:/path/to/public_html/theme-updates/"
+echo "   scp '${ZIP_PATH}' user@clients.lacadev.com:/path/to/public_html/theme-updates/"
 echo ""
 echo "2. Upload JSON (cập nhật thông tin version mới):"
-echo "   scp '${JSON_FILE}' user@lacadev.com:/path/to/public_html/theme-updates/lacadev-client.json"
+echo "   scp '${JSON_FILE}' user@clients.lacadev.com:/path/to/public_html/theme-updates/lacadev-client.json"
 echo ""
 echo "3. Kiểm tra URL sau khi upload:"
-echo "   curl https://lacadev.com/theme-updates/lacadev-client.json"
+echo "   curl https://clients.lacadev.com/theme-updates/lacadev-client.json"
 echo ""
 echo "📦 File zip: ${ZIP_PATH}"
 echo "📋 File JSON: ${JSON_FILE}"

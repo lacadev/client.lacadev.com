@@ -84,9 +84,14 @@ class BlockMarketplace
         // sang đúng route catalog cùng namespace REST, không cần thêm 1
         // trường cấu hình URL riêng cho Block Marketplace.
         $catalogUrl = str_replace('/tracker/log', '/blocks-catalog', $endpoint);
-        $url        = add_query_arg('secret_key', $secret, $catalogUrl);
 
-        $response = wp_remote_get($url, ['timeout' => 15]);
+        $response = wp_remote_get($catalogUrl, [
+            'headers' => [
+                'X-Laca-Key' => $secret,
+                'Accept'     => 'application/json',
+            ],
+            'timeout' => 15,
+        ]);
 
         if (is_wp_error($response) || wp_remote_retrieve_response_code($response) !== 200) {
             return null;

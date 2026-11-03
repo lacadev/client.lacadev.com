@@ -43,6 +43,7 @@ class ThemeUpdater
         add_filter('pre_set_site_transient_update_themes', [$this, 'checkForUpdate']);
         add_filter('themes_api', [$this, 'themeInfo'], 10, 3);
         add_action('upgrader_process_complete', [$this, 'clearCache'], 10, 2);
+        add_filter('upgrader_source_selection', [$this, 'filterSourceSelection'], 10, 4);
     }
 
     /**
@@ -126,7 +127,10 @@ class ThemeUpdater
         $cached = get_transient($this->cacheKey);
 
         if ($cached !== false) {
-            return $cached ?: null;
+            if (is_array($cached) && !empty($cached['error'])) {
+                return null;
+            }
+            return is_object($cached) ? $cached : null;
         }
 
         $response = wp_remote_get($this->updateInfoUrl, [
@@ -135,21 +139,58 @@ class ThemeUpdater
         ]);
 
         if (is_wp_error($response) || wp_remote_retrieve_response_code($response) !== 200) {
-            // Cache thất bại ngắn hạn (30 phút) để không spam server
-            set_transient($this->cacheKey, false, 30 * MINUTE_IN_SECONDS);
+            // Cache lỗi bằng marker array 1 giờ thay vì false (để không fetch lại mỗi request)
+            set_transient($this->cacheKey, ['error' => true], HOUR_IN_SECONDS);
             return null;
         }
 
         $data = json_decode(wp_remote_retrieve_body($response));
 
         if (!$data || empty($data->version)) {
-            set_transient($this->cacheKey, false, 30 * MINUTE_IN_SECONDS);
+            set_transient($this->cacheKey, ['error' => true], HOUR_IN_SECONDS);
             return null;
         }
 
         set_transient($this->cacheKey, $data, $this->cacheTtl);
 
         return $data;
+    }
+
+    /**
+     * Đảm bảo thư mục giải nén được đổi tên về đúng slug theme (lacadev-client)
+     *
+     * @param string $source Path tới thư mục giải nén tạm
+     * @param string $remoteSource Path tới thư mục chứa file nén
+     * @param mixed $upgrader
+     * @param array $hookExtra
+     * @return string|\WP_Error
+     */
+    public function filterSourceSelection(string $source, string $remoteSource, mixed $upgrader, array $hookExtra = []): string|\WP_Error
+    {
+        $theme = $hookExtra['theme'] ?? '';
+        if ($theme !== $this->themeSlug && $theme !== basename($this->themeSlug)) {
+            return $source;
+        }
+
+        $targetDirName = basename($this->themeSlug);
+        if (str_contains($this->themeSlug, '/')) {
+            $parts         = explode('/', $this->themeSlug);
+            $targetDirName = $parts[0];
+        }
+
+        $currentDirName = basename(rtrim($source, '/'));
+        if ($currentDirName === $targetDirName) {
+            return $source;
+        }
+
+        global $wp_filesystem;
+        $newSource = trailingslashit(dirname(rtrim($source, '/'))) . $targetDirName . '/';
+
+        if ($wp_filesystem && $wp_filesystem->move($source, $newSource)) {
+            return $newSource;
+        }
+
+        return $source;
     }
 
     /**

@@ -27,12 +27,14 @@ class LacaDevTrackerClient
     const CF_SECRET   = 'laca_tracker_secret_key';
 
     // WP Cron hook names
-    const CRON_HOURLY  = 'laca_tracker_hourly_scan';
-    const CRON_DAILY   = 'laca_tracker_daily_digest';
+    const CRON_HOURLY    = 'laca_tracker_hourly_scan';
+    const CRON_DAILY     = 'laca_tracker_daily_digest';
+    const CRON_HEARTBEAT = 'laca_tracker_heartbeat';
 
     /** Option lưu timestamp lần chạy gần nhất của mỗi cron — phát hiện cron bị trễ. */
-    const OPT_LAST_RUN_HOURLY = '_laca_cron_last_run_hourly';
-    const OPT_LAST_RUN_DAILY  = '_laca_cron_last_run_daily';
+    const OPT_LAST_RUN_HOURLY    = '_laca_cron_last_run_hourly';
+    const OPT_LAST_RUN_DAILY     = '_laca_cron_last_run_daily';
+    const OPT_LAST_RUN_HEARTBEAT = '_laca_cron_last_run_heartbeat';
 
     /**
      * Thư mục cần quét file lạ (relative to ABSPATH)
@@ -109,10 +111,16 @@ class LacaDevTrackerClient
             $nextRun = strtotime('tomorrow 01:00:00 UTC');
             wp_schedule_event($nextRun, 'daily', self::CRON_DAILY);
         }
+
+        // --- Cron 2 lần / ngày (twicedaily): gửi heartbeat về hub ---
+        add_action(self::CRON_HEARTBEAT, [$this, 'sendHeartbeat']);
+        if (!wp_next_scheduled(self::CRON_HEARTBEAT)) {
+            wp_schedule_event(time(), 'twicedaily', self::CRON_HEARTBEAT);
+        }
     }
 
     /**
-     * Cảnh báo trong wp-admin nếu 1 trong 2 cron (hourly/daily) đã trễ quá xa
+     * Cảnh báo trong wp-admin nếu cron (hourly/daily/heartbeat) đã trễ quá xa
      * so với chu kỳ lên lịch — dấu hiệu WordPress pseudo-cron không tự chạy
      * đều vì site ít traffic. Bỏ qua nếu chưa từng có baseline (site mới cài).
      */
@@ -123,8 +131,9 @@ class LacaDevTrackerClient
         }
 
         $checks = [
-            self::CRON_HOURLY => ['option' => self::OPT_LAST_RUN_HOURLY, 'grace' => 6 * HOUR_IN_SECONDS, 'label' => 'quét file khả nghi hàng giờ'],
-            self::CRON_DAILY  => ['option' => self::OPT_LAST_RUN_DAILY,  'grace' => 3 * DAY_IN_SECONDS,  'label' => 'digest hàng ngày'],
+            self::CRON_HOURLY    => ['option' => self::OPT_LAST_RUN_HOURLY,    'grace' => 6 * HOUR_IN_SECONDS,  'label' => 'quét file khả nghi hàng giờ'],
+            self::CRON_DAILY     => ['option' => self::OPT_LAST_RUN_DAILY,     'grace' => 3 * DAY_IN_SECONDS,   'label' => 'digest hàng ngày'],
+            self::CRON_HEARTBEAT => ['option' => self::OPT_LAST_RUN_HEARTBEAT, 'grace' => 24 * HOUR_IN_SECONDS, 'label' => 'heartbeat định kỳ'],
         ];
 
         foreach ($checks as $hook => $check) {
@@ -192,6 +201,16 @@ class LacaDevTrackerClient
                 'type'    => 'update_pending',
                 'content' => "⚠️ Plugin cần update: {$name}\n  Phiên bản hiện tại: {$current} → Bản mới: {$newVersion}",
                 'level'   => 'warning',
+                'plugins' => [
+                    [
+                        'slug'            => $pluginFile,
+                        'name'            => $name,
+                        'current'         => $current,
+                        'current_version' => $current,
+                        'new'             => $newVersion,
+                        'new_version'     => $newVersion,
+                    ],
+                ],
             ];
 
             set_transient($dedupeKey, 1, 6 * HOUR_IN_SECONDS);
@@ -531,6 +550,14 @@ class LacaDevTrackerClient
                 'type'    => 'update_pending',
                 'content' => "Plugin mới chờ update (" . count($newPlugins) . "):\n{$list}",
                 'level'   => 'warning',
+                'plugins' => array_values(array_map(fn($p) => [
+                    'slug'            => $p['slug'] ?? '',
+                    'name'            => $p['name'] ?? $p['slug'] ?? '',
+                    'current'         => $p['current'] ?? '?',
+                    'current_version' => $p['current'] ?? '?',
+                    'new'             => $p['new'] ?? '?',
+                    'new_version'     => $p['new'] ?? '?',
+                ], $newPlugins)),
             ];
         }
 
@@ -606,6 +633,55 @@ class LacaDevTrackerClient
                 update_option(self::OPT_DEEP_FIM_BASELINE, $deepFim['baseline'], false);
             }
         }
+    }
+
+    // =========================================================================
+    // CRON TWICEDAILY — heartbeat
+    // =========================================================================
+
+    /**
+     * Gửi heartbeat về hub: site_url, wp_version, php_version, theme versions parent/child
+     */
+    public function sendHeartbeat(): void
+    {
+        update_option(self::OPT_LAST_RUN_HEARTBEAT, time(), false);
+
+        global $wp_version;
+        $parentTheme = wp_get_theme(get_template());
+        $childTheme  = wp_get_theme(get_stylesheet());
+
+        $parentVersion = $parentTheme->exists() ? (string) $parentTheme->get('Version') : '';
+        $childVersion  = $childTheme->exists() ? (string) $childTheme->get('Version') : '';
+
+        $meta = [
+            'site_url'             => home_url(),
+            'wp_version'           => (string) ($wp_version ?? ''),
+            'php_version'          => PHP_VERSION,
+            'theme_version_parent' => $parentVersion,
+            'theme_version_child'  => $childVersion,
+            'tracker_health'       => [
+                'failed' => 0,
+                'retry'  => 0,
+            ],
+        ];
+
+        $content = sprintf(
+            'Heartbeat từ %s (WP %s, PHP %s, Parent %s, Child %s)',
+            home_url(),
+            $wp_version,
+            PHP_VERSION,
+            $parentVersion,
+            $childVersion
+        );
+
+        $logs = [[
+            'type'    => 'heartbeat',
+            'content' => $content,
+            'level'   => 'info',
+            'meta'    => $meta,
+        ]];
+
+        $this->sendLogs($logs, blocking: true);
     }
 
     /**

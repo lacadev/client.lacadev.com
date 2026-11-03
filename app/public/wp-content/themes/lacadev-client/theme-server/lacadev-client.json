@@ -1,11 +1,12 @@
 {
-  "name": "LacaDev Child",
+  "name": "LacaDev Client",
+  "slug": "lacadev-client",
   "version": "3.1",
-  "download_url": "https://lacadev.com/theme-updates/lacadev-child-3.1.zip",
-  "details_url": "https://lacadev.com/theme-updates/changelog",
+  "download_url": "https://clients.lacadev.com/theme-updates/lacadev-client-3.1.zip",
+  "details_url": "https://clients.lacadev.com/theme-updates/changelog",
   "last_updated": "2026-03-18",
   "requires": "6.0",
   "requires_php": "8.0",
-  "description": "LacaDev Child Theme — theme WordPress được phát triển bởi La Cà Dev.",
+  "description": "LacaDev Client Theme — theme WordPress được phát triển bởi La Cà Dev.",
   "changelog": "<h4>3.1</h4><ul><li>Phiên bản khởi tạo hệ thống auto-update</li></ul>"
 }

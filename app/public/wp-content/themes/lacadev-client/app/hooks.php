@@ -197,6 +197,13 @@ if (is_admin()) {
  */
 add_action('init', static function () {
     new \App\Settings\LacaDevTrackerClient();
+
+    if (class_exists('\App\Features\ClientSupport\ClientSupportManager')) {
+        (new \App\Features\ClientSupport\ClientSupportManager())->init();
+    }
+    if (class_exists('\App\Security\ClientRoleManager')) {
+        (new \App\Security\ClientRoleManager())->init();
+    }
 });
 
 /**

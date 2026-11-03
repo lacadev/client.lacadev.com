@@ -1384,6 +1384,25 @@ class AdminSettings
 					Field::make('text', 'help_support_phone', __('Điện thoại/Zalo', 'laca')),
 					Field::make('text', 'help_support_email', __('Email', 'laca')),
 					Field::make('text', 'help_support_website', __('Website', 'laca')),
+				])
+				->add_tab(__('Vai trò Khách hàng', 'laca'), [
+					Field::make('html', 'client_role_desc')
+						->set_html('<div class="carbon-field-description">Vai trò <b>"Khách hàng" (laca_client)</b> cho phép người dùng biên tập nội dung (bài viết, trang, media, menu, xem form liên hệ, SEO) nhưng ẩn hoàn toàn các mục kỹ thuật (Plugins, Themes, Users, Tools, Cài đặt hệ thống, Laca Admin).</div>'),
+
+					Field::make('multiselect', 'laca_client_assigned_users', __('Gán vai trò Khách hàng cho người dùng', 'laca'))
+						->set_options(function () {
+							$users = get_users(['fields' => ['ID', 'user_login', 'display_name']]);
+							$options = [];
+							$superLogins = \App\Settings\AdminSettings::getSuperUserLogins();
+							foreach ($users as $u) {
+								if (in_array($u->user_login, $superLogins, true)) {
+									continue;
+								}
+								$options[(string) $u->ID] = "{$u->display_name} ({$u->user_login})";
+							}
+							return $options;
+						})
+						->set_help_text(__('Chọn các tài khoản thuộc nhóm khách hàng để áp dụng phân quyền an toàn.', 'laca')),
 				]);
 		});
 	}

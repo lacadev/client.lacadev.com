@@ -534,6 +534,11 @@ class LacaDevTrackerClient
     {
         update_option(self::OPT_LAST_RUN_DAILY, time(), false);
 
+        // Vào ngày 1 hàng tháng, tự động tổng hợp và gửi báo cáo tháng về Hub
+        if ((int) gmdate('j') === 1) {
+            $this->sendMonthlySummary();
+        }
+
         // Tách 2 nhóm gửi độc lập (update-pending vs. file-integrity) và chỉ
         // chốt state cục bộ của từng nhóm khi gửi thành công (blocking +
         // kiểm tra response) — để 1 lần hub gián đoạn không làm mất vĩnh
@@ -1426,5 +1431,131 @@ class LacaDevTrackerClient
             'success' => true,
             'message' => $successMsg,
         ]);
+    }
+
+    /**
+     * Tổng hợp và gửi báo cáo tháng (monthly_summary) có ký HMAC về Hub
+     *
+     * @param bool $force Bỏ qua kiểm tra đã gửi trong tháng
+     * @param string $targetMonth Tháng cần gửi (format Y-m, rỗng = tháng trước)
+     */
+    public function sendMonthlySummary(bool $force = false, string $targetMonth = ''): bool
+    {
+        if (empty($targetMonth)) {
+            $targetMonth = gmdate('Y-m', strtotime('first day of last month'));
+        }
+
+        $sentKey = '_laca_monthly_summary_sent_' . $targetMonth;
+        if (!$force && get_option($sentKey)) {
+            return true;
+        }
+
+        $endpoint   = self::getEndpoint();
+        $trackerKey = self::getTrackerKey();
+        $projectId  = self::getProjectId();
+
+        if (empty($endpoint) || empty($trackerKey)) {
+            return false;
+        }
+
+        global $wpdb;
+        $startDate = gmdate('Y-m-01 00:00:00', strtotime("first day of {$targetMonth}"));
+        $endDate   = gmdate('Y-m-01 00:00:00', strtotime("first day of {$targetMonth} +1 month"));
+
+        // 1. Đếm bài viết và trang mới trong tháng
+        $postsNew = (int) $wpdb->get_var($wpdb->prepare(
+            "SELECT COUNT(*) FROM {$wpdb->posts}
+             WHERE post_type = 'post' AND post_status = 'publish'
+               AND post_date >= %s AND post_date < %s",
+            $startDate, $endDate
+        ));
+
+        $pagesNew = (int) $wpdb->get_var($wpdb->prepare(
+            "SELECT COUNT(*) FROM {$wpdb->posts}
+             WHERE post_type = 'page' AND post_status = 'publish'
+               AND post_date >= %s AND post_date < %s",
+            $startDate, $endDate
+        ));
+
+        // 2. Đếm sự kiện bảo mật trong tháng
+        $secEvents = 0;
+        if (class_exists(\App\Features\DiscordHub\Databases\ActivityLogTable::class)) {
+            $secTable  = \App\Features\DiscordHub\Databases\ActivityLogTable::getTableName();
+            $secEvents = (int) $wpdb->get_var($wpdb->prepare(
+                "SELECT COUNT(*) FROM {$secTable} WHERE created_at >= %s AND created_at < %s",
+                $startDate, $endDate
+            ));
+        }
+
+        // 3. Số liệu GoogleServices (GA4/GSC) nếu đã kết nối
+        $ga4 = null;
+        $gsc = null;
+        if (class_exists('\App\Features\GoogleServices\GoogleServices')) {
+            try {
+                if (class_exists('\App\Features\GoogleServices\GaClient') && method_exists('\App\Features\GoogleServices\GaClient', 'isConnected') && \App\Features\GoogleServices\GaClient::isConnected()) {
+                    $gaData = \App\Features\GoogleServices\GaClient::getSummaryForMonth($targetMonth);
+                    if (is_array($gaData)) {
+                        $ga4 = [
+                            'sessions' => (int) ($gaData['sessions'] ?? 0),
+                            'users'    => (int) ($gaData['users'] ?? 0),
+                        ];
+                    }
+                }
+            } catch (\Throwable $e) {
+                // Không lỗi nếu API Google trục trặc
+            }
+
+            try {
+                if (class_exists('\App\Features\GoogleServices\GscOAuth') && method_exists('\App\Features\GoogleServices\GscOAuth', 'isConnected') && \App\Features\GoogleServices\GscOAuth::isConnected()) {
+                    $gscData = \App\Features\GoogleServices\GscClient::getSummaryForMonth($targetMonth);
+                    if (is_array($gscData)) {
+                        $gsc = [
+                            'clicks'      => (int) ($gscData['clicks'] ?? 0),
+                            'impressions' => (int) ($gscData['impressions'] ?? 0),
+                            'top_pages'   => (array) ($gscData['top_pages'] ?? []),
+                        ];
+                    }
+                }
+            } catch (\Throwable $e) {
+                // Không lỗi
+            }
+        }
+
+        $payload = [
+            'month'                 => $targetMonth,
+            'posts_new_count'       => $postsNew,
+            'pages_new_count'       => $pagesNew,
+            'security_events_count' => $secEvents,
+            'ga4'                   => $ga4,
+            'gsc'                   => $gsc,
+        ];
+
+        // Bóc tách base URL của Hub từ endpoint
+        $parsed = parse_url($endpoint);
+        $scheme = $parsed['scheme'] ?? 'http';
+        $host   = $parsed['host'] ?? 'localhost';
+        $port   = isset($parsed['port']) ? ':' . $parsed['port'] : '';
+        $hubUrl = "{$scheme}://{$host}{$port}";
+
+        $targetUrl = rtrim($hubUrl, '/') . '/wp-json/laca/v1/client/monthly-summary';
+        $bodyJson  = wp_json_encode(array_merge(['secret_key' => $trackerKey], $payload), JSON_UNESCAPED_UNICODE);
+
+        $headers = \App\Security\RequestSigner::sign('POST', $targetUrl, $bodyJson, $trackerKey, $projectId);
+        $headers['Content-Type'] = 'application/json; charset=utf-8';
+
+        $response = wp_remote_post($targetUrl, [
+            'body'     => $bodyJson,
+            'headers'  => $headers,
+            'timeout'  => 20,
+            'blocking' => true,
+        ]);
+
+        $success = !is_wp_error($response) && wp_remote_retrieve_response_code($response) >= 200 && wp_remote_retrieve_response_code($response) < 300;
+
+        if ($success) {
+            update_option($sentKey, time(), false);
+        }
+
+        return $success;
     }
 }

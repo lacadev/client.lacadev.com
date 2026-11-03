@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 # =============================================================================
+# DEPRECATED — Script này đã bị thay thế bởi GitHub Actions workflow:
+#   .github/workflows/publish-theme-updates.yml
+# Không sử dụng script này để build/release thủ công nữa.
+# =============================================================================
 # build-release.sh — Build & release lacadev-client theme
 #
 # Cách dùng:

@@ -1,0 +1,56 @@
+name: Quality & Static Analysis
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  quality:
+    name: Code Quality & Build Checks
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+        php-version: ['8.1']
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          tools: composer:v2
+
+      - name: PHP Syntax Lint (php -l)
+        run: |
+          echo "Linting all PHP files in themes (excluding vendor and node_modules)..."
+          find app/public/wp-content/themes -name "*.php" ! -path "*/vendor/*" ! -path "*/node_modules/*" -exec php -l {} + > /dev/null
+          echo "All PHP files passed syntax checks."
+
+      - name: PHPStan Static Analysis (Level 1 on parent app/src)
+        run: |
+          composer global config allow-plugins.phpstan/extension-installer true
+          composer global require --no-interaction szepeviktor/phpstan-wordpress:^2.0 phpstan/extension-installer:^1.4
+          GLOBAL_COMPOSER_DIR="$(composer global config home)"
+          STUBS_PATH="${GLOBAL_COMPOSER_DIR}/vendor/php-stubs/wordpress-stubs/wordpress-stubs.php"
+          PHPSTAN_BIN="${GLOBAL_COMPOSER_DIR}/vendor/bin/phpstan"
+          php -d auto_prepend_file="$STUBS_PATH" "$PHPSTAN_BIN" analyse \
+            --configuration=app/public/wp-content/themes/lacadev-client/phpstan.neon \
+            --memory-limit=1G --no-progress
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install Node Dependencies & Build Child Theme Assets
+        working-directory: app/public/wp-content/themes/lacadev-client-child
+        run: |
+          yarn install --frozen-lockfile
+          cp config.json.dist config.json
+          yarn build

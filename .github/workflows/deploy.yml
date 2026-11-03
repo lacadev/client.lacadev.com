@@ -102,3 +102,17 @@ jobs:
             wp-login.php
             xmlrpc.php
             index.php
+
+  smoke:
+    name: Post-Deploy Smoke Test
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Wait for server caches
+        run: sleep 20
+
+      - name: Run Smoke Test
+        run: ./tools/smoke.sh https://clients.lacadev.com

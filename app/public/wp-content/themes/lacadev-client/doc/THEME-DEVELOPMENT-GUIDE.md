@@ -129,6 +129,39 @@ Sử dụng helper functions (xem phần [Responsive Images](#71-responsive-imag
 - **Links:** Link "Xem thêm" phải có `aria-label="Xem thêm về [Tiêu đề]"`.
 - **Colors:** Đảm bảo độ tương phản (Contrast ratio >= 4.5:1).
 
+### 3.4. Layout Container & Container-Fluid Guidelines (R1–R7)
+
+Quy chuẩn cấu trúc container đảm bảo mép trái nội dung luôn thẳng hàng với logo header và không xung đột padding:
+
+- **R1 — Template không bọc `the_content()`**: Template (`page.php`, `single.php`, custom page template...) không bọc `the_content()` trong `.container` hay `.container-fluid`. Vùng nội dung dùng wrapper `<div class="entry-content">` (không padding ngang).
+- **R2 — Block custom tự lo lề ngang**:
+  - Tràn viền theo setting của block, không theo class `alignfull` đã lưu trong nội dung.
+  - Block thông thường hoặc block có setting tràn viền bị TẮT: Thẻ root nằm trong lề chuẩn đồng bộ header/footer (thẻ root `<section class="container-fluid [block-class]">` hoặc áp dụng `@mixin container-gutter($property: margin)` lên thẻ root không có `alignfull`).
+  - Block tràn viền (full-bleed khi setting BẬT): Thẻ root `<section class="[block-class] alignfull">` (KHÔNG có `container-fluid`), nội dung văn bản bên trong bọc qua `<div class="container-fluid">`.
+- **R3 — Core blocks trực tiếp trong `.entry-content`**: Tự động nhận lề qua `@mixin container-gutter`; `.alignwide` = max-width `$xl` căn giữa; `.alignfull` = tràn viền viewport 100vw.
+- **R4 — Phần ngoài nội dung**: Header, footer, breadcrumb, page-hero, archive header... dùng đúng 1 lớp container, không lồng container trong container.
+- **R5 — Bản vá container lồng hợp lệ**: Giữ `.container-fluid .container-fluid { padding: 0 !important; }` để triệt tiêu padding cộng dồn khi các block dạng container lồng nhau (như Tabs, Container).
+- **R6 — Dùng chung Mixin**: Luôn dùng `@mixin container-gutter` trong `abstracts/_mixin.scss`, không hardcode kích thước padding.
+- **R7 — Không chọn container/container-fluid để đổi độ rộng**: Không chọn container/container-fluid trong template/block để đổi độ rộng — luôn dùng `.container-fluid` + chế độ khung (site/trang/block qua `--laca-container-max`).
+
+```html
+<!-- ĐÚNG: Block thường -->
+<section class="container-fluid block-banner">
+    <div class="block-banner__inner">...</div>
+</section>
+
+<!-- ĐÚNG: Block tràn viền -->
+<section class="block-hero alignfull">
+    <img class="block-hero__bg" src="..." alt="">
+    <div class="container-fluid block-hero__content">...</div>
+</section>
+
+<!-- SAI: Tránh lồng container ngoài template -->
+<div class="container-fluid entry-content">
+    <?php the_content(); ?>
+</div>
+```
+
 ---
 
 ## 4. PHP & WORDPRESS BEST PRACTICES
@@ -270,11 +303,11 @@ Theme đã tích hợp hệ thống **Responsive Images** tự động. Sử d�
 - `'tablet'` (~768px)
 - `'full'` (Original)
 
-### 7.2. Tạo XML Sitemap
+### 7.2. Laca SEO & XML Sitemap
 
-Code tạo sitemap tùy chỉnh nằm trong `theme/setup/seo.php` (hoặc `sitemap.php`).
-URL: `/sitemap.xml`.
-Tự động update khi đăng bài mới.
+Hệ thống SEO toàn diện được tích hợp trong `app/src/Features/LacaSeo/` (thay thế Rank Math).
+Quản lý cấu hình tại wp-admin › Laca Theme › SEO (`admin.php?page=laca-seo`).
+Sơ đồ trang XML tự động cung cấp tại: `/sitemap_index.xml`.
 
 ### 7.3. Thêm Custom Post Types
 
@@ -298,5 +331,53 @@ class Service {
 }
 ```
 
+### 7.4. Admin UI (Chakra Tokens & Components)
+
+Toàn bộ giao diện WordPress Admin (WP Chrome, WP Core, Carbon Fields, Gutenberg Inspector, Laca Admin Dock, Laca SEO và các trang tự viết) đã được chuẩn hoá theo ngôn ngữ thiết kế **Chakra UI v3**.
+
+#### 1. Hệ thống Tokens (`resources/styles/admin/_tokens.scss`)
+- **Màu nền:** `--laca-bg` (#ffffff), `--laca-bg-subtle` (#fafafa), `--laca-bg-muted` (#f4f4f5), `--laca-bg-emphasized` (#e4e4e7).
+- **Màu chữ:** `--laca-fg` (#18181b), `--laca-fg-hover` (#27272a), `--laca-fg-muted` (#52525b), `--laca-fg-subtle` (#71717a).
+- **Màu thương hiệu / Tương tác:** `--laca-accent` (#2563eb), `--laca-accent-hover` (#1d4ed8), `--laca-accent-subtle` (#eff6ff), `--laca-accent-fg` (#1e40af), `--laca-focus-ring` (#3b82f6).
+- **Màu trạng thái (WCAG AA):**
+  - Success: `--laca-success` (#15803d), `--laca-success-bg` (#f0fdf4), `--laca-success-border` (#bbf7d0).
+  - Warning: `--laca-warning` (#c2410c), `--laca-warning-bg` (#fff7ed), `--laca-warning-border` (#fed7aa).
+  - Danger: `--laca-danger` (#b91c1c), `--laca-danger-bg` (#fef2f2), `--laca-danger-border` (#fecaca).
+  - Info: `--laca-info` (#0284c7), `--laca-info-bg` (#f0f9ff), `--laca-info-border` (#bae6fd).
+- **Spacing:** `--laca-space-1` (4px) đến `--laca-space-8` (32px).
+- **Border Radius:** `--laca-radius-xs` (2px), `--laca-radius-sm` (4px), `--laca-radius-md` (6px), `--laca-radius-lg` (8px), `--laca-radius-xl` (12px), `--laca-radius-full` (9999px).
+- **Shadows:** `--laca-shadow-xs`, `--laca-shadow-sm`, `--laca-shadow-md`, `--laca-shadow-lg`.
+
+#### 2. Thư viện Components BEM (`resources/styles/admin/components/`)
+15 thành phần giao diện chuẩn:
+1. **Button:** `.laca-btn`, `.laca-btn--solid`, `.laca-btn--outline`, `.laca-btn--ghost`, `.laca-btn--subtle`, `.laca-btn--danger`.
+2. **Card:** `.laca-card`, `.laca-card__header`, `.laca-card__body`, `.laca-card__footer`.
+3. **Badge:** `.laca-badge`, `.laca-badge--neutral`, `.laca-badge--accent`, `.laca-badge--success`, `.laca-badge--warning`, `.laca-badge--danger`.
+4. **Alert:** `.laca-alert`, `.laca-alert--info`, `.laca-alert--success`, `.laca-alert--warning`, `.laca-alert--danger`.
+5. **Stat:** `.laca-stat`, `.laca-stat__label`, `.laca-stat__value`, `.laca-stat__help`.
+6. **Tabs:** `.laca-tabs`, `.laca-tabs__list`, `.laca-tabs__trigger`, `.laca-tabs__panel`.
+7. **Form Controls:** `.laca-input`, `.laca-textarea`, `.laca-select`.
+8. **Switch:** `.laca-switch`, `.laca-switch__input`, `.laca-switch__track`, `.laca-switch__thumb`.
+9. **Segmented Control:** `.laca-segmented`, `.laca-segmented__item`.
+10. **Modal / Dialog:** `.laca-modal`, `.laca-modal__overlay`, `.laca-modal__content`.
+11. **Drawer:** `.laca-drawer`, `.laca-drawer__content`.
+12. **Table Wrapper:** `.laca-table-wrap`, `.laca-table`.
+13. **Empty State:** `.laca-empty-state`, `.laca-empty-state__icon`, `.laca-empty-state__title`.
+14. **Action Bar:** `.laca-action-bar` (sticky actions).
+15. **Breadcrumb:** `.laca-breadcrumb`, `.laca-breadcrumb__item`, `.laca-breadcrumb__separator`.
+
+#### 3. Quy tắc bắt buộc khi code Admin
+- **100% Tokenized:** Mọi trang admin tự viết chỉ dùng class component `laca-*` và CSS token; tuyệt đối không dùng raw hex ngoài file `_tokens.scss`.
+- **Zero Inline Styles:** Không viết inline `style="..."` hoặc thẻ `<style>` trong PHP admin view. Ngoại lệ duy nhất là giá trị runtime động bắt buộc (như `width:{$pct}%` thanh tiến trình) và phải có chú thích `/* động */`.
+- **UI Kit Demo:** Xem toàn bộ demo và mã nguồn mẫu tại `wp-admin › Laca Admin › UI Kit` (`admin.php?page=laca-ui-kit`).
+
+#### 4. Quy trình thay đổi Admin UI (Bắt buộc qua hệ thống Xem trước)
+Từ nay, mọi đề xuất thay đổi hoặc cải tiến giao diện admin BẮT BUỘC tuân theo quy trình chuẩn:
+1. **Dựng phương án vào hệ thống Preview:** Đăng ký khu vực và các phương án A/B/C vào `App\Settings\LacaAdmin\UiPreview` và file SCSS tương ứng trong `resources/styles/admin/preview/_<khu-vực>.scss`.
+2. **Xem trước trên màn thật (Cookie-driven):** Sử dụng trang Gallery `admin.php?page=laca-ui-preview` hoặc thanh `#laca-preview-bar` để người dùng trải nghiệm trực tiếp trên dữ liệu thật. Không ghi database / wp_options.
+3. **Người dùng lựa chọn:** Dừng lại chờ người dùng đưa ra quyết định chọn phương án ưng ý (ví dụ `menu=A, field=A, tabs=B, bg=B, dock=A, inspector=A`).
+4. **Áp dụng chính thức:** Chuyển CSS của phương án được chọn thành mặc định trong skin chính thức, dọn dẹp các phương án không chọn, chạy bộ test nghiệm thu §5 rồi mới commit và push.
+
 ---
 **Happy Coding! 🚀**
+

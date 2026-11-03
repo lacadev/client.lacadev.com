@@ -35,46 +35,44 @@ class QuickNotesWidget
         $notes   = get_option(self::OPT_KEY, []);
         $nonce   = wp_create_nonce(self::NONCE);
         $ajaxUrl = admin_url('admin-ajax.php');
-        $colors  = ['#fff9c4', '#c8e6c9', '#bbdefb', '#f8bbd0', '#ffe0b2', '#e1bee7'];
+        $colors  = ['#ffffff', '#fafafa', '#f4f4f5', '#e4e4e7', '#d4d4d8', '#a1a1aa'];
         ?>
         <div id="laca-notes-wrap">
             <?php if (empty($notes)): ?>
-                <p id="laca-notes-empty" style="color:#999;text-align:center;padding:10px">Chưa có ghi chú nào. Nhấn "+ Thêm ghi chú" để bắt đầu.</p>
+                <p id="laca-notes-empty" class="laca-widget-empty">Chưa có ghi chú nào. Nhấn "+ Thêm ghi chú" để bắt đầu.</p>
             <?php else: ?>
-                <p id="laca-notes-empty" style="display:none;color:#999;text-align:center;padding:10px">Chưa có ghi chú nào.</p>
+                <p id="laca-notes-empty" class="laca-widget-empty" style="display:none; /* động */">Chưa có ghi chú nào.</p>
             <?php endif; ?>
 
-            <div id="laca-notes-list" style="display:flex;flex-direction:column;gap:10px">
+            <div id="laca-notes-list" class="laca-notes-list">
                 <?php foreach ($notes as $note): ?>
-                <div class="laca-note" data-id="<?php echo esc_attr($note['id']); ?>"
-                     style="background:<?php echo esc_attr($note['color']); ?>;padding:10px;border-radius:6px;position:relative">
-                    <textarea class="laca-note-text" rows="3"
-                        style="width:100%;border:none;background:transparent;resize:vertical;font-size:13px;font-family:inherit;box-sizing:border-box;outline:none"
+                <div class="laca-note laca-note-item" data-id="<?php echo esc_attr($note['id']); ?>"
+                     data-color="<?php echo esc_attr($note['color']); ?>"
+                     style="background:<?php echo esc_attr($note['color']); ?>; /* động */">
+                    <textarea class="laca-note-text laca-note-textarea" rows="3"
                         placeholder="Nhập ghi chú..."><?php echo esc_textarea($note['text']); ?></textarea>
-                    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
-                        <small style="color:#777;font-size:10px"><?php echo esc_html($note['date'] ?? ''); ?></small>
+                    <div class="laca-note-footer">
+                        <small class="laca-note-date"><?php echo esc_html($note['date'] ?? ''); ?></small>
                         <button type="button" class="laca-note-delete"
-                            style="background:none;border:none;cursor:pointer;color:#999;font-size:16px;line-height:1;padding:0"
                             title="Xoá ghi chú">✕</button>
                     </div>
                 </div>
                 <?php endforeach; ?>
             </div>
 
-            <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap;align-items:center">
-                <span style="font-size:12px;color:#666">Màu:</span>
+            <div class="laca-note-toolbar">
+                <span class="laca-note-date">Màu:</span>
                 <?php foreach ($colors as $c): ?>
-                    <button type="button" class="laca-note-color-pick"
+                    <button type="button" class="laca-note-color-pick laca-note-swatch"
                         data-color="<?php echo esc_attr($c); ?>"
-                        style="width:20px;height:20px;border-radius:50%;background:<?php echo esc_attr($c); ?>;border:2px solid #ccc;cursor:pointer;flex-shrink:0"
+                        style="background:<?php echo esc_attr($c); ?>; /* động */"
                         title="<?php echo esc_attr($c); ?>"></button>
                 <?php endforeach; ?>
-                <button type="button" id="laca-note-add"
-                    style="margin-left:auto;padding:4px 12px;background:#2271b1;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:12px">
+                <button type="button" id="laca-note-add" class="laca-note-add-btn">
                     + Thêm ghi chú
                 </button>
             </div>
-            <p id="laca-note-saved" style="display:none;color:#155724;font-size:11px;margin:6px 0 0;text-align:right">✓ Đã lưu</p>
+            <p id="laca-note-saved" class="laca-note-saved" style="display:none; /* động */">✓ Đã lưu</p>
         </div>
 
         <script>
@@ -92,10 +90,16 @@ class QuickNotesWidget
             }
 
             function gatherNotes() {
+                // n.style.background bị trình duyệt CHUẨN HOÁ về dạng
+                // "rgb(r, g, b)" (không giữ nguyên chuỗi hex đã set) — server
+                // (sanitize_hex_color()) chỉ chấp nhận đúng "#rrggbb" nên
+                // luôn trả null, rơi về mặc định vàng. Đọc lại từ
+                // data-color (set riêng, giữ nguyên chuỗi hex) thay vì suy
+                // ngược từ style.background.
                 return Array.from(document.querySelectorAll('#laca-notes-list .laca-note')).map(n => ({
                     id:    n.dataset.id,
                     text:  n.querySelector('.laca-note-text').value,
-                    color: n.style.background,
+                    color: n.dataset.color,
                     date:  n.querySelector('small').textContent.trim(),
                 }));
             }
@@ -143,18 +147,17 @@ class QuickNotesWidget
                 const id   = 'note_' + Date.now();
                 const date = new Date().toLocaleDateString('vi-VN');
                 const div  = document.createElement('div');
-                div.className   = 'laca-note';
+                div.className   = 'laca-note laca-note-item';
                 div.dataset.id  = id;
-                div.style.background = activeColor;
-                div.style.cssText += 'padding:10px;border-radius:6px;position:relative';
+                div.dataset.color = activeColor;
+                div.style.background = activeColor; // động
                 div.innerHTML = `
-                    <textarea class="laca-note-text" rows="3"
-                        style="width:100%;border:none;background:transparent;resize:vertical;font-size:13px;font-family:inherit;box-sizing:border-box;outline:none"
+                    <textarea class="laca-note-text laca-note-textarea" rows="3"
                         placeholder="Nhập ghi chú..."></textarea>
-                    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
-                        <small style="color:#777;font-size:10px">${date}</small>
+                    <div class="laca-note-footer">
+                        <small class="laca-note-date">${date}</small>
                         <button type="button" class="laca-note-delete"
-                            style="background:none;border:none;cursor:pointer;color:#999;font-size:16px;line-height:1;padding:0">✕</button>
+                            title="Xoá ghi chú">✕</button>
                     </div>`;
                 document.getElementById('laca-notes-list').appendChild(div);
                 div.querySelector('textarea').focus();

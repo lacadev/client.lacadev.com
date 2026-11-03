@@ -86,14 +86,22 @@ class Optimize
 	public function enableInstantPage()
 	{
 		add_action('wp_enqueue_scripts', function () {
-			wp_enqueue_script('instantpage', get_template_directory_uri() . '/dist/instantpage.js', array(), '5.7.0', true);
+			$dist_dir = dirname(get_stylesheet_directory()) . '/dist/';
+			$dist_uri = dirname(get_stylesheet_directory_uri()) . '/dist/';
+			if (file_exists($dist_dir . 'instantpage.js')) {
+				wp_enqueue_script('instantpage', $dist_uri . 'instantpage.js', array(), '5.7.0', true);
+			}
 		});
 	}
 
 	public function enableSmoothScroll()
 	{
 		add_action('wp_enqueue_scripts', function () {
-			wp_enqueue_script('smooth-scroll', get_template_directory_uri() . '/dist/smooth-scroll.min.js', array(), '1.4.16', true);
+			$dist_dir = dirname(get_stylesheet_directory()) . '/dist/';
+			$dist_uri = dirname(get_stylesheet_directory_uri()) . '/dist/';
+			if (file_exists($dist_dir . 'smooth-scroll.min.js')) {
+				wp_enqueue_script('smooth-scroll', $dist_uri . 'smooth-scroll.min.js', array(), '1.4.16', true);
+			}
 		});
 	}
 }

@@ -30,11 +30,26 @@ add_action('send_headers', function() {
     
     // XSS Protection (legacy browsers)
     header('X-XSS-Protection: 1; mode=block');
+
+    // Ẩn "X-Powered-By: PHP/8.x.y" — bot dùng phiên bản để chọn lỗ hổng khai thác.
+    header_remove('X-Powered-By');
+
+    // HSTS: trình duyệt chỉ dùng HTTPS cho domain này trong 1 năm (chống hạ cấp về HTTP).
+    // Chỉ gửi khi đang chạy HTTPS; KHÔNG includeSubDomains/preload để không ép các subdomain
+    // chưa có SSL. Lưu ý: SSL hết hạn thì khách sẽ không vào được cho tới khi gia hạn.
+    if (is_ssl()) {
+        header('Strict-Transport-Security: max-age=31536000');
+    }
     
     if ( ! is_admin() ) {
         // Content Security Policy
+        // Frontend dùng 'unsafe-inline' thay cho nonce: page cache lưu HTML tĩnh
+        // nên nonce bị dùng lại cho mọi khách (mất ý nghĩa), và script inline do
+        // plugin cache chèn sau (lazyload, delay JS...) không có nonce sẽ bị chặn.
+        // Có nonce trong header thì trình duyệt bỏ qua 'unsafe-inline' — không
+        // được dùng chung 2 cái. Thuộc tính nonce="" vẫn gắn vào thẻ script (vô hại).
         $csp  = "default-src 'self'; ";
-        $csp .= "script-src 'self' 'nonce-{$nonce}' https://cdn.jsdelivr.net https://www.google.com https://www.gstatic.com https://www.googletagmanager.com https://www.google-analytics.com https://images.dmca.com https://apis.google.com blob:; ";
+        $csp .= "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.google.com https://www.gstatic.com https://www.googletagmanager.com https://www.google-analytics.com https://images.dmca.com https://apis.google.com blob:; ";
         $csp .= "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; ";
         $csp .= "font-src 'self' https://fonts.gstatic.com data:; ";
         $csp .= "connect-src 'self' https://www.google.com https://www.gstatic.com https://www.youtube.com https://www.google-analytics.com https://stats.g.doubleclick.net https://apis.google.com ws: wss:; ";

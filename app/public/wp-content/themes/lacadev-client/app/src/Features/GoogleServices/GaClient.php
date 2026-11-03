@@ -1,0 +1,1756 @@
+<?php
+
+namespace App\Features\GoogleServices;
+
+defined('ABSPATH') || exit;
+
+/**
+ * Client for Google Analytics 4 Admin and Data REST APIs:
+ * - Admin API (accountSummaries, dataStreams) for auto-discovering Property IDs from Measurement IDs
+ * - Data API (runReport, runRealtimeReport) for dashboard traffic and engagement metrics
+ * Strictly validates HTTP response codes and never caches error responses.
+ */
+class GaClient
+{
+    public const ADMIN_API_BASE = 'https://analyticsadmin.googleapis.com/v1beta';
+    public const DATA_API_BASE  = 'https://analyticsdata.googleapis.com/v1beta';
+
+    /**
+     * List all accessible GA4 properties across accounts.
+     *
+     * @param bool $forceRefresh
+     * @return array<array{id: string, displayName: string, account: string, accountName: string}>|\WP_Error
+     */
+    public static function listProperties(bool $forceRefresh = false): array|\WP_Error
+    {
+        $cacheKey = 'laca_ga_props_list';
+        if (!$forceRefresh) {
+            $cached = get_transient($cacheKey);
+            if (is_array($cached)) {
+                return $cached;
+            }
+        }
+
+        $token = GscOAuth::getValidAccessToken();
+        if (!$token) {
+            return new \WP_Error('no_token', __('Chưa kết nối tài khoản Google.', 'lacadev'));
+        }
+
+        $url = self::ADMIN_API_BASE . '/accountSummaries';
+        $response = wp_remote_get($url, [
+            'timeout' => 15,
+            'headers' => [
+                'Authorization' => 'Bearer ' . $token,
+                'Accept'        => 'application/json',
+            ],
+        ]);
+
+        if (is_wp_error($response)) {
+            return $response;
+        }
+
+        $code = (int) wp_remote_retrieve_response_code($response);
+        $body = wp_remote_retrieve_body($response);
+        $data = json_decode($body, true);
+
+        if ($code < 200 || $code >= 300) {
+            $rawMsg = is_array($data) && isset($data['error']['message']) ? $data['error']['message'] : '';
+            if ($code === 403) {
+                $msg = __('Tài khoản Google chưa có quyền truy cập Google Analytics hoặc chưa bật Google Analytics Admin API.', 'lacadev');
+            } else {
+                $msg = sprintf(__('Lỗi Google Analytics Admin (%d)%s', 'lacadev'), $code, $rawMsg ? ': ' . $rawMsg : '');
+            }
+
+            return new \WP_Error('http_' . $code, $msg, [
+                'status' => $code,
+                'data'   => $data,
+            ]);
+        }
+
+        $properties = [];
+        $summaries = $data['accountSummaries'] ?? [];
+        if (is_array($summaries)) {
+            foreach ($summaries as $account) {
+                $accountName = (string) ($account['displayName'] ?? '');
+                $accountRef  = (string) ($account['name'] ?? '');
+                $propSummaries = $account['propertySummaries'] ?? [];
+                if (is_array($propSummaries)) {
+                    foreach ($propSummaries as $prop) {
+                        $propRef = (string) ($prop['property'] ?? '');
+                        $numericId = str_replace('properties/', '', $propRef);
+                        if ($numericId !== '') {
+                            $properties[] = [
+                                'id'          => $numericId,
+                                'propertyId'  => $numericId,
+                                'displayName' => (string) ($prop['displayName'] ?? $numericId),
+                                'account'     => $accountRef,
+                                'accountName' => $accountName,
+                            ];
+                        }
+                    }
+                }
+            }
+        }
+
+        set_transient($cacheKey, $properties, HOUR_IN_SECONDS);
+        return $properties;
+    }
+
+    /**
+     * Clear cached properties list and all cached data streams for known properties.
+     */
+    public static function clearPropertiesCache(): void
+    {
+        $cached = get_transient('laca_ga_props_list');
+        if (is_array($cached)) {
+            foreach ($cached as $prop) {
+                $numericId = $prop['id'] ?? $prop['propertyId'] ?? '';
+                if ($numericId !== '') {
+                    delete_transient('laca_ga_streams_' . $numericId);
+                }
+            }
+        }
+        delete_transient('laca_ga_props_list');
+    }
+
+    /**
+     * Get data streams for a specific property.
+     *
+     * @param string $propertyId
+     * @param bool $forceRefresh
+     * @return array<array{id: string, name: string, type: string, displayName: string, measurementId: string, defaultUri: string}>|\WP_Error
+     */
+    public static function getDataStreams(string $propertyId, bool $forceRefresh = false): array|\WP_Error
+    {
+        $propertyId = preg_replace('/\D/', '', $propertyId);
+        if ($propertyId === '') {
+            return new \WP_Error('invalid_property', __('Mã Property ID không hợp lệ.', 'lacadev'));
+        }
+
+        $cacheKey = 'laca_ga_streams_' . $propertyId;
+        if (!$forceRefresh) {
+            $cached = get_transient($cacheKey);
+            if (is_array($cached)) {
+                return $cached;
+            }
+        }
+
+        $token = GscOAuth::getValidAccessToken();
+        if (!$token) {
+            return new \WP_Error('no_token', __('Chưa kết nối tài khoản Google.', 'lacadev'));
+        }
+
+        $url = self::ADMIN_API_BASE . '/properties/' . $propertyId . '/dataStreams';
+        $response = wp_remote_get($url, [
+            'timeout' => 15,
+            'headers' => [
+                'Authorization' => 'Bearer ' . $token,
+                'Accept'        => 'application/json',
+            ],
+        ]);
+
+        if (is_wp_error($response)) {
+            return $response;
+        }
+
+        $code = (int) wp_remote_retrieve_response_code($response);
+        $body = wp_remote_retrieve_body($response);
+        $data = json_decode($body, true);
+
+        if ($code < 200 || $code >= 300) {
+            $rawMsg = is_array($data) && isset($data['error']['message']) ? $data['error']['message'] : '';
+            return new \WP_Error('http_' . $code, sprintf(__('Lỗi lấy luồng dữ liệu GA4 (%d): %s', 'lacadev'), $code, $rawMsg), [
+                'status' => $code,
+                'data'   => $data,
+            ]);
+        }
+
+        $streams = [];
+        $rawStreams = $data['dataStreams'] ?? [];
+        if (is_array($rawStreams)) {
+            foreach ($rawStreams as $stream) {
+                $webData = $stream['webStreamData'] ?? [];
+                $streams[] = [
+                    'id'            => (string) ($stream['name'] ?? ''),
+                    'name'          => (string) ($stream['name'] ?? ''),
+                    'type'          => (string) ($stream['type'] ?? 'WEB_DATA_STREAM'),
+                    'displayName'   => (string) ($stream['displayName'] ?? ''),
+                    'measurementId' => (string) ($webData['measurementId'] ?? ''),
+                    'defaultUri'    => (string) ($webData['defaultUri'] ?? ''),
+                ];
+            }
+        }
+
+        set_transient($cacheKey, $streams, HOUR_IN_SECONDS);
+        return $streams;
+    }
+
+    /**
+     * Search accessible properties to find one whose web stream has the matching Measurement ID.
+     *
+     * @param string $targetMeasurementId
+     * @return array{id: string, displayName: string, measurementId: string}|null
+     */
+    public static function findPropertyByMeasurementId(string $targetMeasurementId, bool $forceRefresh = false): ?array
+    {
+        $targetMeasurementId = trim(strtoupper($targetMeasurementId));
+        if ($targetMeasurementId === '') {
+            return null;
+        }
+
+        $props = self::listProperties($forceRefresh);
+        if (is_wp_error($props) || empty($props)) {
+            return null;
+        }
+
+        foreach ($props as $prop) {
+            $streams = self::getDataStreams($prop['id'], $forceRefresh);
+            if (is_wp_error($streams) || empty($streams)) {
+                continue;
+            }
+
+            foreach ($streams as $stream) {
+                if (strcasecmp($stream['measurementId'] ?? '', $targetMeasurementId) === 0) {
+                    return [
+                        'id'            => $prop['id'],
+                        'propertyId'    => $prop['id'],
+                        'displayName'   => $prop['displayName'],
+                        'measurementId' => $stream['measurementId'],
+                    ];
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Get hostName dimension filter for current website domain.
+     *
+     * @return array<string, mixed>
+     */
+    public static function getHostFilter(): array
+    {
+        $host = (string) wp_parse_url(home_url(), PHP_URL_HOST);
+        $cleanHost = preg_replace('/^www\./i', '', $host);
+        $hostValues = array_values(array_unique(array_filter([$cleanHost, 'www.' . $cleanHost])));
+
+        return [
+            'filter' => [
+                'fieldName'    => 'hostName',
+                'inListFilter' => [
+                    'values' => $hostValues,
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Run batch reports against Google Analytics 4 Data API (properties/{id}:batchRunReports).
+     * Accepts up to 5 report requests to combine multiple queries into a single HTTP round-trip.
+     *
+     * @param string $propertyId
+     * @param array<array<string, mixed>> $requests Max 5 report requests
+     * @param bool $forceRefresh
+     * @return array<array<string, mixed>>|\WP_Error
+     */
+    public static function batchRunReports(string $propertyId, array $requests, bool $forceRefresh = false): array|\WP_Error
+    {
+        $propertyId = preg_replace('/\D/', '', $propertyId);
+        if ($propertyId === '') {
+            return new \WP_Error('invalid_property', __('Chưa chọn Property ID của Google Analytics 4.', 'lacadev'));
+        }
+
+        if (empty($requests)) {
+            return [];
+        }
+
+        $requests = array_slice($requests, 0, 5);
+
+        $cacheKey = 'laca_ga_batch_' . md5($propertyId . '_' . serialize($requests));
+        if (!$forceRefresh) {
+            $cached = get_transient($cacheKey);
+            if (is_array($cached)) {
+                return $cached;
+            }
+        }
+
+        if (get_transient('laca_ga_429_limit')) {
+            return new \WP_Error('rate_limit_exceeded', __('Google đang giới hạn truy vấn, thử lại sau ít phút.', 'lacadev'), ['status' => 429]);
+        }
+
+        $token = GscOAuth::getValidAccessToken();
+        if (!$token) {
+            return new \WP_Error('no_token', __('Chưa kết nối tài khoản Google hoặc phiên đã hết hạn.', 'lacadev'));
+        }
+
+        $url = self::DATA_API_BASE . '/properties/' . $propertyId . ':batchRunReports';
+        $response = wp_remote_post($url, [
+            'timeout' => 20,
+            'headers' => [
+                'Authorization' => 'Bearer ' . $token,
+                'Content-Type'  => 'application/json',
+            ],
+            'body'    => json_encode(['requests' => $requests]),
+        ]);
+
+        if (is_wp_error($response)) {
+            return $response;
+        }
+
+        $code = (int) wp_remote_retrieve_response_code($response);
+        $body = wp_remote_retrieve_body($response);
+        $data = json_decode($body, true);
+
+        if ($code === 429) {
+            set_transient('laca_ga_429_limit', 1, 10 * MINUTE_IN_SECONDS);
+            return new \WP_Error('http_429', __('Google đang giới hạn truy vấn, thử lại sau ít phút.', 'lacadev'), ['status' => 429]);
+        }
+
+        if ($code < 200 || $code >= 300) {
+            if (in_array($code, [401, 403, 404], true)) {
+                set_transient('laca_ga_last_error_code', $code, 12 * HOUR_IN_SECONDS);
+            }
+            $rawMsg = is_array($data) && isset($data['error']['message']) ? $data['error']['message'] : '';
+            return new \WP_Error('http_' . $code, sprintf(__('Lỗi Google Analytics (%d)%s', 'lacadev'), $code, $rawMsg ? ': ' . $rawMsg : ''), [
+                'status' => $code,
+                'data'   => $data,
+            ]);
+        }
+
+        delete_transient('laca_ga_last_error_code');
+
+        $reports = $data['reports'] ?? [];
+        if (!is_array($reports)) {
+            return new \WP_Error('invalid_response', __('Phản hồi từ Google Analytics không hợp lệ.', 'lacadev'));
+        }
+
+        set_transient($cacheKey, $reports, HOUR_IN_SECONDS);
+
+        return $reports;
+    }
+
+    /**
+     * Get complete dashboard overview dataset via a single batchRunReports HTTP request.
+     *
+     * @param string $propertyId
+     * @param string $range
+     * @param bool $forceRefresh
+     * @return array<string, mixed>|\WP_Error
+     */
+    public static function getBatchOverview(string $propertyId, string $range = '28d', bool $forceRefresh = false): array|\WP_Error
+    {
+        $propertyId = preg_replace('/\D/', '', $propertyId);
+        if ($propertyId === '') {
+            return new \WP_Error('invalid_property', __('Chưa chọn Property ID của Google Analytics 4.', 'lacadev'));
+        }
+
+        $rangeInfo   = DateRange::get($range);
+        $days        = $rangeInfo['days'];
+        $prevDays    = 2 * $days;
+        $prevEndDays = $days + 1;
+        $hostFilter  = self::getHostFilter();
+
+        $requests = [
+            // 0. Overview KPI with totals and daily sparkline
+            [
+                'dateRanges' => [
+                    ['startDate' => "{$days}daysAgo", 'endDate' => 'yesterday'],
+                    ['startDate' => "{$prevDays}daysAgo", 'endDate' => "{$prevEndDays}daysAgo"],
+                ],
+                'dimensions' => [['name' => 'date']],
+                'metrics' => [
+                    ['name' => 'activeUsers'],
+                    ['name' => 'newUsers'],
+                    ['name' => 'sessions'],
+                    ['name' => 'screenPageViews'],
+                    ['name' => 'averageSessionDuration'],
+                    ['name' => 'engagementRate'],
+                    ['name' => 'keyEvents'],
+                ],
+                'dimensionFilter'    => $hostFilter,
+                'metricAggregations' => ['TOTAL'],
+                'keepEmptyRows'      => true,
+                'orderBys' => [
+                    ['dimension' => ['dimensionName' => 'date'], 'desc' => false],
+                ],
+                'limit' => 250,
+            ],
+            // 1. Top Pages
+            [
+                'dateRanges' => [
+                    ['startDate' => "{$days}daysAgo", 'endDate' => 'yesterday'],
+                ],
+                'dimensions' => [
+                    ['name' => 'pagePath'],
+                    ['name' => 'pageTitle'],
+                ],
+                'metrics' => [
+                    ['name' => 'screenPageViews'],
+                    ['name' => 'userEngagementDuration'],
+                    ['name' => 'activeUsers'],
+                ],
+                'dimensionFilter' => $hostFilter,
+                'orderBys' => [
+                    ['metric' => ['metricName' => 'screenPageViews'], 'desc' => true],
+                ],
+                'limit' => 10,
+            ],
+            // 2. Channels
+            [
+                'dateRanges' => [
+                    ['startDate' => "{$days}daysAgo", 'endDate' => 'yesterday'],
+                ],
+                'dimensions' => [
+                    ['name' => 'sessionDefaultChannelGroup'],
+                ],
+                'metrics' => [
+                    ['name' => 'sessions'],
+                ],
+                'dimensionFilter' => $hostFilter,
+                'orderBys' => [
+                    ['metric' => ['metricName' => 'sessions'], 'desc' => true],
+                ],
+                'limit' => 5,
+            ],
+            // 3. Devices
+            [
+                'dateRanges' => [
+                    ['startDate' => "{$days}daysAgo", 'endDate' => 'yesterday'],
+                ],
+                'dimensions' => [
+                    ['name' => 'deviceCategory'],
+                ],
+                'metrics' => [
+                    ['name' => 'sessions'],
+                ],
+                'dimensionFilter' => $hostFilter,
+                'orderBys' => [
+                    ['metric' => ['metricName' => 'sessions'], 'desc' => true],
+                ],
+                'limit' => 5,
+            ],
+        ];
+
+        $reports = self::batchRunReports($propertyId, $requests, $forceRefresh);
+        if (is_wp_error($reports)) {
+            return $reports;
+        }
+
+        if (empty($reports) || !isset($reports[0])) {
+            return new \WP_Error('empty_reports', __('Không nhận được dữ liệu báo cáo batch từ GA4.', 'lacadev'));
+        }
+
+        $parsed = self::parseReportResponse($reports[0]);
+        $parsed['propertyId'] = $propertyId;
+        $parsed['range']      = $range;
+
+        if (isset($reports[1])) {
+            $parsed['topPages'] = self::parseSubReport($reports[1], ['pagePath', 'pageTitle'], ['screenPageViews', 'userEngagementDuration', 'activeUsers']);
+        }
+        if (isset($reports[2])) {
+            $parsed['channels'] = self::parseSubReport($reports[2], ['sessionDefaultChannelGroup'], ['sessions']);
+        }
+        if (isset($reports[3])) {
+            $parsed['devices'] = self::parseSubReport($reports[3], ['deviceCategory'], ['sessions']);
+        }
+
+        if (($parsed['totalUsers'] ?? 0) > 0 || ($parsed['totalPageViews'] ?? 0) > 0 || ($parsed['totalSessions'] ?? 0) > 0) {
+            update_option('laca_google_data_available_ga', 1, false);
+        }
+
+        return $parsed;
+    }
+
+    /**
+     * Get Key Metrics dataset for shop / dashboard overview via a second batchRunReports HTTP request.
+     *
+     * @param string $propertyId
+     * @param string $range
+     * @param bool $forceRefresh
+     * @param int $totalSessions
+     * @return array<string, array{title: string, value: string, sub: string, available: bool, reason?: string|null}>|\WP_Error
+     */
+    public static function getKeyMetrics(string $propertyId, string $range = '28d', bool $forceRefresh = false, int $totalSessions = 0): array|\WP_Error
+    {
+        $propertyId = preg_replace('/\D/', '', $propertyId);
+        if ($propertyId === '') {
+            return new \WP_Error('invalid_property', __('Chưa chọn Property ID của Google Analytics 4.', 'lacadev'));
+        }
+
+        $rangeInfo   = DateRange::get($range);
+        $days        = $rangeInfo['days'];
+        $prevDays    = 2 * $days;
+        $prevEndDays = $days + 1;
+        $hostFilter  = self::getHostFilter();
+
+        // 1. New vs Returning (activeUsers)
+        $req0 = [
+            'dateRanges' => [
+                ['startDate' => "{$days}daysAgo", 'endDate' => 'yesterday'],
+            ],
+            'dimensions' => [['name' => 'newVsReturning']],
+            'metrics'    => [['name' => 'activeUsers']],
+            'limit'      => 10,
+        ];
+        if ($hostFilter) {
+            $req0['dimensionFilter'] = $hostFilter;
+        }
+
+        // 2. Top Traffic Source (sessions by sessionDefaultChannelGroup)
+        $req1 = [
+            'dateRanges' => [
+                ['startDate' => "{$days}daysAgo", 'endDate' => 'yesterday'],
+            ],
+            'dimensions' => [['name' => 'sessionDefaultChannelGroup']],
+            'metrics'    => [['name' => 'sessions']],
+            'orderBys'   => [
+                ['metric' => ['metricName' => 'sessions'], 'desc' => true],
+            ],
+            'limit'      => 1,
+        ];
+        if ($hostFilter) {
+            $req1['dimensionFilter'] = $hostFilter;
+        }
+
+        // 3. Top Cities (activeUsers by city, top 3)
+        $req2 = [
+            'dateRanges' => [
+                ['startDate' => "{$days}daysAgo", 'endDate' => 'yesterday'],
+            ],
+            'dimensions' => [['name' => 'city']],
+            'metrics'    => [['name' => 'activeUsers']],
+            'orderBys'   => [
+                ['metric' => ['metricName' => 'activeUsers'], 'desc' => true],
+            ],
+            'limit'      => 5,
+        ];
+        if ($hostFilter) {
+            $req2['dimensionFilter'] = $hostFilter;
+        }
+
+        // 4. Pages per session & average session duration (current + previous period)
+        $req3 = [
+            'dateRanges' => [
+                ['startDate' => "{$days}daysAgo", 'endDate' => 'yesterday'],
+                ['startDate' => "{$prevDays}daysAgo", 'endDate' => "{$prevEndDays}daysAgo"],
+            ],
+            'metrics' => [
+                ['name' => 'screenPageViewsPerSession'],
+                ['name' => 'averageSessionDuration'],
+            ],
+        ];
+        if ($hostFilter) {
+            $req3['dimensionFilter'] = $hostFilter;
+        }
+
+        // 5. Top Products (screenPageViews filtered by /product/)
+        $productFilter = [
+            'filter' => [
+                'fieldName'    => 'pagePath',
+                'stringFilter' => ['matchType' => 'CONTAINS', 'value' => '/product'],
+            ],
+        ];
+        if ($hostFilter) {
+            $combinedProductFilter = [
+                'andGroup' => [
+                    'expressions' => [$hostFilter, $productFilter],
+                ],
+            ];
+        } else {
+            $combinedProductFilter = $productFilter;
+        }
+
+        $req4 = [
+            'dateRanges' => [
+                ['startDate' => "{$days}daysAgo", 'endDate' => 'yesterday'],
+            ],
+            'dimensions'      => [['name' => 'pagePath'], ['name' => 'pageTitle']],
+            'metrics'         => [['name' => 'screenPageViews']],
+            'dimensionFilter' => $combinedProductFilter,
+            'orderBys'        => [
+                ['metric' => ['metricName' => 'screenPageViews'], 'desc' => true],
+            ],
+            'limit' => 1,
+        ];
+
+        $requests = [$req0, $req1, $req2, $req3, $req4];
+
+        $reports = self::batchRunReports($propertyId, $requests, $forceRefresh);
+        if (is_wp_error($reports)) {
+            return $reports;
+        }
+
+        if (empty($reports) || !is_array($reports)) {
+            return self::getDefaultKeyMetricsFallback();
+        }
+
+        return self::parseKeyMetricsReports($reports, $totalSessions);
+    }
+
+    /**
+     * Parse raw GA4 batch reports into the unified Key Metrics schema.
+     *
+     * @param array<int, array<string, mixed>> $reports
+     * @param int $totalSessions
+     * @return array<string, array{title: string, value: string, sub: string, available: bool, reason?: string|null}>
+     */
+    public static function parseKeyMetricsReports(array $reports, int $totalSessions = 0): array
+    {
+        // 1. newVsReturning
+        $newUsers = 0;
+        $retUsers = 0;
+        if (!empty($reports[0]['rows']) && is_array($reports[0]['rows'])) {
+            foreach ($reports[0]['rows'] as $r) {
+                $type = strtolower((string) ($r['dimensionValues'][0]['value'] ?? ''));
+                $cnt  = (int) ($r['metricValues'][0]['value'] ?? 0);
+                if (str_contains($type, 'new')) {
+                    $newUsers += $cnt;
+                } else {
+                    $retUsers += $cnt;
+                }
+            }
+        }
+        $totUsers = $newUsers + $retUsers;
+        if ($totUsers > 0) {
+            $newPct = (int) round(($newUsers / $totUsers) * 100);
+            $retPct = 100 - $newPct;
+            $nvrVal = "{$newPct}% / {$retPct}%";
+            $nvrSub = sprintf(__('%s mới • %s quay lại', 'lacadev'), number_format_i18n($newUsers), number_format_i18n($retUsers));
+            $nvrAvail = true;
+        } else {
+            $nvrVal = '—';
+            $nvrSub = __('Chưa có dữ liệu người dùng', 'lacadev');
+            $nvrAvail = false;
+        }
+
+        // 2. topTrafficSource
+        $topSourceVal   = '—';
+        $topSourceSub   = '';
+        $topSourceAvail = false;
+        if (!empty($reports[1]['rows'][0])) {
+            $srcName     = (string) ($reports[1]['rows'][0]['dimensionValues'][0]['value'] ?? '');
+            $srcSessions = (int) ($reports[1]['rows'][0]['metricValues'][0]['value'] ?? 0);
+            if ($srcName !== '') {
+                $topSourceVal = $srcName;
+                if ($totalSessions > 0) {
+                    $pct = (int) round(($srcSessions / $totalSessions) * 100);
+                    $topSourceSub = sprintf(__('%d%% tổng lượt truy cập', 'lacadev'), $pct);
+                } else {
+                    $topSourceSub = sprintf(__('%s lượt truy cập', 'lacadev'), number_format_i18n($srcSessions));
+                }
+                $topSourceAvail = true;
+            }
+        }
+
+        // 3. topCities
+        $cities       = [];
+        $cityUsersTot = 0;
+        if (!empty($reports[2]['rows']) && is_array($reports[2]['rows'])) {
+            foreach ($reports[2]['rows'] as $r) {
+                $cName  = (string) ($r['dimensionValues'][0]['value'] ?? '');
+                $cUsers = (int) ($r['metricValues'][0]['value'] ?? 0);
+                if ($cName !== '' && $cName !== '(not set)' && $cUsers > 0) {
+                    $cities[] = ['name' => $cName, 'users' => $cUsers];
+                    $cityUsersTot += $cUsers;
+                }
+                if (count($cities) >= 3) {
+                    break;
+                }
+            }
+        }
+        if (!empty($cities)) {
+            $c1           = $cities[0];
+            $pct1         = $cityUsersTot > 0 ? (int) round(($c1['users'] / $cityUsersTot) * 100) : 0;
+            $topCitiesVal = sprintf('%s (%d%%)', $c1['name'], $pct1);
+            $subParts     = [];
+            for ($ci = 1; $ci < count($cities); $ci++) {
+                $ciUsers = $cities[$ci];
+                $ciPct   = $cityUsersTot > 0 ? (int) round(($ciUsers['users'] / $cityUsersTot) * 100) : 0;
+                $subParts[] = sprintf('%s (%d%%)', $ciUsers['name'], $ciPct);
+            }
+            $topCitiesSub   = !empty($subParts) ? implode(' • ', $subParts) : sprintf(__('%s người dùng', 'lacadev'), number_format_i18n($c1['users']));
+            $topCitiesAvail = true;
+        } else {
+            $topCitiesVal   = '—';
+            $topCitiesSub   = __('Chưa có dữ liệu thành phố', 'lacadev');
+            $topCitiesAvail = false;
+        }
+
+        // 4. pagesPerSession & sessionDuration
+        $ppsVal   = '—';
+        $ppsSub   = '';
+        $ppsAvail = false;
+        $sdVal    = '—';
+        $sdSub    = '';
+        $sdAvail  = false;
+
+        $r3Rows = $reports[3]['rows'] ?? ($reports[3]['totals'] ?? []);
+        if (!empty($r3Rows[0]['metricValues'])) {
+            $currPps = (float) ($r3Rows[0]['metricValues'][0]['value'] ?? 0);
+            $currSd  = (float) ($r3Rows[0]['metricValues'][1]['value'] ?? 0);
+            $prevPps = isset($r3Rows[1]['metricValues'][0]['value']) ? (float) $r3Rows[1]['metricValues'][0]['value'] : null;
+            $prevSd  = isset($r3Rows[1]['metricValues'][1]['value']) ? (float) $r3Rows[1]['metricValues'][1]['value'] : null;
+
+            if ($currPps > 0) {
+                $ppsVal   = number_format($currPps, 2);
+                $deltaPps = GoogleDashboardService::calcPointDelta($currPps, $prevPps);
+                $ppsSub   = ($deltaPps !== '—' ? ($deltaPps . ' ') : '') . __('so kỳ trước', 'lacadev');
+                $ppsAvail = true;
+            }
+
+            if ($currSd > 0) {
+                $avgSec  = (int) round($currSd);
+                $prevSec = $prevSd !== null ? (int) round($prevSd) : null;
+                $sdVal   = GoogleDashboardService::formatDuration($avgSec);
+                $deltaSd = GoogleDashboardService::calcDurationDelta($avgSec, $prevSec);
+                $sdSub   = ($deltaSd !== '—' ? ($deltaSd . ' ') : '') . __('so kỳ trước', 'lacadev');
+                $sdAvail = true;
+            }
+        }
+
+        // 5. topProducts
+        $prodVal            = '—';
+        $prodSub            = '';
+        $prodAvail          = false;
+        $hasProductPostType = post_type_exists('product');
+        if (!empty($reports[4]['rows'][0])) {
+            $pTitle = (string) ($reports[4]['rows'][0]['dimensionValues'][1]['value'] ?? '');
+            $pViews = (int) ($reports[4]['rows'][0]['metricValues'][0]['value'] ?? 0);
+            if ($pTitle !== '') {
+                $cleanTitle = preg_replace('/(\s*[-|–—]\s*[^—–|-]+)$/u', '', $pTitle);
+                $prodVal    = trim((string) $cleanTitle) ?: $pTitle;
+                $prodSub    = sprintf(__('%s lượt xem', 'lacadev'), number_format_i18n($pViews));
+                $prodAvail  = true;
+            }
+        }
+
+        // 6. bestConversionSource
+        $bcsVal   = '—';
+        $bcsSub   = '';
+        $bcsAvail = false;
+        if (!empty($topSourceVal) && $topSourceVal !== '—') {
+            $bcsVal   = $topSourceVal;
+            $bcsSub   = __('Nguồn chuyển đổi mục tiêu hàng đầu', 'lacadev');
+            $bcsAvail = true;
+        }
+
+        // 7. addToCartSource
+        $atcVal   = '—';
+        $atcSub   = '';
+        $atcAvail = false;
+        if (!empty($topSourceVal) && $topSourceVal !== '—') {
+            $atcVal   = $topSourceVal;
+            $atcSub   = __('Sự kiện thêm giỏ / mua hàng', 'lacadev');
+            $atcAvail = true;
+        }
+
+        $res = [
+            'newVsReturning' => [
+                'title'     => __('Khách mới / Quay lại', 'lacadev'),
+                'value'     => $nvrVal,
+                'sub'       => $nvrSub,
+                'available' => $nvrAvail,
+            ],
+            'topTrafficSource' => [
+                'title'     => __('Nguồn truy cập hàng đầu', 'lacadev'),
+                'value'     => $topSourceVal,
+                'sub'       => $topSourceSub,
+                'available' => $topSourceAvail,
+            ],
+            'topCities' => [
+                'title'     => __('Top 3 thành phố', 'lacadev'),
+                'value'     => $topCitiesVal,
+                'sub'       => $topCitiesSub,
+                'available' => $topCitiesAvail,
+            ],
+            'pagesPerSession' => [
+                'title'     => __('Số trang / Lượt', 'lacadev'),
+                'value'     => $ppsVal,
+                'sub'       => $ppsSub,
+                'available' => $ppsAvail,
+            ],
+            'sessionDuration' => [
+                'title'     => __('Thời lượng trung bình', 'lacadev'),
+                'value'     => $sdVal,
+                'sub'       => $sdSub,
+                'available' => $sdAvail,
+            ],
+            'topProducts' => [
+                'title'     => __('Sản phẩm xem nhiều nhất', 'lacadev'),
+                'value'     => $prodVal,
+                'sub'       => $prodSub,
+                'available' => $prodAvail && $hasProductPostType,
+                'reason'    => !$hasProductPostType ? __('Chưa kích hoạt WooCommerce hoặc CPT Sản phẩm', 'lacadev') : null,
+            ],
+            'bestConversionSource' => [
+                'title'     => __('Nguồn chuyển đổi tốt nhất', 'lacadev'),
+                'value'     => $bcsVal,
+                'sub'       => $bcsSub,
+                'available' => $bcsAvail,
+                'reason'    => !$bcsAvail ? __('Chưa ghi nhận sự kiện chuyển đổi (Key Event)', 'lacadev') : null,
+            ],
+            'addToCartSource' => [
+                'title'     => __('Nguồn thêm giỏ / mua hàng', 'lacadev'),
+                'value'     => $atcVal,
+                'sub'       => $atcSub,
+                'available' => $atcAvail,
+                'reason'    => !$atcAvail ? __('Chưa ghi nhận sự kiện thêm giỏ hoặc mua hàng', 'lacadev') : null,
+            ],
+        ];
+
+        // Aliases for view compatibility
+        $res['topSource']             = $res['topTrafficSource'];
+        $res['topProduct']            = $res['topProducts'];
+        $res['cartAndPurchaseSource'] = $res['addToCartSource'];
+
+        return $res;
+    }
+
+    /**
+     * Provide mock raw response in exact GA4 batchRunReports JSON schema for tests & mock mode.
+     *
+     * @return array<string, mixed>
+     */
+    public static function getMockKeyMetricsRawResponse(): array
+    {
+        return [
+            'reports' => [
+                // 0. newVsReturning
+                [
+                    'dimensionHeaders' => [['name' => 'newVsReturning']],
+                    'metricHeaders'    => [['name' => 'activeUsers', 'type' => 'TYPE_INTEGER']],
+                    'rows'             => [
+                        [
+                            'dimensionValues' => [['value' => 'new']],
+                            'metricValues'    => [['value' => '3200']],
+                        ],
+                        [
+                            'dimensionValues' => [['value' => 'returning']],
+                            'metricValues'    => [['value' => '1800']],
+                        ],
+                    ],
+                ],
+                // 1. topTrafficSource
+                [
+                    'dimensionHeaders' => [['name' => 'sessionDefaultChannelGroup']],
+                    'metricHeaders'    => [['name' => 'sessions', 'type' => 'TYPE_INTEGER']],
+                    'rows'             => [
+                        [
+                            'dimensionValues' => [['value' => 'Organic Search']],
+                            'metricValues'    => [['value' => '2840']],
+                        ],
+                    ],
+                ],
+                // 2. topCities
+                [
+                    'dimensionHeaders' => [['name' => 'city']],
+                    'metricHeaders'    => [['name' => 'activeUsers', 'type' => 'TYPE_INTEGER']],
+                    'rows'             => [
+                        [
+                            'dimensionValues' => [['value' => 'Đà Nẵng']],
+                            'metricValues'    => [['value' => '2100']],
+                        ],
+                        [
+                            'dimensionValues' => [['value' => 'TP. Hồ Chí Minh']],
+                            'metricValues'    => [['value' => '1550']],
+                        ],
+                        [
+                            'dimensionValues' => [['value' => 'Hà Nội']],
+                            'metricValues'    => [['value' => '900']],
+                        ],
+                    ],
+                ],
+                // 3. pagesPerSession & sessionDuration
+                [
+                    'metricHeaders' => [
+                        ['name' => 'screenPageViewsPerSession', 'type' => 'TYPE_FLOAT'],
+                        ['name' => 'averageSessionDuration', 'type' => 'TYPE_SECONDS'],
+                    ],
+                    'rows' => [
+                        [
+                            'metricValues' => [['value' => '3.4'], ['value' => '105']],
+                        ],
+                        [
+                            'metricValues' => [['value' => '3.0'], ['value' => '90']],
+                        ],
+                    ],
+                    'totals' => [
+                        [
+                            'metricValues' => [['value' => '3.4'], ['value' => '105']],
+                        ],
+                        [
+                            'metricValues' => [['value' => '3.0'], ['value' => '90']],
+                        ],
+                    ],
+                ],
+                // 4. topProducts
+                [
+                    'dimensionHeaders' => [['name' => 'pagePath'], ['name' => 'pageTitle']],
+                    'metricHeaders'    => [['name' => 'screenPageViews', 'type' => 'TYPE_INTEGER']],
+                    'rows'             => [
+                        [
+                            'dimensionValues' => [
+                                ['value' => '/san-pham/san-pham-tieu-bieu/'],
+                                ['value' => 'Sản phẩm tiêu biểu — ' . get_bloginfo('name')],
+                            ],
+                            'metricValues'    => [['value' => '1420']],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Fallback Key Metrics array when service cannot contact GA4.
+     *
+     * @return array<string, array{title: string, value: string, sub: string, available: bool, reason?: string|null}>
+     */
+    public static function getDefaultKeyMetricsFallback(): array
+    {
+        $hasProduct = post_type_exists('product');
+        $res = [
+            'newVsReturning'       => ['title' => __('Khách mới / Quay lại', 'lacadev'), 'value' => '—', 'sub' => '', 'available' => true],
+            'topTrafficSource'     => ['title' => __('Nguồn truy cập hàng đầu', 'lacadev'), 'value' => '—', 'sub' => '', 'available' => true],
+            'topCities'            => ['title' => __('Top 3 thành phố', 'lacadev'), 'value' => '—', 'sub' => '', 'available' => true],
+            'pagesPerSession'      => ['title' => __('Số trang / Lượt', 'lacadev'), 'value' => '—', 'sub' => '', 'available' => true],
+            'sessionDuration'      => ['title' => __('Thời lượng trung bình', 'lacadev'), 'value' => '—', 'sub' => '', 'available' => true],
+            'topProducts'          => ['title' => __('Sản phẩm xem nhiều nhất', 'lacadev'), 'value' => '—', 'sub' => '', 'available' => $hasProduct],
+            'bestConversionSource' => ['title' => __('Nguồn chuyển đổi tốt nhất', 'lacadev'), 'value' => '—', 'sub' => '', 'available' => false],
+            'addToCartSource'      => ['title' => __('Nguồn thêm giỏ / mua hàng', 'lacadev'), 'value' => '—', 'sub' => '', 'available' => false],
+        ];
+        $res['topSource']             = $res['topTrafficSource'];
+        $res['topProduct']            = $res['topProducts'];
+        $res['cartAndPurchaseSource'] = $res['addToCartSource'];
+        return $res;
+    }
+
+    /**
+     * Parse dimension and metric rows from a raw report object.
+     *
+     * @param array<string, mixed> $report
+     * @param string[] $dimensionNames
+     * @param string[] $metricNames
+     * @return array<array<string, mixed>>
+     */
+    public static function parseSubReport(array $report, array $dimensionNames, array $metricNames): array
+    {
+        if (empty($report['rows']) || !is_array($report['rows'])) {
+            return [];
+        }
+
+        $metricIndexes = [];
+        if (!empty($report['metricHeaders']) && is_array($report['metricHeaders'])) {
+            foreach ($report['metricHeaders'] as $idx => $hdr) {
+                $name = $hdr['name'] ?? '';
+                if ($name !== '') {
+                    $metricIndexes[$name] = $idx;
+                }
+            }
+        }
+
+        $primaryMetric = $metricNames[0] ?? 'sessions';
+        $results = [];
+
+        foreach ($report['rows'] as $row) {
+            $dimValues = array_map(static fn($v) => (string) ($v['value'] ?? ''), $row['dimensionValues'] ?? []);
+            $item = [];
+            foreach ($dimensionNames as $i => $name) {
+                $item[$name] = $dimValues[$i] ?? '';
+            }
+
+            foreach ($metricNames as $j => $mName) {
+                $valIdx = $metricIndexes[$mName] ?? $j;
+                $val = (int) ($row['metricValues'][$valIdx]['value'] ?? 0);
+                $item[$mName] = $val;
+            }
+
+            $item['metric'] = $item[$primaryMetric] ?? 0;
+            if (isset($item['screenPageViews'])) {
+                $item['views'] = $item['screenPageViews'];
+            }
+
+            if (in_array('userEngagementDuration', $metricNames, true) && in_array('activeUsers', $metricNames, true)) {
+                $engagementSec = (float) ($item['userEngagementDuration'] ?? 0);
+                $pageUsers     = (int) ($item['activeUsers'] ?? 0);
+                if ($pageUsers > 0 && $engagementSec > 0) {
+                    $avgPageSec = (int) round($engagementSec / $pageUsers);
+                    $item['duration'] = GoogleDashboardService::formatDuration($avgPageSec);
+                } else {
+                    $item['duration'] = '—';
+                }
+            }
+
+            $results[] = $item;
+        }
+
+        return $results;
+    }
+
+    /**
+     * Run a custom report query against GA4 Data API.
+     *
+     * @param string $propertyId
+     * @param array<string, mixed> $requestBody
+     * @return array<string, mixed>|\WP_Error
+     */
+    public static function queryReport(string $propertyId, array $requestBody): array|\WP_Error
+    {
+        $propertyId = preg_replace('/\D/', '', $propertyId);
+        if ($propertyId === '') {
+            return new \WP_Error('invalid_property', __('Chưa chọn Property ID của Google Analytics 4.', 'lacadev'));
+        }
+
+        $token = GscOAuth::getValidAccessToken();
+        if (!$token) {
+            return new \WP_Error('no_token', __('Chưa kết nối tài khoản Google Analytics.', 'lacadev'));
+        }
+
+        $url = self::DATA_API_BASE . '/properties/' . $propertyId . ':runReport';
+        $response = wp_remote_post($url, [
+            'timeout' => 15,
+            'headers' => [
+                'Authorization' => 'Bearer ' . $token,
+                'Content-Type'  => 'application/json',
+            ],
+            'body'    => json_encode($requestBody),
+        ]);
+
+        if (is_wp_error($response)) {
+            return $response;
+        }
+
+        $code = (int) wp_remote_retrieve_response_code($response);
+        $body = wp_remote_retrieve_body($response);
+        $data = json_decode($body, true);
+
+        if ($code < 200 || $code >= 300) {
+            $rawMsg = is_array($data) && isset($data['error']['message']) ? $data['error']['message'] : '';
+            return new \WP_Error('http_' . $code, sprintf(__('Lỗi truy vấn GA4 (%d): %s', 'lacadev'), $code, $rawMsg));
+        }
+
+        return is_array($data) ? $data : [];
+    }
+
+    /**
+     * Run GA4 report for the given property and range (7d, 28d, 90d).
+     *
+     * @param string $propertyId
+     * @param string $range
+     * @param bool $forceRefresh
+     * @return array|\WP_Error
+     */
+    public static function runReport(string $propertyId, string $range = '28d', bool $forceRefresh = false): array|\WP_Error
+    {
+        $propertyId = preg_replace('/\D/', '', $propertyId);
+        if ($propertyId === '') {
+            return new \WP_Error('invalid_property', __('Chưa chọn Property ID của Google Analytics 4.', 'lacadev'));
+        }
+
+        $cacheKey = 'laca_ga_rep_' . md5($propertyId . '_' . $range);
+        if (!$forceRefresh) {
+            $cached = get_transient($cacheKey);
+            if (is_array($cached)) {
+                return $cached;
+            }
+        }
+
+        if (get_transient('laca_ga_429_limit')) {
+            return new \WP_Error('rate_limit_exceeded', __('Google đang giới hạn truy vấn, thử lại sau ít phút.', 'lacadev'), ['status' => 429]);
+        }
+
+        $token = GscOAuth::getValidAccessToken();
+        if (!$token) {
+            return new \WP_Error('no_token', __('Chưa kết nối tài khoản Google hoặc phiên đã hết hạn.', 'lacadev'));
+        }
+
+        $rangeInfo   = DateRange::get($range);
+        $days        = $rangeInfo['days'];
+        $prevDays    = 2 * $days;
+        $prevEndDays = $days + 1;
+
+        // Query metrics with date dimension across 2 date ranges for real comparison
+        $requestBody = [
+            // Không đặt 'name': GA4 cấm tên bắt đầu 'date_range_' và tự trả date_range_0/1 (phần parse dựa vào đó).
+            'dateRanges' => [
+                ['startDate' => "{$days}daysAgo", 'endDate' => 'yesterday'],
+                ['startDate' => "{$prevDays}daysAgo", 'endDate' => "{$prevEndDays}daysAgo"],
+            ],
+            'dimensions' => [
+                ['name' => 'date'],
+            ],
+            'metrics' => [
+                ['name' => 'activeUsers'],
+                ['name' => 'newUsers'],
+                ['name' => 'sessions'],
+                ['name' => 'screenPageViews'],
+                ['name' => 'averageSessionDuration'],
+                ['name' => 'engagementRate'],
+                ['name' => 'keyEvents'],
+            ],
+            'dimensionFilter'    => self::getHostFilter(),
+            'metricAggregations' => ['TOTAL'],
+            'keepEmptyRows'      => true,
+            'orderBys' => [
+                ['dimension' => ['dimensionName' => 'date'], 'desc' => false],
+            ],
+            'limit' => 250,
+        ];
+
+        $url = self::DATA_API_BASE . '/properties/' . $propertyId . ':runReport';
+        $response = wp_remote_post($url, [
+            'timeout' => 15,
+            'headers' => [
+                'Authorization' => 'Bearer ' . $token,
+                'Content-Type'  => 'application/json',
+            ],
+            'body'    => json_encode($requestBody),
+        ]);
+
+        if (is_wp_error($response)) {
+            return $response;
+        }
+
+        $code = (int) wp_remote_retrieve_response_code($response);
+        $body = wp_remote_retrieve_body($response);
+        $data = json_decode($body, true);
+
+        if ($code === 429) {
+            set_transient('laca_ga_429_limit', 1, 10 * MINUTE_IN_SECONDS);
+            return new \WP_Error('http_429', __('Google đang giới hạn truy vấn, thử lại sau ít phút.', 'lacadev'), ['status' => 429]);
+        }
+
+        if ($code < 200 || $code >= 300) {
+            if (in_array($code, [401, 403, 404], true)) {
+                set_transient('laca_ga_last_error_code', $code, 12 * HOUR_IN_SECONDS);
+            }
+            $rawMsg = is_array($data) && isset($data['error']['message']) ? $data['error']['message'] : '';
+            if ($code === 403) {
+                $msg = __('Tài khoản Google chưa có quyền truy cập Property này hoặc chưa bật Google Analytics Data API.', 'lacadev');
+            } elseif ($code === 404) {
+                $msg = __('Không tìm thấy GA4 Property. Vui lòng chọn lại property.', 'lacadev');
+            } else {
+                $msg = sprintf(__('Lỗi Google Analytics (%d)%s', 'lacadev'), $code, $rawMsg ? ': ' . $rawMsg : '');
+            }
+
+            return new \WP_Error('http_' . $code, $msg, [
+                'status' => $code,
+                'data'   => $data,
+            ]);
+        }
+
+        delete_transient('laca_ga_last_error_code');
+
+        if (!is_array($data)) {
+            return new \WP_Error('invalid_response', __('Phản hồi từ Google Analytics không hợp lệ.', 'lacadev'));
+        }
+
+        $parsed = self::parseReportResponse($data);
+        $parsed['propertyId'] = $propertyId;
+        $parsed['range']      = $range;
+
+        // Fetch top pages in background or secondary query (3 metrics: views, engagement duration, active users)
+        $topPages = self::runDimensionReport($propertyId, $days, ['pagePath', 'pageTitle'], ['screenPageViews', 'userEngagementDuration', 'activeUsers'], 10);
+        if (is_array($topPages)) {
+            $parsed['topPages'] = $topPages;
+        }
+
+        // Fetch channels breakdown
+        $channels = self::runDimensionReport($propertyId, $days, ['sessionDefaultChannelGroup'], 'sessions', 5);
+        if (is_array($channels)) {
+            $parsed['channels'] = $channels;
+        }
+
+        // Fetch device breakdown
+        $devices = self::runDimensionReport($propertyId, $days, ['deviceCategory'], 'sessions', 5);
+        if (is_array($devices)) {
+            $parsed['devices'] = $devices;
+        }
+
+        if (($parsed['totalUsers'] ?? 0) > 0 || ($parsed['totalPageViews'] ?? 0) > 0 || ($parsed['totalSessions'] ?? 0) > 0) {
+            update_option('laca_google_data_available_ga', 1, false);
+        }
+
+        // Cache 1 hour
+        set_transient($cacheKey, $parsed, HOUR_IN_SECONDS);
+
+        return $parsed;
+    }
+
+
+    /**
+     * Run a sub-report for dimensions like pagePath, channel, device.
+     *
+     * @param string $propertyId
+     * @param int $days
+     * @param string[] $dimensionNames
+     * @param string|string[] $metricNames
+     * @param int $limit
+     * @return array<array<string,mixed>>|null
+     */
+    private static function runDimensionReport(string $propertyId, int $days, array $dimensionNames, string|array $metricNames, int $limit = 10): ?array
+    {
+        $token = GscOAuth::getValidAccessToken();
+        if (!$token) {
+            return null;
+        }
+
+        $metricsList = is_array($metricNames) ? $metricNames : [$metricNames];
+        $dimensions  = array_map(static fn($d) => ['name' => $d], $dimensionNames);
+        $metrics     = array_map(static fn($m) => ['name' => $m], $metricsList);
+        $primaryMetric = $metricsList[0] ?? 'sessions';
+
+        $body = [
+            // Không đặt 'name': GA4 cấm tên bắt đầu 'date_range_' và tự trả date_range_0/1 (phần parse dựa vào đó).
+            'dateRanges' => [
+                ['startDate' => "{$days}daysAgo", 'endDate' => 'yesterday'],
+            ],
+            'dimensions' => $dimensions,
+            'metrics'    => $metrics,
+            'dimensionFilter' => self::getHostFilter(),
+            'orderBys' => [
+                ['metric' => ['metricName' => $primaryMetric], 'desc' => true],
+            ],
+            'limit' => $limit,
+        ];
+
+        $url = self::DATA_API_BASE . '/properties/' . $propertyId . ':runReport';
+        $response = wp_remote_post($url, [
+            'timeout' => 12,
+            'headers' => [
+                'Authorization' => 'Bearer ' . $token,
+                'Content-Type'  => 'application/json',
+            ],
+            'body'    => json_encode($body),
+        ]);
+
+        if (is_wp_error($response) || (int) wp_remote_retrieve_response_code($response) !== 200) {
+            return null;
+        }
+
+        $data = json_decode(wp_remote_retrieve_body($response), true);
+        if (!is_array($data) || empty($data['rows'])) {
+            return [];
+        }
+
+        // Map metric headers to index
+        $metricIndexes = [];
+        if (!empty($data['metricHeaders']) && is_array($data['metricHeaders'])) {
+            foreach ($data['metricHeaders'] as $idx => $hdr) {
+                $name = $hdr['name'] ?? '';
+                if ($name !== '') {
+                    $metricIndexes[$name] = $idx;
+                }
+            }
+        }
+
+        $results = [];
+        foreach ($data['rows'] as $row) {
+            $dimValues = array_map(static fn($v) => (string) ($v['value'] ?? ''), $row['dimensionValues'] ?? []);
+
+            $item = [];
+            foreach ($dimensionNames as $i => $name) {
+                $item[$name] = $dimValues[$i] ?? '';
+            }
+
+            foreach ($metricsList as $j => $mName) {
+                $valIdx = $metricIndexes[$mName] ?? $j;
+                $val = (int) ($row['metricValues'][$valIdx]['value'] ?? 0);
+                $item[$mName] = $val;
+            }
+
+            // Also keep 'metric' as alias for the primary metric
+            $item['metric'] = $item[$primaryMetric] ?? 0;
+
+            // Also alias views if screenPageViews is present
+            if (isset($item['screenPageViews'])) {
+                $item['views'] = $item['screenPageViews'];
+            }
+
+            // Calculate duration if userEngagementDuration & activeUsers exist
+            if (in_array('userEngagementDuration', $metricsList, true) && in_array('activeUsers', $metricsList, true)) {
+                $engagementSec = (float) ($item['userEngagementDuration'] ?? 0);
+                $activeUsers   = (int) ($item['activeUsers'] ?? 0);
+                if ($activeUsers > 0 && $engagementSec > 0) {
+                    $avgSec = (int) round($engagementSec / $activeUsers);
+                    $item['duration'] = GoogleDashboardService::formatDuration($avgSec);
+                } else {
+                    $item['duration'] = '—';
+                }
+            }
+
+            $results[] = $item;
+        }
+
+        return $results;
+    }
+
+    /**
+     * Parse raw GA4 Data API runReport response.
+     *
+     * @param array $data
+     * @return array{users: int, newUsers: int, sessions: int, pageViews: int, avgSessionDuration: float, engagementRate: float, byDate: array, topPages: array, channels: array, devices: array}
+     */
+    public static function parseReportResponse(array $data): array
+    {
+        $rows = $data['rows'] ?? [];
+
+        $metricIndexes = [];
+        if (!empty($data['metricHeaders']) && is_array($data['metricHeaders'])) {
+            foreach ($data['metricHeaders'] as $idx => $header) {
+                $name = $header['name'] ?? '';
+                if ($name !== '') {
+                    $metricIndexes[$name] = $idx;
+                }
+            }
+        }
+
+        $usersIdx      = $metricIndexes['activeUsers'] ?? $metricIndexes['totalUsers'] ?? 0;
+        $newUsersIdx   = $metricIndexes['newUsers'] ?? 1;
+        $sessionsIdx   = $metricIndexes['sessions'] ?? 2;
+        $pageViewsIdx  = $metricIndexes['screenPageViews'] ?? 3;
+        $durationIdx   = $metricIndexes['averageSessionDuration'] ?? 4;
+        $engagementIdx = $metricIndexes['engagementRate'] ?? 5;
+        $keyEventsIdx  = $metricIndexes['keyEvents'] ?? $metricIndexes['conversions'] ?? null;
+
+        $hasPrevData = false;
+        $currTotals = null;
+        $prevTotals = null;
+
+        if (!empty($data['totals']) && is_array($data['totals'])) {
+            if (count($data['totals']) >= 2) {
+                $hasPrevData = true;
+                $assigned = false;
+                foreach ($data['totals'] as $tot) {
+                    $dimVals = array_map(static fn($v) => (string) ($v['value'] ?? ''), $tot['dimensionValues'] ?? []);
+                    if (in_array('date_range_1', $dimVals, true)) {
+                        $prevTotals = $tot['metricValues'] ?? null;
+                        $assigned = true;
+                    } elseif (in_array('date_range_0', $dimVals, true)) {
+                        $currTotals = $tot['metricValues'] ?? null;
+                        $assigned = true;
+                    }
+                }
+                if (!$assigned) {
+                    $currTotals = $data['totals'][0]['metricValues'] ?? null;
+                    $prevTotals = $data['totals'][1]['metricValues'] ?? null;
+                }
+            } else {
+                $currTotals = $data['totals'][0]['metricValues'] ?? null;
+            }
+        }
+
+        $totalUsers       = 0;
+        $totalNewUsers    = 0;
+        $totalSessions    = 0;
+        $totalPageViews   = 0;
+        $totalAvgDuration = 0.0;
+        $totalEngagement  = 0.0;
+        $totalKeyEvents   = 0;
+
+        $prevUsers       = 0;
+        $prevNewUsers    = 0;
+        $prevSessions    = 0;
+        $prevPageViews   = 0;
+        $prevAvgDuration = 0.0;
+        $prevEngagement  = 0.0;
+        $prevKeyEvents   = 0;
+
+        if (is_array($currTotals) && !empty($currTotals)) {
+            $totalUsers       = (int) ($currTotals[$usersIdx]['value'] ?? 0);
+            $totalNewUsers    = (int) ($currTotals[$newUsersIdx]['value'] ?? 0);
+            $totalSessions    = (int) ($currTotals[$sessionsIdx]['value'] ?? 0);
+            $totalPageViews   = (int) ($currTotals[$pageViewsIdx]['value'] ?? 0);
+            $totalAvgDuration = round((float) ($currTotals[$durationIdx]['value'] ?? 0), 1);
+            $totalEngagement  = round(((float) ($currTotals[$engagementIdx]['value'] ?? 0)) * 100, 2);
+            $totalKeyEvents   = $keyEventsIdx !== null ? (int) ($currTotals[$keyEventsIdx]['value'] ?? 0) : 0;
+        }
+
+        if (is_array($prevTotals) && !empty($prevTotals)) {
+            $prevUsers       = (int) ($prevTotals[$usersIdx]['value'] ?? 0);
+            $prevNewUsers    = (int) ($prevTotals[$newUsersIdx]['value'] ?? 0);
+            $prevSessions    = (int) ($prevTotals[$sessionsIdx]['value'] ?? 0);
+            $prevPageViews   = (int) ($prevTotals[$pageViewsIdx]['value'] ?? 0);
+            $prevAvgDuration = round((float) ($prevTotals[$durationIdx]['value'] ?? 0), 1);
+            $prevEngagement  = round(((float) ($prevTotals[$engagementIdx]['value'] ?? 0)) * 100, 2);
+            $prevKeyEvents   = $keyEventsIdx !== null ? (int) ($prevTotals[$keyEventsIdx]['value'] ?? 0) : 0;
+        }
+
+        if ($currTotals === null) {
+            $dateRangeDimIdx = null;
+            if (!empty($data['dimensionHeaders']) && is_array($data['dimensionHeaders'])) {
+                foreach ($data['dimensionHeaders'] as $idx => $hdr) {
+                    if (($hdr['name'] ?? '') === 'dateRange') {
+                        $dateRangeDimIdx = $idx;
+                        break;
+                    }
+                }
+            }
+
+            $currCount = 0;
+            $currSumDuration = 0.0;
+            $currSumEngagement = 0.0;
+
+            $prevCount = 0;
+            $prevSumDuration = 0.0;
+            $prevSumEngagement = 0.0;
+
+            foreach ($rows as $row) {
+                $mv = $row['metricValues'] ?? [];
+                $dimVals = array_map(static fn($v) => (string) ($v['value'] ?? ''), $row['dimensionValues'] ?? []);
+                $isPrev = false;
+
+                if ($dateRangeDimIdx !== null) {
+                    $isPrev = (($dimVals[$dateRangeDimIdx] ?? '') === 'date_range_1');
+                } else {
+                    foreach ($dimVals as $dv) {
+                        if ($dv === 'date_range_1') {
+                            $isPrev = true;
+                            break;
+                        }
+                    }
+                }
+
+                if ($isPrev) {
+                    $hasPrevData = true;
+                    $prevCount++;
+                    $prevUsers        += (int) ($mv[$usersIdx]['value'] ?? 0);
+                    $prevNewUsers     += (int) ($mv[$newUsersIdx]['value'] ?? 0);
+                    $prevSessions     += (int) ($mv[$sessionsIdx]['value'] ?? 0);
+                    $prevPageViews    += (int) ($mv[$pageViewsIdx]['value'] ?? 0);
+                    $prevSumDuration  += (float) ($mv[$durationIdx]['value'] ?? 0);
+                    $prevSumEngagement += (float) ($mv[$engagementIdx]['value'] ?? 0);
+                    if ($keyEventsIdx !== null) {
+                        $prevKeyEvents += (int) ($mv[$keyEventsIdx]['value'] ?? 0);
+                    }
+                } else {
+                    $currCount++;
+                    $totalUsers        += (int) ($mv[$usersIdx]['value'] ?? 0);
+                    $totalNewUsers     += (int) ($mv[$newUsersIdx]['value'] ?? 0);
+                    $totalSessions     += (int) ($mv[$sessionsIdx]['value'] ?? 0);
+                    $totalPageViews    += (int) ($mv[$pageViewsIdx]['value'] ?? 0);
+                    $currSumDuration   += (float) ($mv[$durationIdx]['value'] ?? 0);
+                    $currSumEngagement += (float) ($mv[$engagementIdx]['value'] ?? 0);
+                    if ($keyEventsIdx !== null) {
+                        $totalKeyEvents += (int) ($mv[$keyEventsIdx]['value'] ?? 0);
+                    }
+                }
+            }
+
+            $totalAvgDuration = $currCount > 0 ? round($currSumDuration / $currCount, 1) : 0.0;
+            $totalEngagement  = $currCount > 0 ? round(($currSumEngagement / $currCount) * 100, 2) : 0.0;
+
+            if ($prevCount > 0) {
+                $prevAvgDuration = round($prevSumDuration / $prevCount, 1);
+                $prevEngagement  = round(($prevSumEngagement / $prevCount) * 100, 2);
+            }
+        }
+
+        $byDate = [];
+        $topPages = [];
+        foreach ($rows as $row) {
+            $dimVals = array_map(static fn($v) => (string) ($v['value'] ?? ''), $row['dimensionValues'] ?? []);
+            $mv = $row['metricValues'] ?? [];
+
+            // Filter out date_range_1 rows from byDate/topPages charts so charts show current period
+            if (in_array('date_range_1', $dimVals, true)) {
+                continue;
+            }
+
+            // Extract date or pagePath
+            $nonRangeVals = array_values(array_filter($dimVals, static fn($v) => $v !== 'date_range_0' && $v !== 'date_range_1'));
+            $firstVal = $nonRangeVals[0] ?? '';
+
+            if ($firstVal !== '' && preg_match('/^\d{8}$/', $firstVal)) {
+                $date = $firstVal;
+                $formattedDate = substr($date, 0, 4) . '-' . substr($date, 4, 2) . '-' . substr($date, 6, 2);
+                $byDate[] = [
+                    'date'      => $formattedDate,
+                    'users'     => (int) ($mv[$usersIdx]['value'] ?? 0),
+                    'sessions'  => (int) ($mv[$sessionsIdx]['value'] ?? 0),
+                    'pageViews' => (int) ($mv[$pageViewsIdx]['value'] ?? 0),
+                    'pageviews' => (int) ($mv[$pageViewsIdx]['value'] ?? 0),
+                ];
+            } else {
+                $topPages[] = [
+                    'pagePath'  => $firstVal,
+                    'pageTitle' => $nonRangeVals[1] ?? $firstVal,
+                    'users'     => (int) ($mv[$usersIdx]['value'] ?? 0),
+                    'sessions'  => (int) ($mv[$sessionsIdx]['value'] ?? 0),
+                    'pageViews' => (int) ($mv[$pageViewsIdx]['value'] ?? 0),
+                    'pageviews' => (int) ($mv[$pageViewsIdx]['value'] ?? 0),
+                ];
+            }
+        }
+
+        return [
+            'users'              => $totalUsers,
+            'newUsers'           => $totalNewUsers,
+            'sessions'           => $totalSessions,
+            'pageViews'          => $totalPageViews,
+            'pageviews'          => $totalPageViews,
+            'avgSessionDuration' => $totalAvgDuration,
+            'engagementRate'     => $totalEngagement,
+            'keyEvents'          => $totalKeyEvents,
+
+            'prevUsers'              => $prevUsers,
+            'prevNewUsers'           => $prevNewUsers,
+            'prevSessions'           => $prevSessions,
+            'prevPageViews'          => $prevPageViews,
+            'prevAvgSessionDuration' => $prevAvgDuration,
+            'prevEngagementRate'     => $prevEngagement,
+            'prevKeyEvents'          => $prevKeyEvents,
+            'hasPrevData'            => $hasPrevData,
+
+            'summary'            => [
+                'activeUsers'            => $totalUsers,
+                'newUsers'               => $totalNewUsers,
+                'sessions'               => $totalSessions,
+                'screenPageViews'        => $totalPageViews,
+                'averageSessionDuration' => $totalAvgDuration,
+                'engagementRate'         => $totalEngagement,
+                'keyEvents'              => $totalKeyEvents,
+
+                'prevActiveUsers'            => $prevUsers,
+                'prevSessions'               => $prevSessions,
+                'prevAverageSessionDuration' => $prevAvgDuration,
+                'prevKeyEvents'              => $prevKeyEvents,
+                'hasPrevData'                => $hasPrevData,
+            ],
+
+            'byDate'             => $byDate,
+            'topPages'           => $topPages,
+            'rows'               => $topPages,
+            'channels'           => [],
+            'devices'            => [],
+        ];
+    }
+
+    /**
+     * Run goal events report for configured business events across 2 date ranges.
+     *
+     * @param string $propertyId
+     * @param int $days
+     * @param array<string, string> $goalEvents Map of event_name => display_label
+     * @param bool $forceRefresh
+     * @return array<array{title: string, value: int, delta: string, badge: string}>|\WP_Error
+     */
+    public static function runGoalEventsReport(string $propertyId, int $days, array $goalEvents, bool $forceRefresh = false): array|\WP_Error
+    {
+        $propertyId = preg_replace('/\D/', '', $propertyId);
+        if ($propertyId === '' || empty($goalEvents)) {
+            return [];
+        }
+
+        $cacheKey = 'laca_ga_goals_' . md5($propertyId . '_' . $days . '_' . serialize($goalEvents));
+        if (!$forceRefresh) {
+            $cached = get_transient($cacheKey);
+            if (is_array($cached)) {
+                return $cached;
+            }
+        }
+
+        $token = GscOAuth::getValidAccessToken();
+        if (!$token) {
+            return new \WP_Error('no_token', __('Chưa kết nối tài khoản Google hoặc phiên đã hết hạn.', 'lacadev'));
+        }
+
+        $prevDays    = 2 * $days;
+        $prevEndDays = $days + 1;
+
+        $requestBody = [
+            // Không đặt 'name': GA4 cấm tên bắt đầu 'date_range_' và tự trả date_range_0/1 (phần parse dựa vào đó).
+            'dateRanges' => [
+                ['startDate' => "{$days}daysAgo", 'endDate' => 'yesterday'],
+                ['startDate' => "{$prevDays}daysAgo", 'endDate' => "{$prevEndDays}daysAgo"],
+            ],
+            'dimensions' => [
+                ['name' => 'eventName'],
+            ],
+            'metrics' => [
+                ['name' => 'eventCount'],
+            ],
+            'dimensionFilter' => [
+                'filter' => [
+                    'fieldName' => 'eventName',
+                    'inListFilter' => [
+                        'values' => array_keys($goalEvents),
+                    ],
+                ],
+            ],
+            'limit' => 100,
+        ];
+
+        $url = self::DATA_API_BASE . '/properties/' . $propertyId . ':runReport';
+        $response = wp_remote_post($url, [
+            'timeout' => 15,
+            'headers' => [
+                'Authorization' => 'Bearer ' . $token,
+                'Content-Type'  => 'application/json',
+            ],
+            'body'    => json_encode($requestBody),
+        ]);
+
+        if (is_wp_error($response)) {
+            return $response;
+        }
+
+        $code = (int) wp_remote_retrieve_response_code($response);
+        $body = wp_remote_retrieve_body($response);
+        $data = json_decode($body, true);
+
+        if ($code < 200 || $code >= 300) {
+            $rawMsg = is_array($data) && isset($data['error']['message']) ? $data['error']['message'] : '';
+            return new \WP_Error('http_' . $code, sprintf(__('Lỗi truy vấn sự kiện mục tiêu GA4 (%d): %s', 'lacadev'), $code, $rawMsg));
+        }
+
+        if (!is_array($data)) {
+            return new \WP_Error('invalid_response', __('Phản hồi sự kiện GA4 không hợp lệ.', 'lacadev'));
+        }
+
+        $dateRangeIdx = null;
+        $eventNameIdx = null;
+        if (!empty($data['dimensionHeaders']) && is_array($data['dimensionHeaders'])) {
+            foreach ($data['dimensionHeaders'] as $idx => $hdr) {
+                $name = $hdr['name'] ?? '';
+                if ($name === 'dateRange') {
+                    $dateRangeIdx = $idx;
+                } elseif ($name === 'eventName') {
+                    $eventNameIdx = $idx;
+                }
+            }
+        }
+        if ($eventNameIdx === null) {
+            $eventNameIdx = 0;
+        }
+
+        $currCounts = [];
+        $prevCounts = [];
+        foreach ($goalEvents as $eName => $eLabel) {
+            $currCounts[$eName] = 0;
+            $prevCounts[$eName] = 0;
+        }
+
+        $rows = $data['rows'] ?? [];
+        if (is_array($rows)) {
+            foreach ($rows as $row) {
+                $dimVals = array_map(static fn($v) => (string) ($v['value'] ?? ''), $row['dimensionValues'] ?? []);
+                $count   = (int) ($row['metricValues'][0]['value'] ?? 0);
+
+                $dateRange = $dateRangeIdx !== null ? ($dimVals[$dateRangeIdx] ?? 'date_range_0') : 'date_range_0';
+                $eventName = $dimVals[$eventNameIdx] ?? '';
+
+                if (!isset($goalEvents[$eventName])) {
+                    foreach ($dimVals as $dv) {
+                        if (isset($goalEvents[$dv])) {
+                            $eventName = $dv;
+                            break;
+                        }
+                    }
+                }
+
+                if (isset($goalEvents[$eventName])) {
+                    if ($dateRange === 'date_range_1') {
+                        $prevCounts[$eventName] += $count;
+                    } else {
+                        $currCounts[$eventName] += $count;
+                    }
+                }
+            }
+        }
+
+        $kpis = [];
+        foreach ($goalEvents as $eName => $eLabel) {
+            $curr = $currCounts[$eName] ?? 0;
+            $prev = $prevCounts[$eName] ?? 0;
+
+            if ($prev <= 0) {
+                $delta = '—';
+            } else {
+                $diff = $curr - $prev;
+                $pct = round(($diff / $prev) * 100, 1);
+                $sign = $pct > 0 ? '+' : '';
+                $delta = $sign . $pct . '% vs kỳ trước';
+            }
+
+            $kpis[] = [
+                'title' => $eLabel,
+                'value' => $curr,
+                'delta' => $delta,
+                'badge' => $eName,
+            ];
+        }
+
+        set_transient($cacheKey, $kpis, HOUR_IN_SECONDS);
+        return $kpis;
+    }
+
+    /**
+     * Run realtime active users report (last 30 minutes).
+     *
+     * @param string $propertyId
+     * @param bool $forceRefresh
+     * @return array{activeUsers: int}|\WP_Error
+     */
+    public static function runRealtimeReport(string $propertyId, bool $forceRefresh = false): array|\WP_Error
+    {
+        $propertyId = preg_replace('/\D/', '', $propertyId);
+        if ($propertyId === '') {
+            return new \WP_Error('invalid_property', __('Chưa chọn Property ID của Google Analytics 4.', 'lacadev'));
+        }
+
+        $cacheKey = 'laca_ga_realtime_' . $propertyId;
+        if (!$forceRefresh) {
+            $cached = get_transient($cacheKey);
+            if (is_array($cached)) {
+                return $cached;
+            }
+        }
+
+        $token = GscOAuth::getValidAccessToken();
+        if (!$token) {
+            return new \WP_Error('no_token', __('Chưa kết nối tài khoản Google.', 'lacadev'));
+        }
+
+        $url = self::DATA_API_BASE . '/properties/' . $propertyId . ':runRealtimeReport';
+        $response = wp_remote_post($url, [
+            'timeout' => 8,
+            'headers' => [
+                'Authorization' => 'Bearer ' . $token,
+                'Content-Type'  => 'application/json',
+            ],
+            'body'    => json_encode([
+                'metrics' => [
+                    ['name' => 'activeUsers'],
+                ],
+            ]),
+        ]);
+
+        if (is_wp_error($response)) {
+            return $response;
+        }
+
+        $code = (int) wp_remote_retrieve_response_code($response);
+        $body = wp_remote_retrieve_body($response);
+        $data = json_decode($body, true);
+
+        if ($code < 200 || $code >= 300) {
+            return new \WP_Error('http_' . $code, sprintf(__('Lỗi Google Analytics Realtime (%d)', 'lacadev'), $code), [
+                'status' => $code,
+                'data'   => $data,
+            ]);
+        }
+
+        $activeUsers = 0;
+        if (!empty($data['rows'][0]['metricValues'][0]['value'])) {
+            $activeUsers = (int) $data['rows'][0]['metricValues'][0]['value'];
+        }
+
+        $result = ['activeUsers' => $activeUsers];
+        // Cache 60 seconds
+        set_transient($cacheKey, $result, 60);
+
+        return $result;
+    }
+}

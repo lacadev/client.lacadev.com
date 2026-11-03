@@ -1,0 +1,740 @@
+<?php
+
+namespace App\Features\GoogleServices;
+
+defined('ABSPATH') || exit;
+
+/**
+ * Service providing combined, formatted Google Search Console and GA4 data for Dashboard.
+ * Supports live API queries with transient caching, error detection, and rich mock fallbacks.
+ */
+class GoogleDashboardService
+{
+    /**
+     * Determines whether mock data should be displayed.
+     * Active on local environment when not connected, or when explicit query parameter is set.
+     */
+    public static function isMockMode(): bool
+    {
+        $env = apply_filters('pre_wp_get_environment_type', null);
+        if ($env === null && function_exists('wp_get_environment_type')) {
+            $env = wp_get_environment_type();
+        }
+
+        if (
+            !empty($_GET['laca_mock_google'])
+            && $env === 'local'
+            && current_user_can('manage_options')
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Get Google Search Console dataset for given range.
+     *
+     * @param string $range '7d' | '28d' | '90d'
+     * @param bool $forceRefresh
+     * @return array<string, mixed>
+     */
+    public static function getGscData(string $range = '28d', bool $forceRefresh = false): array
+    {
+        $isConnected = GscOAuth::isConnected();
+
+        if (!$isConnected && !self::isMockMode()) {
+            return [
+                'connected' => false,
+                'setup_url' => admin_url('admin.php?page=laca-google-search-console'),
+            ];
+        }
+
+        if (self::isMockMode()) {
+            return self::getMockGscData($range);
+        }
+
+        $siteUrl = GscClient::getSiteUrl();
+        if (empty($siteUrl)) {
+            return [
+                'connected' => true,
+                'error'     => __('Chưa chọn Property Google Search Console.', 'lacadev'),
+                'setup_url' => admin_url('admin.php?page=laca-google-search-console'),
+            ];
+        }
+
+        $result = GscClient::getPerformanceSummary($siteUrl, $range, $forceRefresh);
+        if (is_wp_error($result)) {
+            $status = (int) ($result->get_error_data()['status'] ?? 0);
+            $msg = $result->get_error_message();
+            if ($status === 404) {
+                $msg = sprintf(
+                    __('Không tìm thấy property "%s" trong Google Search Console. Hãy kiểm tra lại hoặc chọn property khác.', 'lacadev'),
+                    $siteUrl
+                );
+            } elseif ($status === 403) {
+                $email = GscOAuth::getConnectedEmail();
+                $emailDisplay = !empty($email) ? $email : __('Chưa rõ email, hãy kết nối lại để hiển thị', 'lacadev');
+                $msg = sprintf(
+                    __('Tài khoản %s chưa có property này. Ngắt kết nối và đăng nhập bằng tài khoản sở hữu site, hoặc thêm %s vào Search Console → Cài đặt → Người dùng và quyền.', 'lacadev'),
+                    $emailDisplay,
+                    $emailDisplay
+                );
+            }
+            return [
+                'connected' => true,
+                'error'     => $msg,
+                'status'    => $status,
+                'siteUrl'   => $siteUrl,
+                'setup_url' => admin_url('admin.php?page=laca-google-search-console'),
+            ];
+        }
+
+        $queries = $result['queries'] ?? [];
+        $pages = $result['pages'] ?? [];
+
+        $clicks = (int) ($result['totalClicks'] ?? 0);
+        $prevClicks = isset($result['prevClicks']) && !empty($result['hasPrevData']) ? (int) $result['prevClicks'] : null;
+        $clicksDelta = self::calcPercentDelta($clicks, $prevClicks);
+
+        $impressions = (int) ($result['totalImpressions'] ?? 0);
+        $prevImpressions = isset($result['prevImpressions']) && !empty($result['hasPrevData']) ? (int) $result['prevImpressions'] : null;
+        $impressionsDelta = self::calcPercentDelta($impressions, $prevImpressions);
+
+        $ctr = (float) ($result['avgCtr'] ?? 0);
+        $prevCtr = isset($result['prevCtr']) && !empty($result['hasPrevData']) ? (float) $result['prevCtr'] : null;
+        $ctrDelta = self::calcPointDelta($ctr, $prevCtr);
+
+        $position = (float) ($result['avgPosition'] ?? 0);
+        $prevPosition = isset($result['prevPosition']) && !empty($result['hasPrevData']) ? (float) $result['prevPosition'] : null;
+        $positionDelta = self::calcPositionDelta($position, $prevPosition);
+
+        $isZeroData  = ($clicks === 0 && $impressions === 0 && empty($queries) && empty($pages));
+        $hasDataEver = (bool) get_option('laca_google_data_available_gsc', 0);
+        $isCollecting = ($isZeroData && !$hasDataEver);
+
+        return [
+            'connected'         => true,
+            'isMock'            => false,
+            'siteUrl'           => $siteUrl,
+            'clicks'            => $clicks,
+            'clicks_delta'      => $clicksDelta,
+            'impressions'       => $impressions,
+            'impressions_delta' => $impressionsDelta,
+            'ctr'               => $ctr,
+            'ctr_delta'         => $ctrDelta,
+            'position'          => $position,
+            'position_delta'    => $positionDelta,
+            'queries'           => $queries,
+            'pages'             => $pages,
+            'isCollecting'      => $isCollecting,
+            'collectingNotice'  => $isCollecting ? __('Đang thu thập dữ liệu (Google cần 24–48 giờ)', 'lacadev') : null,
+            'isZeroData'        => ($isZeroData && $hasDataEver),
+            'zeroDataNotice'    => ($isZeroData && $hasDataEver) ? __('Chưa có lượt truy cập trong khoảng này', 'lacadev') : null,
+            'dataDate'          => (string) ($result['dataDate'] ?? date('d/m', strtotime($result['endDate'] ?? '-1 day'))),
+            'lagNotice'         => sprintf(__('Dữ liệu đến ngày %s', 'lacadev'), (string) ($result['dataDate'] ?? date('d/m', strtotime($result['endDate'] ?? '-1 day')))),
+        ];
+    }
+
+    /**
+     * Get Google Analytics 4 dataset for given range.
+     *
+     * @param string $range '7d' | '28d' | '90d'
+     * @param bool $forceRefresh
+     * @return array<string, mixed>
+     */
+    public static function getGa4Data(string $range = '28d', bool $forceRefresh = false): array
+    {
+        $isConnected = GscOAuth::isConnected();
+        $hasGaScope  = GscOAuth::hasAnalyticsScope();
+        $googleOpts  = get_option('laca_google_services', []);
+        $propertyId  = '';
+        if (is_array($googleOpts) && array_key_exists('ga4_property_id', $googleOpts)) {
+            $propertyId = (string) $googleOpts['ga4_property_id'];
+        } elseif (class_exists(\App\Features\LacaSeo\Core\Settings::class)) {
+            $propertyId = (string) \App\Features\LacaSeo\Core\Settings::get('general.ga4_property_id', '');
+        }
+
+        if ((!$isConnected || !$hasGaScope || empty($propertyId)) && !self::isMockMode()) {
+            return [
+                'connected' => false,
+                'setup_url' => admin_url('admin.php?page=laca-google-analytics'),
+            ];
+        }
+
+        if (self::isMockMode()) {
+            return self::getMockGa4Data($range);
+        }
+
+        $result = GaClient::getBatchOverview($propertyId, $range, $forceRefresh);
+        if (is_wp_error($result) || empty($result)) {
+            $result = GaClient::runReport($propertyId, $range, $forceRefresh);
+        }
+        if (is_wp_error($result)) {
+            $realtimeUsers = 0;
+            $rt = GaClient::runRealtimeReport($propertyId, $forceRefresh);
+            if (!is_wp_error($rt) && isset($rt['activeUsers'])) {
+                $realtimeUsers = (int) $rt['activeUsers'];
+            }
+            return [
+                'connected'     => true,
+                'error'         => $result->get_error_message(),
+                'status'        => (int) ($result->get_error_data()['status'] ?? 0),
+                'setup_url'     => admin_url('admin.php?page=laca-google-analytics'),
+                'realtimeUsers' => $realtimeUsers,
+            ];
+        }
+
+        $realtimeUsers = 0;
+        $realtimeResult = GaClient::runRealtimeReport($propertyId, $forceRefresh);
+        if (!is_wp_error($realtimeResult) && isset($realtimeResult['activeUsers'])) {
+            $realtimeUsers = (int) $realtimeResult['activeUsers'];
+        }
+
+        $summary = $result['summary'] ?? $result;
+        $channels = $result['channels'] ?? [];
+        $topPages = $result['topPages'] ?? [];
+
+        // Format channels with share (no raw hex)
+        $totalChannelSessions = 0;
+        foreach ($channels as $c) {
+            $totalChannelSessions += (int) ($c['sessions'] ?? 0);
+        }
+        $formattedChannels = [];
+        foreach ($channels as $c) {
+            $sessions = (int) ($c['sessions'] ?? 0);
+            $share = $totalChannelSessions > 0 ? round(($sessions / $totalChannelSessions) * 100) : 0;
+            $formattedChannels[] = [
+                'name'           => (string) ($c['sessionDefaultChannelGroup'] ?? $c['name'] ?? '—'),
+                'sessions'       => $sessions,
+                'share'          => (int) $share,
+                'activeUsers'    => (int) ($c['activeUsers'] ?? $c['users'] ?? (int) round($sessions * 0.78)),
+                'engagementRate' => $c['engagementRate'] ?? null,
+            ];
+        }
+
+        // Search Funnel - Organic Search specific metrics (NEVER fallback to total users)
+        $organicChannel = null;
+        foreach ($formattedChannels as $ch) {
+            if (strcasecmp($ch['name'], 'Organic Search') === 0) {
+                $organicChannel = $ch;
+                break;
+            }
+        }
+
+        $organicUsers = 0;
+        $organicShare = 0;
+        $organicEngagementRate = '—';
+        $hasOrganic = false;
+        $organicNote = null;
+
+        if ($organicChannel !== null && (int) ($organicChannel['sessions'] ?? 0) > 0) {
+            $hasOrganic = true;
+            $organicSessions = (int) $organicChannel['sessions'];
+            $organicShare = (int) ($organicChannel['share'] ?? 0);
+            $organicUsers = (int) ($organicChannel['activeUsers'] ?? (int) round($organicSessions * 0.78));
+            $organicEngagementRate = !empty($organicChannel['engagementRate'])
+                ? number_format((float) $organicChannel['engagementRate'] * 100, 1) . '%'
+                : (!empty($summary['engagementRate']) ? number_format((float) $summary['engagementRate'] * 100, 1) . '%' : '—');
+        } else {
+            $organicUsers = 0;
+            $organicNote = __('Chưa ghi nhận người dùng từ tìm kiếm tự nhiên trong khoảng này', 'lacadev');
+        }
+
+        $formattedTopPages = [];
+        foreach ($topPages as $tp) {
+            $views = (int) ($tp['screenPageViews'] ?? $tp['views'] ?? 0);
+            $engagementSec = (float) ($tp['userEngagementDuration'] ?? 0);
+            $pageUsers = (int) ($tp['activeUsers'] ?? 0);
+
+            if (isset($tp['duration']) && $tp['duration'] !== '' && $tp['duration'] !== '1m 30s') {
+                $duration = $tp['duration'];
+            } elseif ($pageUsers > 0 && $engagementSec > 0) {
+                $avgPageSec = (int) round($engagementSec / $pageUsers);
+                $duration = self::formatDuration($avgPageSec);
+            } else {
+                $duration = '—';
+            }
+
+            $formattedTopPages[] = [
+                'title'                  => (string) ($tp['pageTitle'] ?? $tp['title'] ?? 'Trang'),
+                'path'                   => (string) ($tp['pagePath'] ?? $tp['path'] ?? '/'),
+                'views'                  => $views,
+                'screenPageViews'        => $views,
+                'userEngagementDuration' => $engagementSec,
+                'activeUsers'            => $pageUsers,
+                'duration'               => $duration,
+                'highlight'              => !empty($tp['highlight']),
+            ];
+        }
+
+        $users = (int) ($summary['activeUsers'] ?? $summary['users'] ?? 0);
+        $prevUsers = isset($summary['prevActiveUsers']) ? (int) $summary['prevActiveUsers'] : (isset($summary['prevUsers']) ? (int) $summary['prevUsers'] : null);
+        $usersDelta = self::calcPercentDelta($users, $prevUsers);
+
+        $sessions = (int) ($summary['sessions'] ?? 0);
+        $prevSessions = isset($summary['prevSessions']) ? (int) $summary['prevSessions'] : null;
+        $sessionsDelta = self::calcPercentDelta($sessions, $prevSessions);
+
+        $avgSec = (int) round((float) ($summary['averageSessionDuration'] ?? $summary['avgSessionDuration'] ?? 0));
+        $prevAvgSec = isset($summary['prevAverageSessionDuration']) ? (int) round((float) $summary['prevAverageSessionDuration']) : (isset($summary['prevAvgSessionDuration']) ? (int) round((float) $summary['prevAvgSessionDuration']) : null);
+        $avgEngagementDelta = self::calcDurationDelta($avgSec, $prevAvgSec);
+
+        $currKeyEvents = (int) ($summary['keyEvents'] ?? 0);
+        $prevKeyEvents = isset($summary['prevKeyEvents']) ? (int) $summary['prevKeyEvents'] : null;
+
+        // Conversion rate: null if no key events configured/recorded in both periods
+        $conversionRate = null;
+        $conversionRateDelta = '—';
+        if ($currKeyEvents > 0 || ($prevKeyEvents !== null && $prevKeyEvents > 0)) {
+            $convRate = $sessions > 0 ? round(($currKeyEvents / $sessions) * 100, 1) : 0.0;
+            $conversionRate = $convRate . '%';
+            $prevConvRate = ($prevSessions !== null && $prevSessions > 0) ? round(($prevKeyEvents / $prevSessions) * 100, 1) : null;
+            $conversionRateDelta = self::calcPointDelta($convRate, $prevConvRate);
+        }
+
+        // Business KPIs from configured ga4_goal_events
+        $businessKpis = [];
+        $rawGoals = '';
+        if (is_array($googleOpts) && array_key_exists('ga4_goal_events', $googleOpts)) {
+            $rawGoals = (string) $googleOpts['ga4_goal_events'];
+        } elseif (class_exists(\App\Features\LacaSeo\Core\Settings::class)) {
+            $rawGoals = (string) \App\Features\LacaSeo\Core\Settings::get('general.ga4_goal_events', '');
+        }
+        if ($rawGoals !== '') {
+            $goalMap = [];
+            foreach (explode("\n", $rawGoals) as $line) {
+                $line = trim($line);
+                if ($line === '' || str_starts_with($line, '#')) {
+                    continue;
+                }
+                $parts = explode('|', $line, 2);
+                $eName = trim($parts[0]);
+                $eLabel = isset($parts[1]) && trim($parts[1]) !== '' ? trim($parts[1]) : $eName;
+                if ($eName !== '') {
+                    $goalMap[$eName] = $eLabel;
+                }
+            }
+
+            if (!empty($goalMap)) {
+                $days = match ($range) {
+                    '7d', '7'   => 7,
+                    '90d', '90' => 90,
+                    default     => 28,
+                };
+                $goalResult = GaClient::runGoalEventsReport($propertyId, $days, $goalMap, $forceRefresh);
+                if (is_array($goalResult)) {
+                    $businessKpis = $goalResult;
+                }
+            }
+        }
+
+        $totalUsers    = (int) ($summary['totalUsers'] ?? 0);
+        $totalViews    = (int) ($summary['totalPageViews'] ?? 0);
+        $totalSessions = (int) ($summary['totalSessions'] ?? 0);
+        $isZeroData    = ($totalUsers === 0 && $totalViews === 0 && $totalSessions === 0 && empty($formattedTopPages));
+        $hasDataEver   = (bool) get_option('laca_google_data_available_ga', 0);
+        $isCollecting  = ($isZeroData && !$hasDataEver);
+
+        // Extract daily chart series from byDate
+        $chartSeries = ['curr' => [], 'prev' => []];
+        if (!empty($result['byDate']) && is_array($result['byDate'])) {
+            foreach ($result['byDate'] as $bd) {
+                $chartSeries['curr'][] = [
+                    'date'  => $bd['date'] ?? '',
+                    'label' => !empty($bd['date']) ? date('d/m', strtotime($bd['date'])) : '',
+                    'value' => (int) ($bd['users'] ?? 0),
+                ];
+            }
+        }
+
+        // Key metrics batch (2nd batch)
+        $kmResult = GaClient::getKeyMetrics($propertyId, $range, $forceRefresh, $totalSessions);
+        $keyMetrics = (!is_wp_error($kmResult) && is_array($kmResult)) ? $kmResult : GaClient::getDefaultKeyMetricsFallback();
+
+        return [
+            'connected'            => true,
+            'isMock'               => false,
+            'propertyId'           => $propertyId,
+            'keyMetrics'           => $keyMetrics,
+            'users'                => $users,
+            'users_delta'          => $usersDelta,
+            'sessions'             => $sessions,
+            'sessions_delta'       => $sessionsDelta,
+            'avgEngagement'        => $avgSec > 0 ? self::formatDuration($avgSec) : '—',
+            'avgEngagement_delta'  => $avgEngagementDelta,
+            'conversionRate'       => $conversionRate,
+            'conversionRate_delta' => $conversionRateDelta,
+            'channels'             => $formattedChannels,
+            'businessKpis'         => $businessKpis,
+            'topPages'             => array_slice($formattedTopPages, 0, 5),
+            'realtimeUsers'        => $realtimeUsers,
+            'isCollecting'         => $isCollecting,
+            'collectingNotice'     => $isCollecting ? __('Đang thu thập dữ liệu (Google cần 24–48 giờ)', 'lacadev') : null,
+            'isZeroData'           => ($isZeroData && $hasDataEver),
+            'zeroDataNotice'       => ($isZeroData && $hasDataEver) ? __('Chưa có lượt truy cập trong khoảng này', 'lacadev') : null,
+            'summary'              => $summary,
+            'chartSeries'          => $chartSeries,
+            'organicSearch'        => [
+                'hasData'             => $hasOrganic,
+                'hasOrganic'          => $hasOrganic,
+                'users'               => $organicUsers,
+                'share'               => $organicShare,
+                'engagementRate'      => $organicEngagementRate,
+                'note'                => $organicNote,
+                'usersDelta'          => $hasOrganic ? $usersDelta : '—',
+                'engagementRateDelta' => $hasOrganic ? $avgEngagementDelta : '—',
+            ],
+        ];
+    }
+
+    /**
+     * Calculate percentage difference between current and previous period.
+     */
+    public static function calcPercentDelta(int|float $current, int|float|null $previous): string
+    {
+        if ($previous === null || $previous <= 0) {
+            return '—';
+        }
+
+        $diff = $current - $previous;
+        $pct = round(($diff / $previous) * 100, 1);
+        $sign = $pct > 0 ? '+' : '';
+
+        return $sign . $pct . '%';
+    }
+
+    /**
+     * Calculate percentage point difference (e.g. CTR, conversion rate).
+     */
+    public static function calcPointDelta(float $current, ?float $previous): string
+    {
+        if ($previous === null || $previous <= 0) {
+            return '—';
+        }
+
+        $diff = round($current - $previous, 1);
+        if ($diff == 0.0) {
+            return '0%';
+        }
+        $sign = $diff > 0 ? '+' : '';
+
+        return $sign . $diff . '%';
+    }
+
+    /**
+     * Calculate position delta where a lower position number represents an improvement.
+     */
+    public static function calcPositionDelta(float $current, ?float $previous): string
+    {
+        if ($previous === null || $previous <= 0 || $current <= 0) {
+            return '—';
+        }
+
+        $diff = round($previous - $current, 1);
+        if ($diff == 0.0) {
+            return '0';
+        }
+
+        $sign = $diff > 0 ? '+' : '';
+
+        return $sign . number_format($diff, 1);
+    }
+
+    /**
+     * Calculate duration delta formatted in seconds.
+     */
+    public static function calcDurationDelta(int $currentSec, ?int $previousSec): string
+    {
+        if ($previousSec === null || $previousSec <= 0) {
+            return '—';
+        }
+
+        $diff = $currentSec - $previousSec;
+        if ($diff === 0) {
+            return '0s';
+        }
+
+        $sign = $diff > 0 ? '+' : '';
+
+        return $sign . $diff . 's';
+    }
+
+    /**
+     * Get combined dashboard report.
+     *
+     * @param string $range
+     * @param bool $forceRefresh
+     * @return array<string, mixed>
+     */
+    public static function getDashboardReport(string $range = '28d', bool $forceRefresh = false): array
+    {
+        return [
+            'range' => $range,
+            'gsc'   => self::getGscData($range, $forceRefresh),
+            'ga4'   => self::getGa4Data($range, $forceRefresh),
+        ];
+    }
+
+    /**
+     * Format seconds into human readable duration, e.g. 1m 45s.
+     */
+    public static function formatDuration(int|float $seconds): string
+    {
+        $seconds = (int) round($seconds);
+        if ($seconds <= 0) {
+            return '0s';
+        }
+
+        $minutes = (int) floor($seconds / 60);
+        $remainingSeconds = $seconds % 60;
+
+        if ($minutes <= 0) {
+            return sprintf('%ds', $remainingSeconds);
+        }
+
+        if ($remainingSeconds === 0) {
+            return sprintf('%dm 0s', $minutes);
+        }
+
+        return sprintf('%dm %02ds', $minutes, $remainingSeconds);
+    }
+
+    /**
+     * Mock GSC data for demo mode.
+     *
+     * @param string $range
+     * @return array<string, mixed>
+     */
+    private static function getMockGscData(string $range): array
+    {
+        $multipliers = match ($range) {
+            '7d'    => 0.25,
+            '90d'   => 3.2,
+            default => 1.0,
+        };
+
+        $clicks = (int) round(1420 * $multipliers);
+        $impressions = (int) round(28500 * $multipliers);
+
+        $dates = DateRange::calculateDates($range);
+        $days = max(1, (int) round((strtotime($dates['endDate']) - strtotime($dates['startDate'])) / 86400) + 1);
+        $startTs = strtotime($dates['startDate']);
+
+        $clicksSeries = [];
+        $impressionsSeries = [];
+        for ($i = 0; $i < $days; $i++) {
+            $ts = $startTs + ($i * 86400);
+            $d = date('Y-m-d', $ts);
+            $lbl = date('d/m', $ts);
+            $wave = sin($i / 3.0) * 0.25 + 1.0;
+            $dailyClicks = max(1, (int) round(($clicks / $days) * $wave));
+            $dailyImp = max(10, (int) round(($impressions / $days) * $wave));
+            $clicksSeries[] = ['date' => $d, 'label' => $lbl, 'value' => $dailyClicks];
+            $impressionsSeries[] = ['date' => $d, 'label' => $lbl, 'value' => $dailyImp];
+        }
+
+        return [
+            'connected'         => true,
+            'isMock'            => true,
+            'siteUrl'           => 'sc-domain:example.com',
+            'clicks'            => $clicks,
+            'clicks_delta'      => '+12.4%',
+            'impressions'       => $impressions,
+            'impressions_delta' => '+18.2%',
+            'ctr'               => 4.98,
+            'ctr_delta'         => '+0.5%',
+            'position'          => 11.2,
+            'position_delta'    => '+1.8',
+            'clicksSeries'      => $clicksSeries,
+            'impressionsSeries' => $impressionsSeries,
+            'queries'           => [
+                ['query' => 'dich vu thiet ke website', 'clicks' => (int) round(312 * $multipliers), 'impressions' => (int) round(4500 * $multipliers), 'ctr' => 6.9, 'position' => 3.1],
+                ['query' => 'thiet ke web chuyen nghiep', 'clicks' => (int) round(285 * $multipliers), 'impressions' => (int) round(1200 * $multipliers), 'ctr' => 23.7, 'position' => 1.0],
+                ['query' => 'thiet ke website doanh nghiep', 'clicks' => (int) round(145 * $multipliers), 'impressions' => (int) round(3200 * $multipliers), 'ctr' => 4.5, 'position' => 5.4],
+                ['query' => 'bao gia thiet ke website', 'clicks' => (int) round(98 * $multipliers), 'impressions' => (int) round(2100 * $multipliers), 'ctr' => 4.6, 'position' => 7.8],
+                ['query' => 'dich vu seo uy tin', 'clicks' => (int) round(76 * $multipliers), 'impressions' => (int) round(1800 * $multipliers), 'ctr' => 4.2, 'position' => 4.2],
+            ],
+            'pages'             => [
+                ['url' => '/dich-vu/', 'clicks' => (int) round(480 * $multipliers), 'impressions' => (int) round(7200 * $multipliers), 'ctr' => 6.67],
+                ['url' => '/du-an/', 'clicks' => (int) round(310 * $multipliers), 'impressions' => (int) round(6100 * $multipliers), 'ctr' => 5.08],
+                ['url' => '/gioi-thieu/', 'clicks' => (int) round(195 * $multipliers), 'impressions' => (int) round(2400 * $multipliers), 'ctr' => 8.13],
+                ['url' => '/lien-he/', 'clicks' => (int) round(120 * $multipliers), 'impressions' => (int) round(1900 * $multipliers), 'ctr' => 6.32],
+            ],
+            'dataDate'          => date('d/m', strtotime('-1 day')),
+            'lagNotice'         => sprintf(__('Dữ liệu đến ngày %s', 'lacadev'), date('d/m', strtotime('-1 day'))),
+        ];
+    }
+
+    /**
+     * Generate 100 mock GSC search queries for modal dialog testing.
+     *
+     * @param string $range
+     * @return array<int, array{query: string, clicks: int, impressions: int, ctr: float, position: float}>
+     */
+    public static function getMockGscQueries100(string $range = '28d'): array
+    {
+        $multipliers = match ($range) {
+            '7d'    => 0.25,
+            '90d'   => 3.2,
+            default => 1.0,
+        };
+
+        $baseQueries = [
+            'dich vu thiet ke website',
+            'thiet ke web chuyen nghiep',
+            'thiet ke website doanh nghiep',
+            'bao gia thiet ke website',
+            'dich vu seo uy tin',
+            'cong ty thiet ke web uy tin',
+            'mau website dep',
+            'thiet ke web chuan seo',
+            'toi uu toc do website',
+            'thiet ke landing page',
+            'nang cap giao dien website',
+            'quan tri website chuyen nghiep',
+            'chi phi thiet ke web',
+            'thiet ke web tron goi',
+            'bang gia dich vu web',
+            'cong ty phan mem uy tin',
+            'giai phap web doanh nghiep',
+            'thiet ke web ban hang',
+            'lap trinh web theo yeu cau',
+            'tu van giai phap website',
+        ];
+
+        $modifiers = [
+            '',
+            'chuyen nghiep',
+            'uy tin',
+            'tron goi',
+            'cao cap',
+        ];
+
+        $rows = [];
+        $count = 0;
+        foreach ($modifiers as $mod) {
+            foreach ($baseQueries as $bq) {
+                $q = trim($bq . ' ' . $mod);
+                $count++;
+                $clicks = max(1, (int) round((350 / sqrt($count)) * $multipliers));
+                $impressions = max(10, (int) round($clicks * (rand(12, 28))));
+                $ctr = round(($clicks / $impressions) * 100, 2);
+                $pos = round(1.0 + ($count * 0.4), 1);
+                $rows[] = [
+                    'query'       => $q,
+                    'clicks'      => $clicks,
+                    'impressions' => $impressions,
+                    'ctr'         => $ctr,
+                    'position'    => $pos,
+                ];
+                if ($count >= 100) {
+                    break 2;
+                }
+            }
+        }
+
+        return $rows;
+    }
+
+    /**
+     * Mock GA4 data for demo mode.
+     *
+     * @param string $range
+     * @return array<string, mixed>
+     */
+    private static function getMockGa4Data(string $range): array
+    {
+        $multipliers = match ($range) {
+            '7d'    => 0.25,
+            '90d'   => 3.2,
+            default => 1.0,
+        };
+
+        $users = (int) round(3840 * $multipliers);
+        $sessions = (int) round(5260 * $multipliers);
+        $newUsers = (int) round(2458 * $multipliers);
+        $returningUsers = max(0, $users - $newUsers);
+
+        $dates = DateRange::calculateDates($range);
+        $days = max(1, (int) round((strtotime($dates['endDate']) - strtotime($dates['startDate'])) / 86400) + 1);
+        $startTs = strtotime($dates['startDate']);
+
+        $usersSeries = [];
+        $prevUsersSeries = [];
+        for ($i = 0; $i < $days; $i++) {
+            $ts = $startTs + ($i * 86400);
+            $d = date('Y-m-d', $ts);
+            $lbl = date('d/m', $ts);
+            $wave = sin($i / 3.2) * 0.22 + 1.0;
+            $dailyUsers = max(1, (int) round(($users / $days) * $wave));
+            $dailyPrev = max(1, (int) round((($users / 1.141) / $days) * ($wave * 0.94)));
+            $usersSeries[] = ['date' => $d, 'label' => $lbl, 'value' => $dailyUsers];
+            $prevUsersSeries[] = ['date' => $d, 'label' => $lbl, 'value' => $dailyPrev];
+        }
+
+        $organicUsers = (int) round(2074 * $multipliers);
+        $prevOrganicUsers = (int) round(1832 * $multipliers);
+
+        return [
+            'connected'            => true,
+            'isMock'               => true,
+            'propertyId'           => '438291045',
+            'realtimeUsers'        => 3,
+            'users'                => $users,
+            'users_delta'          => '+14.1%',
+            'sessions'             => $sessions,
+            'sessions_delta'       => '+9.8%',
+            'avgEngagement'        => '1m 45s',
+            'avgEngagement_delta'  => '+15s',
+            'conversionRate'       => '4.7%',
+            'conversionRate_delta' => '+0.8%',
+            'keyEventsTotal'       => (int) round(248 * $multipliers),
+            'hasKeyEvents'         => true,
+            'hasEcommerce'         => true,
+            'chartSeries'          => [
+                'curr' => $usersSeries,
+                'prev' => $prevUsersSeries,
+            ],
+            'organicSearch'        => [
+                'hasData'             => true,
+                'hasOrganic'          => true,
+                'users'               => $organicUsers,
+                'prevUsers'           => $prevOrganicUsers,
+                'usersDelta'          => '+13.2%',
+                'share'               => 54,
+                'engagementRate'      => '68.5%',
+                'prevEngagementRate'  => '64.2%',
+                'engagementRateDelta' => '+4.3%',
+                'note'                => null,
+            ],
+            'channels'             => [
+                ['name' => 'Organic Search', 'sessions' => (int) round(2840 * $multipliers), 'share' => 54],
+                ['name' => 'Direct', 'sessions' => (int) round(1450 * $multipliers), 'share' => 27],
+                ['name' => 'Social', 'sessions' => (int) round(620 * $multipliers), 'share' => 12],
+                ['name' => 'Referral', 'sessions' => (int) round(350 * $multipliers), 'share' => 7],
+            ],
+            'keyMetrics'           => GaClient::parseKeyMetricsReports(GaClient::getMockKeyMetricsRawResponse()['reports'] ?? [], (int) round(5260 * $multipliers)),
+            'businessKpis'         => [
+                [
+                    'title' => __('Bấm Đăng ký / Tư vấn dịch vụ', 'lacadev'),
+                    'value' => (int) round(186 * $multipliers),
+                    'delta' => '+18.5% so với kỳ trước',
+                    'badge' => __('Tư vấn', 'lacadev'),
+                ],
+                [
+                    'title' => __('Gửi Form liên hệ', 'lacadev'),
+                    'value' => (int) round(62 * $multipliers),
+                    'delta' => '6.5% tỷ lệ trên trang liên hệ',
+                    'badge' => __('Liên hệ', 'lacadev'),
+                ],
+            ],
+            'topPages'             => [
+                ['title' => 'Trang chủ | ' . get_bloginfo('name'), 'path' => '/', 'views' => (int) round(4820 * $multipliers), 'duration' => '1m 15s'],
+                ['title' => 'Dịch vụ thiết kế website', 'path' => '/dich-vu/', 'views' => (int) round(3450 * $multipliers), 'duration' => '2m 05s'],
+                ['title' => 'Giới thiệu về chúng tôi', 'path' => '/gioi-thieu/', 'views' => (int) round(2180 * $multipliers), 'duration' => '2m 40s', 'highlight' => true],
+                ['title' => 'Liên hệ tư vấn', 'path' => '/lien-he/', 'views' => (int) round(950 * $multipliers), 'duration' => '1m 55s'],
+            ],
+        ];
+    }
+}

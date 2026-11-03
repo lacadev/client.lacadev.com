@@ -1,0 +1,517 @@
+// =============================================================================
+// Carbon Fields Skin (Chakra UI v3 tokens — Monochromatic)
+// =============================================================================
+
+// Postbox Card Padding & Soft Shadow (Chakra v3 Option B)
+#poststuff .carbon-box,
+.carbon-box,
+.postbox.carbon-box {
+  background-color: var(--laca-bg) !important;
+  border: none !important;
+  border-radius: var(--laca-radius-l3) !important;
+  box-shadow: var(--laca-shadow-sm) !important;
+  box-sizing: border-box;
+
+  .inside {
+    padding: var(--laca-space-6, 24px) !important;
+    margin: 0 !important;
+    box-sizing: border-box;
+  }
+}
+
+.cf-container {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+
+  // 1. Pill variant Tabs (Option B: nút viên, active nền tối chữ trắng)
+  &__tabs,
+  .cf-tabs,
+  .carbon-tabs {
+    background: transparent !important;
+    border: none !important;
+    border-bottom: none !important;
+    padding: 0 !important;
+    margin: 0 0 var(--laca-space-6, 24px) 0 !important;
+    max-width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &__tabs-list,
+  .cf-tabs__list {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 8px;
+    margin: 0;
+    padding: 4px 0;
+    list-style: none;
+    border: none;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    &:has(> :only-child) {
+      display: none !important;
+    }
+  }
+
+  &__tabs-item,
+  .cf-tabs__item {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    flex-shrink: 0;
+
+    button,
+    a {
+      display: inline-flex;
+      align-items: center;
+      background: var(--laca-bg-muted) !important;
+      border: 1px solid transparent !important;
+      border-radius: var(--laca-radius-full) !important;
+      padding: 6px 16px !important;
+      color: var(--laca-fg) !important;
+      font-family: var(--laca-font);
+      font-size: 13px !important;
+      font-weight: 500 !important;
+      line-height: var(--laca-line-height-sm);
+      cursor: pointer;
+      text-decoration: none;
+      transition: none !important;
+      outline: none;
+
+      &:hover {
+        background: var(--laca-bg-emphasized) !important;
+        color: var(--laca-fg) !important;
+        border-color: transparent !important;
+        transition: background-color 0.15s ease !important;
+      }
+    }
+
+    &--current,
+    &.is-current,
+    &[aria-selected="true"] {
+      button,
+      a {
+        background: var(--laca-accent) !important;
+        color: var(--laca-bg) !important;
+        font-weight: 600 !important;
+        border-color: var(--laca-accent) !important;
+        transition: none !important;
+      }
+    }
+  }
+
+  // 2. Field grid without column dividing borders
+  &__fields {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 !important;
+    margin-left: calc(-1 * var(--laca-space-3));
+    margin-right: calc(-1 * var(--laca-space-3));
+    border: none !important;
+    background: transparent;
+  }
+
+  a:not(.button):not(.laca-btn) {
+    color: var(--laca-fg);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--laca-fg-hover);
+      text-decoration: underline;
+    }
+  }
+}
+
+// Field layout & typography (.laca-field pattern)
+.cf-field {
+  background: transparent;
+  border: none !important;
+  box-shadow: none !important;
+  box-sizing: border-box !important;
+  padding: 0 var(--laca-space-3) !important;
+  margin-bottom: var(--laca-space-5);
+
+  &::before,
+  &::after {
+    display: none !important;
+    border: none !important;
+  }
+
+  &--has-width {
+    border: none !important;
+  }
+
+  &__head,
+  &__title,
+  &__label {
+    display: block;
+    font-family: var(--laca-font);
+    font-size: var(--laca-font-size-sm);
+    font-weight: 500;
+    line-height: var(--laca-line-height-sm);
+    color: var(--laca-fg);
+    margin-bottom: var(--laca-space-1);
+    text-transform: none;
+  }
+
+  &__help,
+  &__description {
+    font-family: var(--laca-font);
+    font-size: var(--laca-font-size-xs);
+    line-height: var(--laca-line-height-xs);
+    color: var(--laca-fg-muted);
+    margin-top: var(--laca-space-1);
+  }
+
+  // Controls styling (Hình 1: viền rõ ràng cho input và select)
+  input[type="text"]:not(.wp-color-picker),
+  input[type="password"],
+  input[type="email"],
+  input[type="url"],
+  input[type="number"],
+  select {
+    height: 36px;
+    border: 1px solid var(--laca-input-border, var(--laca-border-emphasized)) !important;
+    border-radius: var(--laca-radius-l2);
+    padding: 0 var(--laca-space-3);
+    background-color: var(--laca-bg) !important;
+    color: var(--laca-fg) !important;
+    font-family: var(--laca-font);
+    font-size: var(--laca-font-size-sm);
+    line-height: var(--laca-line-height-sm);
+    box-sizing: border-box;
+    transition: var(--laca-transition);
+
+    &:hover {
+      border-color: var(--laca-fg-muted) !important;
+    }
+
+    &:focus {
+      border-color: var(--laca-accent) !important;
+      box-shadow: 0 0 0 1px var(--laca-accent) !important;
+      outline: none !important;
+    }
+  }
+
+  textarea {
+    border: 1px solid var(--laca-input-border, var(--laca-border-emphasized)) !important;
+    border-radius: var(--laca-radius-l2);
+    padding: var(--laca-space-2) var(--laca-space-3);
+    background-color: var(--laca-bg) !important;
+    color: var(--laca-fg) !important;
+    font-family: var(--laca-font);
+    font-size: var(--laca-font-size-sm);
+    line-height: var(--laca-line-height-sm);
+    box-sizing: border-box;
+    transition: var(--laca-transition);
+
+    &:hover {
+      border-color: var(--laca-fg-muted) !important;
+    }
+
+    &:focus {
+      border-color: var(--laca-accent) !important;
+      box-shadow: 0 0 0 1px var(--laca-accent) !important;
+      outline: none !important;
+    }
+  }
+
+  .cf-text__input,
+  .cf-textarea__input,
+  .cf-select__input,
+  .cf-search-input__inner,
+  .cf-datetime__input {
+    border: 1px solid var(--laca-input-border, var(--laca-border-emphasized)) !important;
+    background-color: var(--laca-bg) !important;
+    color: var(--laca-fg) !important;
+    border-radius: var(--laca-radius-l2) !important;
+
+    &:hover {
+      border-color: var(--laca-fg-muted) !important;
+    }
+
+    &:focus {
+      border-color: var(--laca-accent) !important;
+      box-shadow: 0 0 0 1px var(--laca-accent) !important;
+      outline: none !important;
+    }
+  }
+}
+
+// 3. Color field swatch & inputs
+.cf-color {
+  .wp-picker-container {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--laca-space-2);
+  }
+
+  .wp-color-result.button {
+    width: 28px !important;
+    height: 28px !important;
+    min-height: 28px !important;
+    border-radius: var(--laca-radius-l2) !important;
+    border: 1px solid var(--laca-border) !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    cursor: pointer;
+
+    .wp-color-result-text {
+      display: none !important;
+    }
+  }
+
+  .wp-picker-input-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--laca-space-2);
+
+    input.wp-color-picker[type="text"] {
+      height: 32px !important;
+      border: 1px solid var(--laca-border) !important;
+      border-radius: var(--laca-radius-l2) !important;
+      font-family: monospace;
+      font-size: var(--laca-font-size-xs) !important;
+      padding: 0 var(--laca-space-2) !important;
+      width: 90px !important;
+      box-sizing: border-box;
+
+      &:focus {
+        border-color: var(--laca-focus-ring) !important;
+        box-shadow: 0 0 0 1px var(--laca-focus-ring) !important;
+        outline: none;
+      }
+    }
+
+    .wp-picker-clear.button {
+      height: 32px !important;
+      padding: 0 var(--laca-space-2) !important;
+      font-family: var(--laca-font);
+      font-size: var(--laca-font-size-xs) !important;
+      border-radius: var(--laca-radius-l2) !important;
+      background-color: transparent !important;
+      border: 1px solid var(--laca-border) !important;
+      color: var(--laca-fg-muted) !important;
+      box-shadow: none !important;
+      cursor: pointer;
+      transition: var(--laca-transition);
+
+      &:hover {
+        background-color: var(--laca-bg-muted) !important;
+        color: var(--laca-fg) !important;
+      }
+    }
+  }
+}
+
+// 4. Complex / Repeater fields as collapsible Cards
+.cf-complex {
+  &__group {
+    border: 1px solid var(--laca-border) !important;
+    border-radius: var(--laca-radius-l2) !important;
+    background-color: var(--laca-bg) !important;
+    box-shadow: none !important;
+    margin-bottom: var(--laca-space-3) !important;
+    overflow: hidden;
+  }
+
+  &__group-head,
+  &__tabs-item {
+    height: 44px;
+    display: flex;
+    align-items: center;
+    padding: 0 var(--laca-space-4);
+    background-color: var(--laca-bg-subtle);
+    border-bottom: 1px solid var(--laca-border);
+    font-family: var(--laca-font);
+    font-size: var(--laca-font-size-sm);
+    font-weight: 600;
+    color: var(--laca-fg);
+  }
+
+  &__group-body {
+    padding: var(--laca-space-4);
+    background-color: var(--laca-bg);
+  }
+
+  &__inserter-button,
+  &__inserter button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    padding: 0 var(--laca-space-3);
+    font-family: var(--laca-font);
+    font-size: var(--laca-font-size-sm);
+    font-weight: 500;
+    border-radius: var(--laca-radius-l2);
+    border: 1px solid var(--laca-border);
+    background-color: var(--laca-bg);
+    color: var(--laca-fg);
+    cursor: pointer;
+    transition: var(--laca-transition);
+
+    &:hover {
+      background-color: var(--laca-bg-muted);
+    }
+  }
+}
+
+// 5. Actions Card & alignment
+// 5. Actions Card & alignment (Option B: card trắng không viền kèm đổ bóng nhẹ và padding)
+#submitdiv.postbox,
+.cf-container__actions,
+.cf-actions {
+  border: none !important;
+  border-radius: var(--laca-radius-l3) !important;
+  background-color: var(--laca-bg) !important;
+  box-shadow: var(--laca-shadow-sm) !important;
+  padding: var(--laca-space-6, 24px) !important;
+  margin-top: 0 !important;
+  box-sizing: border-box;
+
+  h3,
+  .postbox-header {
+    font-family: var(--laca-font) !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: var(--laca-fg) !important;
+    background-color: transparent !important;
+    border: none !important;
+    padding: 0 0 var(--laca-space-4, 16px) 0 !important;
+    margin: 0 !important;
+  }
+
+  #major-publishing-actions {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  #publishing-action {
+    float: none !important;
+    text-align: left !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  #publish.button-primary,
+  input[type="submit"].button-primary {
+    width: 100%;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--laca-radius-l2) !important;
+    font-weight: 600;
+    background-color: var(--laca-accent) !important;
+    border-color: var(--laca-accent) !important;
+    color: var(--laca-bg) !important;
+    transition: var(--laca-transition);
+
+    &:hover {
+      background-color: var(--laca-accent-hover) !important;
+      border-color: var(--laca-accent-hover) !important;
+    }
+  }
+}
+
+// 6. Carbon Save Notifications (Alert success)
+.carbon-notification,
+.cf-notification,
+.notice.cf-notice {
+  background-color: var(--laca-success-bg) !important;
+  border: 1px solid var(--laca-success-border) !important;
+  border-radius: var(--laca-radius-l2) !important;
+  color: var(--laca-success) !important;
+  padding: var(--laca-space-3) var(--laca-space-4) !important;
+  font-family: var(--laca-font);
+  font-weight: 500;
+  box-shadow: none !important;
+}
+
+// 7. Auto-Save Indicator
+.laca-autosave-indicator {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 99999;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: var(--laca-radius-full);
+  font-family: var(--laca-font);
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: var(--laca-shadow-md);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+
+  &.is-idle {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  &.is-saving {
+    opacity: 1;
+    transform: translateY(0);
+    background: var(--laca-bg);
+    color: var(--laca-fg);
+    border: 1px solid var(--laca-border);
+  }
+
+  &.is-saved {
+    opacity: 1;
+    transform: translateY(0);
+    background: var(--laca-success-bg);
+    color: var(--laca-success);
+    border: 1px solid var(--laca-success-border);
+  }
+
+  &.is-error {
+    opacity: 1;
+    transform: translateY(0);
+    background: var(--laca-danger-bg);
+    color: var(--laca-danger);
+    border: 1px solid var(--laca-danger-border);
+  }
+
+  .laca-autosave-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  .laca-autosave-spinner {
+    animation: laca-spin 0.8s linear infinite;
+  }
+}
+
+@keyframes laca-spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+

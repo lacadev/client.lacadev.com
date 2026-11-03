@@ -57,6 +57,23 @@ class DynamicCptManager
     }
 
     /**
+     * ID của Page chứa nội dung hiển thị ở đầu trang archive của 1 CPT (do
+     * admin chọn trong màn hình Custom Post Types) — mô hình y hệt
+     * "Shop page" của WooCommerce. 0 nếu CPT chưa cấu hình hoặc không tồn tại.
+     *
+     * @see template_tags.php::laca_render_dynamic_cpt_archive_intro()
+     */
+    public static function getArchiveContentPageId(string $postType): int
+    {
+        foreach (self::getAll() as $cpt) {
+            if (($cpt['slug'] ?? '') === $postType) {
+                return (int)($cpt['archive_content_page_id'] ?? 0);
+            }
+        }
+        return 0;
+    }
+
+    /**
      * Thêm cột ảnh đại diện vào admin list — y hệt AbstractPostType::showThumbnailOnList.
      */
     private function registerThumbnailColumn(string $slug): void
@@ -81,12 +98,12 @@ class DynamicCptManager
                 echo "<img src='" . esc_url($thumbnail) . "' class='thumbnail-preview' alt='Thumbnail'/>";
                 echo "</a>";
                 echo "<a class='remove-thumbnail' href='javascript:void(0)' data-trigger-remove-thumbnail data-post-id='{$post_id_attr}' data-nonce='{$nonce_attr}' title='Remove thumbnail'>"
-                   . "<svg viewBox='0 0 12 12'><path d='M11 1L1 11M1 1l10 10' stroke='currentColor' stroke-width='2' stroke-linecap='round'/></svg>"
+                   . "<svg viewBox='0 0 12 12'><path d='M10 2L2 10M2 2L10 10' stroke='#ffffff' stroke-width='2' stroke-linecap='round'/></svg>"
                    . "</a>";
                 echo "</div>";
             } else {
                 echo "<a href='javascript:void(0)' data-trigger-change-thumbnail-id data-post-id='{$post_id_attr}' data-nonce='{$nonce_attr}'>";
-                echo "<div class='no-image-text'>Choose image</div>";
+                echo "<div class='no-image-text'><span>Choose</span><span>image</span></div>";
                 echo "</a>";
             }
         }, 10, 2);

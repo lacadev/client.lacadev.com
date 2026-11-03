@@ -1,8 +1,34 @@
+// Chakra UI v3 Design Tokens & Components
+@use "tokens";
+@use "components/button";
+@use "components/input";
+@use "components/field";
+@use "components/selection";
+@use "components/tabs";
+@use "components/card";
+@use "components/badge";
+@use "components/alert";
+@use "components/table";
+@use "components/accordion";
+@use "components/empty";
+@use "components/stat";
+@use "components/progress";
+@use "components/page-header";
+@use "components/actionbar";
+
 // Shared font declarations used by both frontend and admin.
 @use "../theme/base/fonts";
 @use "../theme/abstracts/variables.scss" as *;
 
+@use "skins/wp-chrome";
+@use "skins/wp-core";
+@use "skins/carbon";
+@use "skins/laca-dock";
+@use "skins/gutenberg-inspector";
+@use "skins/self-authored";
+
 @use "admin-column-style";
+@use "list-table-inline";
 @use "admin-dashboard";
 @use "admin-custom";
 @use "admin-help";
@@ -46,50 +72,116 @@ body.wp-admin {
   z-index: 9999;
 }
 
-.featured_image.column-featured_image {
+.featured_image.column-featured_image,
+.column-thumb,
+.column-lacadev_thumb,
+.column-image {
   a:not(.remove-thumbnail) {
-    display: block !important;
-    background-color: #fff;
+    display: inline-block !important;
+    text-decoration: none !important;
+  }
+
+  .thumbnail-wrap {
+    position: relative !important;
+    display: inline-block !important;
+    line-height: 0 !important;
   }
 
   a.remove-thumbnail {
-    position: absolute;
-    top: -7px;
-    right: -7px;
-    width: 13px;
-    height: 13px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #f15d4f;
-    color: #fff;
-    border-radius: 50%;
-    border: 1px solid #f15d4f;
-    transition: all 0.3s ease;
+    position: absolute !important;
+    top: -6px !important;
+    right: -6px !important;
+    width: 18px !important;
+    height: 18px !important;
+    min-width: 18px !important;
+    min-height: 18px !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    background-color: var(--laca-fg) !important;
+    color: var(--laca-bg) !important;
+    border: 1.5px solid var(--laca-bg) !important;
+    border-radius: 50% !important;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35) !important;
+    z-index: 10 !important;
+    cursor: pointer !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    text-decoration: none !important;
+    transition: transform 0.15s ease, background-color 0.15s ease !important;
 
     &:hover {
-      background: #fff;
-      color: #f15d4f;
+      background-color: var(--laca-danger) !important;
+      border-color: var(--laca-bg) !important;
+      transform: scale(1.15) !important;
     }
 
     svg {
-      width: 50%;
-      height: 50%;
+      width: 10px !important;
+      height: 10px !important;
+      display: block !important;
+      stroke: var(--laca-bg) !important;
+      fill: none !important;
+      pointer-events: none !important;
+
+      path {
+        stroke: var(--laca-bg) !important;
+        stroke-width: 2 !important;
+        stroke-linecap: round !important;
+      }
     }
   }
 
-  img {
-    width: 100%;
-    aspect-ratio: 16 / 10;
-    object-fit: cover;
+  img,
+  .thumbnail-preview {
+    width: 54px !important;
+    height: 54px !important;
+    max-width: 54px !important;
+    max-height: 54px !important;
+    object-fit: cover !important;
+    border-radius: 6px !important;
+    border: 1px solid var(--laca-border-emphasized) !important;
+    display: block !important;
+    margin: 0 auto !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06) !important;
   }
 
   .no-image-text {
-    display: flex;
-    align-items: center;
-    text-align: center;
-    border: 1px dashed;
-    aspect-ratio: 16 / 10;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 54px !important;
+    height: 54px !important;
+    margin: 0 auto !important;
+    padding: 2px !important;
+    box-sizing: border-box !important;
+    border: 1.5px dashed var(--laca-border-emphasized) !important;
+    border-radius: 6px !important;
+    background-color: var(--laca-bg-subtle) !important;
+    color: var(--laca-fg-subtle) !important;
+    font-size: 11px !important;
+    font-weight: 500 !important;
+    line-height: 1.25 !important;
+    text-align: center !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+    white-space: normal !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+
+    span {
+      display: block !important;
+      word-break: normal !important;
+      white-space: nowrap !important;
+      line-height: 1.2 !important;
+    }
+
+    &:hover {
+      border-color: var(--laca-fg) !important;
+      color: var(--laca-fg) !important;
+      background-color: var(--laca-bg-muted) !important;
+    }
   }
 }
 
@@ -105,8 +197,8 @@ button[data-toggle="password-toggle"] {
   font-weight: 600;
   line-height: 2;
   text-transform: uppercase;
-  color: #fff;
-  background: #1d2327;
+  color: var(--laca-bg);
+  background: var(--laca-fg);
   border: 1px solid;
   border-radius: 4px;
 }
@@ -117,7 +209,7 @@ button[data-toggle="password-toggle"] {
 }
 
 #wp-auth-check-wrap .wp-auth-check-close {
-  color: #fff !important;
+  color: var(--laca-bg) !important;
   z-index: 99;
 }
 
@@ -162,7 +254,7 @@ button[data-toggle="password-toggle"] {
       font-family: "Quicksand", sans-serif !important;
       font-size: 1.5rem !important;
       font-weight: 800 !important;
-      color: #fff !important;
+      color: var(--laca-bg) !important;
       margin-bottom: 0.625rem !important;
       letter-spacing: -0.02em;
     }

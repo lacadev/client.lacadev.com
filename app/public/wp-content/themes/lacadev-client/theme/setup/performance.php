@@ -19,8 +19,10 @@ class ThemePerformance
         // Core WordPress optimizations
         add_action('init', [self::class, 'remove_wordpress_bloat']);
 
-        // Advanced caching
-        add_action('template_redirect', [self::class, 'set_cache_headers']);
+        // KHÔNG tự set Cache-Control cho HTML và KHÔNG ob_start('ob_gzhandler'):
+        // header/nén do web server (LiteSpeed) + plugin cache quản lý. Theme can
+        // thiệp vào 2 tầng này từng làm trình duyệt giữ trang lỗi 1h và đưa dữ
+        // liệu gzip nhị phân vào buffer của plugin cache.
 
         // Database optimizations
         add_action('init', [self::class, 'optimize_database_queries']);
@@ -33,9 +35,6 @@ class ThemePerformance
         // Image optimizations
         add_filter('wp_get_attachment_image_attributes', [self::class, 'optimize_images'], 10, 3);
         add_filter('the_content', [self::class, 'optimize_content_images']);
-
-        // Advanced compression
-        add_action('template_redirect', [self::class, 'enable_compression']);
 
         // Service Worker
         add_action('wp_footer', [self::class, 'register_service_worker']);
@@ -67,31 +66,15 @@ class ThemePerformance
             return $settings;
         });
 
-        // Remove login errors
-        add_filter('login_errors', '__return_null');
+        // Ẩn thông báo lỗi đăng nhập CHI TIẾT (tránh dò email/username hợp
+        // lệ) nhưng vẫn phải trả về 1 câu chung — __return_null() xoá trắng
+        // hoàn toàn, khiến form "shake" báo có lỗi mà không hiển thị gì,
+        // trông như bug thay vì cố ý ẩn thông tin.
+        add_filter('login_errors', function () {
+            return __('That key doesn\'t seem to work. Please check and try again.', 'laca');
+        });
     }
 
-    /**
-     * Set advanced cache headers
-     */
-    public static function set_cache_headers()
-    {
-        if (!is_admin() && !is_user_logged_in()) {
-            // Cache static assets for 1 year
-            if (preg_match('/\.(css|js|png|jpg|jpeg|gif|webp|svg|woff|woff2|ttf|eot|ico)$/', $_SERVER['REQUEST_URI'])) {
-                header('Cache-Control: public, max-age=31536000, immutable');
-                header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 31536000) . ' GMT');
-                header('Pragma: public');
-            }
-
-            // Cache HTML for 1 hour
-            else {
-                header('Cache-Control: public, max-age=3600, must-revalidate');
-                header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 3600) . ' GMT');
-                header('Vary: Accept-Encoding');
-            }
-        }
-    }
 
     /**
      * Optimize database queries
@@ -156,9 +139,17 @@ class ThemePerformance
      */
     public static function optimize_images($attr, $attachment, $size)
     {
-        // Add loading and decoding attributes
-        $attr['loading'] = 'lazy';
-        $attr['decoding'] = 'async';
+        // Add loading and decoding attributes (không ghi đè nếu đã chỉ định loading hoặc fetchpriority="high")
+        if (empty($attr['loading'])) {
+            if (isset($attr['fetchpriority']) && $attr['fetchpriority'] === 'high') {
+                $attr['loading'] = 'eager';
+            } else {
+                $attr['loading'] = 'lazy';
+            }
+        }
+        if (empty($attr['decoding'])) {
+            $attr['decoding'] = 'async';
+        }
 
         // Add better alt text if missing
         if (empty($attr['alt'])) {
@@ -182,8 +173,23 @@ class ThemePerformance
      */
     public static function optimize_content_images($content)
     {
-        // Add lazy loading to content images
-        $content = preg_replace('/<img((?![^>]*loading)[^>]*)>/', '<img$1 loading="lazy" decoding="async">', $content);
+        // Add lazy loading to content images (không ghi đè nếu đã có loading hoặc fetchpriority="high")
+        $content = preg_replace_callback('/<img([^>]+)>/i', function ($matches) {
+            $tag = $matches[0];
+            $attrs = $matches[1];
+
+            // Nếu đã có loading="..." thì giữ nguyên
+            if (stripos($attrs, 'loading=') !== false) {
+                return $tag;
+            }
+
+            // Nếu có fetchpriority="high" thì gắn loading="eager"
+            if (stripos($attrs, 'fetchpriority="high"') !== false || stripos($attrs, "fetchpriority='high'") !== false) {
+                return '<img' . $attrs . ' loading="eager" decoding="async">';
+            }
+
+            return '<img' . $attrs . ' loading="lazy" decoding="async">';
+        }, $content);
 
         // Add responsive images if missing
         $content = preg_replace_callback('/<img([^>]+)>/', function ($matches) {
@@ -198,18 +204,6 @@ class ThemePerformance
         return $content;
     }
 
-    /**
-     * Enable compression
-     */
-    public static function enable_compression()
-    {
-        if (!is_admin()) {
-            // Enable gzip compression
-            if (function_exists('gzencode') && !ob_get_contents()) {
-                ob_start('ob_gzhandler');
-            }
-        }
-    }
 
     /**
      * Register service worker for caching
@@ -217,7 +211,12 @@ class ThemePerformance
     public static function register_service_worker()
     {
         if (!is_admin() && !is_user_logged_in()) {
-            $sw_path = get_template_directory() . '/dist/sw.js';
+            // get_template_directory() luôn trỏ vào theme PARENT (lacadev-client)
+            // — theme này KHÔNG có thư mục dist/. File dist/sw.js thật đã build
+            // đúng chỉ nằm ở theme CHILD (get_stylesheet_directory()) — dùng
+            // get_template_directory() khiến file_exists() luôn false, toàn bộ
+            // Service Worker (cache/offline/PWA) chết hoàn toàn trên mọi site.
+            $sw_path = get_stylesheet_directory() . '/dist/sw.js';
 
             // Only register if SW file exists
             if (!file_exists($sw_path)) {
@@ -233,7 +232,7 @@ class ThemePerformance
                     true
                 );
                 wp_localize_script('laca-sw-register', 'swConfig', [
-                    'swUrl' => get_template_directory_uri() . '/dist/sw.js',
+                    'swUrl' => get_stylesheet_directory_uri() . '/dist/sw.js',
                     'debug' => defined('WP_DEBUG') && WP_DEBUG ? 'true' : 'false',
                 ]);
             });

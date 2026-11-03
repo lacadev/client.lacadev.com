@@ -6,6 +6,7 @@ use App\Settings\LacaTools\Management\ContentAuditService;
 use App\Settings\LacaTools\Management\MediaService;
 use App\Settings\LacaTools\Management\DashboardWidgets;
 use App\Settings\LacaTools\Management\ListTableEnhancements;
+use App\Settings\LacaTools\Management\ListTableInlineEditor;
 use App\Settings\LacaTools\Management\AdminUxService;
 use App\Settings\LacaTools\Management\DatabaseCleaner;
 use App\Settings\LacaTools\Management\QuickNotesWidget;
@@ -45,6 +46,10 @@ class ManagementExperience
         $listTable = new ListTableEnhancements($auditService);
         $listTable->register();
 
+        // 3b. List-table horizontal scroll & inline editing (Product & all CPTs)
+        $inlineEditor = new ListTableInlineEditor();
+        $inlineEditor->register();
+
         // 4. Navigation & UX simplification
         $adminUx = new AdminUxService();
         $adminUx->register();
@@ -68,6 +73,9 @@ class ManagementExperience
 
         // 10. Dynamic CPT admin page (Appearance > Custom Post Types)
         new \App\Features\DynamicCPT\DynamicCptAdminPage();
+
+        // 10.5. Thu gọn/mở rộng danh mục con trên edit-tags.php (mọi taxonomy phân cấp)
+        (new \App\Features\DynamicCPT\CollapsibleTaxonomyTerms())->register();
 
         // 11. Contact Form Manager (Appearance > Form Liên Hệ)
         new \App\Features\ContactForm\ContactFormManager();

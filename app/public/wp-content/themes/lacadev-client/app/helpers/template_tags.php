@@ -40,8 +40,24 @@ function getFieldImageUrl($name, $w, $h) {
     return getImageUrlById(get_field($name,'option'), $w, $h);
 }
 
+/**
+ * ID ảnh mặc định trong Theme Options. Field "default_image" thường đăng ký
+ * KHÔNG kèm hậu tố ngôn ngữ, nhưng getOption() luôn nối currentLanguage()
+ * (Polylang cũng define ICL_LANGUAGE_CODE) → thử key theo ngôn ngữ trước,
+ * rỗng thì đọc key gốc.
+ *
+ * @return int
+ */
+function getDefaultImageId() {
+    $id = getOption('default_image');
+    if (empty($id) && function_exists('carbon_get_theme_option')) {
+        $id = carbon_get_theme_option('default_image');
+    }
+    return (int) $id;
+}
+
 function getPostThumbnailUrl($postId, $width = null, $height = null) {
-    $defaultImage = getImageUrlById(getOption('default_image'), $width, $height);
+    $defaultImage = getImageUrlById(getDefaultImageId(), $width, $height);
     
     // If no default_image option is set, use theme default image
     if (empty($defaultImage)) {
@@ -273,7 +289,52 @@ function thePostTypePagination($query, $post_type) {
     }
 }
 
-// Breadcrumb
+// Breadcrumb wrapper: Laca SEO (phase 3) -> Rank Math -> empty
+function laca_seo_breadcrumbs(): void {
+    laca_seo_the_breadcrumbs();
+}
+
+/**
+ * Render breadcrumbs HTML.
+ * When Rank Math is active and force frontend is NOT enabled, delegating to Rank Math
+ * ensures 100% untouched live UI.
+ */
+function laca_seo_the_breadcrumbs(): void {
+    echo laca_seo_get_breadcrumbs();
+}
+
+/**
+ * Retrieve breadcrumbs HTML string.
+ */
+function laca_seo_get_breadcrumbs(array $args = []): string {
+    // If Rank Math is active and not forced, delegate directly to Rank Math
+    if (\App\Features\LacaSeo\Core\Helper::isRankMathActive() && !\App\Features\LacaSeo\Core\Helper::isForceFrontend()) {
+        if (function_exists('rank_math_get_breadcrumbs')) {
+            return rank_math_get_breadcrumbs($args);
+        }
+        if (function_exists('rank_math_the_breadcrumbs')) {
+            ob_start();
+            rank_math_the_breadcrumbs();
+            return (string) ob_get_clean();
+        }
+    }
+
+    $breadcrumbs = new \App\Features\LacaSeo\Frontend\Breadcrumbs();
+    return $breadcrumbs->getBreadcrumb($args);
+}
+
+// WHY: Plugin Rank Math loads before theme, so if RM is active its functions already exist; these shims only register when RM is inactive to maintain backward compatibility without fatal collision.
+if (!function_exists('rank_math_the_breadcrumbs')) {
+    function rank_math_the_breadcrumbs(): void {
+        echo laca_seo_get_breadcrumbs();
+    }
+}
+if (!function_exists('rank_math_get_breadcrumbs')) {
+    function rank_math_get_breadcrumbs(array $args = []): string {
+        return laca_seo_get_breadcrumbs($args);
+    }
+}
+
 function theBreadcrumb() {
     get_template_part('template-parts/breadcrumb');
 }
@@ -342,4 +403,46 @@ function theLanguageSwitcher($showName = true, $showFlag = false) {
       }
       echo '</ul>';
   }
+}
+
+/**
+ * In nội dung 1 Page (soạn bằng Block Editor như trang thường) lên đầu trang
+ * archive của 1 Dynamic CPT — mô hình giống "Shop page" của WooCommerce:
+ * archive vẫn do code kiểm soát (loop danh sách bài viết), nhưng phần giới
+ * thiệu ở đầu trang thì admin tự soạn qua 1 Page riêng (chọn trong màn hình
+ * Custom Post Types), không cần sửa code mỗi khi đổi nội dung.
+ *
+ * Gọi trong theme/archive.php (fallback dùng chung cho MỌI post type không
+ * có archive-{slug}.php riêng) nên áp dụng tự động cho mọi Dynamic CPT tạo
+ * sau này — không cần làm gì thêm khi tạo CPT mới, chỉ cần chọn Page trong
+ * màn hình cấu hình CPT đó. CPT nào có archive-{slug}.php viết tay riêng
+ * (không dùng archive.php mặc định, vd archive-glossary.php) muốn dùng tính
+ * năng này thì tự gọi thêm hàm này 1 dòng trong file đó.
+ *
+ * @param string $post_type Bỏ trống để tự lấy post type hiện tại.
+ */
+function laca_render_dynamic_cpt_archive_intro(string $post_type = ''): void
+{
+    if (!class_exists(\App\Features\DynamicCPT\DynamicCptManager::class)) {
+        return;
+    }
+
+    $post_type = $post_type ?: (string) get_post_type();
+    if (!$post_type) {
+        return;
+    }
+
+    $page_id = \App\Features\DynamicCPT\DynamicCptManager::getArchiveContentPageId($post_type);
+    if (!$page_id) {
+        return;
+    }
+
+    $page = get_post($page_id);
+    if (!$page || 'page' !== $page->post_type || 'publish' !== $page->post_status) {
+        return;
+    }
+
+    echo '<div class="dynamic-cpt-archive-intro">';
+    echo apply_filters('the_content', $page->post_content); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+    echo '</div>';
 }

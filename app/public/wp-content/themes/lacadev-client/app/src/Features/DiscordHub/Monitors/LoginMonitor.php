@@ -1,0 +1,139 @@
+<?php
+
+namespace App\Features\DiscordHub\Monitors;
+
+use App\Features\DiscordHub\I18n;
+use App\Features\DiscordHub\Settings;
+use App\Features\DiscordHub\Context;
+use App\Features\DiscordHub\Embed;
+use App\Features\DiscordHub\Notifier;
+
+/**
+ * Phát hiện brute-force theo IP (cửa sổ cố định): wp-login.php, XML-RPC (kể cả
+ * system.multicall — mỗi lần thử bắn 1 wp_login_failed) và REST Application Password
+ * (core KHÔNG bắn wp_login_failed cho trường hợp này → bắt riêng).
+ *
+ * Chỉ cảnh báo khi vượt ngưỡng và tại các mốc leo thang (50/200/1000) → 1 đợt tấn công
+ * không thành hàng trăm tin nhắn.
+ */
+final class LoginMonitor
+{
+    const KEY_PREFIX   = 'laca_dh_bf_';
+    const ESCALATION   = [50, 200, 1000, 5000];
+    const MAX_USERNAMES = 10;
+
+    public function register(): void
+    {
+        add_action('wp_login_failed', [$this, 'onLoginFailed'], 10, 1);
+        add_action('application_password_failed_authentication', [$this, 'onAppPasswordFailed'], 10, 0);
+        add_action('wp_login', [$this, 'onLogin'], 10, 2);
+        add_action('laca_login_guard_lockout', [$this, 'onLockout'], 10, 4);
+    }
+
+    /**
+     * IP bị App\Settings\Security\LoginGuard khoá.
+     *
+     * @param string $ip
+     * @param int    $duration giây
+     * @param int    $strikes  số lần bị khoá trong 24h
+     * @param string $username username của lần thử cuối
+     */
+    public function onLockout($ip, $duration, $strikes, $username): void
+    {
+        $minutes = (int) round((int) $duration / MINUTE_IN_SECONDS);
+        $embed = Embed::make(
+            sprintf(I18n::t('🔒 Đã khoá IP %1$s trong %2$s', '🔒 IP %1$s locked for %2$s'), (string) $ip, $minutes >= 60 ? (int) round($minutes / 60) . 'h' : $minutes . "'"),
+            Embed::COLOR_DANGER
+        )
+            ->description(I18n::block(
+                'Đăng nhập sai quá nhiều lần → IP bị chặn đăng nhập (kể cả đúng mật khẩu) cho tới khi hết hạn.',
+                'Too many failed logins → this IP cannot log in (even with the right password) until the lock expires.'
+            ), true)
+            ->codeField('IP', (string) $ip)
+            ->field(I18n::t('Lần bị khoá (24h)', 'Lockouts (24h)'), (string) (int) $strikes)
+            ->codeField(I18n::t('Username thử cuối', 'Last username tried'), (string) $username)
+            ->field(I18n::t('Kênh', 'Via'), Context::origin());
+        Notifier::send(Settings::CHANNEL_SECURITY, 'login.lockout', $embed);
+    }
+
+    public function onAppPasswordFailed(): void
+    {
+        $user = isset($_SERVER['PHP_AUTH_USER']) ? sanitize_user(wp_unslash($_SERVER['PHP_AUTH_USER'])) : '';
+        $this->onLoginFailed($user);
+    }
+
+    /**
+     * @param string $username
+     */
+    public function onLoginFailed($username): void
+    {
+        $ip        = Context::clientIp();
+        $window    = Settings::threshold('bruteforce_window', 5 * MINUTE_IN_SECONDS);
+        $threshold = Settings::threshold('bruteforce_count', 5);
+        $now       = time();
+        $key       = self::KEY_PREFIX . md5($ip);
+
+        $state = get_transient($key);
+        if (!is_array($state) || $now - (int) $state['start'] >= $window) {
+            $state = ['start' => $now, 'count' => 0, 'users' => []];
+        }
+        $state['count']++;
+
+        $username = Embed::truncate(sanitize_user((string) $username), 60);
+        if ('' !== $username && !in_array($username, $state['users'], true) && count($state['users']) < self::MAX_USERNAMES) {
+            $state['users'][] = $username;
+        }
+        // TTL = phần còn lại của cửa sổ (cửa sổ cố định, không trượt theo mỗi lần sai).
+        set_transient($key, $state, max(1, $window - ($now - (int) $state['start'])));
+
+        $count = (int) $state['count'];
+        if ($count !== $threshold + 1 && !in_array($count, self::ESCALATION, true)) {
+            return;
+        }
+
+        $valid = array_values(array_filter($state['users'], 'username_exists'));
+        $embed = Embed::make(
+            sprintf(I18n::t('🚨 Brute-force: %1$d lần đăng nhập sai từ 1 IP', '🚨 Brute-force: %1$d failed logins from one IP'), $count),
+            Embed::COLOR_DANGER
+        )
+            ->codeField('IP', $ip)
+            ->field(I18n::t('Quốc gia', 'Country'), Context::country() ?? 'N/A')
+            ->field(I18n::t('Kênh', 'Via'), Context::origin())
+            ->field(I18n::t('Thời gian', 'Window'), sprintf(I18n::t('%1$d lần trong %2$d giây', '%1$d attempts in %2$d s'), $count, max(1, $now - (int) $state['start'])))
+            ->field(I18n::t('Username bị dò', 'Targeted usernames'), Embed::code(implode(', ', $state['users'])), false, true)
+            ->codeField('User-Agent', Context::userAgent(), false);
+
+        if ($valid) {
+            $embed->field(I18n::t('⚠️ Username TỒN TẠI đang bị dò', '⚠️ EXISTING usernames targeted'), Embed::code(implode(', ', $valid)), false, true);
+        }
+
+        Notifier::send(Settings::CHANNEL_SECURITY, 'login.bruteforce', $embed, 'bf:' . md5($ip) . ':' . $count);
+    }
+
+    /**
+     * Đăng nhập thành công vào tài khoản quản trị từ IP vừa brute-force → khả năng bị chiếm tài khoản.
+     *
+     * @param string   $login
+     * @param \WP_User $user
+     */
+    public function onLogin($login, $user): void
+    {
+        if (!$user instanceof \WP_User || !user_can($user, 'manage_options')) {
+            return;
+        }
+        $ip    = Context::clientIp();
+        $state = get_transient(self::KEY_PREFIX . md5($ip));
+        if (!is_array($state) || (int) $state['count'] <= Settings::threshold('bruteforce_count', 5)) {
+            return;
+        }
+
+        $embed = Embed::make(I18n::t('🚨 Quản trị viên đăng nhập THÀNH CÔNG từ IP đang brute-force', '🚨 Admin logged in SUCCESSFULLY from a brute-forcing IP'), Embed::COLOR_DANGER)
+            ->description(I18n::block('Có thể tài khoản đã bị dò ra mật khẩu. Kiểm tra ngay, đổi mật khẩu và huỷ phiên đăng nhập nếu không phải chính chủ.', 'The password may have been guessed. Check now, change the password and destroy sessions if this was not the owner.'), true)
+            ->codeField('Username', $user->user_login)
+            ->codeField('IP', $ip)
+            ->field(I18n::t('Số lần sai trước đó', 'Previous failed attempts'), (string) (int) $state['count'])
+            ->field(I18n::t('Quản trị', 'Admin'), Embed::link(I18n::t('Xem user', 'View user'), admin_url('user-edit.php?user_id=' . (int) $user->ID)), true, true);
+
+        Notifier::send(Settings::CHANNEL_SECURITY, 'login.suspicious_success', $embed);
+    }
+}

@@ -8,8 +8,8 @@
 // ─── Base ────────────────────────────────────────────────────
 
 body.wp-admin {
-  background: var(--bg-color-ad, #f0f0f1);
-  font-family: $themeFont !important;
+  background: var(--laca-bg-subtle);
+  font-family: var(--laca-font) !important;
 }
 
 h1.wp-block-post-title {
@@ -17,282 +17,13 @@ h1.wp-block-post-title {
   margin-bottom: 3rem !important;
   text-align: center !important;
 }
-// ─── Admin Bar ───────────────────────────────────────────────
+// (Các khối Admin Bar, Sidebar, Core Controls, Postbox, WP List Table, Notices đã được chuẩn hoá vào skins/_wp-chrome.scss và skins/_wp-core.scss)
 
-#wpadminbar {
-  background: #1a1a2e !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-
-  .ab-item,
-  .ab-empty-item,
-  #wp-toolbar span.ab-label,
-  .ab-icon::before,
-  a.ab-item,
-  div.ab-item {
-    color: rgba(255, 255, 255, 0.82) !important;
-  }
-
-  .quicklinks > ul > li:hover > .ab-item,
-  .ab-top-menu > li:hover > .ab-item,
-  .ab-top-menu > li > .ab-item:focus {
-    background: rgba(255, 255, 255, 0.08) !important;
-    color: #fff !important;
-  }
-
-  .ab-top-menu > .menupop > .ab-sub-wrapper {
-    background: #1a1a2e !important;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-  }
-
-  .ab-submenu .ab-item:hover {
-    background: rgba(255, 255, 255, 0.08) !important;
-    color: #fff !important;
-  }
-
-  #wp-admin-bar-logo_author a {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .logo-admin-bar {
-    max-height: 0.75rem;
-  }
-
-  #wp-admin-bar-user-info {
-    .username { display: none; }
-
-    .display-name {
-      line-height: 1.2em !important;
-      color: #fff !important;
-    }
-
-    .avatar {
-      top: -5px;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-    }
-  }
-
-  @include maxWidth($lg) { height: 36px; }
-  @include maxWidth($sm) { padding: 0; }
-}
-
-// ─── Sidebar ─────────────────────────────────────────────────
-
-#adminmenuback,
-#adminmenuwrap,
-#adminmenu {
-  background: #0f0f23 !important;
-  border-right: 1px solid rgba(255,255,255,0.06) !important;
-}
-
-#adminmenu {
-  margin: 0;
-
-  // Items
-  li.menu-top:hover,
-  li.opensub > a.menu-top,
-  li > a.menu-top:focus {
-    background: rgba(255, 255, 255, 0.07) !important;
-    color: #fff !important;
-  }
-
-  a,
-  div.wp-menu-image::before {
-    color: rgba(255, 255, 255, 0.65) !important;
-    transition: color 0.15s ease !important;
-  }
-
-  a:hover,
-  .wp-submenu a:hover,
-  li.opensub a {
-    color: #fff !important;
-  }
-
-  // Active parent
-  li.current a.menu-top,
-  li.wp-has-current-submenu a.wp-has-current-submenu {
-    background: rgba(var(--primary-color-ad-rgb, 46 162 204) / 0.18) !important;
-    color: var(--primary-color-ad, #2ea2cc) !important;
-    border-left: 3px solid var(--primary-color-ad, #2ea2cc);
-    font-weight: 600;
-  }
-
-  .current div.wp-menu-image::before,
-  .wp-has-current-submenu div.wp-menu-image::before,
-  li.current a.menu-top div.wp-menu-image::before,
-  li.wp-has-current-submenu div.wp-menu-image::before {
-    color: var(--primary-color-ad, #2ea2cc) !important;
-  }
-
-  // Badge
-  .awaiting-mod,
-  .update-plugins {
-    background: #f15d4f;
-    color: #fff;
-    font-weight: 700;
-  }
-
-  // Submenu
-  .wp-submenu {
-    background: #0a0a1a !important;
-    border-left: none;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
-
-    a { color: rgba(255,255,255,0.6) !important; }
-    a:hover { color: #fff !important; }
-
-    li.current a,
-    li.current a:hover {
-      color: var(--primary-color-ad, #2ea2cc) !important;
-    }
-  }
-
-  // Separator
-  li.wp-menu-separator {
-    border-top: 1px solid rgba(255,255,255,0.18) !important;
-    margin: 6px auto !important;
-    height: 0;
-  }
-
-  // Collapse button
-  #collapse-menu {
-    color: rgba(255,255,255,0.4) !important;
-    border-top: 1px solid rgba(255,255,255,0.06);
-
-    .collapse-button {
-      color: rgba(255,255,255,0.4) !important;
-      &:hover { color: #fff !important; }
-    }
-  }
-}
-
-// Remove arrow on current submenu items
-ul#adminmenu {
-  a.wp-has-current-submenu::after,
-  > li.current > a.current::after {
-    border-right-color: rgba(255,255,255,0.06) !important;
-  }
-}
-
-// ─── Main Content ────────────────────────────────────────────
-
-#wpcontent {
-  background: var(--bg-color-ad, #f0f0f1);
-}
-
-#wpfooter {
-  border-top: 1px solid rgba(0,0,0,0.08);
-  p, a { color: rgba(0,0,0,0.45); font-size: 12px; }
-  a:hover { color: var(--primary-color-ad, #2ea2cc); }
-}
-
-// ─── Post Boxes / Meta Boxes ──────────────────────────────────
-
-.postbox {
-  border: 1px solid rgba(0,0,0,0.08) !important;
-  border-radius: 8px !important;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.04) !important;
-  overflow: hidden;
-
-  .postbox-header {
-    background: #fff;
-    border-bottom: 1px solid rgba(0,0,0,0.06);
-    border-radius: 8px 8px 0 0;
-  }
-
-  .hndle {
-    font-size: 13px;
-    font-weight: 600;
-    color: #1a1a2e;
-  }
-}
-
-// ─── Dashboard Widgets ────────────────────────────────────────
-
-#dashboard-widgets {
-  .postbox {
-    background: #fff;
-    transition: box-shadow 0.2s ease;
-
-    &:hover {
-      box-shadow: 0 4px 16px rgba(0,0,0,0.09) !important;
-    }
-  }
-}
-
-// ─── WP List Table ───────────────────────────────────────────
-
-.wp-list-table {
-  background: #fff;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-
-  thead th,
-  tfoot th {
-    background: #f8f8fc;
-    color: #1a1a2e;
-    font-weight: 600;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    border-bottom: 2px solid rgba(0,0,0,0.06) !important;
-  }
-
-  tbody tr {
-    transition: background 0.12s ease;
-
-    &:hover td { background: rgba(46, 162, 204, 0.04); }
-    &.alternate { background: #fafafa; }
-  }
-
-  .row-actions {
-    color: rgba(0,0,0,0.45);
-    a { color: var(--primary-color-ad, #2ea2cc); }
-    .delete a, .trash a { color: #f15d4f; }
-  }
-}
-
-// ─── Buttons ─────────────────────────────────────────────────
-
-.button-primary,
-#publish {
-  background: var(--primary-color-ad, #8aadf7) !important;
-  border-color: var(--primary-color-ad, #8aadf7) !important;
-  color: #fff !important;
-  border-radius: 6px !important;
-  font-weight: 600;
-  box-shadow: none !important;
-  transition: opacity 0.15s ease !important;
-
-  &:hover:not(:disabled) {
-    opacity: 0.85;
-  }
-}
-
-// ─── Notices ─────────────────────────────────────────────────
-
-.notice,
-div.updated,
-div.error {
-  border-radius: 6px !important;
-  border-left-width: 4px !important;
-  box-shadow: none !important;
-}
-
-.notice-success { border-left-color: #7dd3a8 !important; }
-.notice-info    { border-left-color: #8aadf7 !important; }
-.notice-warning { border-left-color: #f5c97a !important; }
-.notice-error   { border-left-color: #f29b9b !important; }
 
 // ─── LacaDev Dashboard Widgets ───────────────────────────────
 
 .laca-stat-card {
-  background: #fff;
+  background: var(--laca-bg);
   border-radius: 12px;
   padding: 20px 24px;
   border: 1px solid rgba(0,0,0,0.06);
@@ -310,7 +41,7 @@ div.error {
     width: 48px;
     height: 48px;
     border-radius: 12px;
-    background: linear-gradient(135deg, var(--primary-color-ad, #2ea2cc), rgba(46,162,204,0.6));
+    background: var(--laca-accent);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -321,7 +52,7 @@ div.error {
   .laca-stat-number {
     font-size: 28px;
     font-weight: 700;
-    color: #1a1a2e;
+    color: var(--laca-fg);
     line-height: 1;
   }
 
@@ -345,8 +76,8 @@ div.error {
   width: 52px;
   height: 52px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--primary-color-ad, #2ea2cc), #1a87aa);
-  color: #fff;
+  background: var(--laca-accent);
+  color: var(--laca-bg);
   border: none;
   cursor: pointer;
   box-shadow: 0 4px 20px rgba(46, 162, 204, 0.45);
@@ -364,7 +95,7 @@ div.error {
 
   &.laca-ai-open {
     transform: rotate(45deg) scale(0.95);
-    background: linear-gradient(135deg, #1a1a2e, #2a2a4e);
+    background: var(--laca-fg);
   }
 }
 
@@ -375,7 +106,7 @@ div.error {
   z-index: 99998;
   width: 360px;
   max-height: 520px;
-  background: #fff;
+  background: var(--laca-bg);
   border-radius: 16px;
   box-shadow: 0 16px 60px rgba(0,0,0,0.18);
   display: flex;
@@ -401,8 +132,8 @@ div.error {
 }
 
 .laca-ai-chat-header {
-  background: linear-gradient(135deg, #1a1a2e, #2a2a4e);
-  color: #fff;
+  background: var(--laca-fg);
+  color: var(--laca-bg);
   padding: 14px 18px;
   display: flex;
   align-items: center;
@@ -439,12 +170,12 @@ div.error {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: #3ecf8e;
+    background: var(--laca-success);
     flex-shrink: 0;
 
     &.laca-ai-thinking {
       animation: laca-pulse 1.2s ease-in-out infinite;
-      background: #f5a623;
+      background: var(--laca-warning);
     }
   }
 }
@@ -477,15 +208,15 @@ div.error {
 
   &--user {
     align-self: flex-end;
-    background: var(--primary-color-ad, #2ea2cc);
-    color: #fff;
+    background: var(--laca-accent);
+    color: var(--laca-bg);
     border-radius: 12px 12px 3px 12px;
   }
 
   &--ai {
     align-self: flex-start;
-    background: #f3f4f7;
-    color: #1a1a2e;
+    background: var(--laca-bg-muted);
+    color: var(--laca-fg);
     border-radius: 12px 12px 12px 3px;
 
     code {
@@ -498,7 +229,7 @@ div.error {
 
   &--thinking {
     align-self: flex-start;
-    background: #f3f4f7;
+    background: var(--laca-bg-muted);
     color: rgba(0,0,0,0.4);
     border-radius: 12px 12px 12px 3px;
     display: flex;
@@ -556,9 +287,9 @@ div.error {
     min-height: 40px;
     max-height: 100px;
     transition: border-color 0.15s ease;
-    color: #1a1a2e;
+    color: var(--laca-fg);
 
-    &:focus { border-color: var(--primary-color-ad, #2ea2cc); }
+    &:focus { border-color: var(--laca-accent); }
     &::placeholder { color: rgba(0,0,0,0.3); }
   }
 
@@ -566,8 +297,8 @@ div.error {
     width: 38px;
     height: 38px;
     border-radius: 10px;
-    background: var(--primary-color-ad, #2ea2cc);
-    color: #fff;
+    background: var(--laca-accent);
+    color: var(--laca-bg);
     border: none;
     cursor: pointer;
     display: flex;
@@ -618,3 +349,7 @@ div.error {
 }
 
 // Column-specific styles are maintained in _admin-column-style.scss
+
+#wpadminbar .quicklinks #wp-admin-bar-woocommerce-site-visibility-badge a.ab-item {
+  background-color: transparent !important;
+}

@@ -1,0 +1,133 @@
+:root {
+  // 2.1 Colors — Slate soft + Blue gentle (Chakra v3)
+  --laca-bg: #ffffff;
+  --laca-bg-subtle: #fafafa;
+  --laca-bg-muted: #f4f4f5;
+  --laca-bg-emphasized: #e4e4e7;
+  --laca-fg: #18181b;
+  --laca-fg-hover: #27272a;
+  --laca-fg-muted: #52525b;
+  --laca-fg-subtle: #71717a;
+  --laca-border: #e4e4e7;
+  --laca-border-emphasized: #d4d4d8;
+  --laca-input-border: #a1a1aa;
+  --laca-accent: #18181b;
+  --laca-accent-hover: #3f3f46;
+  --laca-accent-subtle: #f4f4f5;
+  --laca-accent-muted: #e4e4e7;
+  --laca-accent-fg: #18181b;
+  --laca-focus-ring: #71717a;
+
+  // WP Admin Core & Gutenberg theme color overrides (Monochromatic)
+  --wp-admin-theme-color: #18181b;
+  --wp-admin-theme-color-darker-10: #27272a;
+  --wp-admin-theme-color-darker-20: #3f3f46;
+  --wp-components-color-accent: #18181b;
+  --wp-components-color-accent-darker-10: #27272a;
+  --wp-components-color-accent-darker-20: #3f3f46;
+
+  --laca-success: #3f3f46;
+  --laca-success-bg: #f4f4f5;
+  --laca-success-border: #e4e4e7;
+
+  --laca-warning: #27272a;
+  --laca-warning-bg: #f4f4f5;
+  --laca-warning-border: #e4e4e7;
+
+  --laca-danger: #18181b;
+  --laca-danger-bg: #f4f4f5;
+  --laca-danger-border: #e4e4e7;
+
+  --laca-info: #3f3f46;
+  --laca-info-bg: #f4f4f5;
+  --laca-info-border: #e4e4e7;
+
+  // 2.2 Chrome & Navigation (Monochromatic Dark)
+  --laca-chrome-bg: #18181b;
+  --laca-chrome-sub-bg: #27272a;
+  --laca-chrome-active-bg: #3f3f46;
+  --laca-chrome-fg: #e4e4e7;
+  --laca-chrome-fg-active: #ffffff;
+
+  // 2.2 Typography
+  --laca-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --laca-font-size-xs: 12px;
+  --laca-line-height-xs: 16px;
+  --laca-font-size-sm: 14px;
+  --laca-line-height-sm: 20px;
+  --laca-font-size-md: 16px;
+  --laca-line-height-md: 24px;
+  --laca-font-size-lg: 18px;
+  --laca-line-height-lg: 28px;
+  --laca-font-size-xl: 20px;
+  --laca-line-height-xl: 28px;
+
+  // 2.3 Spacing scale (4px base)
+  --laca-space-1: 4px;
+  --laca-space-2: 8px;
+  --laca-space-3: 12px;
+  --laca-space-4: 16px;
+  --laca-space-5: 20px;
+  --laca-space-6: 24px;
+  --laca-space-7: 32px;
+  --laca-space-8: 40px;
+  --laca-space-9: 48px;
+  --laca-space-10: 64px;
+
+  // Radii
+  --laca-radius-l1: 2px;
+  --laca-radius-l2: 4px;
+  --laca-radius-l3: 6px;
+  --laca-radius-full: 9999px;
+
+  // Control heights
+  --laca-height-xs: 32px;
+  --laca-height-sm: 36px;
+  --laca-height-md: 40px;
+
+  // Chakra v3 token aliases
+  --laca-spacing-0-5: 2px;
+  --laca-spacing-1: 4px;
+  --laca-spacing-1-5: 6px;
+  --laca-spacing-2: 8px;
+  --laca-spacing-2-5: 10px;
+  --laca-spacing-3: 12px;
+  --laca-spacing-4: 16px;
+  --laca-spacing-5: 20px;
+  --laca-spacing-6: 24px;
+  --laca-spacing-8: 32px;
+
+  --laca-radii-l1: 2px;
+  --laca-radii-l2: 4px;
+  --laca-radii-l3: 6px;
+  --laca-radii-full: 9999px;
+
+  --laca-durations-fast: 0.15s;
+  --laca-durations-normal: 0.2s;
+  --laca-shadow-xs: 0 1px 2px 0 rgba(24, 24, 27, 0.05);
+  --laca-shadow-sm: 0 1px 3px 0 rgba(24, 24, 27, 0.06), 0 1px 2px 0 rgba(24, 24, 27, 0.04);
+
+  // Transitions
+  --laca-transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+
+  // Backwards compatibility aliases
+  --primary-color-ad: var(--laca-accent);
+  --secondary-color-ad: var(--laca-fg);
+  --bg-color-ad: var(--laca-bg-subtle);
+  --text-color-ad: var(--laca-fg);
+
+  --laca-primary: var(--laca-accent);
+  --laca-primary-lt: var(--laca-accent-subtle);
+  --laca-blue: var(--laca-accent);
+  --laca-blue-soft: var(--laca-accent-subtle);
+  --laca-green: var(--laca-success);
+  --laca-green-soft: var(--laca-success-bg);
+  --laca-amber: var(--laca-warning);
+  --laca-amber-soft: var(--laca-warning-bg);
+  --laca-red: var(--laca-danger);
+  --laca-red-soft: var(--laca-danger-bg);
+  --laca-text-main: var(--laca-fg);
+  --laca-text-muted: var(--laca-fg-muted);
+  --laca-bg-soft: var(--laca-bg-subtle);
+  --laca-radius: var(--laca-radius-l3);
+}

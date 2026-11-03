@@ -28,6 +28,38 @@ add_action('admin_head', 'app_action_add_favicon', 5);
 add_filter('upload_dir', 'app_filter_fix_upload_dir_url_schema');
 
 /**
+ * Body class: xuất class laca-layout-fluid hoặc laca-layout-boxed theo 3 tầng (site -> trang).
+ */
+add_filter('body_class', function (array $classes): array {
+    $mode = function_exists('laca_get_current_layout_mode') ? laca_get_current_layout_mode() : 'fluid';
+    $classes[] = 'laca-layout-' . $mode;
+    return $classes;
+});
+
+/**
+ * Filter render_block_data hỗ trợ preview block override khi test trên local / admin
+ * e.g. ?laca_block_override=boxed (không ghi DB, chỉ phục vụ layout audit).
+ */
+add_filter('render_block_data', function (array $parsed_block): array {
+    if (is_admin()) {
+        return $parsed_block;
+    }
+    $is_local = function_exists('wp_get_environment_type') && wp_get_environment_type() === 'local';
+    if (($is_local || current_user_can('manage_options')) && isset($_GET['laca_block_override'])) {
+        $target_mode = sanitize_key($_GET['laca_block_override']);
+        if (in_array($target_mode, ['fluid', 'boxed'], true)) {
+            if (isset($parsed_block['blockName']) && strpos($parsed_block['blockName'], 'lacadev/') === 0) {
+                if (!isset($GLOBALS['__laca_block_override_applied'])) {
+                    $parsed_block['attrs']['containerMode'] = $target_mode;
+                    $GLOBALS['__laca_block_override_applied'] = true;
+                }
+            }
+        }
+    }
+    return $parsed_block;
+});
+
+/**
  * Keep Laca Admin submenu grouped and ordered from one place.
  */
 add_action('init', function () {
@@ -35,6 +67,39 @@ add_action('init', function () {
         (new \App\Settings\LacaAdmin\LacaAdminMenuOrganizer())->register();
     }
 });
+
+/**
+ * Google Services (GSC & GA4 standalone module + Laca Admin pages).
+ */
+add_action('init', function () {
+    if (class_exists('\App\Features\GoogleServices\GoogleServices')) {
+        \App\Features\GoogleServices\GoogleServices::boot();
+    }
+});
+
+/**
+ * UI Kit trang mẫu (style guide sống) để review.
+ */
+add_action('init', function () {
+    if (is_admin() && class_exists('\App\Settings\LacaAdmin\UiKitPage')) {
+        (new \App\Settings\LacaAdmin\UiKitPage())->register();
+    }
+});
+
+
+
+
+
+/**
+ * Checklist phát hành production — đầu trang Laca Admin (chỉ Super User).
+ */
+add_action('init', function () {
+    if (is_admin() && class_exists('\App\Settings\LacaAdmin\ReleaseChecklist')) {
+        (new \App\Settings\LacaAdmin\ReleaseChecklist())->register();
+    }
+});
+// Tra DNS (SPF/DMARC) chạy nền qua WP-Cron — request cron không phải is_admin() nên đăng ký riêng.
+add_action('laca_release_checklist_dns', ['\App\Settings\LacaAdmin\ReleaseChecklist', 'refreshDns']);
 
 /**
  * Xếp mọi custom post type (tĩnh lẫn tạo qua Dynamic CPT) nằm liền kề
@@ -84,6 +149,18 @@ add_filter('login_message', 'app_login_google_admin_message');
  */
 // add_action( 'after_setup_theme', 'app_bootstrap_carbon_fields', 100 );
 add_action('carbon_fields_register_fields', 'app_bootstrap_carbon_fields_register_fields');
+
+/**
+ * Carbon Fields AJAX Auto-Save Handler for Theme Options (Laca Theme & Laca Admin).
+ */
+add_action('carbon_fields_theme_options_container_saved', static function ($user_data, $container) {
+    if (!empty($_POST['carbon_fields_auto_save']) || wp_doing_ajax()) {
+        wp_send_json_success([
+            'message'   => __('Đã tự động lưu cài đặt thành công.', 'lacadev'),
+            'timestamp' => current_time('H:i:s'),
+        ]);
+    }
+}, 10, 2);
 
 /**
  * Theme Updater — tự động check & nhận update từ clients.lacadev.com
@@ -178,6 +255,17 @@ add_action('init', function () {
 });
 
 /**
+ * Login Log — ghi lại lý do thật của đăng nhập thất bại (xem
+ * theme/setup/performance.php — login_errors filter chỉ hiện 1 câu chung
+ * cho người dùng, chi tiết thật được lưu riêng ở đây cho admin kiểm tra).
+ */
+add_action('init', function () {
+    if (class_exists('\App\Settings\LoginLog\LoginLogManager')) {
+        (new \App\Settings\LoginLog\LoginLogManager())->init();
+    }
+});
+
+/**
  * Related Posts
  */
 add_action('init', function () {
@@ -226,6 +314,46 @@ add_action('init', function () {
 });
 
 /**
+ * Chống brute-force (khoá IP sau nhiều lần đăng nhập sai) + chặn dò username.
+ * Đăng ký vô điều kiện, sớm (trước khi wp-login.php/XML-RPC xác thực), độc lập với Discord Hub.
+ */
+add_action('after_setup_theme', function () {
+    if (class_exists('\App\Settings\Security\LoginGuard')) {
+        (new \App\Settings\Security\LoginGuard())->register();
+    }
+    if (class_exists('\App\Settings\Security\UserEnumerationGuard')) {
+        (new \App\Settings\Security\UserEnumerationGuard())->register();
+    }
+    if (class_exists('\App\Settings\Security\CoreInfoFileCleanup')) {
+        (new \App\Settings\Security\CoreInfoFileCleanup())->register();
+    }
+}, 15);
+
+/**
+ * Discord Hub — đẩy lead/hoạt động/cảnh báo bảo mật về Discord (Laca Admin → Discord Hub).
+ * Boot ở after_setup_theme (sớm hơn init) vì một số sự kiện cần bắt có thể xảy ra
+ * ngay đầu request (xác thực Application Password qua REST).
+ */
+add_action('after_setup_theme', function () {
+    // Tính năng phụ: file đang upload dở khi deploy (ParseError/Class not found) không được làm sập site.
+    try {
+        if (class_exists('\App\Features\DiscordHub\DiscordHub')) {
+            (new \App\Features\DiscordHub\DiscordHub())->boot();
+        }
+    } catch (\Throwable $e) {
+        error_log('[laca-discord-hub] Không khởi động được: ' . $e->getMessage());
+    }
+
+    try {
+        if (class_exists('\App\Features\LacaSeo\LacaSeo')) {
+            \App\Features\LacaSeo\LacaSeo::boot();
+        }
+    } catch (\Throwable $e) {
+        error_log('[laca-seo] Không khởi động được: ' . $e->getMessage());
+    }
+}, 20);
+
+/**
  * Bảo vệ tài khoản Super User mặc định (lacadev) — không cho user khác xoá
  * hoặc đổi quyền, áp dụng cả REST API nên không được gate trong is_admin().
  */
@@ -265,17 +393,17 @@ function app_render_featured_image_column($column, $postId) {
         echo "<a href='javascript:void(0)' data-trigger-change-thumbnail-id data-post-id='{$post_id_attr}' data-nonce='{$nonce_attr}'>";
         echo "<img src='" . esc_url($thumbnailUrl) . "' class='thumbnail-preview' alt='Thumbnail'/>";
         echo "</a>";
-        // Remove button (X)
+        // Remove button (white X on black background)
         echo "<a class='remove-thumbnail' href='javascript:void(0)' data-trigger-remove-thumbnail data-post-id='{$post_id_attr}' data-nonce='{$nonce_attr}' title='Remove thumbnail'>
                 <svg viewBox='0 0 12 12'>
-                    <path d='M11 1L1 11M1 1l10 10' stroke='currentColor' stroke-width='2' stroke-linecap='round'/>
+                    <path d='M10 2L2 10M2 2L10 10' stroke='#ffffff' stroke-width='2' stroke-linecap='round'/>
                 </svg>
             </a>";
         echo "</div>";
     } else {
         // No thumbnail - show WordPress-style "Set featured image" link (same as Service)
         echo "<a href='javascript:void(0)' data-trigger-change-thumbnail-id data-post-id='{$post_id_attr}' data-nonce='{$nonce_attr}'>";
-        echo "<div class='no-image-text'>Choose image</div>";
+        echo "<div class='no-image-text'><span>Choose</span><span>image</span></div>";
         echo "</a>";
     }
 }

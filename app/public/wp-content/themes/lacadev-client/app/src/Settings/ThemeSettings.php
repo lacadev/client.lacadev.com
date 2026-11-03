@@ -37,7 +37,17 @@ class ThemeSettings {
                 $phpmailer->Port       = get_option('_smtp_port');
                 $phpmailer->Username   = get_option('_smtp_username');
                 $phpmailer->Password   = get_option('_smtp_password');
-                $phpmailer->From       = get_option('_admin_email');
+                // BUG THẬT đã gặp: "_admin_email" không phải option nào cả
+                // (option thật của WP là "admin_email", không gạch dưới —
+                // field admin thật trong màn hình Cài đặt cũng không tên
+                // "admin_email") nên luôn trả về rỗng, khiến PHPMailer báo
+                // "Invalid address: (From)" và HỦY gửi hoàn toàn dù cấu
+                // hình SMTP đúng — vì vậy form không bao giờ gửi được mail.
+                // Gmail SMTP còn bắt buộc "From" phải TRÙNG account đang
+                // authenticate (_smtp_username), nếu không Gmail sẽ từ chối
+                // hoặc tự ý thay đổi From — nên dùng đúng username đó thay
+                // vì admin_email chung chung (có thể không phải @gmail.com).
+                $phpmailer->From       = get_option('_smtp_username');
                 $phpmailer->FromName   = get_bloginfo('name');
             });
         }
@@ -110,11 +120,7 @@ class ThemeSettings {
                     <meta name="author" content="' . esc_attr(AUTHOR['name']) . '" />
                     <meta name="copyright" content="' . esc_attr(AUTHOR['name']) . ' [' . esc_attr(AUTHOR['email']) . '] [' . esc_attr(AUTHOR['website']) . ']" />
                     <meta http-equiv="Content-Language" content="' . get_bloginfo('language') . '"/>
-                    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-                    <!--[if lt IE 9]>
-                    <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-                    <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-                    <![endif]-->';
+                    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>';
         }, PHP_INT_MAX);
     }
 

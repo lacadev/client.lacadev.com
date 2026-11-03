@@ -46,9 +46,9 @@ class AdminUxService
             return;
         }
 
-        echo '<div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;padding:14px 16px;margin:8px 0">'
-            . '<p style="margin:0 0 8px;font-weight:600;color:#0369a1">🔧 Media Không Dùng</p>'
-            . '<p style="margin:0;font-size:13px;color:#374151">Danh sách này liệt kê các file ảnh/video đã tải lên nhưng chưa được gắn vào bài viết, trang hoặc sản phẩm nào. Bạn có thể xoá bớt để giải phóng dung lượng lưu trữ trên site.</p>'
+        echo '<div class="laca-alert laca-alert--info laca-mb-3">'
+            . '<p class="laca-alert__title">🔧 Media Không Dùng</p>'
+            . '<p class="laca-alert__description">Danh sách này liệt kê các file ảnh/video đã tải lên nhưng chưa được gắn vào bài viết, trang hoặc sản phẩm nào. Bạn có thể xoá bớt để giải phóng dung lượng lưu trữ trên site.</p>'
             . '</div>';
     }
 
@@ -86,9 +86,9 @@ class AdminUxService
         ?>
 
         <div class="wrap laca-help-wrap">
-            <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;padding:14px 16px;margin:8px 0 16px">
-                <p style="margin:0 0 8px;font-weight:600;color:#0369a1">🔧 Trang trợ giúp dành cho bạn</p>
-                <p style="margin:0;font-size:13px;color:#374151">Đây là trang hướng dẫn sử dụng website dành cho khách hàng. Nội dung bên dưới do quản trị viên cấu hình riêng cho từng dự án tại <strong>Laca Admin &gt; Quản trị &amp; HD Sử dụng</strong>.</p>
+            <div class="laca-alert laca-alert--info laca-mb-3">
+                <p class="laca-alert__title">🔧 Trang trợ giúp dành cho bạn</p>
+                <p class="laca-alert__description">Đây là trang hướng dẫn sử dụng website dành cho khách hàng. Nội dung bên dưới do quản trị viên cấu hình riêng cho từng dự án tại <strong>Laca Admin &gt; Quản trị &amp; HD Sử dụng</strong>.</p>
             </div>
             <h1 class="laca-help-header">
                 <span>📖</span>
@@ -99,7 +99,7 @@ class AdminUxService
             <div class="laca-help-grid">
                 <?php if (!empty($blocks)) : ?>
                     <?php foreach ($blocks as $block) : ?>
-                        <div class="laca-help-card" style="border-top-color: <?php echo esc_attr($block['border_color'] ?: '#2271b1'); ?>;">
+                        <div class="laca-help-card" style="border-top-color: <?php echo esc_attr($block['border_color'] ?: 'var(--laca-accent)'); ?>; /* động */">
                             <h3><?php echo esc_html($block['title']); ?></h3>
                             <div class="laca-help-card-content">
                                 <?php echo wpautop(wp_kses_post($block['content'])); ?>
@@ -129,19 +129,22 @@ class AdminUxService
 
     /**
      * Simplifies the admin for non-developer roles (hides dev-only menus).
+     *
+     * Super User (cả login cố định trong code lẫn thêm qua UI Bảo mật →
+     * Super User, xem App\Settings\AdminSettings::getSuperUserLogins())
+     * được BỎ QUA bước đơn giản hoá này — họ cần thấy Laca Admin/Settings/
+     * Tools/Plugins để làm việc (quyền truy cập chi tiết hơn nữa, vd Super
+     * User "extra" không vào được 1 số trang con, đã được giới hạn riêng ở
+     * App\Settings\AdminSettings::filterAdminMenuForExtraSuperUser()).
      */
     private function simplifyMerchantAdmin(): void
     {
-        add_action('admin_head', function () {
-            if (current_user_can('manage_options') && !in_array(wp_get_current_user()->user_login, ['lacadev'])) {
-                echo '<style>
-                    #toplevel_page_laca-admin { display: none !important; }
-                    #menu-settings, #menu-tools, #menu-plugins { display: none !important; }
-                    .update-nag, .notice-warning, .notice-info.is-dismissible { display: none !important; }
-                    #contextual-help-link-wrap { display: none !important; }
-                    #wp-admin-bar-updates, #wp-admin-bar-comments, #wp-admin-bar-new-content { display: none !important; }
-                </style>';
+        add_filter('admin_body_class', function (string $classes): string {
+            $superLogins = \App\Settings\AdminSettings::getSuperUserLogins();
+            if (current_user_can('manage_options') && !in_array(wp_get_current_user()->user_login, $superLogins, true)) {
+                $classes .= ' is-merchant-admin';
             }
+            return $classes;
         });
     }
 }

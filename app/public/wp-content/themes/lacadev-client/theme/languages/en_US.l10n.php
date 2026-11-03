@@ -1,0 +1,2 @@
+<?php
+return ['domain'=>'laca','plural-forms'=>'nplurals=2; plural=n != 1;','language'=>'en_US','project-id-version'=>'La Cà Dev','pot-creation-date'=>'2025-12-30 08:23+0000','po-revision-date'=>'2026-02-26 18:19+0000','x-generator'=>'Loco https://localise.biz/','messages'=>['Tìm kiếm'=>'Search']];

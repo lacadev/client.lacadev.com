@@ -131,9 +131,30 @@ require_once APP_APP_DIR . 'hooks.php';
 // =============================================================================
 // THEME SETUP
 // =============================================================================
+
+/**
+ * Nạp bản dịch của theme (theme/languages/{locale}.mo — câu gốc tiếng Việt).
+ *
+ * Từ WP 6.7 load_theme_textdomain() chỉ ghi nhận đường dẫn và nạp just-in-time
+ * ĐÚNG 1 file (wp-content/languages/themes/laca-{locale}.mo sẽ thắng).
+ * load_textdomain() nạp thẳng file của theme + fallback load_theme_textdomain.
+ * Hook 'change_locale' để switch_to_locale() và Polylang nạp lại đúng bản dịch.
+ */
+function laca_load_textdomain($locale = ''): void
+{
+    $locale = $locale ?: determine_locale();
+    $mofile = APP_THEME_DIR . 'languages' . DIRECTORY_SEPARATOR . $locale . '.mo';
+    if (is_readable($mofile)) {
+        load_textdomain('laca', $mofile, $locale);
+    } else {
+        load_theme_textdomain('laca', APP_THEME_DIR . 'languages');
+    }
+}
+add_action('change_locale', 'laca_load_textdomain');
+
 add_action('after_setup_theme', function () {
     // Load textdomain
-    load_theme_textdomain('laca', APP_THEME_DIR . 'languages');
+    laca_load_textdomain();
 
     // Load theme components
     require_once APP_APP_SETUP_DIR . 'theme-support.php';

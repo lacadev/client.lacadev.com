@@ -30,7 +30,7 @@ class ClientSupportManager
      */
     public function addAdminBarMenu(\WP_Admin_Bar $adminBar): void
     {
-        if (!is_user_logged_in()) {
+        if (!current_user_can('edit_posts')) {
             return;
         }
 
@@ -49,6 +49,10 @@ class ClientSupportManager
      */
     public function addDashboardWidget(): void
     {
+        if (!current_user_can('edit_posts')) {
+            return;
+        }
+
         wp_add_dashboard_widget(
             'laca_dashboard_support_widget',
             '🆘 ' . esc_html__('Trung tâm Hỗ trợ LacaDev', 'laca'),
@@ -311,7 +315,7 @@ class ClientSupportManager
     {
         check_ajax_referer('laca_support_request_nonce', '_wpnonce');
 
-        if (!current_user_can('read')) {
+        if (!current_user_can('edit_posts')) {
             wp_send_json_error(['message' => __('Bạn không có quyền thực hiện thao tác này.', 'laca')], 403);
         }
 
@@ -356,7 +360,7 @@ class ClientSupportManager
     {
         check_ajax_referer('laca_support_request_nonce', '_wpnonce');
 
-        if (!current_user_can('read')) {
+        if (!current_user_can('edit_posts')) {
             wp_send_json_error(['message' => __('Bạn không có quyền thực hiện thao tác này.', 'laca')], 403);
         }
 

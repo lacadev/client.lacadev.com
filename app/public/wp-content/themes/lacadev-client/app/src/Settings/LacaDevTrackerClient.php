@@ -657,13 +657,18 @@ class LacaDevTrackerClient
         $parentVersion = $parentTheme->exists() ? (string) $parentTheme->get('Version') : '';
         $childVersion  = $childTheme->exists() ? (string) $childTheme->get('Version') : '';
 
+        $backupInfo     = $this->detectBackupStatus();
+        $pendingPlugins = $this->getPendingPluginUpdates();
+
         $meta = [
-            'site_url'             => home_url(),
-            'wp_version'           => (string) ($wp_version ?? ''),
-            'php_version'          => PHP_VERSION,
-            'theme_version_parent' => $parentVersion,
-            'theme_version_child'  => $childVersion,
-            'tracker_health'       => [
+            'site_url'               => home_url(),
+            'wp_version'             => (string) ($wp_version ?? ''),
+            'php_version'            => PHP_VERSION,
+            'theme_version_parent'   => $parentVersion,
+            'theme_version_child'    => $childVersion,
+            'backup'                 => $backupInfo,
+            'plugins_pending_update' => count($pendingPlugins),
+            'tracker_health'         => [
                 'failed' => 0,
                 'retry'  => 0,
             ],
@@ -686,6 +691,199 @@ class LacaDevTrackerClient
         ]];
 
         $this->sendLogs($logs, blocking: true);
+    }
+
+    /**
+     * Tự động phát hiện plugin sao lưu và thời điểm sao lưu gần nhất.
+     * Hỗ trợ: UpdraftPlus, BackWPup, WPvivid, All-in-One WP Migration, Duplicator.
+     * Cho phép hook laca_tracker_backup_status để site tự khai báo thêm (vd: backup tầng hosting).
+     *
+     * @return array{plugin: string, last_backup_at: string, status: string}
+     */
+    public function detectBackupStatus(): array
+    {
+        $backup = [
+            'plugin'         => 'none',
+            'last_backup_at' => '',
+            'status'         => 'unknown',
+        ];
+
+        // 1. UpdraftPlus
+        $updraftLast = get_option('updraft_last_backup');
+        if (!empty($updraftLast) && is_numeric($updraftLast) && (int) $updraftLast > 0) {
+            $backup = [
+                'plugin'         => 'UpdraftPlus',
+                'last_backup_at' => gmdate('c', (int) $updraftLast),
+                'status'         => 'success',
+            ];
+        } elseif (defined('UPDRAFTPLUS_DIR') || class_exists('UpdraftPlus')) {
+            $backup = [
+                'plugin'         => 'UpdraftPlus',
+                'last_backup_at' => '',
+                'status'         => 'unknown',
+            ];
+        }
+
+        // 2. BackWPup (nếu chưa tìm thấy UpdraftPlus)
+        if ($backup['plugin'] === 'none') {
+            $jobs = get_option('backwpup_jobs');
+            if (is_array($jobs)) {
+                $latest = 0;
+                foreach ($jobs as $job) {
+                    if (!empty($job['lastrun']) && is_numeric($job['lastrun']) && (int) $job['lastrun'] > $latest) {
+                        $latest = (int) $job['lastrun'];
+                    }
+                }
+                if ($latest > 0) {
+                    $backup = [
+                        'plugin'         => 'BackWPup',
+                        'last_backup_at' => gmdate('c', $latest),
+                        'status'         => 'success',
+                    ];
+                } elseif (defined('BACKWPUP_PLUGIN_DIR') || class_exists('BackWPup')) {
+                    $backup = [
+                        'plugin'         => 'BackWPup',
+                        'last_backup_at' => '',
+                        'status'         => 'unknown',
+                    ];
+                }
+            }
+        }
+
+        // 3. WPvivid (nếu chưa tìm thấy plugin khác)
+        if ($backup['plugin'] === 'none') {
+            $vividList = get_option('wpvivid_backup_list');
+            if (is_array($vividList) && !empty($vividList)) {
+                $latest = 0;
+                foreach ($vividList as $item) {
+                    $t = 0;
+                    if (!empty($item['create_time'])) {
+                        $t = is_numeric($item['create_time']) ? (int) $item['create_time'] : strtotime((string) $item['create_time']);
+                    } elseif (!empty($item['backup_time'])) {
+                        $t = is_numeric($item['backup_time']) ? (int) $item['backup_time'] : strtotime((string) $item['backup_time']);
+                    }
+                    if ($t > $latest) {
+                        $latest = $t;
+                    }
+                }
+                if ($latest > 0) {
+                    $backup = [
+                        'plugin'         => 'WPvivid',
+                        'last_backup_at' => gmdate('c', $latest),
+                        'status'         => 'success',
+                    ];
+                }
+            }
+
+            if ($backup['plugin'] === 'none' && defined('WP_CONTENT_DIR')) {
+                $vividDir = WP_CONTENT_DIR . '/wpvividbackups';
+                if (is_dir($vividDir)) {
+                    $files = glob($vividDir . '/*.zip');
+                    if (!empty($files)) {
+                        $newest = 0;
+                        foreach ($files as $f) {
+                            $mt = @filemtime($f);
+                            if ($mt > $newest) {
+                                $newest = $mt;
+                            }
+                        }
+                        if ($newest > 0) {
+                            $backup = [
+                                'plugin'         => 'WPvivid',
+                                'last_backup_at' => gmdate('c', $newest),
+                                'status'         => 'success',
+                            ];
+                        }
+                    }
+                }
+            }
+
+            if ($backup['plugin'] === 'none' && (defined('WPVIVID_PLUGIN_DIR') || class_exists('WPvivid'))) {
+                $backup = [
+                    'plugin'         => 'WPvivid',
+                    'last_backup_at' => '',
+                    'status'         => 'unknown',
+                ];
+            }
+        }
+
+        // 4. All-in-One WP Migration
+        if ($backup['plugin'] === 'none' && defined('WP_CONTENT_DIR')) {
+            $ai1Dir = WP_CONTENT_DIR . '/ai1wm-backups';
+            if (is_dir($ai1Dir)) {
+                $files = glob($ai1Dir . '/*.wpress');
+                if (!empty($files)) {
+                    $newest = 0;
+                    foreach ($files as $f) {
+                        $mt = @filemtime($f);
+                        if ($mt > $newest) {
+                            $newest = $mt;
+                        }
+                    }
+                    if ($newest > 0) {
+                        $backup = [
+                            'plugin'         => 'All-in-One WP Migration',
+                            'last_backup_at' => gmdate('c', $newest),
+                            'status'         => 'success',
+                        ];
+                    }
+                }
+            }
+            if ($backup['plugin'] === 'none' && (defined('AI1WM_PLUGIN_NAME') || class_exists('Ai1wm_Main'))) {
+                $backup = [
+                    'plugin'         => 'All-in-One WP Migration',
+                    'last_backup_at' => '',
+                    'status'         => 'unknown',
+                ];
+            }
+        }
+
+        // 5. Duplicator
+        if ($backup['plugin'] === 'none' && defined('WP_CONTENT_DIR')) {
+            $dupDir = WP_CONTENT_DIR . '/backups-dup-lite';
+            if (is_dir($dupDir)) {
+                $files = glob($dupDir . '/*.zip');
+                if (!empty($files)) {
+                    $newest = 0;
+                    foreach ($files as $f) {
+                        $mt = @filemtime($f);
+                        if ($mt > $newest) {
+                            $newest = $mt;
+                        }
+                    }
+                    if ($newest > 0) {
+                        $backup = [
+                            'plugin'         => 'Duplicator',
+                            'last_backup_at' => gmdate('c', $newest),
+                            'status'         => 'success',
+                        ];
+                    }
+                }
+            }
+            if ($backup['plugin'] === 'none' && (defined('DUPLICATOR_VERSION') || class_exists('DUP_PRO_U') || class_exists('DUP_Util'))) {
+                $backup = [
+                    'plugin'         => 'Duplicator',
+                    'last_backup_at' => '',
+                    'status'         => 'unknown',
+                ];
+            }
+        }
+
+        /**
+         * Filter cho phép website tự khai báo trạng thái sao lưu tùy biến
+         *
+         * @param array{plugin: string, last_backup_at: string, status: string} $backup
+         */
+        $filtered = apply_filters('laca_tracker_backup_status', $backup);
+        if (is_array($filtered)) {
+            $backup = [
+                'plugin'         => sanitize_text_field((string) ($filtered['plugin'] ?? $backup['plugin'])),
+                'last_backup_at' => sanitize_text_field((string) ($filtered['last_backup_at'] ?? $backup['last_backup_at'])),
+                'status'         => sanitize_text_field((string) ($filtered['status'] ?? $backup['status'])),
+            ];
+        }
+
+        return $backup;
     }
 
     /**

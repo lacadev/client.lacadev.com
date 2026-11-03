@@ -1043,11 +1043,7 @@ class LacaDevTrackerClient
                 return $val;
             }
         }
-        $val = (string) get_option('_' . self::CF_KEY_REMOTE, '');
-        if ($val !== '') {
-            return $val;
-        }
-        return self::getSecretKey();
+        return (string) get_option('_' . self::CF_KEY_REMOTE, '');
     }
 
     public static function isConfigured(): bool
@@ -1135,23 +1131,22 @@ class LacaDevTrackerClient
         $action    = sanitize_key($params['action'] ?? '');
         $slug      = sanitize_text_field($params['slug'] ?? '');
 
-        // 1) Xác thực: Ưu tiên HMAC signature (X-Laca-Signature) với remote key
+        // 1) Xác thực:
         $remoteKey = self::getRemoteKey();
-        $sigHeader = $request->get_header('X-Laca-Signature');
-
-        if (!empty($sigHeader)) {
-            if (empty($remoteKey)) {
-                return new \WP_REST_Response(['success' => false, 'message' => 'Remote key chưa được cấu hình'], 401);
-            }
+        if (!empty($remoteKey)) {
+            // Client mới: đã cấu hình remote key -> BẮT BUỘC chữ ký hợp lệ (bất kể body có secret_key hay không)
             $verify = \App\Security\RequestSigner::verify($request, $remoteKey);
             if (!$verify['valid']) {
-                return new \WP_REST_Response(['success' => false, 'message' => $verify['message']], 401);
+                return new \WP_REST_Response([
+                    'success' => false,
+                    'message' => $verify['message'] ?: 'Chữ ký HMAC không hợp lệ hoặc thiếu.',
+                ], 401);
             }
         } else {
-            // Fallback: Xác thực secret key truyền thống (constant-time)
+            // Client cũ: chưa cấu hình remote key -> fallback so sánh body.secret_key với tracker key (legacy)
+            $trackerKey   = self::getTrackerKey() ?: self::getSecretKey();
             $secretKey    = sanitize_text_field($params['secret_key'] ?? '');
-            $storedSecret = self::getSecretKey();
-            if (empty($secretKey) || empty($storedSecret) || !hash_equals($storedSecret, $secretKey)) {
+            if (empty($secretKey) || empty($trackerKey) || !hash_equals($trackerKey, $secretKey)) {
                 return new \WP_REST_Response(['success' => false, 'message' => 'Unauthorized'], 401);
             }
         }

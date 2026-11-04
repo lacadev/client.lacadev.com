@@ -78,14 +78,14 @@ function scanBlockRelativePaths(rootDir) {
     const entryPath = path.join(rootDir, entry);
     if (!fs.statSync(entryPath).isDirectory()) return;
 
-    if (fs.existsSync(path.join(entryPath, 'block.json'))) {
+    if (fs.existsSync(path.join(entryPath, 'block.json')) && fs.existsSync(path.join(entryPath, 'index.js'))) {
       relativePaths.push(entry);
       return;
     }
 
     fs.readdirSync(entryPath).forEach(subEntry => {
       const subEntryPath = path.join(entryPath, subEntry);
-      if (fs.statSync(subEntryPath).isDirectory() && fs.existsSync(path.join(subEntryPath, 'block.json'))) {
+      if (fs.statSync(subEntryPath).isDirectory() && fs.existsSync(path.join(subEntryPath, 'block.json')) && fs.existsSync(path.join(subEntryPath, 'index.js'))) {
         relativePaths.push(path.join(entry, subEntry));
       }
     });

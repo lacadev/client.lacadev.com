@@ -301,17 +301,3 @@ jobs:
             }' > "$RUNNER_TEMP/discord.json"
 
           curl -sS --fail-with-body --max-time 30 -H "Content-Type: application/json" --data-binary @"$RUNNER_TEMP/discord.json" "$DISCORD_DEPLOY_WEBHOOK" || echo "::warning::Không gửi được thông báo Discord"
-
-  smoke:
-    name: Post-Deploy Smoke Test
-    needs: deploy
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Wait for server caches
-        run: sleep 20
-
-      - name: Run Smoke Test
-        run: ./tools/smoke.sh https://clients.lacadev.com

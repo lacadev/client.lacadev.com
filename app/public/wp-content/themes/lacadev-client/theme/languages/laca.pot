@@ -6612,3 +6612,11 @@ msgstr ""
 msgctxt "block keyword"
 msgid "headings"
 msgstr ""
+
+#: app/src/Settings/Security/SecurityManager.php
+msgid "Xác thực 2 bước (2FA)"
+msgstr ""
+
+#: app/src/Settings/Security/SecurityManager.php
+msgid "Super User"
+msgstr ""

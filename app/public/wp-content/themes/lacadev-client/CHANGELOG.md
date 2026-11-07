@@ -1,5 +1,10 @@
 # Nhật ký thay đổi (Changelog)
 
+## 3.4 (07/11/2026)
+- **Menu "Quản lý người dùng"**: Xác thực 2 bước (2FA) và Login Log (nhật ký đăng nhập thất bại) chuyển thành trang riêng trong nhóm Quản lý người dùng của Laca Admin. Login Log trước đây đã ghi log nhưng bị ẩn khỏi menu.
+- **Menu "Super User" riêng**: Quản lý Super User tách khỏi trang Bảo mật thành menu độc lập. Link cũ tới tab 2FA/Super User tự chuyển sang trang mới.
+- **Yêu cầu hỗ trợ**: Chỉ người dùng có quyền sửa bài viết mới thấy nút và widget gửi yêu cầu hỗ trợ.
+
 ## 3.3 (03/11/2026)
 - **Trung tâm hỗ trợ khách hàng**: Widget dashboard và nút truy cập nhanh trên admin bar cho phép khách gửi yêu cầu hỗ trợ (lỗi, nội dung, tính năng...) có ký số HMAC-SHA256, đính kèm ảnh chụp màn hình từ Media Library và theo dõi trực tiếp trạng thái phản hồi từ kỹ thuật viên.
 - **Báo cáo vận hành hàng tháng**: Tự động tổng hợp số liệu bài viết, trang mới, sự kiện bảo mật và dữ liệu hiệu suất Google Analytics 4 / Search Console định kỳ gửi về trung tâm điều hành.

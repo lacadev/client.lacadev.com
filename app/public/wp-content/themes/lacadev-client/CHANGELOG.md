@@ -1,5 +1,11 @@
 # Nhật ký thay đổi (Changelog)
 
+## 3.5 (09/11/2026)
+- **Giao diện Laca Admin gọn hơn**: Dock gom còn 6 nhóm (không còn nhóm chỉ 1 mục), checklist phát hành thu gọn mặc định, thanh tab con có tiêu đề nhóm ở trên, trang Tối ưu hóa dùng nhãn tiếng Việt.
+- **Màu trạng thái**: Đạt / cảnh báo / lỗi có màu riêng (xanh lá / cam / đỏ) thay vì cùng tông đen; vòng điểm kiểm tra bảo mật hiển thị đúng.
+- **Sửa lỗi hiển thị**: Chân trang không còn bị dock che; bỏ cột Categories bị trùng và ẩn sẵn cột ít dùng ở danh sách bài viết; logo widget "Giới thiệu" và admin bar không còn bị vỡ.
+- **Hướng dẫn**: Gộp "Hướng dẫn" vào menu "HD Sử dụng"; tài khoản Khách hàng mở được trang HD Sử dụng.
+
 ## 3.4 (07/11/2026)
 - **Menu "Quản lý người dùng"**: Xác thực 2 bước (2FA) và Login Log (nhật ký đăng nhập thất bại) chuyển thành trang riêng trong nhóm Quản lý người dùng của Laca Admin. Login Log trước đây đã ghi log nhưng bị ẩn khỏi menu.
 - **Menu "Super User" riêng**: Quản lý Super User tách khỏi trang Bảo mật thành menu độc lập. Link cũ tới tab 2FA/Super User tự chuyển sang trang mới.

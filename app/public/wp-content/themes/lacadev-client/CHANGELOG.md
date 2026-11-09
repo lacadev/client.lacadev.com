@@ -1,5 +1,14 @@
 # Nhật ký thay đổi (Changelog)
 
+## 3.6 (09/11/2026)
+- **Dashboard mới**: Khối "Bảng điều khiển" ở đầu trang gồm số liệu (bài viết, trang, form liên hệ chưa đọc, bảo trì), Việc cần làm và Thao tác nhanh; bỏ banner Welcome, widget Site Health tiếng Anh và các ô trống "Drag boxes here".
+- **Thanh lưu dính đáy**: Các trang cài đặt (Laca Admin, Laca Theme, Tối ưu hóa…) bỏ card "Actions" bên phải; nút Lưu và trạng thái tự lưu nằm ở thanh dưới cùng.
+- **Laca Theme dùng tab dọc**: 10 tab hiện hết một lúc thay vì xuống 2 dòng.
+- **Danh sách bài viết**: Gộp 3 cột SEO thành 1 (điểm + tình trạng tiêu đề/mô tả + nút "Sửa SEO" mở Quick Edit); bảng hết cuộn ngang.
+- **Kiểm tra bảo mật**: Mục chưa đạt ghi kết quả thật lên trước, kèm tiêu chí và cách sửa; điểm ghi 0/n cho mục chưa đạt.
+- **Gọn hơn**: Bỏ emoji ở tiêu đề trang và widget; hộp mô tả lặp tiêu đề rút thành 1 dòng.
+- **Admin tiếng Việt mặc định**: User chưa tự chọn ngôn ngữ thấy admin tiếng Việt khi site có gói ngôn ngữ vi (không đổi ngôn ngữ frontend).
+
 ## 3.5 (09/11/2026)
 - **Giao diện Laca Admin gọn hơn**: Dock gom còn 6 nhóm (không còn nhóm chỉ 1 mục), checklist phát hành thu gọn mặc định, thanh tab con có tiêu đề nhóm ở trên, trang Tối ưu hóa dùng nhãn tiếng Việt.
 - **Màu trạng thái**: Đạt / cảnh báo / lỗi có màu riêng (xanh lá / cam / đỏ) thay vì cùng tông đen; vòng điểm kiểm tra bảo mật hiển thị đúng.

@@ -787,7 +787,7 @@ class SecurityManager
                     var color = d.score >= 80 ? 'var(--laca-success)' : d.score >= 50 ? 'var(--laca-warning)' : 'var(--laca-danger)';
                     var verdict = d.score >= 80 ? 'Tốt' : d.score >= 50 ? 'Trung bình' : 'Yếu';
                     var html = '<div class="laca-security-flex" style="margin-bottom:20px;">';
-                    html += '<div class="audit-score-circle" style="color:'+color+';border-color:'+color+';">'+d.score+'</div>';
+                    html += '<div class="laca-audit-score-circle" style="color:'+color+';border-color:'+color+';">'+d.score+'</div>';
                     html += '<div><strong style="font-size:18px;">'+verdict+'</strong><br>';
                     html += '<span style="font-size:13px;color:var(--laca-fg-muted);">Pass: '+d.pass+' | Fail: '+d.fail+' | Warning: '+d.warn+'</span></div></div>';
 

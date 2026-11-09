@@ -54,12 +54,18 @@ function saveRow(sheet, d) {
 }
 JS;
 
+// Hộp giới thiệu đầu tab — dùng component .laca-alert + token admin của theme cha, không viết cứng màu.
+$lacaOptionsIntro = static function (string $title, string $description): string {
+	return '<div class="laca-alert laca-alert--info"><div class="laca-alert__content"><p class="laca-alert__title">'
+		. esc_html($title) . '</p><p class="laca-alert__description">' . esc_html($description) . '</p></div></div>';
+};
+
 $optionsPage = Container::make('theme_options', __('Laca Theme', 'laca'))
 	->set_page_file('app-theme-options.php')
 	->set_page_menu_position(3.1)
-	->add_tab(__('Branding | Thương hiệu', 'laca'), [
+	->add_tab(__('Thương hiệu', 'laca'), [
 		Field::make('html', 'branding_intro', __('', 'laca'))
-			->set_html('<div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;padding:14px 16px;margin:8px 0"><p style="margin:0 0 8px;font-weight:600;color:#0369a1">🔧 Thương hiệu</p><p style="margin:0;font-size:13px;color:#374151">Thiết lập màu sắc và logo dùng chung cho toàn bộ website. Các màu và logo ở đây sẽ hiển thị đồng bộ trên mọi trang, mọi giao diện của site.</p></div>'),
+			->set_html($lacaOptionsIntro(__('Thương hiệu', 'laca'), __('Thiết lập màu sắc và logo dùng chung cho toàn bộ website. Các màu và logo ở đây sẽ hiển thị đồng bộ trên mọi trang, mọi giao diện của site.', 'laca'))),
 
 		Field::make('color', 'primary_color', __('Primary color', 'laca'))
 			->set_width(33.33),
@@ -93,9 +99,9 @@ $optionsPage = Container::make('theme_options', __('Laca Theme', 'laca'))
 			->set_help_text(__('Mặc định website dùng Fluid (toàn rộng). Chọn Boxed nếu muốn giới hạn độ rộng tối đa toàn site.', 'laca')),
 	])
 
-	->add_tab(__('Contact | Liên hệ', 'laca'), [
+	->add_tab(__('Liên hệ', 'laca'), [
 		Field::make('html', 'contact_intro', __('', 'laca'))
-			->set_html('<div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;padding:14px 16px;margin:8px 0"><p style="margin:0 0 8px;font-weight:600;color:#0369a1">🔧 Liên hệ</p><p style="margin:0;font-size:13px;color:#374151">Nhập thông tin liên hệ của công ty (địa chỉ, số điện thoại, hotline, giờ làm việc, mạng xã hội). Các thông tin này sẽ tự động hiển thị ở footer và các khối liên hệ trên site.</p></div>'),
+			->set_html($lacaOptionsIntro(__('Liên hệ', 'laca'), __('Nhập thông tin liên hệ của công ty (địa chỉ, số điện thoại, hotline, giờ làm việc, mạng xã hội). Các thông tin này sẽ tự động hiển thị ở footer và các khối liên hệ trên site.', 'laca'))),
 
 		Field::make('html', 'info', __('', 'laca'))
 			->set_html('----<i> Information | Thông tin </i>----'),
@@ -145,7 +151,7 @@ $optionsPage = Container::make('theme_options', __('Laca Theme', 'laca'))
 			->set_attribute('placeholder', 'zalo'),
 	])
 
-	->add_tab(__('🦶 Footer', 'laca'), [
+	->add_tab(__('Footer', 'laca'), [
 		Field::make('html', 'footer_intro', __('', 'laca'))
 			->set_html('<div style="background:#f4f4f5;border:1px solid #e4e4e7;border-radius:6px;padding:14px 16px;margin:8px 0"><p style="margin:0 0 8px;font-weight:600;color:#18181b">🔧 Footer</p><p style="margin:0;font-size:13px;color:#374151">Thông tin công ty và các cột liên kết hiển thị ở footer cuối trang. Địa chỉ, email, mạng xã hội đã nhập ở tab <strong>Contact | Liên hệ</strong> — footer tự lấy lại, không cần nhập lại ở đây.</p></div>'),
 
@@ -214,9 +220,9 @@ $optionsPage = Container::make('theme_options', __('Laca Theme', 'laca'))
 			->set_help_text(__('Ảnh hiển thị bên phải form liên hệ ở footer.', 'laca')),
 	])
 
-	->add_tab(__('Footer menu(Child)', 'laca'), [
+	->add_tab(__('Footer menu (Child)', 'laca'), [
 		Field::make('html', 'footer_menu_intro', __('', 'laca'))
-			->set_html('<div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;padding:14px 16px;margin:8px 0"><p style="margin:0 0 8px;font-weight:600;color:#0369a1">🔧 Footer menu (Child)</p><p style="margin:0;font-size:13px;color:#374151">Cấu hình 5 cột menu ở footer: Về chúng tôi, Dịch vụ, Chính sách, Showroom & Nhà máy, Dự án tiêu biểu và Đối tác. Nội dung khai báo ở đây sẽ hiển thị ở cuối mọi trang trên website.</p></div>'),
+			->set_html($lacaOptionsIntro(__('Footer menu (Child)', 'laca'), __('Cấu hình 5 cột menu ở footer: Về chúng tôi, Dịch vụ, Chính sách, Showroom & Nhà máy, Dự án tiêu biểu và Đối tác. Nội dung khai báo ở đây sẽ hiển thị ở cuối mọi trang trên website.', 'laca'))),
 
 		//Menu Về chúng tôi
 		Field::make('html', 'about_footer', __('', 'laca'))
@@ -290,7 +296,7 @@ $optionsPage = Container::make('theme_options', __('Laca Theme', 'laca'))
 			])->set_header_template('<% if (name) { %><%- name %><% } %>'),
 	])
 
-	->add_tab(__('📧 Newsletter', 'laca'), [
+	->add_tab(__('Newsletter', 'laca'), [
 		Field::make('html', 'newsletter_intro', __('', 'laca'))
 			->set_html('<div style="background:#f4f4f5;border:1px solid #e4e4e7;border-radius:6px;padding:14px 16px;margin:8px 0"><p style="margin:0 0 8px;font-weight:600;color:#18181b">🔧 Newsletter ở footer</p><p style="margin:0;font-size:13px;color:#374151">Khách nhập email ở footer và bấm Subscribe là <strong>đăng ký luôn</strong>, không cần xác nhận. Website gửi 1 <strong>email cảm ơn</strong> (qua SMTP ở Laca Admin → SMTP), cuối email có link <strong>huỷ đăng ký</strong>. Xem danh sách theo trạng thái và xuất CSV tại menu <strong>Newsletter</strong> bên trái.</p></div>'),
 
@@ -427,7 +433,7 @@ $optionsPage = Container::make('theme_options', __('Laca Theme', 'laca'))
 			->set_conditional_logic([['field' => 'newsletter_provider', 'value' => 'brevo']]),
 	])
 
-	->add_tab(__('AI Translation | Dịch thuật AI', 'laca'), [
+	->add_tab(__('Dịch thuật AI', 'laca'), [
 		Field::make('html', 'ai_intro', __('', 'laca'))
 			->set_html('Cấu hình API Key để kích hoạt tính năng tự động dịch nội dung bằng trí tuệ nhân tạo. Có thể nhập NHIỀU key cùng lúc — hệ thống sẽ tự động chuyển sang key tiếp theo (theo thứ tự ở mục "Bộ xử lý ưu tiên" bên dưới) nếu key đang dùng bị lỗi hoặc hết quota miễn phí, không cần tự đổi tay.'),
 
@@ -481,7 +487,7 @@ $optionsPage = Container::make('theme_options', __('Laca Theme', 'laca'))
 			->set_default_value('gemini'),
 	])
 
-	->add_tab(__('🛒 Block Marketplace', 'laca'), [
+	->add_tab(__('Block Marketplace', 'laca'), [
 		Field::make('html', 'block_marketplace', __('', 'laca'))
 			->set_html(static function () {
 				return class_exists('\App\Settings\BlockMarketplace')

@@ -126,7 +126,7 @@ class AdminSettings
 					<a target="_blank" href="<?php echo AUTHOR['website'] ?>" title="<?php echo AUTHOR['name'] ?>"
 						style="opacity: 0.9; transition: opacity 0.2s;">
 						<img style="max-width: 160px; height: auto; display: block;"
-							src="<?php echo get_site_url() . '/wp-content/themes/lacadev/resources/images/dev/moomsdev-black.png' ?>"
+							src="<?php echo esc_url(get_template_directory_uri() . '/../resources/images/dev/moomsdev-black.png') ?>"
 							alt="<?php echo AUTHOR['name'] ?>">
 					</a>
 					<div style="margin-top: 20px; text-align: center;">
@@ -234,7 +234,7 @@ class AdminSettings
 		add_action('admin_bar_menu', static function ($wp_admin_bar) use ($author) {
 			$args = [
 				'id' => 'logo_author',
-				'title' => '<img src="' . get_site_url() . "/wp-content/themes/lacadev/resources/images/dev/moomsdev-white.png" . '" class="logo-admin-bar" alt="' . AUTHOR['name'] . '">',
+				'title' => '<img src="' . esc_url(get_template_directory_uri() . '/../resources/images/dev/moomsdev-white.png') . '" class="logo-admin-bar" alt="' . AUTHOR['name'] . '">',
 				'href' => $author['website'],
 				'meta' => [
 					'target' => '_blank',
@@ -532,7 +532,7 @@ class AdminSettings
 
 	public function setupErrorMessage()
 	{
-		$logoUrl = get_site_url() . "/wp-content/themes/lacadev/resources/images/dev/moomsdev-black.png";
+		$logoUrl = get_template_directory_uri() . '/../resources/images/dev/moomsdev-black.png';
 		$adminUrl = admin_url();
 		$website = AUTHOR['website'];
 		$authorName = AUTHOR['name'];
@@ -941,61 +941,61 @@ class AdminSettings
 						->set_default_value('← Leave the Station'),
 				]);
 
-			Container::make('theme_options', __('Tools', 'laca'))
+			Container::make('theme_options', __('Tối ưu hóa', 'laca'))
 				->set_page_parent($options)
 				->set_page_file(__('laca-tools', 'laca'))
-				->add_tab(__('Optimization', 'laca'), [
+				->add_tab(__('Tối ưu hóa', 'laca'), [
 					// Disable unnecessary items
-					Field::make('separator', 'title_disable_unnecessary_items', __('Disable unnecessary items')),
-					Field::make('checkbox', 'disable_use_jquery_migrate', __('Disable jQuery Migrate', 'laca'))
+					Field::make('separator', 'title_disable_unnecessary_items', __('Tắt thành phần không cần thiết', 'laca')),
+					Field::make('checkbox', 'disable_use_jquery_migrate', __('Tắt jQuery Migrate', 'laca'))
 						->set_width(30),
 					Field::make('html', 'disable_use_jquery_migrate_desc')
 						->set_width(70)
 						->set_html('<i class="fa-regular fa-lightbulb-on"></i> jQuery Migrate là thư viện được sử dụng để duy trì hoạt động của các plugin và theme cũ. Nếu bạn không sử dụng plugin này, bạn có thể tắt nó để tăng tốc độ tải trang.'),
 
-					Field::make('checkbox', 'disable_gutenberg_css', __('Disable Gutenberg CSS', 'laca'))
+					Field::make('checkbox', 'disable_gutenberg_css', __('Tắt CSS Gutenberg', 'laca'))
 						->set_width(30),
 					Field::make('html', 'gutenberg_css_desc')
 						->set_width(70)
 						->set_html('<i class="fa-regular fa-lightbulb-on"></i> Gutenberg CSS là thư viện được sử dụng để duy trì hoạt động của các plugin và theme cũ. Nếu bạn không sử dụng plugin này, bạn có thể tắt nó để tăng tốc độ tải trang.'),
 
-					Field::make('checkbox', 'disable_classic_css', __('Disable Classic CSS', 'laca'))
+					Field::make('checkbox', 'disable_classic_css', __('Tắt CSS Classic', 'laca'))
 						->set_width(30),
 					Field::make('html', 'classic_css_desc')
 						->set_width(70)
 						->set_html('<i class="fa-regular fa-lightbulb-on"></i> Classic CSS là thư viện được sử dụng để duy trì hoạt động của các plugin và theme cũ. Nếu bạn không sử dụng plugin này, bạn có thể tắt nó để tăng tốc độ tải trang.'),
 
-					Field::make('checkbox', 'disable_emoji', __('Disable Emoji', 'laca'))
+					Field::make('checkbox', 'disable_emoji', __('Tắt Emoji', 'laca'))
 						->set_width(30),
 					Field::make('html', 'emoji_desc')
 						->set_width(70)
 						->set_html('<i class="fa-regular fa-lightbulb-on"></i> Emoji là thư viện được sử dụng để hiển thị các biểu tượng trong trang web. Nếu bạn không sử dụng plugin này, bạn có thể tắt nó để tăng tốc độ tải trang.'),
 
 					// Optimization Library
-					Field::make('separator', 'title_optimization_library', __('Optimization Library')),
-					Field::make('checkbox', 'enable_instant_page', __('Enable Instant-page', 'laca'))
+					Field::make('separator', 'title_optimization_library', __('Thư viện tối ưu', 'laca')),
+					Field::make('checkbox', 'enable_instant_page', __('Bật Instant-page', 'laca'))
 						->set_width(30),
 					Field::make('html', 'instant_page_desc')
 						->set_width(70)
 						->set_html('<i class="fa-regular fa-lightbulb-on"></i> Instant-Page là một thư viện cho phép bạn tải trước nội dung của trang được liên kết vào bộ nhớ trình duyệt chỉ bằng cách di chuyển qua liên kết. Khi bạn nhấp vào liên kết, nó cung cấp trải nghiệm tải nhanh đáng kể'),
 
-					Field::make('checkbox', 'enable_smooth_scroll', __('Enable Smooth-scroll', 'laca'))
+					Field::make('checkbox', 'enable_smooth_scroll', __('Bật cuộn mượt (Smooth-scroll)', 'laca'))
 						->set_width(30),
 					Field::make('html', 'smooth_scroll_desc')
 						->set_width(70)
 						->set_html('<i class="fa-regular fa-lightbulb-on"></i> Smooth-scroll là thư viện cho phép bạn tạo hiệu ứng cuộn mượt mà, cung cấp cho người dùng cảm giác điều hướng trang nhanh hơn.'),
 
 					// The function of lazy loading images
-					Field::make('separator', 'title_lazy_loading_images', __('The function of lazy loading images')),
+					Field::make('separator', 'title_lazy_loading_images', __('Tối ưu HTML & ảnh', 'laca')),
 					Field::make('html', 'lazy_loading_images_desc')
 						->set_width(70)
 						->set_html('<i class="fa-regular fa-lightbulb-on"></i> Nếu bạn muốn lazy load hình ảnh mỗi khi trang tải, hãy bật tính năng này. Chức năng này giúp trang web của bạn tải nhanh hơn'),
 
-					Field::make('checkbox', 'remove_comments', __('Remove comments from HTML, JavaScript, and CSS', 'laca')),
-					Field::make('checkbox', 'remove_xhtml_closing_tags', __('Remove XHTML closing tags from empty elements in HTML5', 'laca')),
-					Field::make('checkbox', 'remove_relative_domain', __('Remove relative domain from internal URLs', 'laca')),
-					Field::make('checkbox', 'remove_protocols', __('Remove protocols (HTTP: and HTTPS:) from all URLs', 'laca')),
-					Field::make('checkbox', 'support_multi_byte_utf_8', __('Support multi-byte UTF-8 encoding (if you see strange characters)', 'laca')),
+					Field::make('checkbox', 'remove_comments', __('Xoá comment trong HTML, JavaScript và CSS', 'laca')),
+					Field::make('checkbox', 'remove_xhtml_closing_tags', __('Bỏ thẻ đóng XHTML ở phần tử rỗng (HTML5)', 'laca')),
+					Field::make('checkbox', 'remove_relative_domain', __('Bỏ tên miền khỏi URL nội bộ', 'laca')),
+					Field::make('checkbox', 'remove_protocols', __('Bỏ giao thức (HTTP: và HTTPS:) khỏi mọi URL', 'laca')),
+					Field::make('checkbox', 'support_multi_byte_utf_8', __('Hỗ trợ mã hoá UTF-8 nhiều byte (khi thấy ký tự lạ)', 'laca')),
 					// Thêm các field tối ưu hóa mới
 					Field::make('checkbox', 'enable_advanced_resource_hints', __('Bật Advanced Resource Hints', 'laca'))
 						->set_width(30),

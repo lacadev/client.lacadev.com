@@ -24,7 +24,8 @@ class ClientRoleManager
     {
         add_action('init', [$this, 'maybeRegisterRole']);
         add_action('admin_menu', [$this, 'filterAdminMenu'], 999);
-        add_action('admin_menu', [$this, 'registerUserGuidePage'], 5);
+        // Sau priority 10 để menu cha 'lacadev-help' (AdminUxService) đã tồn tại.
+        add_action('admin_menu', [$this, 'registerUserGuidePage'], 11);
         add_action('admin_init', [$this, 'blockDirectAccess']);
         add_action('admin_notices', [$this, 'renderAccessDeniedNotice']);
         add_action('carbon_fields_theme_options_container_saved', [$this, 'syncAssignedUsers']);
@@ -223,7 +224,7 @@ class ClientRoleManager
         $isForbiddenPage = false;
         if (!empty($page)) {
             // Cho phép các trang hỗ trợ và hướng dẫn
-            if (in_array($page, ['laca-user-guide', 'laca-client-support'], true)) {
+            if (in_array($page, ['laca-user-guide', 'laca-client-support', 'lacadev-help'], true)) {
                 $isForbiddenPage = false;
             } elseif (str_contains($page, 'laca') || str_contains($page, 'carbon_fields')) {
                 $isForbiddenPage = true;
@@ -254,6 +255,19 @@ class ClientRoleManager
      */
     public function registerUserGuidePage(): void
     {
+        // Gộp vào menu "HD Sử dụng" để chỉ còn 1 lối vào hướng dẫn trên sidebar.
+        if (menu_page_url('lacadev-help', false) !== '') {
+            add_submenu_page(
+                'lacadev-help',
+                __('Hướng dẫn sử dụng', 'laca'),
+                __('Hướng dẫn cơ bản', 'laca'),
+                'read',
+                'laca-user-guide',
+                [$this, 'renderUserGuidePage']
+            );
+            return;
+        }
+
         add_menu_page(
             __('Hướng dẫn sử dụng', 'laca'),
             __('Hướng dẫn', 'laca'),

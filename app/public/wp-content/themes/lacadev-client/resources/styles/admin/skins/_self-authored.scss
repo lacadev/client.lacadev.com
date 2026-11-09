@@ -1449,6 +1449,31 @@
         border-top: 1px solid var(--rc-border);
     }
 
+    &__more-head {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        font-size: 13px;
+        color: var(--rc-muted);
+
+        &:hover {
+            color: var(--rc-text);
+        }
+    }
+
+    &__more[open] > &__more-head {
+        border-bottom: 1px solid var(--rc-border);
+
+        .laca-rc__chevron {
+            transform: rotate(180deg);
+        }
+    }
+
+    &__more:not([open]) {
+        margin-bottom: 0;
+    }
+
     summary {
         list-style: none;
         cursor: pointer;

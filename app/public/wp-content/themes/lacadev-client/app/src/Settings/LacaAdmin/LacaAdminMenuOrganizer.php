@@ -65,6 +65,7 @@ class LacaAdminMenuOrganizer
             'label' => 'Marketing & AI',
             'items' => [
                 'laca-exit-popup',
+                'laca-post-audio',
             ],
         ],
     ];

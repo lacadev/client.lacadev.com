@@ -304,6 +304,15 @@ add_action('init', function () {
 });
 
 /**
+ * Post Audio - Nghe bài viết
+ */
+add_action('init', function () {
+    if (class_exists('\App\Features\PostAudio\PostAudioManager')) {
+        (new \App\Features\PostAudio\PostAudioManager())->init();
+    }
+});
+
+/**
  * Security — Custom Login, 2FA, Security Manager
  */
 add_action('init', function () {

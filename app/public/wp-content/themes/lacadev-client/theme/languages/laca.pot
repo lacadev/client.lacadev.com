@@ -7727,3 +7727,43 @@ msgstr ""
 
 msgid "Sửa SEO"
 msgstr ""
+
+#: theme/setup/assets.php
+msgid "Ai đang ghé trạm?"
+msgstr ""
+
+#: theme/setup/assets.php
+msgid "Điền tên hoặc email vào đây nhé"
+msgstr ""
+
+#: theme/setup/assets.php
+msgid "Chìa khóa"
+msgstr ""
+
+#: theme/setup/assets.php
+msgid "Nhập chìa khóa mở cửa"
+msgstr ""
+
+#: theme/setup/assets.php
+msgid ""
+"Chào mừng về Trạm Laca!\n"
+"Cắm sạc, pha trà và bắt đầu nào!"
+msgstr ""
+
+#: theme/setup/assets.php
+msgid "Rớt chìa khoá?"
+msgstr ""
+
+#: theme/setup/assets.php
+msgid "← Rời khỏi Trạm"
+msgstr ""
+
+#: theme/setup/assets.php
+msgctxt "nút chọn tiếng Việt ở trang đăng nhập"
+msgid "Vie"
+msgstr ""
+
+#: theme/setup/assets.php
+msgctxt "nút chọn tiếng Anh ở trang đăng nhập"
+msgid "Eng"
+msgstr ""

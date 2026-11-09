@@ -63,6 +63,8 @@ $lacaOptionsIntro = static function (string $title, string $description): string
 $optionsPage = Container::make('theme_options', __('Laca Theme', 'laca'))
 	->set_page_file('app-theme-options.php')
 	->set_page_menu_position(3.1)
+	// 10 tab ngang bị xuống 2 dòng → tab dọc bên trái thấy hết một lúc.
+	->set_layout('tabbed-vertical')
 	->add_tab(__('Thương hiệu', 'laca'), [
 		Field::make('html', 'branding_intro', __('', 'laca'))
 			->set_html($lacaOptionsIntro(__('Thương hiệu', 'laca'), __('Thiết lập màu sắc và logo dùng chung cho toàn bộ website. Các màu và logo ở đây sẽ hiển thị đồng bộ trên mọi trang, mọi giao diện của site.', 'laca'))),

@@ -15,6 +15,36 @@ class AdminUxService
         add_action('admin_menu', [$this, 'registerUnattachedMediaMenu']);
         add_action('admin_notices', [$this, 'renderUnattachedMediaNotice']);
         $this->simplifyMerchantAdmin();
+        add_filter('get_user_metadata', [$this, 'defaultAdminLocale'], 10, 4);
+    }
+
+    /**
+     * Admin mặc định tiếng Việt cho user CHƯA tự chọn ngôn ngữ (meta "locale" rỗng).
+     *
+     * Chỉ chạm ngôn ngữ giao diện admin của user — không đổi Site Language nên
+     * frontend giữ nguyên. Không có gói ngôn ngữ "vi" thì bỏ qua để WP khỏi nạp
+     * locale không tồn tại.
+     *
+     * @param mixed  $value
+     * @return mixed
+     */
+    public function defaultAdminLocale($value, $objectId, $metaKey, $single)
+    {
+        static $checking = false;
+        if ($metaKey !== 'locale' || $value !== null || $checking) {
+            return $value;
+        }
+
+        $checking = true;
+        $stored = get_user_meta((int) $objectId, 'locale', true);
+        $checking = false;
+
+        if ($stored !== '' || !in_array('vi', get_available_languages(), true)) {
+            return $value;
+        }
+
+        // get_metadata_raw() tự lấy phần tử đầu khi $single.
+        return ['vi'];
     }
 
     /**
@@ -47,7 +77,7 @@ class AdminUxService
         }
 
         echo '<div class="laca-alert laca-alert--info laca-mb-3">'
-            . '<p class="laca-alert__title">🔧 Media Không Dùng</p>'
+            . '<p class="laca-alert__title">Media Không Dùng</p>'
             . '<p class="laca-alert__description">Danh sách này liệt kê các file ảnh/video đã tải lên nhưng chưa được gắn vào bài viết, trang hoặc sản phẩm nào. Bạn có thể xoá bớt để giải phóng dung lượng lưu trữ trên site.</p>'
             . '</div>';
     }
@@ -87,7 +117,7 @@ class AdminUxService
 
         <div class="wrap laca-help-wrap">
             <div class="laca-alert laca-alert--info laca-mb-3">
-                <p class="laca-alert__title">🔧 Trang trợ giúp dành cho bạn</p>
+                <p class="laca-alert__title">Trang trợ giúp dành cho bạn</p>
                 <p class="laca-alert__description">Đây là trang hướng dẫn sử dụng website dành cho khách hàng. Nội dung bên dưới do quản trị viên cấu hình riêng cho từng dự án tại <strong>Laca Admin &gt; Quản trị &amp; HD Sử dụng</strong>.</p>
             </div>
             <h1 class="laca-help-header">

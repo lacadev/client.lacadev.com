@@ -40,6 +40,12 @@
   --laca-danger-bg: #fef2f2;
   --laca-danger-border: #fecaca;
 
+  // Tên "-subtle" đang được Laca SEO và vài skin dùng nhưng trước đây chưa khai báo
+  // (nền rơi về trong suốt) — trỏ về nền trạng thái tương ứng.
+  --laca-success-subtle: var(--laca-success-bg);
+  --laca-warning-subtle: var(--laca-warning-bg);
+  --laca-danger-subtle: var(--laca-danger-bg);
+
   --laca-info: #3f3f46;
   --laca-info-bg: #f4f4f5;
   --laca-info-border: #e4e4e7;

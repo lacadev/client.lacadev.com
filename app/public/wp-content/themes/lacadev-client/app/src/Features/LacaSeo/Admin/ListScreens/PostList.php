@@ -78,6 +78,12 @@ class PostList
             ?>
             <script>
             jQuery(document).ready(function($) {
+                // Nút "Sửa SEO" trong cột SEO mở đúng hàng Quick Edit sẵn có của WP.
+                $('#the-list').on('click', '.laca-seo-quick-edit', function(e) {
+                    e.preventDefault();
+                    inlineEditPost.edit(this);
+                });
+
                 var $wp_inline_edit = inlineEditPost.edit;
                 inlineEditPost.edit = function(id) {
                     $wp_inline_edit.apply(this, arguments);
@@ -120,16 +126,14 @@ class PostList
         $new = [];
         foreach ($columns as $k => $v) {
             $new[$k] = $v;
+            // 1 cột SEO thay 3 cột (điểm + tiêu đề + mô tả) để bảng bớt cuộn ngang;
+            // tiêu đề/mô tả tóm thành 1 dòng trạng thái, sửa qua nút "Sửa SEO".
             if ($k === 'title') {
-                $new['laca_seo']       = __('SEO', 'laca');
-                $new['laca_seo_title'] = __('Tiêu đề SEO', 'laca');
-                $new['laca_seo_desc']  = __('Mô tả SEO', 'laca');
+                $new['laca_seo'] = __('SEO', 'laca');
             }
         }
         if (!isset($new['laca_seo'])) {
-            $new['laca_seo']       = __('SEO', 'laca');
-            $new['laca_seo_title'] = __('Tiêu đề SEO', 'laca');
-            $new['laca_seo_desc']  = __('Mô tả SEO', 'laca');
+            $new['laca_seo'] = __('SEO', 'laca');
         }
         return $new;
     }
@@ -158,7 +162,7 @@ class PostList
                 if ($score > 0) {
                     echo '<span class="laca-list-score laca-list-score--' . esc_attr($ratingClass) . '">' . esc_html($score) . '/100</span>';
                 } else {
-                    echo '<span class="laca-list-score laca-list-score--bad">N/A</span>';
+                    echo '<span class="laca-list-score laca-list-score--none">' . esc_html__('Chưa chấm', 'laca') . '</span>';
                 }
 
                 if ($isPillar) {
@@ -179,6 +183,19 @@ class PostList
                 // Data holders for inline quick edit
                 $rawTitle = (string) get_post_meta($postId, '_laca_seo_title', true);
                 $rawDesc  = (string) get_post_meta($postId, '_laca_seo_description', true);
+
+                $metaState = match (true) {
+                    $rawTitle !== '' && $rawDesc !== '' => __('Tiêu đề & mô tả riêng', 'laca'),
+                    $rawTitle !== ''                    => __('Có tiêu đề riêng, mô tả theo mẫu', 'laca'),
+                    $rawDesc !== ''                     => __('Có mô tả riêng, tiêu đề theo mẫu', 'laca'),
+                    default                             => __('Theo mẫu chung', 'laca'),
+                };
+                echo '<div class="laca-list-seo-meta">' . esc_html($metaState) . '</div>';
+
+                $postType = (string) get_post_type($postId);
+                if ((string) Settings::get("titles.pt_{$postType}_bulk_editing", 'editing') !== '0' && current_user_can('edit_post', $postId)) {
+                    echo '<button type="button" class="button-link laca-seo-quick-edit">' . esc_html__('Sửa SEO', 'laca') . '</button>';
+                }
                 echo '<span class="laca-col-data-title" style="display:none;">' . esc_html($rawTitle) . '</span>';
                 echo '<span class="laca-col-data-desc" style="display:none;">' . esc_html($rawDesc) . '</span>';
                 echo '<span class="laca-col-data-kw" style="display:none;">' . esc_html($kw) . '</span>';
@@ -187,23 +204,6 @@ class PostList
                 echo '</div>';
                 break;
 
-            case 'laca_seo_title':
-                $customTitle = (string) get_post_meta($postId, '_laca_seo_title', true);
-                if ($customTitle !== '') {
-                    echo esc_html($customTitle);
-                } else {
-                    echo '<span style="color:#94a3b8;font-style:italic;">' . esc_html__('— Theo mẫu chung —', 'laca') . '</span>';
-                }
-                break;
-
-            case 'laca_seo_desc':
-                $customDesc = (string) get_post_meta($postId, '_laca_seo_description', true);
-                if ($customDesc !== '') {
-                    echo esc_html(wp_trim_words($customDesc, 15, '...'));
-                } else {
-                    echo '<span style="color:#94a3b8;font-style:italic;">' . esc_html__('— Theo mẫu chung —', 'laca') . '</span>';
-                }
-                break;
         }
     }
 

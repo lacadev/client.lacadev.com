@@ -1104,7 +1104,7 @@ class AdminSettings
 				]);
 
 			// Tracker Settings — kết nối gửi log về lacadev CMS
-			Container::make('theme_options', __('📡 Tracker', 'laca'))
+			Container::make('theme_options', __('Site Tracker', 'laca'))
 				->set_page_parent($options)
 				->set_page_file(__('laca-tracker', 'laca'))
 				->add_fields([

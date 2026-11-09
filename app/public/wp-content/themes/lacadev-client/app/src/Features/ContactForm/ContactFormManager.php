@@ -347,7 +347,7 @@ class ContactFormManager
         <div class="wrap laca-cf-wrap">
             <div class="laca-cf-header">
                 <div>
-                    <h1>📋 Quản lý Form Liên Hệ</h1>
+                    <h1>Quản lý Form Liên Hệ</h1>
                     <p class="laca-cf-subtitle">Tạo và quản lý các form liên hệ. Nhúng bằng shortcode <code>[laca_contact_form id="X"]</code></p>
                 </div>
                 <a href="<?php echo esc_url($pageUrl . '&action=new'); ?>" class="button button-primary laca-cf-btn-new">
@@ -857,7 +857,7 @@ class ContactFormManager
         <div class="wrap laca-cf-wrap">
             <div class="laca-cf-header">
                 <div>
-                    <h1>📥 Submissions — <?php echo esc_html($form['name']); ?></h1>
+                    <h1>Submissions — <?php echo esc_html($form['name']); ?></h1>
                     <p class="laca-cf-subtitle"><a href="<?php echo esc_url($pageUrl); ?>">← Quay lại danh sách</a></p>
                 </div>
                 <div class="lcf-sub-header">

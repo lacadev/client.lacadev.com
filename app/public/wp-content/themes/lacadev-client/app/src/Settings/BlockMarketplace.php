@@ -34,7 +34,7 @@ class BlockMarketplace
     {
         if (!LacaDevTrackerClient::isConfigured()) {
             return '<div class="laca-alert laca-alert--warning">'
-                . '⚠️ Cần cấu hình Tracker (Endpoint URL + Secret Key) tại <strong>Laca Admin → 📡 Tracker</strong> trước khi dùng Block Marketplace.'
+                . '⚠️ Cần cấu hình Tracker (Endpoint URL + Secret Key) tại <strong>Laca Admin → Kết nối LacaDev → Site Tracker</strong> trước khi dùng Block Marketplace.'
                 . '</div>';
         }
 

@@ -1,5 +1,11 @@
 # Nhật ký thay đổi (Changelog)
 
+## 3.7 (09/11/2026)
+- **Trang đăng nhập theo giờ**: Nền phong cảnh núi đồi nhiều lớp, rừng thông, mây trôi, lều và lửa trại; mặt trời/mặt trăng đi theo vòng cung theo múi giờ của site, có 4 tông màu bình minh / ngày / hoàng hôn / đêm.
+- **Form đăng nhập đổi theo ngày/đêm**: Card kính sáng ban ngày, kính tối buổi tối (logo trắng), màu nhấn xanh rừng / vàng lửa trại; chữ đủ tương phản, card gọn hơn.
+- **Câu chữ trang đăng nhập dịch qua file .po**: Không còn ghi cứng tiếng Việt/Anh trong JS; ô ghi đè trong Theme Options vẫn được ưu tiên.
+- **Lưu ý cập nhật**: Nền mới chỉ hiện sau khi build lại theme con (`yarn build`); site chưa build vẫn giữ nền sao cũ.
+
 ## 3.6 (09/11/2026)
 - **Dashboard mới**: Khối "Bảng điều khiển" ở đầu trang gồm số liệu (bài viết, trang, form liên hệ chưa đọc, bảo trì), Việc cần làm và Thao tác nhanh; bỏ banner Welcome, widget Site Health tiếng Anh và các ô trống "Drag boxes here".
 - **Thanh lưu dính đáy**: Các trang cài đặt (Laca Admin, Laca Theme, Tối ưu hóa…) bỏ card "Actions" bên phải; nút Lưu và trạng thái tự lưu nằm ở thanh dưới cùng.

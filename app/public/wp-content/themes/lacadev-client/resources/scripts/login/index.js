@@ -19,10 +19,15 @@ document.addEventListener( 'DOMContentLoaded', () => {
 	}
 
 	// 1. CÂU CHỮ — lấy từ PHP (__() + .po, có thể ghi đè ở Theme Options), không ghi cứng ở JS
-	const i18n = dynamicConfig.strings || {};
 	const currentLang = document.documentElement.lang.includes( 'en' )
 		? 'en'
 		: 'vi';
+	// Parent PHP < 3.7 chưa có `strings` → đọc `locales[lang]` kiểu cũ (câu chào dạng HTML có <br />)
+	const legacyLocale = ( dynamicConfig.locales || {} )[ currentLang ];
+	const i18n = dynamicConfig.strings || { ...( legacyLocale || {} ) };
+	if ( ! dynamicConfig.strings && i18n.welcomeText ) {
+		i18n.welcomeText = i18n.welcomeText.replace( /<br\s*\/?>/gi, '' );
+	}
 
 	const userLabel = document.querySelector( 'label[for="user_login"]' );
 	if ( userLabel && i18n.userLabel ) {
@@ -88,7 +93,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 				const btn = document.createElement( 'button' );
 				btn.type = 'button';
 				btn.dataset.lang = value;
-				btn.textContent = label || value;
+				btn.textContent = label || code;
 				if ( currentLang === code ) {
 					btn.classList.add( 'active' );
 				}

@@ -335,6 +335,43 @@ body.login {
     }
   }
 
+  // Tương thích parent PHP < 3.7 (chưa có khung cảnh mới): nền sao + trăng cũ
+  .login-night-sky {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at 50% 40%, #1a2a4e 0%, #0d0d21 60%, #05050a 100%);
+    z-index: -1;
+
+    .alp-stars { 
+      position: absolute; 
+      inset: 0; 
+      z-index: 1;
+      pointer-events: none; 
+    }
+
+    .alp-star {
+      position: absolute;
+      border-radius: 50%;
+      background: #ffffff;
+      box-shadow: 0 0 4px 1px rgba(255, 255, 255, 0.8);
+      animation: alpTwinkle var(--d, 3s) ease-in-out infinite;
+      opacity: 0.15;
+    }
+
+    .alp-moon {
+      position: absolute;
+      top: 8%;
+      right: 12%;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      box-shadow: 10px 10px 0 0 #fef9c3;
+      filter: drop-shadow(0 0 15px rgba(254, 249, 195, 0.3));
+      transform: rotate(-15deg);
+      z-index: 2;
+    }
+  }
+
   .language-switcher {
     display: flex;
     justify-content: center;

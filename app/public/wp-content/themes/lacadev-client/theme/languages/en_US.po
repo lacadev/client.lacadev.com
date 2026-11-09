@@ -1,639 +1,23 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: La Cà Dev\n"
-"Report-Msgid-Bugs-To: \n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/theme/lacadev-client\n"
+"POT-Creation-Date: 2026-11-09T03:30:14+00:00\n"
+"PO-Revision-Date: 2026-02-26 18:19+0000\n"
 "Last-Translator: La Cà Dev\n"
 "Language-Team: English (United States)\n"
+"Language: en_US\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-12-30 08:23+0000\n"
-"PO-Revision-Date: 2026-02-26 18:19+0000\n"
-"Language: en_US\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Loco https://localise.biz/\n"
 "X-Loco-Version: 2.8.0; wp-6.9; php-8.3.23\n"
 "X-Domain: laca\n"
 
-#: theme/loop_templates/post_meta.php:32
-msgid "% Comments"
-msgstr ""
-
-#: theme/comments.php:20
-msgid "% Responses"
-msgstr ""
-
-#. translators: comment date and time
-#: theme/loop_templates/comment_single.php:25
-#, php-format
-msgid "%1$s at %2$s"
-msgstr ""
-
-#: theme/search.php:237
-#, php-format
-msgid "%s liên quan"
-msgstr ""
-
-#: theme/loop_templates/comment_single.php:29
-msgid "(Edit)"
-msgstr ""
-
-#: theme/loop_templates/post_meta.php:32
-msgid "1 Comment"
-msgstr ""
-
-#: theme/404.php:48
-msgid "404"
-msgstr ""
-
-#: theme/setup/taxonomies/blog_cat.php:37
-#: theme/setup/taxonomies/template_cat.php:37
-msgid "Add new"
-msgstr ""
-
-#: theme/setup/taxonomies/blog_cat.php:31
-#: theme/setup/taxonomies/template_cat.php:31
-msgid "All Custom Taxonomies"
-msgstr ""
-
-#: theme/setup/theme-options.php:25
-#: block-gutenberg/workflow-block/build/index.js:1
-#: block-gutenberg/workflow-block/edit.js:188
-msgid "Background color"
-msgstr ""
-
-#: theme/setup/theme-options.php:32
-msgid "Background color dark"
-msgstr ""
-
-#: theme/setup/blocks/about.php:8
-msgid "BLOCK ABOUT ME"
-msgstr ""
-
-#: theme/setup/blocks/about.php:6
-msgid "Block ABOUT ME"
-msgstr ""
-
-#: theme/setup/blocks/blog.php:11
-msgid "Block blog"
-msgstr ""
-
-#: theme/setup/blocks/slider.php:8
-msgid "BLOCK SLIDER"
-msgstr ""
-
-#: theme/setup/blocks/slider.php:6
-msgid "Block Slider"
-msgstr ""
-
-#: theme/setup/blocks/blog.php:13
-msgid "BLOCK TIN TỨC"
-msgstr ""
-
-#: theme/setup/taxonomies/blog_cat.php:28
-#: theme/setup/taxonomies/blog_cat.php:39
-msgid "Blog Category"
-msgstr ""
-
-#: theme/setup/taxonomies/blog_tags.php:27
-msgid "Blog Tags"
-msgstr ""
-
-#: theme/setup/theme-options.php:18
-msgid "Branding | Thương hiệu"
-msgstr ""
-
-#. translators: post author attribution
-#: theme/loop_templates/post_meta.php:22
-#, php-format
-msgid "by %s"
-msgstr ""
-
-#: theme/search.php:132
-msgid "Bài viết liên quan"
-msgstr ""
-
-#: theme/page_templates/template-contact.php:30
-msgid "Bạn có ý tưởng mới, một dự án hay ho hay đơn giản là muốn chia sẻ một hành trình? Đừng ngần ngại, trạm luôn mở cửa đón chờ!"
-msgstr ""
-
-#: theme/header.php:199
-msgid "Chuyển chế độ tối/sáng"
-msgstr ""
-
-#: theme/setup/users/auth.php:331
-#, php-format
-msgid "Chào buổi chiều %s"
-msgstr ""
-
-#: theme/setup/users/auth.php:321
-#, php-format
-msgid "Chào buổi sáng %s"
-msgstr ""
-
-#: theme/setup/users/auth.php:336
-#, php-format
-msgid "Chào buổi tối %s"
-msgstr ""
-
-#: theme/footer.php:118
-#: theme/page_templates/template-contact.php:167
-msgid "Chính sách bảo mật"
-msgstr ""
-
-#: theme/setup/users/auth.php:78
-#: theme/setup/users/auth.php:208
-msgid "Chúc mừng bạn đã đăng nhập thành công"
-msgstr ""
-
-#: theme/setup/blocks/blog.php:37
-msgid "Chọn bài viết thủ công"
-msgstr ""
-
-#: theme/setup/blocks/slider.php:9
-msgid "Chọn hình ảnh (khuyến nghị tỉ lệ 16/9)"
-msgstr ""
-
-#: theme/comments.php:43
-msgid "Comments are closed."
-msgstr ""
-
-#. Template Name of the theme
-msgid "Contact Page"
-msgstr ""
-
-#: theme/setup/theme-options.php:43
-msgid "Contact | Liên hệ"
-msgstr ""
-
-#: app/src/Features/DynamicCPT/DynamicCptAdminPage.php:378
-#: theme/setup/taxonomies/blog_cat.php:29
-#: theme/setup/taxonomies/template_cat.php:29
-msgid "Custom Taxonomy"
-msgstr ""
-
-#: theme/setup/users/auth.php:314
-msgid "Cuối tuần vui vẻ, "
-msgstr ""
-
-#: theme/setup/theme-options.php:39
-msgid "Default image | Hình ảnh mặc định"
-msgstr ""
-
-#: theme/setup/sidebars.php:31
-msgid "Default Sidebar"
-msgstr ""
-
-#: theme/setup/taxonomies/blog_cat.php:35
-#: theme/setup/taxonomies/template_cat.php:35
-msgid "Edit"
-msgstr ""
-
-#: app/src/Databases/ContactFormTable.php:127
-#: app/src/Databases/ContactFormTable.php:136
-#: app/src/Features/LacaSeo/Modules/LocalSeo/Address.php:28
-#: theme/page_templates/template-contact.php:51
-msgid "Email"
-msgstr ""
-
-#: theme/page_templates/template-contact.php:139
-msgid "Email liên hệ"
-msgstr ""
-
-#: theme/setup/users/auth.php:50
-#: theme/setup/users/auth.php:88
-msgid "Empty request."
-msgstr ""
-
-#: theme/setup/theme-support.php:121
-msgid "extra large"
-msgstr ""
-
-#: theme/setup/theme-support.php:97
-msgid "extra small"
-msgstr ""
-
-#: theme/setup/menus.php:21
-msgid "Footer Menu"
-msgstr ""
-
-#: theme/setup/theme-options.php:98
-msgid "Footer Script"
-msgstr ""
-
-#: theme/setup/users/auth.php:332
-msgid "Giữ vững sự tập trung, sắp hoàn thành mục tiêu ngày rồi! 💪"
-msgstr ""
-
-#: theme/footer.php:74
-msgid "Gặp tôi tại"
-msgstr ""
-
-#: theme/page_templates/template-contact.php:185
-msgid "Gửi lời nhắn"
-msgstr ""
-
-#: theme/setup/theme-options.php:97
-msgid "Header Script"
-msgstr ""
-
-#: theme/footer.php:18
-msgid "HÃY CÙNG NHAU LA CÀ VÀ"
-msgstr ""
-
-#: theme/setup/users/auth.php:315
-msgid "Hãy gác lại công việc, dành thời gian nghỉ ngơi và sạc đầy năng lượng nhé! ✨"
-msgstr ""
-
-#: theme/setup/recaptcha.php:147
-msgid "Hệ thống nghi ngờ bạn là robot. Điểm tín nhiệm thấp."
-msgstr ""
-
-#: theme/page_templates/template-contact.php:124
-msgid "Họ và tên của bạn"
-msgstr ""
-
-#: theme/search.php:272
-#, php-format
-msgid "Không tìm thấy kết quả nào cho \"%s\""
-msgstr ""
-
-#: theme/search.php:20
-msgid "Kết quả tìm kiếm"
-msgstr ""
-
-#: theme/setup/theme-support.php:116
-msgid "L"
-msgstr ""
-
-#: theme/setup/gutenberg-blocks.php:156
-msgid "La Cà Blocks"
-msgstr ""
-
-#: theme/404.php:49
-msgid "La cà hơi xa rồi bạn ơi!"
-msgstr ""
-
-#: theme/setup/theme-options.php:15
-msgid "Laca Theme"
-msgstr ""
-
-#: theme/setup/theme-support.php:115
-msgid "large"
-msgstr ""
-
-#: theme/setup/theme-options.php:35
-msgid "Logo"
-msgstr ""
-
-#: theme/setup/theme-options.php:37
-msgid "Logo Dark"
-msgstr ""
-
-#: theme/setup/recaptcha.php:132
-msgid "Lỗi kết nối đến máy chủ xác thực."
-msgstr ""
-
-#: theme/setup/theme-support.php:110
-msgid "M"
-msgstr ""
-
-#: theme/setup/menus.php:20
-msgid "Main Menu"
-msgstr ""
-
-#: theme/header.php:129
-msgid "Main menu"
-msgstr ""
-
-#: theme/setup/menus.php:38
-msgid "Menu image"
-msgstr ""
-
-#: theme/setup/users/auth.php:322
-msgid "Một tách cà phê thơm và bắt đầu ngày mới thật hứng khởi nào! ☕"
-msgstr ""
-
-#: theme/header.php:215
-msgid "NAVIGATION"
-msgstr ""
-
-#: theme/setup/taxonomies/blog_cat.php:38
-#: theme/setup/taxonomies/template_cat.php:38
-msgid "New Custom Taxonomy Name"
-msgstr ""
-
-#: theme/comments.php:37
-msgid "Next Comments »"
-msgstr ""
-
-#: theme/loop_templates/loop.php:45
-msgid "Next Entries »"
-msgstr ""
-
-#: theme/loop_templates/loop_single.php:40
-msgid "Next Entry »"
-msgstr ""
-
-#: theme/setup/users/auth.php:326
-#, php-format
-msgid "Nghỉ trưa thôi %s"
-msgstr ""
-
-#: theme/header.php:180
-msgid "Nhập từ khóa tìm kiếm"
-msgstr ""
-
-#: theme/loop_templates/post_meta.php:32
-msgid "No Comments"
-msgstr ""
-
-#: theme/comments.php:20
-msgid "No Responses"
-msgstr ""
-
-#: theme/page_templates/template-contact.php:150
-msgid "Nơi bạn viết nên những ý tưởng hoặc lời nhắn gửi..."
-msgstr ""
-
-#: app/src/Databases/ContactFormTable.php:128
-#: app/src/Databases/ContactFormTable.php:137
-#: app/src/Features/ProjectManagement/Views/meta-box-col2.php:27
-#: app/src/Features/ProjectManagement/Views/meta-box-col2.php:91
-#: theme/page_templates/template-contact.php:147
-#: block-gutenberg/about-laca-block/build/index.js:1
-#: block-gutenberg/about-laca-block/edit.js:202
-msgid "Nội dung"
-msgstr ""
-
-#: theme/comments.php:20
-msgid "One Response"
-msgstr ""
-
-#: theme/setup/taxonomies/blog_cat.php:33
-#: theme/setup/taxonomies/template_cat.php:33
-msgid "Parent Custom Taxonomy:"
-msgstr ""
-
-#: theme/setup/taxonomies/blog_cat.php:32
-#: theme/setup/taxonomies/template_cat.php:32
-msgid "Parent Taxonomy"
-msgstr ""
-
-#: theme/footer.php:43
-msgid "Ping tôi"
-msgstr ""
-
-#: theme/page_templates/template-contact.php:28
-msgid "Ping tôi tại đây"
-msgstr ""
-
-#. translators: generic error page content; placeholders represents homepage opening and closing anchor tags
-#: theme/error.php:16
-#, php-format
-msgid "Please check the URL for proper spelling and capitalization. If you're having trouble locating a destination, try visiting the %1$shome page%2$s."
-msgstr ""
-
-#: theme/loop_templates/post_meta.php:28
-msgid "Posted in "
-msgstr ""
-
-#: theme/setup/theme-options.php:21
-msgid "Primary color"
-msgstr ""
-
-#: theme/setup/theme-options.php:28
-msgid "Primary color dark"
-msgstr ""
-
-#: theme/setup/theme-support.php:109
-msgid "regular"
-msgstr ""
-
-#: theme/setup/theme-support.php:104
-msgid "S"
-msgstr ""
-
-#: theme/loop_templates/comment_single.php:14
-msgid "says:"
-msgstr ""
-
-#: theme/setup/theme-options.php:94
-msgid "Scripts"
-msgstr ""
-
-#: app/src/Abstracts/AbstractPostType.php:276
-#: app/src/Abstracts/AbstractTaxonomy.php:110
-#: app/src/Features/LacaSeo/Modules/LocalSeo/StoreLocator.php:43
-#: theme/searchform.php:18
-msgid "Search"
-msgstr ""
-
-#: theme/searchform.php:15
-msgid "Search &hellip;"
-msgstr ""
-
-#: theme/setup/taxonomies/blog_cat.php:30
-#: theme/setup/taxonomies/template_cat.php:30
-msgid "Search Custom Taxonomies"
-msgstr ""
-
-#: theme/searchform.php:13
-#: theme/searchform.php:15
-msgid "Search for:"
-msgstr ""
-
-#: theme/setup/theme-options.php:23
-msgid "Secondary color"
-msgstr ""
-
-#: theme/setup/theme-options.php:30
-msgid "Secondary color dark"
-msgstr ""
-
-#: theme/header.php:112
-msgid "Skip to content"
-msgstr ""
-
-#: theme/setup/theme-support.php:103
-msgid "small"
-msgstr ""
-
-#: theme/search.php:79
-msgid "Sản phẩm liên quan"
-msgstr ""
-
-#: theme/setup/taxonomies/blog_tags.php:26
-#: theme/setup/taxonomies/template_tags.php:26
-msgid "Tags"
-msgstr ""
-
-#: theme/loop_templates/post_meta.php:37
-msgid "Tags:"
-msgstr ""
-
-#: block-gutenberg/service-block/build/index.js:1
-#: block-gutenberg/service-block/edit.js:252
-msgid "Tiêu đề"
-msgstr ""
-
-#: theme/setup/users/auth.php:54
-#: theme/setup/users/auth.php:92
-msgid "Token mismatch!"
-msgstr ""
-
-#: theme/search.php:184
-msgid "Trang liên quan"
-msgstr ""
-
-#: theme/setup/users/auth.php:58
-msgid "Tài khoản hoặc mật khẩu không đúng, vui lòng kiểm tra lại"
-msgstr ""
-
-#: theme/header.php:173
-msgid "Tìm kiếm"
-msgstr "Search"
-
-#: theme/header.php:179
-msgid "Tìm kiếm ..."
-msgstr ""
-
-#: theme/header.php:174
-msgid "Từ khóa tìm kiếm"
-msgstr ""
-
-#: theme/search.php:23
-#, php-format
-msgid "Từ khóa: \"%s\""
-msgstr ""
-
-#: theme/setup/blocks/blog.php:31
-msgid "Tự động hiển thị 3 bài viết mới nhất"
-msgstr ""
-
-#: theme/setup/taxonomies/blog_cat.php:36
-#: theme/setup/taxonomies/template_cat.php:36
-msgid "Update"
-msgstr ""
-
-#: theme/setup/taxonomies/blog_cat.php:34
-#: theme/setup/taxonomies/template_cat.php:34
-msgid "View Custom Taxonomy"
-msgstr ""
-
-#: theme/footer.php:38
-msgid "viết nên hành trình mới"
-msgstr ""
-
-#: theme/setup/users/auth.php:112
-msgid "Vui lòng kiểm tra lại mật khẩu"
-msgstr ""
-
-#: theme/setup/users/auth.php:104
-msgid "Vui lòng nhập email hợp lệ"
-msgstr ""
-
-#: theme/setup/users/auth.php:96
-msgid "Vui lòng nhập họ"
-msgstr ""
-
-#: theme/setup/users/auth.php:108
-msgid "Vui lòng nhập mật khẩu"
-msgstr ""
-
-#: theme/setup/users/auth.php:100
-msgid "Vui lòng nhập tên"
-msgstr ""
-
-#: theme/search.php:273
-msgid "Vui lòng thử lại với từ khóa khác."
-msgstr ""
-
-#: theme/setup/recaptcha.php:120
-msgid "Vui lòng tải lại trang để xác thực reCAPTCHA."
-msgstr ""
-
-#: theme/search.php:100
-#: theme/search.php:153
-#: theme/search.php:205
-#: theme/search.php:258
-msgid "Xem thêm"
-msgstr ""
-
-#: theme/setup/users/auth.php:77
-#: theme/setup/users/auth.php:207
-msgid "Xin chào, "
-msgstr ""
-
-#: theme/setup/theme-support.php:122
-msgid "XL"
-msgstr ""
-
-#: theme/setup/theme-support.php:98
-msgid "XS"
-msgstr ""
-
-#: theme/setup/recaptcha.php:143
-msgid "Xác thực reCAPTCHA thất bại. Bạn có phải là robot?"
-msgstr ""
-
-#: theme/header.php:181
-msgid "Xóa tìm kiếm"
-msgstr ""
-
-#: theme/functions.php:305
-#: theme/loop_templates/comment_single.php:18
-#: theme/template-parts/comment-single.php:42
-msgid "Your comment is awaiting moderation."
-msgstr ""
-
-#: theme/comments.php:36
-msgid "« Previous Comments"
-msgstr ""
-
-#: theme/loop_templates/loop.php:44
-msgid "« Previous Entries"
-msgstr ""
-
-#: theme/loop_templates/loop_single.php:39
-msgid "« Previous Entry"
-msgstr ""
-
-#: theme/footer.php:121
-msgid "Điều khoản sử dụng"
-msgstr ""
-
-#: theme/footer.php:59
-msgid "Điểm dừng"
-msgstr ""
-
-#: app/src/Settings/LacaAdmin/UiKitPage.php:210
-#: theme/page_templates/template-contact.php:67
-msgid "Điện thoại"
-msgstr ""
-
-#: theme/setup/users/auth.php:337
-msgid "Đã muộn rồi, làm việc vừa sức và sớm đi ngủ nhé! 🌕"
-msgstr ""
-
-#: theme/setup/users/auth.php:142
-msgid "Đăng ký thành công!"
-msgstr ""
-
-#: app/src/Features/LacaSeo/Modules/LocalSeo/LocalSeo.php:28
-#: app/src/Features/LacaSeo/Modules/LocalSeo/LocalSeo.php:29
-#: theme/page_templates/template-contact.php:83
-msgid "Địa điểm"
-msgstr ""
-
-#: theme/setup/users/auth.php:327
-msgid "Đừng quên ăn trưa và chợp mắt một lát để nạp lại pin nhé! 🍱"
-msgstr ""
-
 #. Theme Name of the theme
-#. Author of the theme
 #: theme
-msgid "La Cà Dev"
+msgid "La Cà Dev - Client"
 msgstr ""
 
 #. Theme URI of the theme
@@ -647,8 +31,12 @@ msgstr ""
 msgid "Theme WordPress được code giữa những chuyến đi – bởi La Cà Dev, một kẻ lang thang mê phím và bánh xe."
 msgstr ""
 
+#. Author of the theme
+#: theme
+msgid "La Cà Dev"
+msgstr ""
+
 #: app/helpers/ajax.php:110
-#: block-gutenberg/project-block/render.php:150
 msgid "No projects found."
 msgstr ""
 
@@ -659,6 +47,52 @@ msgstr ""
 #: app/helpers/ajax.php:429
 #, php-format
 msgid "Bạn đã gửi lời nhắn vào lúc %s. Bạn có muốn gửi thêm nội dung khác?"
+msgstr ""
+
+#: app/helpers/ajax.php:456
+#, php-format
+msgid "Bạn vừa gửi tin nhắn vào lúc %s. Đợi một chút rồi gửi tiếp nhé!"
+msgstr ""
+
+#: app/helpers/ajax.php:472
+msgid "Token reCAPTCHA không được gửi. Vui lòng thử lại."
+msgstr ""
+
+#: app/helpers/ajax.php:491
+msgid "Không thể kết nối với Google reCAPTCHA."
+msgstr ""
+
+#: app/helpers/ajax.php:533
+msgid "Xác thực reCAPTCHA thất bại: "
+msgstr ""
+
+#: app/helpers/ajax.php:544
+#, php-format
+msgid "Hệ thống nghi ngờ bạn là bot (Điểm: %s/%s)."
+msgstr ""
+
+#: app/helpers/ajax.php:562
+msgid "Vui lòng điền đầy đủ các thông tin bắt buộc."
+msgstr ""
+
+#: app/helpers/ajax.php:568
+msgid "Số điện thoại không hợp lệ."
+msgstr ""
+
+#: app/helpers/ajax.php:574
+msgid "Địa chỉ email không hợp lệ."
+msgstr ""
+
+#: app/helpers/ajax.php:622
+msgid "Lời nhắn đã được gửi thành công! Vui lòng kiểm tra email để xác nhận."
+msgstr ""
+
+#: app/helpers/ajax.php:628
+msgid "Lời nhắn đã được gửi. Email xác nhận có thể bị lỗi, nhưng tôi sẽ phản hồi sớm!"
+msgstr ""
+
+#: app/helpers/ajax.php:633
+msgid "Đã có lỗi xảy ra khi gửi email. Vui lòng thử lại sau hoặc liên hệ: 0776.41.00.43"
 msgstr ""
 
 #. translators: post link title attribute
@@ -691,75 +125,71 @@ msgstr ""
 msgid "No posts found."
 msgstr ""
 
-#: app/helpers/functions.php:461
+#: app/helpers/functions.php:420
 msgid "Vừa mới đây"
 msgstr ""
 
-#: app/helpers/functions.php:463
+#: app/helpers/functions.php:422
 #, php-format
 msgid "Khoảng %d phút trước"
 msgstr ""
 
-#: app/helpers/functions.php:465
+#: app/helpers/functions.php:424
 #, php-format
 msgid "Khoảng %d giờ trước"
 msgstr ""
 
-#: app/helpers/functions.php:467
+#: app/helpers/functions.php:426
 #, php-format
 msgid "Khoảng %d ngày trước"
 msgstr ""
 
-#: app/helpers/functions.php:468
+#: app/helpers/functions.php:427
 #, php-format
 msgid "Khoảng %d tuần trước"
 msgstr ""
 
-#: app/helpers/template_tags.php:146
+#: app/helpers/template_tags.php:161
 msgid "Dữ liệu đang được cập nhật"
 msgstr ""
 
 #. translators: search results page title
-#: app/helpers/template_tags.php:295
+#: app/helpers/template_tags.php:355
 #, php-format
 msgid "Kết quả tìm kiếm cho từ khóa: %s"
 msgstr ""
 
 #. translators: tag post listing page title
-#: app/helpers/template_tags.php:301
+#: app/helpers/template_tags.php:361
 #, php-format
 msgid "Tag: %s"
 msgstr ""
 
 #. translators: day archive post listing page title
-#: app/helpers/template_tags.php:304
-#: app/helpers/title.php:34
+#: app/helpers/template_tags.php:364 app/helpers/title.php:34
 #, php-format
 msgid "Daily Archives: %s"
 msgstr ""
 
 #. translators: month archive post listing page title
-#: app/helpers/template_tags.php:307
-#: app/helpers/title.php:37
+#: app/helpers/template_tags.php:367 app/helpers/title.php:37
 #, php-format
 msgid "Monthly Archives: %s"
 msgstr ""
 
 #. translators: year archive post listing page title
-#: app/helpers/template_tags.php:310
-#: app/helpers/title.php:40
+#: app/helpers/template_tags.php:370 app/helpers/title.php:40
 #, php-format
 msgid "Yearly Archives: %s"
 msgstr ""
 
 #. translators: author archive post listing page title
-#: app/helpers/template_tags.php:313
-#: app/helpers/title.php:43
+#: app/helpers/template_tags.php:373 app/helpers/title.php:43
 #, php-format
 msgid "Posts by %s"
 msgstr ""
 
-#: app/helpers/template_tags.php:323
+#: app/helpers/template_tags.php:383
 msgid "Lỗi 404 - Không tìm thấy trang bạn yêu cầu"
 msgstr ""
 
@@ -801,24 +231,8 @@ msgstr ""
 msgid "Thêm vào giỏ thất bại"
 msgstr ""
 
-#: app/hooks.php:94
+#: app/hooks.php:159
 msgid "Đã tự động lưu cài đặt thành công."
-msgstr ""
-
-#: app/hooks.php:312
-msgid "Bạn có chắc muốn xoá?"
-msgstr ""
-
-#: app/hooks.php:313
-msgid "Đang xử lý..."
-msgstr ""
-
-#: app/hooks.php:314
-msgid "Đã xoá"
-msgstr ""
-
-#: app/hooks.php:315
-msgid "Đã đánh dấu xử lý"
 msgstr ""
 
 #: app/src/Abstracts/AbstractPostType.php:271
@@ -836,6 +250,13 @@ msgstr ""
 
 #: app/src/Abstracts/AbstractPostType.php:275
 msgid "View "
+msgstr ""
+
+#: app/src/Abstracts/AbstractPostType.php:276
+#: app/src/Abstracts/AbstractTaxonomy.php:110
+#: app/src/Features/LacaSeo/Modules/LocalSeo/StoreLocator.php:43
+#: theme/searchform.php:18
+msgid "Search"
 msgstr ""
 
 #: app/src/Abstracts/AbstractPostType.php:277
@@ -867,8 +288,7 @@ msgstr ""
 msgid "Featured image"
 msgstr ""
 
-#: app/src/Abstracts/AbstractPostType.php:285
-#: theme/setup/assets.php:182
+#: app/src/Abstracts/AbstractPostType.php:285 theme/setup/assets.php:171
 msgid "Set featured image"
 msgstr ""
 
@@ -916,107 +336,165 @@ msgstr ""
 msgid "Popular items"
 msgstr ""
 
-#: app/src/Databases/ContactFormTable.php:110
-#: app/src/Databases/ContactFormTable.php:123
-msgid "Form Liên hệ"
+#: app/src/Features/ClientSupport/ClientSupportManager.php:39
+msgid "Hỗ trợ"
 msgstr ""
 
-#: app/src/Databases/ContactFormTable.php:125
-#: app/src/Databases/ContactFormTable.php:134
-#: theme/page_templates/template-contact.php:121
-msgid "Họ và tên"
+#: app/src/Features/ClientSupport/ClientSupportManager.php:42
+msgid "Gửi yêu cầu hỗ trợ tới đội ngũ kỹ thuật LacaDev"
 msgstr ""
 
-#: app/src/Databases/ContactFormTable.php:126
-#: app/src/Databases/ContactFormTable.php:135
-#: theme/page_templates/template-contact.php:129
-msgid "Số điện thoại"
+#: app/src/Features/ClientSupport/ClientSupportManager.php:58
+msgid "Trung tâm Hỗ trợ LacaDev"
 msgstr ""
 
-#: app/src/Databases/ContactFormTable.php:131
-msgid "Lời nhắn mới từ $name - $phone"
+#: app/src/Features/ClientSupport/ClientSupportManager.php:100
+msgid "Gửi yêu cầu mới"
 msgstr ""
 
-#: app/src/Databases/ContactFormTable.php:139
-msgid "Cảm ơn bạn đã liên hệ"
+#: app/src/Features/ClientSupport/ClientSupportManager.php:101
+msgid "Yêu cầu của tôi"
 msgstr ""
 
-#: app/src/Databases/ContactFormTable.php:142
-msgid "Chào"
+#: app/src/Features/ClientSupport/ClientSupportManager.php:111
+msgid "Tiêu đề yêu cầu"
 msgstr ""
 
-#: app/src/Databases/ContactFormTable.php:143
-msgid "Chúng tôi đã nhận được lời nhắn của bạn và sẽ phản hồi sớm nhất."
+#: app/src/Features/ClientSupport/ClientSupportManager.php:112
+msgid "Ví dụ: Cần sửa banner trang chủ, lỗi form đặt hàng..."
 msgstr ""
 
-#: app/src/Features/ContactForm/ContactFormManager.php:101
-#: app/src/Features/ContactForm/ContactFormManager.php:102
-msgid "Form Liên Hệ"
+#: app/src/Features/ClientSupport/ClientSupportManager.php:117
+msgid "Loại yêu cầu"
 msgstr ""
 
-#: app/src/Features/ContactForm/ContactFormManager.php:116
-#: app/src/Features/DiscordHub/AdminPage.php:210
-#: app/src/Features/LacaSeo/Admin/AdminPage.php:149
-msgid "Bạn không có quyền truy cập trang này."
+#: app/src/Features/ClientSupport/ClientSupportManager.php:119
+msgid "Báo lỗi website"
 msgstr ""
 
-#: app/src/Features/ContactForm/ContactFormManager.php:129
-#: app/src/Features/ContactForm/ContactFormManager.php:136
-#: app/src/Features/ContactForm/ContactFormManager.php:1455
-msgid "Form không tồn tại."
+#: app/src/Features/ClientSupport/ClientSupportManager.php:120
+msgid "Cập nhật nội dung / hình ảnh"
 msgstr ""
 
-#: app/src/Features/ContactForm/ContactFormManager.php:573
-msgid "Kiểu hiển thị form"
+#: app/src/Features/ClientSupport/ClientSupportManager.php:121
+msgid "Đề xuất tính năng mới"
 msgstr ""
 
-#: app/src/Features/ContactForm/ContactFormManager.php:575
-msgid "Form thường"
+#: app/src/Features/ClientSupport/ClientSupportManager.php:122
+#: app/src/Features/ContactForm/ContactFormAjaxHandler.php:138
+#: app/src/Features/ContactForm/ContactFormAjaxHandler.php:821
+#: app/src/Features/ContactForm/ContactFormAjaxHandler.php:840
+msgid "Khác"
 msgstr ""
 
-#: app/src/Features/ContactForm/ContactFormManager.php:576
-msgid "Form từng bước"
+#: app/src/Features/ClientSupport/ClientSupportManager.php:126
+msgid "Mức ưu tiên"
 msgstr ""
 
-#: app/src/Features/ContactForm/ContactFormManager.php:578
-msgid "Dùng \"Ngắt bước (Step)\" trong tab Trường để chia form thành nhiều bước."
+#: app/src/Features/ClientSupport/ClientSupportManager.php:128
+msgid "Thấp (Không gấp)"
 msgstr ""
 
-#: app/src/Features/ContactForm/ContactFormManager.php:582
-msgid "Nút tiếp theo"
+#: app/src/Features/ClientSupport/ClientSupportManager.php:129
+#: app/src/Features/PostAudio/PostAudioManager.php:174
+msgid "Bình thường"
+msgstr "Normal"
+
+#: app/src/Features/ClientSupport/ClientSupportManager.php:130
+msgid "Cao (Cần xử lý sớm)"
 msgstr ""
 
-#: app/src/Features/ContactForm/ContactFormManager.php:585
-msgid "Tiếp theo"
+#: app/src/Features/ClientSupport/ClientSupportManager.php:131
+msgid "Khẩn cấp (Website gián đoạn)"
 msgstr ""
 
-#: app/src/Features/ContactForm/ContactFormManager.php:588
-msgid "Nút quay lại"
+#: app/src/Features/ClientSupport/ClientSupportManager.php:137
+msgid "Mô tả chi tiết"
 msgstr ""
 
-#: app/src/Features/ContactForm/ContactFormManager.php:591
-#: app/src/Features/DynamicCPT/DynamicCptMetaEditor.php:311
-msgid "Quay lại"
+#: app/src/Features/ClientSupport/ClientSupportManager.php:138
+msgid "Vui lòng mô tả chi tiết vị trí trang, đường link hoặc các bước gặp lỗi để kỹ thuật hỗ trợ nhanh nhất..."
 msgstr ""
 
-#: app/src/Features/ContactForm/ContactFormManager.php:594
-msgid "Nút gửi ở bước cuối"
+#: app/src/Features/ClientSupport/ClientSupportManager.php:142
+msgid "Ảnh đính kèm / Ảnh chụp màn hình"
 msgstr ""
 
-#: app/src/Features/ContactForm/ContactFormManager.php:597
-msgid "Gửi thông tin"
+#: app/src/Features/ClientSupport/ClientSupportManager.php:144
+msgid "Chưa có ảnh nào được chọn"
 msgstr ""
 
-#: app/src/Features/ContactForm/ContactFormManager.php:1018
-#: app/src/Features/ContactForm/ContactFormManager.php:1264
-#: app/src/Features/ContactForm/ContactFormManager.php:1278
-#: app/src/Features/ContactForm/ContactFormManager.php:1294
-#: app/src/Features/ContactForm/ContactFormManager.php:1414
-#: app/src/Features/ContactForm/ContactFormManager.php:1431
-#: app/src/Features/ContactForm/ContactFormManager.php:1448
-msgid "Không có quyền."
+#: app/src/Features/ClientSupport/ClientSupportManager.php:145
+msgid "Chọn từ Media"
 msgstr ""
 
+#: app/src/Features/ClientSupport/ClientSupportManager.php:148
+msgid "Chỉ gửi liên kết hình ảnh an toàn từ thư viện Media của website."
+msgstr ""
+
+#: app/src/Features/ClientSupport/ClientSupportManager.php:152
+msgid "Gửi yêu cầu hỗ trợ"
+msgstr ""
+
+#: app/src/Features/ClientSupport/ClientSupportManager.php:160
+msgid "Đang tải danh sách..."
+msgstr ""
+
+#: app/src/Features/ClientSupport/ClientSupportManager.php:190
+msgid "Chọn ảnh đính kèm minh hoạ lỗi"
+msgstr ""
+
+#: app/src/Features/ClientSupport/ClientSupportManager.php:191
+msgid "Dùng ảnh này"
+msgstr ""
+
+#: app/src/Features/ClientSupport/ClientSupportManager.php:220
+msgid "Đang gửi yêu cầu..."
+msgstr ""
+
+#: app/src/Features/ClientSupport/ClientSupportManager.php:232
+msgid "Yêu cầu đã được gửi thành công!"
+msgstr ""
+
+#: app/src/Features/ClientSupport/ClientSupportManager.php:240
+#: app/src/Features/DynamicCPT/DynamicCptAdminPage.php:652
+msgid "Có lỗi xảy ra, vui lòng thử lại."
+msgstr ""
+
+#: app/src/Features/ClientSupport/ClientSupportManager.php:254
+msgid "Đang đồng bộ với trung tâm hỗ trợ..."
+msgstr ""
+
+#: app/src/Features/ClientSupport/ClientSupportManager.php:264
+msgid "Bạn chưa có yêu cầu hỗ trợ nào."
+msgstr ""
+
+#: app/src/Features/ClientSupport/ClientSupportManager.php:271
+msgid "Chờ xử lý"
+msgstr ""
+
+#: app/src/Features/ClientSupport/ClientSupportManager.php:274
+msgid "Đang xử lý"
+msgstr ""
+
+#: app/src/Features/ClientSupport/ClientSupportManager.php:277
+msgid "Đã giải quyết"
+msgstr ""
+
+#: app/src/Features/ClientSupport/ClientSupportManager.php:287
+msgid "Xem ảnh đính kèm"
+msgstr ""
+
+#: app/src/Features/ClientSupport/ClientSupportManager.php:290
+msgid "Phản hồi từ kỹ thuật: "
+msgstr ""
+
+#: app/src/Features/ClientSupport/ClientSupportManager.php:298
+msgid "Không thể tải danh sách yêu cầu: "
+msgstr ""
+
+#: app/src/Features/ClientSupport/ClientSupportManager.php:319
+#: app/src/Features/ClientSupport/ClientSupportManager.php:364
 #: app/src/Features/DiscordHub/AdminPage.php:66
 #: app/src/Features/GoogleServices/GoogleServices.php:524
 #: app/src/Features/GoogleServices/GoogleServices.php:569
@@ -1033,11 +511,78 @@ msgstr ""
 #: app/src/Settings/LacaAdmin/GoogleServicesPage.php:300
 #: app/src/Settings/LacaAdmin/GoogleServicesPage.php:314
 #: app/src/Settings/LacaAdmin/GoogleServicesPage.php:334
-#: app/src/Settings/LacaAdmin/ReleaseChecklist.php:824
-#: app/src/Settings/LacaAdmin/ReleaseChecklist.php:826
-#: app/src/Settings/Security/SecurityManager.php:581
+#: app/src/Settings/LacaAdmin/ReleaseChecklist.php:951
+#: app/src/Settings/LacaAdmin/ReleaseChecklist.php:953
+#: app/src/Settings/Security/SecurityManager.php:639
 msgid "Bạn không có quyền thực hiện thao tác này."
 msgstr ""
+
+#: app/src/Features/ClientSupport/ClientSupportManager.php:329
+msgid "Vui lòng điền đầy đủ tiêu đề và nội dung mô tả."
+msgstr ""
+
+#: app/src/Features/ClientSupport/ClientSupportManager.php:347
+msgid "Không thể gửi yêu cầu tới máy chủ trung tâm."
+msgstr ""
+
+#: app/src/Features/ClientSupport/ClientSupportManager.php:351
+msgid "Yêu cầu hỗ trợ đã được gửi thành công."
+msgstr ""
+
+#: app/src/Features/ClientSupport/ClientSupportManager.php:369
+msgid "Không thể tải danh sách yêu cầu."
+msgstr ""
+
+#: app/src/Features/ClientSupport/ClientSupportManager.php:394
+msgid "Website chưa cấu hình kết nối tới LacaDev Hub."
+msgstr ""
+
+#: app/src/Features/ContactForm/ContactFormAjaxHandler.php:171
+#: app/src/Features/ContactForm/ContactFormAjaxHandler.php:417
+msgid "Vui lòng nhập hoặc chọn ít nhất một thông tin trước khi gửi."
+msgstr ""
+
+#: app/src/Features/ContactForm/ContactFormAjaxHandler.php:345
+msgid "Gửi thông tin"
+msgstr ""
+
+#: app/src/Features/ContactForm/ContactFormAjaxHandler.php:413
+msgid "Trường này"
+msgstr ""
+
+#: app/src/Features/ContactForm/ContactFormAjaxHandler.php:831
+#: app/src/Features/ContactForm/ContactFormAjaxHandler.php:867
+msgid "Vui lòng ghi rõ…"
+msgstr ""
+
+#: app/src/Features/ContactForm/ContactFormManager.php:100
+#: app/src/Features/ContactForm/ContactFormManager.php:101
+msgid "Form Liên Hệ"
+msgstr ""
+
+#: app/src/Features/ContactForm/ContactFormManager.php:115
+#: app/src/Features/DiscordHub/AdminPage.php:210
+#: app/src/Features/LacaSeo/Admin/AdminPage.php:149
+#: app/src/Features/PostAudio/PostAudioManager.php:154
+msgid "Bạn không có quyền truy cập trang này."
+msgstr "You do not have permission to access this page."
+
+#: app/src/Features/ContactForm/ContactFormManager.php:128
+#: app/src/Features/ContactForm/ContactFormManager.php:135
+#: app/src/Features/ContactForm/ContactFormManager.php:1384
+msgid "Form không tồn tại."
+msgstr ""
+
+#: app/src/Features/ContactForm/ContactFormManager.php:966
+#: app/src/Features/ContactForm/ContactFormManager.php:1193
+#: app/src/Features/ContactForm/ContactFormManager.php:1207
+#: app/src/Features/ContactForm/ContactFormManager.php:1223
+#: app/src/Features/ContactForm/ContactFormManager.php:1343
+#: app/src/Features/ContactForm/ContactFormManager.php:1360
+#: app/src/Features/ContactForm/ContactFormManager.php:1377
+#: app/src/Features/PostAudio/PostAudioManager.php:461
+msgid "Không có quyền."
+msgstr "Permission denied."
 
 #: app/src/Features/DynamicCPT/DynamicCptAdminPage.php:36
 #: app/src/Features/DynamicCPT/DynamicCptAdminPage.php:37
@@ -1188,8 +733,11 @@ msgstr ""
 msgid "Tag"
 msgstr ""
 
+#: app/src/Features/DynamicCPT/DynamicCptAdminPage.php:378
+msgid "Custom Taxonomy"
+msgstr ""
+
 #: app/src/Features/DynamicCPT/DynamicCptAdminPage.php:381
-#: app/src/Features/ProjectManagement/Views/meta-box-col2.php:97
 msgid "Thêm"
 msgstr ""
 
@@ -1229,10 +777,6 @@ msgstr ""
 msgid "Slug này đã tồn tại, vui lòng chọn slug khác."
 msgstr ""
 
-#: app/src/Features/DynamicCPT/DynamicCptAdminPage.php:652
-msgid "Có lỗi xảy ra, vui lòng thử lại."
-msgstr ""
-
 #: app/src/Features/DynamicCPT/DynamicCptAdminPage.php:653
 msgid "Template archive & single đã được sinh thành công!"
 msgstr ""
@@ -1248,6 +792,10 @@ msgstr ""
 
 #: app/src/Features/DynamicCPT/DynamicCptMetaEditor.php:309
 msgid "Code có lỗi cú pháp PHP, CHƯA được lưu để tránh làm sập site:"
+msgstr ""
+
+#: app/src/Features/DynamicCPT/DynamicCptMetaEditor.php:311
+msgid "Quay lại"
 msgstr ""
 
 #: app/src/Features/DynamicCPT/DynamicCptMetaEditor.php:424
@@ -2919,8 +2467,6 @@ msgstr ""
 #: app/src/Features/LacaSeo/Admin/ListScreens/PostList.php:124
 #: app/src/Features/LacaSeo/Admin/ListScreens/PostList.php:130
 #: app/src/Features/LacaSeo/Admin/ListScreens/TermList.php:36
-#: app/src/Features/ProjectManagement/Views/meta-box-col2.php:28
-#: app/src/Features/ProjectManagement/Views/meta-box-col2.php:92
 msgid "SEO"
 msgstr ""
 
@@ -3338,7 +2884,7 @@ msgid "Ảnh chia sẻ Facebook"
 msgstr ""
 
 #: app/src/Features/LacaSeo/Admin/SaveHandler.php:33
-#: app/src/Settings/LacaAdmin/ReleaseChecklist.php:832
+#: app/src/Settings/LacaAdmin/ReleaseChecklist.php:959
 msgid "Phiên làm việc đã hết hạn. Vui lòng tải lại trang."
 msgstr ""
 
@@ -3714,8 +3260,6 @@ msgstr ""
 
 #: app/src/Features/LacaSeo/Core/Helper.php:241
 #: app/src/Features/LacaSeo/Schema/SchemaDefinitions.php:9015
-#: app/src/PostTypes/service.php:26
-#: app/src/PostTypes/service.php:27
 msgid "Service"
 msgstr ""
 
@@ -4242,6 +3786,12 @@ msgstr ""
 msgid "Fax"
 msgstr ""
 
+#: app/src/Features/LacaSeo/Modules/LocalSeo/Address.php:28
+#: app/src/Settings/AdminSettings.php:1387
+#: theme/page_templates/template-contact.php:52
+msgid "Email"
+msgstr ""
+
 #: app/src/Features/LacaSeo/Modules/LocalSeo/Address.php:32
 msgid "URL"
 msgstr ""
@@ -4260,6 +3810,13 @@ msgstr ""
 
 #: app/src/Features/LacaSeo/Modules/LocalSeo/Address.php:48
 msgid "Price indication"
+msgstr ""
+
+#: app/src/Features/LacaSeo/Modules/LocalSeo/LocalSeo.php:28
+#: app/src/Features/LacaSeo/Modules/LocalSeo/LocalSeo.php:29
+#: theme/page_templates/template-contact.php:82
+#: theme/page_templates/template-contact.php:94
+msgid "Địa điểm"
 msgstr ""
 
 #: app/src/Features/LacaSeo/Modules/LocalSeo/LocalSeo.php:38
@@ -4601,1436 +4158,1202 @@ msgstr ""
 msgid "Locations Sitemap %1$s %2$s"
 msgstr ""
 
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:89
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:90
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:1338
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:1342
-#: app/src/PostTypes/project.php:34
-msgid "Laca Projects"
-msgstr ""
+#: app/src/Features/PostAudio/AudioStorage.php:28
+msgid "Không có dữ liệu âm thanh để lưu."
+msgstr "There is no audio data to save."
 
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:103
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:104
-msgid "Dashboard"
-msgstr ""
+#. translators: %s: thông báo lỗi khi ghi file vào thư mục uploads
+#: app/src/Features/PostAudio/AudioStorage.php:49
+#, php-format
+msgid "Lỗi lưu file: %s"
+msgstr "File save error: %s"
 
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:112
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:113
-msgid "Action center"
-msgstr ""
+#. translators: %s: tiêu đề bài viết
+#: app/src/Features/PostAudio/AudioStorage.php:61
+#, php-format
+msgid "Audio bài viết: %s"
+msgstr "Post audio: %s"
 
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:121
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:122
-msgid "Notifications"
-msgstr ""
+#: app/src/Features/PostAudio/AudioStorage.php:69
+msgid "Không thể tạo attachment cho file audio."
+msgstr "Could not create attachment for audio file."
 
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:130
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:131
-msgid "Pipeline"
-msgstr ""
+#: app/src/Features/PostAudio/AudioStorage.php:101
+msgid "Đường dẫn audio trả về không hợp lệ."
+msgstr "The returned audio URL is invalid."
 
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:139
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:140
-#: app/src/Features/ProjectManagement/ProjectAdminColumns.php:57
-#: app/src/Features/ProjectManagement/ProjectFields.php:68
+#. translators: %d: mã HTTP
+#: app/src/Features/PostAudio/AudioStorage.php:121
+#, php-format
+msgid "Audio chưa sẵn sàng (HTTP %d)."
+msgstr "Audio is not ready yet (HTTP %d)."
+
+#: app/src/Features/PostAudio/AudioStorage.php:129
+msgid "Dữ liệu tải về chưa phải file MP3."
+msgstr "The downloaded data is not an MP3 file yet."
+
+#: app/src/Features/PostAudio/PostAudioManager.php:143
+msgid "Nghe bài viết (Audio)"
+msgstr "Listen to Article (Audio)"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:144
+#: app/src/Features/PostAudio/PostAudioManager.php:574
+#: app/src/Features/PostAudio/PostAudioManager.php:1020
+#: app/src/Features/PostAudio/PostAudioManager.php:1038
+msgid "Nghe bài viết"
+msgstr "Listen to post"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:173
+msgid "Chậm"
+msgstr "Slow"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:175
+msgid "Hơi nhanh"
+msgstr "Slightly fast"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:176
+msgid "Nhanh"
+msgstr "Fast"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:177
+msgid "Rất nhanh"
+msgstr "Very fast"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:181
+msgid "Cài đặt Nghe bài viết"
+msgstr "Listen to Article Settings"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:185
+msgid "Đã lưu cấu hình thành công."
+msgstr "Settings saved successfully."
+
+#: app/src/Features/PostAudio/PostAudioManager.php:193
+msgid "Cấu hình chung"
+msgstr "General settings"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:196
+msgid "Kích hoạt tính năng"
+msgstr "Enable feature"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:200
+msgid "Bật tạo và phát audio bài viết"
+msgstr "Enable post audio generation and player"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:202
+msgid "Tự động tạo file MP3 khi xuất bản hoặc cập nhật nội dung bài viết. Bài có mật khẩu sẽ không được tạo audio."
+msgstr "Automatically create an MP3 file when a post is published or its content is updated. Password-protected posts do not get audio."
+
+#: app/src/Features/PostAudio/PostAudioManager.php:206
+msgid "Dự phòng giọng trình duyệt"
+msgstr "Browser voice fallback"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:210
+msgid "Dùng giọng đọc của trình duyệt khi bài viết chưa có file MP3"
+msgstr "Use the browser's voice when the post has no MP3 file yet"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:215
+msgid "Loại nội dung áp dụng"
+msgstr "Content types"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:228
+msgid "Giới hạn ký tự mỗi bài"
+msgstr "Character limit per post"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:231
+msgid "Bài dài hơn giới hạn này sẽ không gọi API, tránh phát sinh chi phí lớn ngoài ý muốn."
+msgstr "Posts longer than this limit will not call the API, avoiding unexpected costs."
+
+#: app/src/Features/PostAudio/PostAudioManager.php:235
+msgid "Tốc độ đọc khi tạo file"
+msgstr "Reading speed for generated files"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:247
+msgid "Nhà cung cấp"
+msgstr "Provider"
+
+#. translators: %s: tên nhà cung cấp TTS
+#: app/src/Features/PostAudio/PostAudioManager.php:267
+#, php-format
+msgid "Cấu hình %s"
+msgstr "%s settings"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:274
+#: app/src/Settings/AdminSettings.php:1064
+msgid "API Key"
+msgstr "API Key"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:277
+msgid "Để trống để giữ key đã lưu"
+msgstr "Leave empty to keep the saved key"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:277
+msgid "Nhập API Key"
+msgstr "Enter API key"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:278
+msgid "Kiểm tra kết nối"
+msgstr "Test Connection"
+
+#. translators: %s: API key đã che, vd ••••1234
+#: app/src/Features/PostAudio/PostAudioManager.php:284
+#, php-format
+msgid "Đã lưu key: %s. Key được mã hoá trước khi lưu."
+msgstr "Saved key: %s. Keys are encrypted before saving."
+
+#: app/src/Features/PostAudio/PostAudioManager.php:288
+msgid "Chưa có key. Key được mã hoá trước khi lưu."
+msgstr "No key saved. Keys are encrypted before saving."
+
+#: app/src/Features/PostAudio/PostAudioManager.php:293
+msgid "Xoá key đã lưu"
+msgstr "Delete saved key"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:300
+msgid "Giọng tiếng Việt"
+msgstr "Vietnamese voice"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:301
+msgid "Giọng tiếng Anh (bài Polylang tiếng Anh)"
+msgstr "English voice (English Polylang posts)"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:304
+msgid "Giọng đọc"
+msgstr "Voice"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:327
+msgid "Trình phát được chèn tự động ở đầu bài. Muốn đặt ở vị trí khác: dùng shortcode [laca_post_audio] và tắt chèn tự động bằng filter laca_post_audio_auto_prepend."
+msgstr "The player is inserted automatically at the top of the post. To place it elsewhere, use the [laca_post_audio] shortcode and turn off auto-insert with the laca_post_audio_auto_prepend filter."
+
+#: app/src/Features/PostAudio/PostAudioManager.php:330
+msgid "Lưu cài đặt"
+msgstr "Save Settings"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:337
+msgid "Đang kiểm tra kết nối API…"
+msgstr "Testing API connection…"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:338
+msgid "Kết nối thất bại."
+msgstr "Connection failed."
+
+#. translators: %s: link tới Google Cloud Console
+#: app/src/Features/PostAudio/PostAudioManager.php:396
+#, php-format
+msgid "Đăng nhập %s, tạo hoặc chọn 1 project."
+msgstr "Sign in to %s and create or select a project."
+
+#. translators: %s: link tới trang Billing
+#: app/src/Features/PostAudio/PostAudioManager.php:401
+#, php-format
+msgid "Gắn tài khoản thanh toán cho project tại %s (bắt buộc; chỉ tính phí khi vượt hạn mức miễn phí)."
+msgstr "Link a billing account to the project on %s (required; you are only charged above the free quota)."
+
+#: app/src/Features/PostAudio/PostAudioManager.php:402
+msgid "trang Billing"
+msgstr "the Billing page"
+
+#. translators: %s: link bật Cloud Text-to-Speech API
+#: app/src/Features/PostAudio/PostAudioManager.php:406
+#, php-format
+msgid "Bật %s."
+msgstr "Enable the %s."
+
+#. translators: %s: link trang Credentials
+#: app/src/Features/PostAudio/PostAudioManager.php:411
+#, php-format
+msgid "Vào %s → Create credentials → API key."
+msgstr "Go to %s → Create credentials → API key."
+
+#: app/src/Features/PostAudio/PostAudioManager.php:412
+msgid "trang Credentials"
+msgstr "the Credentials page"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:414
+msgid "Bấm vào key vừa tạo → API restrictions → chọn \"Restrict key\" và chỉ tick Cloud Text-to-Speech API, để key bị lộ cũng không dùng được cho dịch vụ khác."
+msgstr "Open the new key → API restrictions → choose \"Restrict key\" and tick only Cloud Text-to-Speech API, so a leaked key cannot be used for other services."
+
+#: app/src/Features/PostAudio/PostAudioManager.php:415
+#: app/src/Features/PostAudio/PostAudioManager.php:433
+msgid "Copy key, dán vào ô API Key ở trên, bấm \"Kiểm tra kết nối\" rồi \"Lưu cài đặt\"."
+msgstr "Copy the key, paste it into the API Key field above, click \"Test connection\" and then \"Save settings\"."
+
+#. translators: 1, 2: link tới tài liệu tham khảo
+#: app/src/Features/PostAudio/PostAudioManager.php:419
+#: app/src/Features/PostAudio/PostAudioManager.php:438
+#, php-format
+msgid "Xem thêm: %1$s · %2$s"
+msgstr "See also: %1$s · %2$s"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:420
+msgid "Bảng giá & hạn mức miễn phí"
+msgstr "Pricing & free quota"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:421
+msgid "Tài liệu hướng dẫn"
+msgstr "Documentation"
+
+#. translators: %s: link tới FPT.AI Console
+#: app/src/Features/PostAudio/PostAudioManager.php:427
+#, php-format
+msgid "Đăng ký tài khoản FPT ID và đăng nhập %s."
+msgstr "Sign up for an FPT ID account and sign in to %s."
+
+#: app/src/Features/PostAudio/PostAudioManager.php:430
+msgid "Bật (toggle) Text to Speech API, bấm Confirm."
+msgstr "Toggle on the Text to Speech API and click Confirm."
+
+#: app/src/Features/PostAudio/PostAudioManager.php:431
+msgid "Nếu chưa có project: nhập tên project và bấm Create."
+msgstr "If you have no project yet, enter a project name and click Create."
+
+#: app/src/Features/PostAudio/PostAudioManager.php:432
+msgid "Nhập tên key và bấm Create để tạo API key."
+msgstr "Enter a key name and click Create to generate the API key."
+
+#: app/src/Features/PostAudio/PostAudioManager.php:434
+msgid "Tính phí theo số ký tự; xem hạn mức miễn phí còn lại ở Dashboard, mua thêm bằng nút Buy (VNPay QR, thẻ ATM, thẻ quốc tế…)."
+msgstr "Billing is per character; check your remaining free quota on the Dashboard and buy more with the Buy button (VNPay QR, ATM cards, international cards…)."
+
+#: app/src/Features/PostAudio/PostAudioManager.php:439
+msgid "Hướng dẫn FPT.AI Console"
+msgstr "FPT.AI Console guide"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:440
+msgid "Tài liệu API Text to Speech"
+msgstr "Text to Speech API documentation"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:447
+msgid "Cách lấy API key"
+msgstr "How to get an API key"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:522
+msgid "Không có quyền thực hiện."
+msgstr "Permission denied."
+
+#: app/src/Features/PostAudio/PostAudioManager.php:528
+msgid "Nhà cung cấp không tồn tại."
+msgstr "Provider does not exist."
+
+#: app/src/Features/PostAudio/PostAudioManager.php:550
+msgid "Không có quyền chỉnh sửa bài viết này."
+msgstr "Permission denied to edit this post."
+
+#: app/src/Features/PostAudio/PostAudioManager.php:560
+msgid "Đã đưa yêu cầu tạo lại audio vào hàng đợi xử lý ngầm."
+msgstr "Audio regeneration has been queued for background processing."
+
+#: app/src/Features/PostAudio/PostAudioManager.php:588
+msgid "Đã có MP3"
+msgstr "MP3 Ready"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:589
+msgid "Đang chờ trong hàng đợi"
+msgstr "Waiting in queue"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:590
+msgid "Đang xử lý…"
+msgstr "Processing…"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:591
+msgid "Tạo thất bại"
+msgstr "Failed"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:593
+msgid "Chưa có audio"
+msgstr "No audio yet"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:597
+msgid "Trạng thái:"
+msgstr "Status:"
+
+#. translators: %s: thời lượng audio dạng phút:giây
+#: app/src/Features/PostAudio/PostAudioManager.php:605
+#, php-format
+msgid "Thời lượng: %s"
+msgstr "Duration: %s"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:613
+msgid "Lỗi:"
+msgstr "Error:"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:617
+#: app/src/Features/PostAudio/PostAudioManager.php:708
+msgid "Bài có mật khẩu nên không tạo audio."
+msgstr "This post is password-protected, so no audio is created."
+
+#: app/src/Features/PostAudio/PostAudioManager.php:623
+msgid "Tắt nghe bài viết cho bài này"
+msgstr "Disable audio player for this post"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:629
+msgid "Tạo lại audio"
+msgstr "Regenerate audio"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:636
+msgid "Gửi yêu cầu thất bại."
+msgstr "Request failed."
+
+#: app/src/Features/PostAudio/PostAudioManager.php:639
+msgid "Đang gửi yêu cầu…"
+msgstr "Sending request…"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:694
+msgid "Tính năng Nghe bài viết đang tắt."
+msgstr "Listen to Article is turned off."
+
+#: app/src/Features/PostAudio/PostAudioManager.php:699
+msgid "Chỉ tạo audio cho bài đã xuất bản."
+msgstr "Audio is only created for published posts."
+
+#: app/src/Features/PostAudio/PostAudioManager.php:703
+msgid "Loại nội dung này chưa bật Nghe bài viết."
+msgstr "Listen to Article is not enabled for this content type."
+
+#: app/src/Features/PostAudio/PostAudioManager.php:712
+msgid "Bài này đã tắt Nghe bài viết."
+msgstr "Listen to Article is turned off for this post."
+
+#: app/src/Features/PostAudio/PostAudioManager.php:770
+msgid "Nội dung bài viết rỗng."
+msgstr "Post content is empty."
+
+#. translators: 1: số ký tự của bài, 2: giới hạn trong cài đặt
+#: app/src/Features/PostAudio/PostAudioManager.php:778
+#, php-format
+msgid "Bài viết có %1$s ký tự, vượt quá giới hạn cấu hình (%2$s ký tự)."
+msgstr "This post has %1$s characters, exceeding the configured limit (%2$s characters)."
+
+#. translators: 1: mã ngôn ngữ của bài, 2: tên nhà cung cấp
+#: app/src/Features/PostAudio/PostAudioManager.php:789
+#, php-format
+msgid "Ngôn ngữ \"%1$s\" chưa được %2$s hỗ trợ."
+msgstr "Language \"%1$s\" is not supported by %2$s."
+
+#: app/src/Features/PostAudio/PostAudioManager.php:862
+msgid "Lỗi không xác định khi gọi TTS API."
+msgstr "Unknown error calling TTS API."
+
+#. translators: %s: chi tiết lỗi lần tải cuối
+#: app/src/Features/PostAudio/PostAudioManager.php:922
+#, php-format
+msgid "Không tải được audio từ FPT.AI: %s"
+msgstr "Could not download audio from FPT.AI: %s"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:1023
+#: app/src/Features/PostAudio/PostAudioManager.php:1042
+msgid "Phát"
+msgstr "Play"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:1024
+msgid "Tạm dừng"
+msgstr "Pause"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:1025
+#: app/src/Features/PostAudio/PostAudioManager.php:1057
+msgid "Bấm để nghe bằng giọng đọc của trình duyệt"
+msgstr "Press to listen with your browser's voice"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:1026
+msgid "Đang đọc…"
+msgstr "Reading…"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:1027
+msgid "Đã tạm dừng"
+msgstr "Paused"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:1028
+msgid "Đã đọc xong bài viết."
+msgstr "Finished reading the article."
+
+#. translators: %s: tốc độ hiện tại, vd 1.25x
+#: app/src/Features/PostAudio/PostAudioManager.php:1029
+#: app/src/Features/PostAudio/PostAudioManager.php:1061
+#, php-format
+msgid "Tốc độ đọc: %s"
+msgstr "Reading speed: %s"
+
+#. translators: 1: thời gian đã nghe, 2: tổng thời lượng
+#: app/src/Features/PostAudio/PostAudioManager.php:1030
+#, php-format
+msgid "Đã nghe %1$s trên %2$s"
+msgstr "%1$s of %2$s"
+
+#: app/src/Features/PostAudio/PostAudioManager.php:1049
+msgid "Vị trí đang nghe"
+msgstr "Playback position"
+
+#: app/src/Features/PostAudio/Providers/FptAiProvider.php:37
+msgid "Ban Mai - Nữ miền Bắc"
+msgstr "Ban Mai - Female, Northern"
+
+#: app/src/Features/PostAudio/Providers/FptAiProvider.php:38
+msgid "Thu Minh - Nữ miền Bắc"
+msgstr "Thu Minh - Northern Female"
+
+#: app/src/Features/PostAudio/Providers/FptAiProvider.php:39
+msgid "Lê Minh - Nam miền Bắc"
+msgstr "Le Minh - Northern Male"
+
+#: app/src/Features/PostAudio/Providers/FptAiProvider.php:40
+msgid "Mỹ An - Nữ miền Trung"
+msgstr "My An - Central Female"
+
+#: app/src/Features/PostAudio/Providers/FptAiProvider.php:41
+msgid "Gia Huy - Nam miền Trung"
+msgstr "Gia Huy - Central Male"
+
+#: app/src/Features/PostAudio/Providers/FptAiProvider.php:42
+msgid "Lan Nhi - Nữ miền Nam"
+msgstr "Lan Nhi - Female, Southern"
+
+#: app/src/Features/PostAudio/Providers/FptAiProvider.php:43
+msgid "Linh San - Nữ miền Nam"
+msgstr "Linh San - Southern Female"
+
+#: app/src/Features/PostAudio/Providers/FptAiProvider.php:51
+msgid "Chưa cấu hình FPT.AI API Key trong cài đặt."
+msgstr "FPT.AI API Key is not configured."
+
+#: app/src/Features/PostAudio/Providers/FptAiProvider.php:84
+msgid "Vui lòng nhập FPT.AI API Key để kiểm tra."
+msgstr "Please enter FPT.AI API Key to test."
+
+#: app/src/Features/PostAudio/Providers/FptAiProvider.php:90
+#: app/src/Features/PostAudio/Providers/GoogleTtsProvider.php:96
+msgid "Xin chào, đây là âm thanh thử nghiệm từ hệ thống."
+msgstr "Hello, this is a test audio from the system."
+
+#. translators: %s: thông báo lỗi từ FPT.AI
+#: app/src/Features/PostAudio/Providers/FptAiProvider.php:101
+#, php-format
+msgid "Kết nối FPT.AI thất bại: %s"
+msgstr "FPT.AI connection failed: %s"
+
+#: app/src/Features/PostAudio/Providers/FptAiProvider.php:109
+msgid "Kết nối FPT.AI TTS thành công! API Key hợp lệ."
+msgstr "FPT.AI TTS connection successful! API Key is valid."
+
+#. translators: %d: mã HTTP
+#: app/src/Features/PostAudio/Providers/FptAiProvider.php:141
+#, php-format
+msgid "Lỗi HTTP %d từ FPT.AI TTS API"
+msgstr "HTTP error %d from FPT.AI TTS API"
+
+#: app/src/Features/PostAudio/Providers/GoogleTtsProvider.php:33
+msgid "Tiếng Anh - Nữ (Neural2)"
+msgstr "English - Female (Neural2)"
+
+#: app/src/Features/PostAudio/Providers/GoogleTtsProvider.php:34
+msgid "Tiếng Anh - Nam (Neural2)"
+msgstr "English - Male (Neural2)"
+
+#: app/src/Features/PostAudio/Providers/GoogleTtsProvider.php:35
+msgid "Tiếng Anh - Nữ (Tiêu chuẩn)"
+msgstr "English - Female (Standard)"
+
+#: app/src/Features/PostAudio/Providers/GoogleTtsProvider.php:36
+msgid "Tiếng Anh - Nam (Tiêu chuẩn)"
+msgstr "English - Male (Standard)"
+
+#: app/src/Features/PostAudio/Providers/GoogleTtsProvider.php:41
+msgid "Tiếng Việt - Nữ A (Neural2)"
+msgstr "Vietnamese - Female A (Neural2)"
+
+#: app/src/Features/PostAudio/Providers/GoogleTtsProvider.php:42
+msgid "Tiếng Việt - Nam D (Neural2)"
+msgstr "Vietnamese - Male D (Neural2)"
+
+#: app/src/Features/PostAudio/Providers/GoogleTtsProvider.php:43
+msgid "Tiếng Việt - Nữ A (WaveNet)"
+msgstr "Vietnamese - Female A (WaveNet)"
+
+#: app/src/Features/PostAudio/Providers/GoogleTtsProvider.php:44
+msgid "Tiếng Việt - Nam B (WaveNet)"
+msgstr "Vietnamese - Male B (WaveNet)"
+
+#: app/src/Features/PostAudio/Providers/GoogleTtsProvider.php:45
+msgid "Tiếng Việt - Nữ C (WaveNet)"
+msgstr "Vietnamese - Female C (WaveNet)"
+
+#: app/src/Features/PostAudio/Providers/GoogleTtsProvider.php:46
+msgid "Tiếng Việt - Nam D (WaveNet)"
+msgstr "Vietnamese - Male D (WaveNet)"
+
+#: app/src/Features/PostAudio/Providers/GoogleTtsProvider.php:47
+msgid "Tiếng Việt - Nữ A (Tiêu chuẩn)"
+msgstr "Vietnamese - Female A (Standard)"
+
+#: app/src/Features/PostAudio/Providers/GoogleTtsProvider.php:48
+msgid "Tiếng Việt - Nam B (Tiêu chuẩn)"
+msgstr "Vietnamese - Male B (Standard)"
+
+#: app/src/Features/PostAudio/Providers/GoogleTtsProvider.php:49
+msgid "Tiếng Việt - Nữ C (Tiêu chuẩn)"
+msgstr "Vietnamese - Female C (Standard)"
+
+#: app/src/Features/PostAudio/Providers/GoogleTtsProvider.php:50
+msgid "Tiếng Việt - Nam D (Tiêu chuẩn)"
+msgstr "Vietnamese - Male D (Standard)"
+
+#: app/src/Features/PostAudio/Providers/GoogleTtsProvider.php:58
+msgid "Chưa cấu hình Google Cloud API Key trong cài đặt."
+msgstr "Google Cloud API Key is not configured."
+
+#: app/src/Features/PostAudio/Providers/GoogleTtsProvider.php:90
+msgid "Vui lòng nhập Google Cloud API Key để kiểm tra."
+msgstr "Please enter Google Cloud API Key to test."
+
+#. translators: %s: thông báo lỗi từ Google
+#: app/src/Features/PostAudio/Providers/GoogleTtsProvider.php:107
+#, php-format
+msgid "Kết nối thất bại: %s"
+msgstr "Connection failed: %s"
+
+#: app/src/Features/PostAudio/Providers/GoogleTtsProvider.php:115
+msgid "Kết nối Google Cloud TTS thành công! API Key hợp lệ."
+msgstr "Google Cloud TTS connection successful! API Key is valid."
+
+#. translators: %d: mã HTTP
+#: app/src/Features/PostAudio/Providers/GoogleTtsProvider.php:158
+#, php-format
+msgid "Lỗi HTTP %d từ Google TTS API"
+msgstr "HTTP error %d from Google TTS API"
+
+#: app/src/Features/PostAudio/Providers/GoogleTtsProvider.php:169
+msgid "Google TTS không trả về dữ liệu âm thanh."
+msgstr "Google TTS returned no audio data."
+
+#: app/src/Security/ClientRoleManager.php:112
 msgid "Khách hàng"
 msgstr ""
 
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:148
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:149
-msgid "Issues"
+#: app/src/Security/ClientRoleManager.php:173
+msgid "Menu điều hướng"
 msgstr ""
 
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:157
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:158
-msgid "Updates"
+#: app/src/Security/ClientRoleManager.php:174
+msgid "Menu"
 msgstr ""
 
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:166
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:167
-msgid "Renewals"
+#: app/src/Security/ClientRoleManager.php:246
+msgid "Khu vực bị hạn chế: "
 msgstr ""
 
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:175
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:176
-msgid "Vận hành"
+#: app/src/Security/ClientRoleManager.php:247
+msgid "Tài khoản của bạn không có quyền truy cập vào cấu hình hệ thống kỹ thuật này. Vui lòng liên hệ đội ngũ LacaDev nếu bạn cần thay đổi cài đặt."
 msgstr ""
 
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:184
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:185
-msgid "Health score"
+#: app/src/Security/ClientRoleManager.php:258
+msgid "Hướng dẫn sử dụng"
 msgstr ""
 
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:193
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:194
-#: app/src/Features/ProjectManagement/ProjectFields.php:356
-msgid "Thanh toán"
+#: app/src/Security/ClientRoleManager.php:259
+msgid "Hướng dẫn"
 msgstr ""
 
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:202
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:203
-msgid "Reports"
+#: app/src/Security/ClientRoleManager.php:277
+msgid "Hướng dẫn sử dụng Website"
 msgstr ""
 
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:211
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:212
-msgid "Portal links"
+#: app/src/Security/ClientRoleManager.php:281
+msgid "Chào mừng bạn đến với hệ thống quản trị website!"
 msgstr ""
 
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:222
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:423
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:481
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:542
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:1552
-msgid "Bạn không có quyền xem trang này."
+#: app/src/Security/ClientRoleManager.php:283
+msgid "Tài liệu này tổng hợp các thao tác cơ bản nhất để bạn có thể tự tin quản lý nội dung, cập nhật bài viết và tương tác với khách hàng một cách nhanh chóng."
 msgstr ""
 
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:273
-msgid "Tỷ lệ đã thu"
+#: app/src/Security/ClientRoleManager.php:290
+msgid "1. Chỉnh sửa trang bằng Block Editor (Gutenberg)"
 msgstr ""
 
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:824
-msgid "Chưa có portal page hoặc key"
+#: app/src/Security/ClientRoleManager.php:293
+msgid "Website được xây dựng theo kiến trúc Block linh hoạt. Bạn có thể dễ dàng chỉnh sửa văn bản, thay đổi hình ảnh và sắp xếp lại các phần:"
 msgstr ""
 
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:1343
-msgid "CRM & delivery hub"
+#: app/src/Security/ClientRoleManager.php:296
+msgid "Mở trang cần sửa:"
 msgstr ""
 
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:1413
-msgid "Chưa có nhật ký dự án."
+#: app/src/Security/ClientRoleManager.php:296
+msgid "Vào Trang → Tất cả các trang → Chọn trang cần cập nhật → Nhấn Chỉnh sửa."
 msgstr ""
 
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:1440
-msgid "Chưa có dữ liệu."
+#: app/src/Security/ClientRoleManager.php:297
+msgid "Sửa nội dung:"
 msgstr ""
 
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:1457
-msgid "Chưa có project."
+#: app/src/Security/ClientRoleManager.php:297
+msgid "Nhấp chuột trực tiếp vào đoạn văn, tiêu đề hoặc ảnh để thay đổi nội dung tức thì."
 msgstr ""
 
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:1486
-msgid "Không có việc cần xử lý."
+#: app/src/Security/ClientRoleManager.php:298
+msgid "Lưu thay đổi:"
 msgstr ""
 
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:1518
-msgid "Chưa có yêu cầu mới từ client portal."
+#: app/src/Security/ClientRoleManager.php:298
+msgid "Nhấn nút \"Cập nhật\" ở góc trên bên phải để áp dụng lên website."
 msgstr ""
 
-#: app/src/Features/ProjectManagement/LacaProjectsHub.php:1538
-msgid "Client"
+#: app/src/Security/ClientRoleManager.php:305
+msgid "2. Thêm mới và quản lý bài viết / tin tức"
 msgstr ""
 
-#: app/src/Features/ProjectManagement/ProjectAdminColumns.php:55
-msgid "Ảnh"
+#: app/src/Security/ClientRoleManager.php:308
+msgid "Tạo bài mới:"
 msgstr ""
 
-#: app/src/Features/ProjectManagement/ProjectAdminColumns.php:56
-msgid "Tên dự án"
+#: app/src/Security/ClientRoleManager.php:308
+msgid "Vào Bài viết → Viết bài mới. Nhập tiêu đề và soạn thảo nội dung."
 msgstr ""
 
-#: app/src/Features/ProjectManagement/ProjectAdminColumns.php:58
-#: app/src/Features/ProjectManagement/ProjectFields.php:389
-#: app/src/Settings/LacaAdmin/UiKitPage.php:275
-#: theme/single-project.php:331
-msgid "Trạng thái"
+#: app/src/Security/ClientRoleManager.php:309
+msgid "Ảnh đại diện:"
 msgstr ""
 
-#: app/src/Features/ProjectManagement/ProjectAdminColumns.php:59
-msgid "Domain"
+#: app/src/Security/ClientRoleManager.php:309
+msgid "Tại cột bên phải, tìm mục \"Ảnh đại diện\" và tải lên hình ảnh minh hoạ cho bài viết."
 msgstr ""
 
-#: app/src/Features/ProjectManagement/ProjectAdminColumns.php:60
-msgid "Hết hạn"
+#: app/src/Security/ClientRoleManager.php:310
+msgid "Chuyên mục:"
 msgstr ""
 
-#: app/src/Features/ProjectManagement/ProjectAdminColumns.php:61
-#: app/src/PostTypes/project.php:162
-#: app/src/Settings/LacaAdmin/UiKitPage.php:249
-msgid "Cảnh báo"
+#: app/src/Security/ClientRoleManager.php:310
+msgid "Tích chọn chuyên mục phù hợp để bài viết xuất hiện đúng vị trí."
 msgstr ""
 
-#: app/src/Features/ProjectManagement/ProjectFields.php:21
-msgid "Thông tin dự án"
+#: app/src/Security/ClientRoleManager.php:317
+msgid "3. Xem và xuất danh sách liên hệ từ khách hàng"
 msgstr ""
 
-#: app/src/Features/ProjectManagement/ProjectFields.php:64
-msgid "Báo giá"
+#: app/src/Security/ClientRoleManager.php:320
+msgid "Khi khách hàng điền form liên hệ hoặc đặt hẹn trên website, dữ liệu sẽ được gửi về email của bạn đồng thời lưu trong hệ thống:"
 msgstr ""
 
-#: app/src/Features/ProjectManagement/ProjectFields.php:92
-#: theme/single-project.php:183
-msgid "Tổng quan dự án"
+#: app/src/Security/ClientRoleManager.php:323
+msgid "Kiểm tra danh sách:"
 msgstr ""
 
-#: app/src/Features/ProjectManagement/ProjectFields.php:100
-msgid "Danh sách trang thiết kế"
+#: app/src/Security/ClientRoleManager.php:323
+msgid "Vào mục Form liên hệ trên menu để xem toàn bộ thông tin họ tên, số điện thoại, lời nhắn."
 msgstr ""
 
-#: app/src/Features/ProjectManagement/ProjectFields.php:127
-msgid "Giai đoạn thực hiện"
+#: app/src/Security/ClientRoleManager.php:324
+msgid "Xuất file Excel/CSV:"
 msgstr ""
 
-#: app/src/Features/ProjectManagement/ProjectFields.php:148
-msgid "Mốc thời gian"
+#: app/src/Security/ClientRoleManager.php:324
+msgid "Nhấn nút \"Export\" để tải danh sách khách hàng về máy tính khi cần tổng hợp."
 msgstr ""
 
-#: app/src/Features/ProjectManagement/ProjectFields.php:152
-msgid "Thời gian làm (ngày)"
+#: app/src/Security/ClientRoleManager.php:331
+msgid "4. Gửi yêu cầu hỗ trợ tới đội ngũ LacaDev"
 msgstr ""
 
-#: app/src/Features/ProjectManagement/ProjectFields.php:156
-msgid "Thời gian không tính"
+#: app/src/Security/ClientRoleManager.php:334
+msgid "Bất cứ khi nào bạn cần hỗ trợ kỹ thuật, gặp lỗi website hoặc muốn cập nhật thêm tính năng:"
 msgstr ""
 
-#: app/src/Features/ProjectManagement/ProjectFields.php:160
-msgid "Ngày bắt đầu làm"
+#: app/src/Security/ClientRoleManager.php:338
+msgid "Mở Widget Gửi Yêu Cầu Hỗ Trợ"
 msgstr ""
 
-#: app/src/Features/ProjectManagement/ProjectFields.php:164
-msgid "Ngày bàn giao (dự kiến)"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:170
-msgid "Chi phí thực hiện"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:174
-msgid "Bảng chi phí chi tiết"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:229
-msgid "Quy trình"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:254
-msgid "Tính năng kỹ thuật"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:255
-msgid "Mô tả ngắn"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:260
-msgid "Tech Tags (nền tảng)"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:274
-msgid "Modules tính năng"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:331
-msgid "Bảo trì & Bảo hành"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:335
-msgid "Trạng thái bảo hành"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:357
-#: theme/single-project.php:471
-msgid "Quy trình thanh toán"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:376
-msgid "Hiệu lực báo giá (ngày)"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:393
-msgid "Trạng thái dự án"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:404
-msgid "Tags / Nhãn dự án"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:424
-msgid "Tài chính"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:428
-msgid "Giá build"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:434
-msgid "Phí bảo trì hàng năm"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:439
-msgid "Trạng thái thanh toán (Auto)"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:450
-msgid "Lịch sử thanh toán từng đợt"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:456
-msgid "Ngày thanh toán"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:458
-msgid "Số tiền"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:463
-msgid "Ghi chú / Mã GD"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:468
-msgid "File hóa đơn / Bằng chứng chung"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:472
-msgid "Ghi chú tài chính nội bộ"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:485
-msgid "Hosting & Domain"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:490
-msgid "Thông tin Domain"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:492
-msgid "Tên miền"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:496
-#: app/src/Features/ProjectManagement/ProjectFields.php:527
-msgid "Giá gia hạn / năm"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:501
-msgid "Ngày hết hạn Domain"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:505
-msgid "Nhà đăng ký"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:509
-msgid "Tài khoản đăng nhập"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:513
-msgid "Mật khẩu (mã hóa khi lưu)"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:519
-#: app/src/Features/ProjectManagement/ProjectFields.php:536
-#: app/src/Features/ProjectManagement/ProjectFields.php:576
-msgid "Cảnh báo trước (ngày)"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:525
-msgid "Thông tin Hosting"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:532
-msgid "Ngày hết hạn Hosting"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:541
-msgid "Nhà cung cấp hosting"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:545
-msgid "Tài khoản hosting"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:549
-msgid "Mật khẩu hosting"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:555
-msgid "URL cPanel / DirectAdmin"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:559
-msgid "Tài khoản cPanel"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:563
-msgid "Mật khẩu cPanel (mã hóa)"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:570
-msgid "Thông tin SSL"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:572
-msgid "Ngày hết hạn SSL"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:582
-msgid "FTP / SFTP"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:584
-msgid "FTP Host"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:588
-msgid "FTP Username"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:592
-msgid "Mật khẩu FTP"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:606
-#: app/src/PostTypes/template.php:55
-msgid "Tech Specs"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:610
-msgid "URL web mẫu / Link Figma"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:614
-msgid "URL website đang chạy"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:619
-msgid "Màu sắc chủ đạo"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:621
-msgid "Tối đa 3 màu"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:628
-msgid "Mã màu (HEX)"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:630
-msgid "Ghi chú (tuỳ chọn)"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:643
-msgid "Block Sync"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:647
-msgid "Cấu hình REST API cho client site"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:649
-msgid "API Key của client"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:650
-msgid "Lấy từ Settings → LacaDev trên website client. Dùng để xác thực khi push blocks."
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:654
-msgid "Block Sync Endpoint URL"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/ProjectFields.php:655
-msgid "URL đến REST endpoint. Ví dụ: https://client.com/wp-json/lacadev/v1/sync-block"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:34
-msgid "Cảnh báo cần xử lý"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:35
-msgid "Các vấn đề còn mở từ website khách hàng hoặc tracker."
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:41
-msgid "Không có cảnh báo nào."
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:53
-msgid "Đã xử lý"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:64
-msgid "Client health"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:65
-msgid "Heartbeat, hàng đợi gửi log và thông tin môi trường website khách."
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:68
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:208
-msgid "Chưa có dữ liệu"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:74
-msgid "Heartbeat gần nhất"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:75
-msgid "Chưa nhận heartbeat"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:78
-msgid "WordPress / PHP"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:88
-msgid "Theme"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:98
-msgid "Việc chưa hoàn thành"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:99
-msgid "Những mục cần xử lý trước khi báo cáo hoặc bàn giao."
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:113
-msgid "Plugin cần cập nhật"
-msgstr ""
-
-#. Template Name of the theme
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:132
-msgid "Client Portal"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:133
-msgid "Link theo dõi tiến độ, bảo trì và cập nhật dành cho khách hàng."
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:140
-msgid "Link portal"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:145
-msgid "Xem portal"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:149
-msgid "Client Portal chưa cấu hình. Tạo một page dùng template Client Portal để gửi link cho khách."
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:156
-msgid "Auto Activity Tracker"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:157
-msgid "Kết nối website khách để tự động gửi log, lỗi và cập nhật về đây."
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:162
-msgid "Cách chuẩn: nếu site khách chạy theme lacadev-client (hoặc theme con) — vào Laca Admin → 📡 Tracker trên site đó, dán 2 giá trị dưới đây vào. Không cần cài thêm gì khác — tracker đã có sẵn trong theme, đã hợp nhất và có cơ chế chống mất log khi mạng gián đoạn."
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:166
-msgid "Endpoint URL"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:170
-#: app/src/Settings/AdminSettings.php:1210
-msgid "Secret Key"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:175
-msgid "Site khách KHÔNG chạy theme lacadev-client? Dùng MU-plugin dự phòng"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:177
-msgid "Chỉ dùng cách này khi site khách không phải theme lacadev-client (ví dụ site có sẵn của khách, theme khác). MU-plugin này chạy 1 tracker riêng, độc lập với theme — nếu dùng cho site đang chạy lacadev-client sẽ tạo ra 2 hệ tracker song song, không đồng bộ với nhau."
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:180
-msgid "Tải MU-plugin"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:181
-msgid "Xem code PHP"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:189
-msgid "Cập nhật từ xa"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:190
-msgid "Kiểm tra plugin chờ cập nhật hoặc gửi lệnh update đến website khách."
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:193
-msgid "Tải plugin chờ update"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:201
-msgid "Plugin"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:202
-msgid "Hiện tại"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:203
-msgid "Bản mới"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:204
-msgid "Hành động"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:213
-msgid "Không có plugin nào cần cập nhật."
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:217
-msgid "Gửi lệnh thủ công"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:219
-msgid "Loại cập nhật"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:220
-msgid "Cập nhật Plugin"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:221
-msgid "Cập nhật Theme"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:222
-msgid "Cập nhật WordPress Core"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:224
-msgid "slug, ví dụ: woocommerce/woocommerce.php"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:226
-msgid "Gửi lệnh"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col1.php:229
-msgid "Với <code>update_core</code>, bỏ trống slug. Plugin slug dạng <code>folder/file.php</code>, theme slug dạng <code>folder-name</code>."
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col2.php:25
-#: app/src/Features/ProjectManagement/Views/meta-box-col2.php:89
-msgid "Bug / Lỗi"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col2.php:26
-#: app/src/Features/ProjectManagement/Views/meta-box-col2.php:90
-msgid "Trang giao diện"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col2.php:29
-#: app/src/Features/ProjectManagement/Views/meta-box-col2.php:93
-msgid "Tính năng"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col2.php:30
-#: app/src/Features/ProjectManagement/Views/meta-box-col2.php:94
-msgid "Khác"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col2.php:38
-msgid "Task & tiến độ"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col2.php:39
-msgid "Checklist nội bộ để quản lý phạm vi, lỗi và việc cần bàn giao."
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col2.php:41
-msgid "Import trang từ tab Design Scope"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col2.php:42
-msgid "Sync trang"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col2.php:58
-msgid "Chưa có task nào. Sync trang từ Design Scope hoặc thêm task thủ công bên dưới."
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col2.php:69
-#, php-format
-msgid "Đánh dấu hoàn thành: %s"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col2.php:77
-msgid "Mẫu giao diện"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col2.php:81
-msgid "Xoá task"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col2.php:88
-msgid "Loại task"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col2.php:96
-msgid "Tên task, ví dụ: Fix menu mobile..."
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col2.php:104
-msgid "Nhật ký cập nhật & bảo trì"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col2.php:105
-msgid "Dòng thời gian các thay đổi từ tracker, task và ghi chú vận hành."
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col2.php:111
-msgid "Chưa có nhật ký nào."
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col2.php:119
-msgid "Auto"
-msgstr ""
-
-#: app/src/Features/ProjectManagement/Views/meta-box-col2.php:122
-msgid "bởi"
-msgstr ""
-
-#: app/src/PostTypes/project.php:33
-msgid "Laca Project"
-msgstr ""
-
-#: app/src/PostTypes/project.php:36
-msgid "Tên dự án / website"
-msgstr ""
-
-#: app/src/PostTypes/project.php:91
-msgid "Project Workspace"
-msgstr ""
-
-#: app/src/PostTypes/project.php:143
-msgid "Cần xử lý"
-msgstr ""
-
-#: app/src/PostTypes/project.php:150
-msgid "Workspace dự án"
-msgstr ""
-
-#: app/src/PostTypes/project.php:151
-msgid "Theo dõi tiến độ, cảnh báo, lịch sử bảo trì và các thao tác từ xa của website khách hàng."
-msgstr ""
-
-#: app/src/PostTypes/project.php:160
-msgid "Tổng quan nhanh dự án"
-msgstr ""
-
-#: app/src/PostTypes/project.php:164
-msgid "Không có cảnh báo mở"
-msgstr ""
-
-#: app/src/PostTypes/project.php:164
-msgid "Đang chờ xử lý"
-msgstr ""
-
-#: app/src/PostTypes/project.php:167
-msgid "Tiến độ task"
-msgstr ""
-
-#: app/src/PostTypes/project.php:172
-msgid "Portal khách hàng"
-msgstr ""
-
-#: app/src/PostTypes/project.php:173
-msgid "Sẵn sàng"
-msgstr ""
-
-#: app/src/PostTypes/project.php:173
-msgid "Chưa cấu hình"
-msgstr ""
-
-#: app/src/PostTypes/project.php:174
-msgid "Đang dùng alias thân thiện"
-msgstr ""
-
-#: app/src/PostTypes/project.php:174
-msgid "Dùng secret key mặc định"
-msgstr ""
-
-#: app/src/PostTypes/project.php:177
-msgid "Nhật ký mới nhất"
-msgstr ""
-
-#: app/src/PostTypes/project.php:179
-msgid "Chưa có"
-msgstr ""
-
-#: app/src/PostTypes/project.php:182
-msgid "Chưa nhận log từ tracker"
-msgstr ""
-
-#: app/src/PostTypes/project.php:186
-msgid "Tracker heartbeat"
-msgstr ""
-
-#: app/src/PostTypes/project.php:208
-msgid "Chưa có heartbeat"
-msgstr ""
-
-#: app/src/PostTypes/project.php:209
-msgid "Chưa kết nối"
-msgstr ""
-
-#: app/src/PostTypes/project.php:210
-msgid "Chưa nhận heartbeat từ website khách hàng."
-msgstr ""
-
-#: app/src/PostTypes/project.php:218
-#: app/src/PostTypes/project.php:236
-msgid "Cần kiểm tra"
-msgstr ""
-
-#: app/src/PostTypes/project.php:219
-msgid "Dữ liệu lỗi"
-msgstr ""
-
-#: app/src/PostTypes/project.php:220
-msgid "Thời gian heartbeat không hợp lệ."
-msgstr ""
-
-#: app/src/PostTypes/project.php:226
-#, php-format
-msgid "%s trước"
-msgstr ""
-
-#: app/src/PostTypes/project.php:232
-msgid "Tracker im lặng"
-msgstr ""
-
-#: app/src/PostTypes/project.php:233
-msgid "Mất kết nối"
-msgstr ""
-
-#: app/src/PostTypes/project.php:237
-msgid "Có rủi ro"
-msgstr ""
-
-#: app/src/PostTypes/project.php:240
-msgid "Ổn định"
-msgstr ""
-
-#: app/src/PostTypes/project.php:241
-msgid "Online"
-msgstr ""
-
-#: app/src/PostTypes/project.php:246
-#, php-format
-msgid " · %d lỗi, %d retry"
-msgstr ""
-
-#: app/src/PostTypes/template.php:26
-#: app/src/PostTypes/template.php:27
-msgid "Giao diện mẫu"
-msgstr ""
-
-#: app/src/PostTypes/template.php:34
-msgid "Project Settings | Cài đặt dự án"
-msgstr ""
-
-#: app/src/PostTypes/template.php:36
-msgid "Visuals"
-msgstr ""
-
-#: app/src/PostTypes/template.php:40
-msgid "Đã làm thực tế"
-msgstr ""
-
-#: app/src/PostTypes/template.php:46
-msgid "Live Demo URL"
-msgstr ""
-
-#: app/src/PostTypes/template.php:49
-msgid "Quick view"
-msgstr ""
-
-#: app/src/PostTypes/template.php:51
-msgid "Thư viện ảnh (Gallery)"
-msgstr ""
-
-#: app/src/PostTypes/template.php:56
-msgid "Nền tảng (Platform)"
-msgstr ""
-
-#: app/src/PostTypes/template.php:64
-msgid "Công cụ xây dựng (Page Builder)"
-msgstr ""
-
-#: app/src/PostTypes/template.php:72
-msgid "Code thuần"
-msgstr ""
-
-#: app/src/PostTypes/template.php:74
-msgid "Tính năng phổ biến (Presets)"
-msgstr ""
-
-#: app/src/PostTypes/template.php:76
-msgid "Landing Page"
-msgstr ""
-
-#: app/src/PostTypes/template.php:77
-msgid "Multi-language"
-msgstr ""
-
-#: app/src/PostTypes/template.php:78
-msgid "Booking System"
-msgstr ""
-
-#: app/src/PostTypes/template.php:79
-msgid "Payment Gateway"
-msgstr ""
-
-#: app/src/PostTypes/template.php:80
-msgid "Flash Sale"
-msgstr ""
-
-#: app/src/PostTypes/template.php:81
-msgid "SEO Optimized"
-msgstr ""
-
-#: app/src/PostTypes/template.php:82
-msgid "High Speed"
-msgstr ""
-
-#: app/src/PostTypes/template.php:84
-msgid "Tính năng khác (Tùy chỉnh)"
-msgstr ""
-
-#: app/src/PostTypes/template.php:85
-msgid "Dùng để thêm các tính năng đặc thù cho dự án này mà không có trong danh sách trên."
-msgstr ""
-
-#: app/src/PostTypes/template.php:87
-msgid "Tên tính năng"
-msgstr ""
-
-#: app/src/PostTypes/template.php:91
-msgid "Conversion"
-msgstr ""
-
-#: app/src/PostTypes/template.php:95
-msgid "Giá ước tính (Price Tag)"
-msgstr ""
-
-#: app/src/PostTypes/template.php:97
-msgid "Chỉ từ 5.000.000đ"
-msgstr ""
-
-#: app/src/PostTypes/template.php:98
-msgid "Thời gian hoàn thành dự kiến"
-msgstr ""
-
-#: app/src/PostTypes/template.php:100
-msgid "Ví dụ: 5-7 ngày"
-msgstr ""
-
-#: app/src/PostTypes/template.php:101
-msgid "Gói dịch vụ đi kèm"
-msgstr ""
-
-#: app/src/PostTypes/template.php:103
-msgid "Tặng kèm Hosting 1 năm"
-msgstr ""
-
-#: app/src/PostTypes/template.php:104
-msgid "Tặng kèm Domain (.com)"
-msgstr ""
-
-#: app/src/PostTypes/template.php:105
-msgid "Miễn phí chứng chỉ SSL"
-msgstr ""
-
-#: app/src/PostTypes/template.php:106
-msgid "Bảo trì miễn phí 12 tháng"
-msgstr ""
-
-#: app/src/PostTypes/template.php:107
-msgid "Tối ưu SEO cơ bản"
-msgstr ""
-
-#: app/src/PostTypes/template.php:108
-msgid "Tối ưu tốc độ PageSpeed"
-msgstr ""
-
-#: app/src/PostTypes/template.php:109
-msgid "Hướng dẫn quản trị website"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:77
-msgid "Insufficient permissions."
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:81
-msgid "Invalid nonce."
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:88
-msgid "Attachment not found."
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:844
-#: app/src/Settings/LacaAdmin/LacaAdminMenuOrganizer.php:191
+#: app/src/Settings/AdminSettings.php:822
+#: app/src/Settings/LacaAdmin/LacaAdminMenuOrganizer.php:210
 msgid "Laca Admin"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:845
+#: app/src/Settings/AdminSettings.php:823
 msgid "laca-admin"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:847
+#: app/src/Settings/AdminSettings.php:825
 msgid "ADMIN"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:848
+#: app/src/Settings/AdminSettings.php:826
 msgid "Bật chế độ bảo trì"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:855
+#: app/src/Settings/AdminSettings.php:833
 msgid "Tắt chức năng chỉnh sửa code"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:861
+#: app/src/Settings/AdminSettings.php:839
 msgid "Tắt chức năng xác thực email khi thay đổi email admin"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:867
+#: app/src/Settings/AdminSettings.php:845
 msgid "Tắt chức năng sử dụng mật khẩu yếu"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:873
+#: app/src/Settings/AdminSettings.php:851
 msgid "Ẩn menu bài viết mặc định"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:879
+#: app/src/Settings/AdminSettings.php:857
 msgid "Ẩn menu bình luận mặc định"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:886
+#: app/src/Settings/AdminSettings.php:864
 msgid "SMTP"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:887
+#: app/src/Settings/AdminSettings.php:865
 msgid "Sử dụng SMTP để gửi mail"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:889
+#: app/src/Settings/AdminSettings.php:867
 msgid "Thông tin máy chủ SMTP"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:890
+#: app/src/Settings/AdminSettings.php:868
 msgid "Địa chỉ máy chủ"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:893
+#: app/src/Settings/AdminSettings.php:871
 msgid "Cổng máy chủ"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:896
+#: app/src/Settings/AdminSettings.php:874
 msgid "Phương thức mã hóa"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:900
+#: app/src/Settings/AdminSettings.php:878
 msgid "Thông tin email hệ thống"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:901
+#: app/src/Settings/AdminSettings.php:879
 msgid "Địa chỉ email"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:903
+#: app/src/Settings/AdminSettings.php:881
 msgid "Mật khẩu"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:908
+#: app/src/Settings/AdminSettings.php:886
 msgid "LOGIN"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:909
+#: app/src/Settings/AdminSettings.php:887
 msgid "Login logo"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:913
+#: app/src/Settings/AdminSettings.php:891
 msgid "Lời chào (VI)"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:917
+#: app/src/Settings/AdminSettings.php:896
 msgid "Welcome text (EN)"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:921
+#: app/src/Settings/AdminSettings.php:901
 msgid "Label user (VI)"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:924
+#: app/src/Settings/AdminSettings.php:904
 msgid "Label user (EN)"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:928
+#: app/src/Settings/AdminSettings.php:908
 msgid "Label password (VI)"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:931
+#: app/src/Settings/AdminSettings.php:911
 msgid "Label password (EN)"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:935
+#: app/src/Settings/AdminSettings.php:915
 msgid "Placeholder user (VI)"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:938
+#: app/src/Settings/AdminSettings.php:918
 msgid "Placeholder user (EN)"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:942
+#: app/src/Settings/AdminSettings.php:922
 msgid "Placeholder password (VI)"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:945
+#: app/src/Settings/AdminSettings.php:925
 msgid "Placeholder password (EN)"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:949
+#: app/src/Settings/AdminSettings.php:929
 msgid "Label rớt chìa khoá (VI)"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:952
+#: app/src/Settings/AdminSettings.php:932
 msgid "Forgot label (EN)"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:956
+#: app/src/Settings/AdminSettings.php:936
 msgid "Label rời khỏi trạm (VI)"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:959
+#: app/src/Settings/AdminSettings.php:939
 msgid "Back label (EN)"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:964
+#: app/src/Settings/AdminSettings.php:944
 msgid "Tools"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:966
+#: app/src/Settings/AdminSettings.php:946
 msgid "laca-tools"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:967
+#: app/src/Settings/AdminSettings.php:947
 msgid "Optimization"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:969
-msgid "Disable unnecessary items"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:971
+#: app/src/Settings/AdminSettings.php:950
 msgid "Disable jQuery Migrate"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:982
+#: app/src/Settings/AdminSettings.php:956
 msgid "Disable Gutenberg CSS"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:993
+#: app/src/Settings/AdminSettings.php:962
 msgid "Disable Classic CSS"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:1004
+#: app/src/Settings/AdminSettings.php:968
 msgid "Disable Emoji"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:1016
-msgid "Optimization Library"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1018
+#: app/src/Settings/AdminSettings.php:976
 msgid "Enable Instant-page"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:1029
+#: app/src/Settings/AdminSettings.php:982
 msgid "Enable Smooth-scroll"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:1041
-msgid "Image & Output Optimization"
+#: app/src/Settings/AdminSettings.php:994
+msgid "Remove comments from HTML, JavaScript, and CSS"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:1043
-msgid "Remove HTML comments from output"
+#: app/src/Settings/AdminSettings.php:995
+msgid "Remove XHTML closing tags from empty elements in HTML5"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:1054
+#: app/src/Settings/AdminSettings.php:996
+msgid "Remove relative domain from internal URLs"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:997
+msgid "Remove protocols (HTTP: and HTTPS:) from all URLs"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:998
+msgid "Support multi-byte UTF-8 encoding (if you see strange characters)"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1000
 msgid "Bật Advanced Resource Hints"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:1065
+#: app/src/Settings/AdminSettings.php:1006
 msgid "Tối ưu hóa thuộc tính ảnh"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:1076
-msgid "Tối ưu hóa ảnh trong nội dung bài viết"
+#: app/src/Settings/AdminSettings.php:1012
+msgid "Tối ưu hóa ảnh trong nội dung"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:1087
+#: app/src/Settings/AdminSettings.php:1018
 msgid "Bật Service Worker cache"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:1099
-msgid "Mobile UX"
+#: app/src/Settings/AdminSettings.php:1025
+msgid "Tối ưu hóa Database & Bộ nhớ"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:1101
-msgid "Bật thanh CTA liên hệ trên mobile"
+#: app/src/Settings/AdminSettings.php:1026
+msgid "Tối ưu hóa truy vấn database"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:1107
-msgid "✅ Mặc định bật"
+#: app/src/Settings/AdminSettings.php:1032
+msgid "Log truy vấn SQL chậm"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:1108
-msgid "Tác dụng:"
+#: app/src/Settings/AdminSettings.php:1038
+msgid "Tối ưu hóa bộ nhớ"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:1108
-msgid "Hiển thị thanh gọi nhanh / Zalo / Báo giá cố định ở chân trang trên thiết bị di động (< 768px). Tự ẩn khi cuộn xuống và hiện khi cuộn lên."
+#: app/src/Settings/AdminSettings.php:1044
+msgid "Dọn dẹp bộ nhớ cuối trang"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:1109
-msgid "Nên tắt khi:"
+#: app/src/Settings/AdminSettings.php:1050
+msgid "Giám sát hiệu suất"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:1109
-msgid "Muốn tối ưu không gian màn hình mobile hoặc landing page đã có CTA riêng."
+#: app/src/Settings/AdminSettings.php:1058
+msgid "Đồng bộ Block"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:1113
-msgid "Security"
+#: app/src/Settings/AdminSettings.php:1060
+msgid "laca-block-sync"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:1114
-msgid "Tắt tính năng có nguy cơ bảo mật"
+#: app/src/Settings/AdminSettings.php:1062
+msgid "Block Sync — Nhận blocks từ lacadev.com"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:1116
-msgid "Disable REST API (cho khách)"
+#: app/src/Settings/AdminSettings.php:1084
+msgid "Block Catalog — chỉ dùng trên clients.lacadev.com"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:1127
-msgid "Disable XML-RPC"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1138
-msgid "Disable WP-Embed (oEmbed)"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1149
-msgid "Disable X-Pingback header"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1160
-msgid "WordPress Hardening"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1162
-msgid "Ẩn thông tin WordPress (Bloat Removal)"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1173
-msgid "Tối ưu Server & Database"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1175
-msgid "Giới hạn Post Revision & Autosave"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1186
-msgid "Tối ưu PHP Memory"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1199
-msgid "Google reCAPTCHA"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1201
-msgid "laca-recaptcha"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1206
-msgid "Site Key"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1215
-msgid "Cấu hình hiển thị"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1217
-msgid "Kích hoạt cho Đăng nhập"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1221
-msgid "Kích hoạt cho Đăng ký"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1222
-msgid "Kích hoạt cho Bình luận"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1223
-msgid "Kích hoạt cho Form Liên Hệ"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1227
-msgid "Điểm tối thiểu (0.0 - 1.0)"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1238
-msgid "LacaDev PM & Bots"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1240
-msgid "laca-project-notifications"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1241
-msgid "Zalo OA (Project Manager)"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1245
-msgid "Bật thông báo Zalo"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1247
-msgid "Access Token"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1251
-msgid "Refresh Token"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1255
-msgid "Zalo App (để tự động refresh token)"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1257
-msgid "App ID"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1261
-msgid "App Secret Key"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1266
-msgid "Zalo User ID nhận mặc định"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1269
-msgid "Email (Project Manager)"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1270
-msgid "Bật thông báo qua Email"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1272
-msgid "Email nhận thông báo"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1276
-msgid "Telegram (Project Manager)"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1277
-msgid "Bật thông báo Telegram"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1278
-msgid "Bot Token"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1280
-msgid "Chat ID"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1284
-msgid "Slack (Project Manager)"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1285
-msgid "Bật thông báo Slack"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1286
-msgid "Webhook URL"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1294
-msgid "🗂️ Block Catalog Source"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1296
-msgid "laca-block-catalog-source"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1308
-msgid "Catalog Endpoint URL"
-msgstr ""
-
-#: app/src/Settings/AdminSettings.php:1313
+#: app/src/Settings/AdminSettings.php:1086
 msgid "Catalog Key"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:1344
+#: app/src/Settings/AdminSettings.php:1107
+msgid "📡 Tracker"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1109
+msgid "laca-tracker"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1129
+msgid "⚡ Dán cấu hình nhanh từ Hub (Laca CMS)"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1131
+msgid "Dán cấu hình JSON từ Hub"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1136
+msgid "Chi tiết kết nối & Khóa bảo mật (HMAC)"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1138
+msgid "Tracker Endpoint URL"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1143
+msgid "Public Project ID"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1148
+msgid "Tracker Key"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1154
+msgid "Block Catalog Key"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1160
+msgid "Remote Update Key"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1166
+msgid "Secret Key dự phòng (Legacy)"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1172
+msgid "Kiểm tra sâu (nâng cao)"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1174
+msgid "Bật kiểm tra sâu mã nguồn (FIM)"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1187
+msgid "Cron hệ thống thật (site ít traffic)"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1195
+msgid "Cron URL"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1201
+msgid "Google reCAPTCHA"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1203
+msgid "laca-recaptcha"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1208
+msgid "Site Key"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1212
+msgid "Secret Key"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1217
+msgid "Cấu hình hiển thị"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1219
+msgid "Kích hoạt cho Đăng nhập"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1223
+msgid "Kích hoạt cho Đăng ký"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1227
+msgid "Kích hoạt cho Bình luận"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1231
+msgid "Kích hoạt cho Form liên hệ"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1236
+msgid "Điểm tối thiểu (0.0 - 1.0)"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1247
+msgid "LacaDev PM & Bots"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1249
+msgid "laca-project-notifications"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1250
+msgid "Zalo OA (Project Manager)"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1254
+msgid "Bật thông báo Zalo"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1256
+msgid "Access Token"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1259
+msgid "Refresh Token"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1262
+msgid "Zalo User ID nhận mặc định"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1265
+msgid "Email (Project Manager)"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1266
+msgid "Bật thông báo qua Email"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1268
+msgid "Email nhận thông báo"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1273
 msgid "Login Socials"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:1346
+#: app/src/Settings/AdminSettings.php:1275
 msgid "laca-login-socials"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:1347
+#: app/src/Settings/AdminSettings.php:1276
 msgid "Google"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:1357
+#: app/src/Settings/AdminSettings.php:1280
 msgid "Bật Login Google"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:1358
+#: app/src/Settings/AdminSettings.php:1281
 msgid "Client ID"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:1360
+#: app/src/Settings/AdminSettings.php:1283
 msgid "Client Secret"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:1362
+#: app/src/Settings/AdminSettings.php:1285
 msgid "Redirect URI"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:1368
-msgid "Quản trị"
+#: app/src/Settings/AdminSettings.php:1341
+msgid "Quản trị & HD Sử dụng"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:1370
+#: app/src/Settings/AdminSettings.php:1343
 msgid "laca-management-settings"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:1371
+#: app/src/Settings/AdminSettings.php:1344
 msgid "Dashboard Widget"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:1375
+#: app/src/Settings/AdminSettings.php:1348
 msgid "Các Post Type hiển thị"
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:1385
+#: app/src/Settings/AdminSettings.php:1359
 msgid "Để trống để tự động hiển thị tất cả các loại nội dung quan trọng (Posts, Services, Projects, Properties...)."
 msgstr ""
 
-#: app/src/Settings/AdminSettings.php:1388
+#: app/src/Settings/AdminSettings.php:1362
 msgid "Số lượng bài hiển thị"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1367
+msgid "Nội dung HD Sử dụng"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1371
+msgid "Tiêu đề trang"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1374
+msgid "Đoạn giới thiệu"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1377
+msgid "Các khối hướng dẫn (Blog, WooCommerce...)"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1380
+msgid "Tiêu đề khối"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1381
+msgid "Màu viền (Border top)"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1382
+msgid "Nội dung hướng dẫn (Link, Video, Text)"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1385
+msgid "Thông tin hỗ trợ kỹ thuật"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1386
+msgid "Điện thoại/Zalo"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1388
+msgid "Website"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1390
+msgid "Vai trò Khách hàng"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1394
+msgid "Gán vai trò Khách hàng cho người dùng"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1407
+msgid "Chọn các tài khoản thuộc nhóm khách hàng để áp dụng phân quyền an toàn."
 msgstr ""
 
 #: app/src/Settings/LacaAdmin/GoogleServicesPage.php:39
@@ -6594,34 +5917,34 @@ msgstr ""
 msgid "Chưa sẵn sàng"
 msgstr ""
 
-#: app/src/Settings/LacaAdmin/LacaAdminMenuOrganizer.php:194
+#: app/src/Settings/LacaAdmin/LacaAdminMenuOrganizer.php:213
 msgid "Menu Laca Admin"
 msgstr ""
 
-#: app/src/Settings/LacaAdmin/ReleaseChecklist.php:902
+#: app/src/Settings/LacaAdmin/ReleaseChecklist.php:1029
 msgid "Mọi mục đã đạt. Mục tự kiểm sẽ tự báo lại nếu cấu hình bị đổi."
 msgstr ""
 
-#: app/src/Settings/LacaAdmin/ReleaseChecklist.php:905
+#: app/src/Settings/LacaAdmin/ReleaseChecklist.php:1032
 #, php-format
 msgid "%d mục quan trọng chưa xong"
 msgstr ""
 
-#: app/src/Settings/LacaAdmin/ReleaseChecklist.php:907
+#: app/src/Settings/LacaAdmin/ReleaseChecklist.php:1034
 #, php-format
 msgid "%d tự kiểm chưa đạt · %d chưa tick"
 msgstr ""
 
-#: app/src/Settings/LacaAdmin/ReleaseChecklist.php:909
+#: app/src/Settings/LacaAdmin/ReleaseChecklist.php:1036
 #, php-format
 msgid " · %d không áp dụng"
 msgstr ""
 
-#: app/src/Settings/LacaAdmin/ReleaseChecklist.php:922
+#: app/src/Settings/LacaAdmin/ReleaseChecklist.php:1049
 msgid "Sẵn sàng production"
 msgstr ""
 
-#: app/src/Settings/LacaAdmin/ReleaseChecklist.php:922
+#: app/src/Settings/LacaAdmin/ReleaseChecklist.php:1049
 msgid "Checklist phát hành production"
 msgstr ""
 
@@ -6815,6 +6138,11 @@ msgstr ""
 msgid "Máy tính bảng"
 msgstr ""
 
+#: app/src/Settings/LacaAdmin/UiKitPage.php:210
+#: theme/page_templates/template-contact.php:64
+msgid "Điện thoại"
+msgstr ""
+
 #: app/src/Settings/LacaAdmin/UiKitPage.php:220
 msgid "4. Badges & Alerts"
 msgstr ""
@@ -6851,6 +6179,10 @@ msgstr ""
 msgid "Cài đặt đã được lưu an toàn vào cơ sở dữ liệu."
 msgstr ""
 
+#: app/src/Settings/LacaAdmin/UiKitPage.php:249
+msgid "Cảnh báo"
+msgstr ""
+
 #: app/src/Settings/LacaAdmin/UiKitPage.php:250
 msgid "Tính năng admin color đã được gỡ bỏ để đảm bảo tính nhất quán."
 msgstr ""
@@ -6875,7 +6207,12 @@ msgstr ""
 msgid "Phiên bản"
 msgstr ""
 
+#: app/src/Settings/LacaAdmin/UiKitPage.php:275
+msgid "Trạng thái"
+msgstr ""
+
 #: app/src/Settings/LacaAdmin/UiKitPage.php:276
+#: app/src/Settings/Security/MalwareScanner.php:591
 msgid "Thao tác"
 msgstr ""
 
@@ -6934,6 +6271,27 @@ msgstr ""
 
 #: app/src/Settings/LacaAdmin/UiKitPage.php:352
 msgid "Huỷ bỏ"
+msgstr ""
+
+#: app/src/Settings/LacaDevTrackerClient.php:157
+msgid "Cron có thể đang trễ:"
+msgstr ""
+
+#: app/src/Settings/LacaDevTrackerClient.php:158
+#, php-format
+msgid "Cron %s (%s) chưa chạy lại trong %d giờ qua."
+msgstr ""
+
+#: app/src/Settings/LacaDevTrackerClient.php:159
+msgid "Site ít traffic thì WordPress pseudo-cron không tự chạy đều — xem hướng dẫn cài cron hệ thống thật trong doc/TRACKER_HUB_CLIENT_SYNC.md."
+msgstr ""
+
+#: app/src/Settings/LacaTools/AITranslationManager.php:79
+msgid "Dịch toàn bộ tiêu đề/nội dung/SEO của bài viết này bằng AI? Nội dung hiện tại sẽ bị GHI ĐÈ."
+msgstr ""
+
+#: app/src/Settings/LacaTools/AITranslationManager.php:80
+msgid "Dịch cả bài bằng AI"
 msgstr ""
 
 #: app/src/Settings/LacaTools/Management/ContentAuditService.php:46
@@ -7008,71 +6366,29 @@ msgstr ""
 msgid "Trạng thái kho không hợp lệ."
 msgstr ""
 
-#: app/src/Settings/LacaTools/ProjectNotificationHandler.php:64
-#, php-format
-msgid "Gửi thông báo qua %s thất bại"
-msgstr ""
-
-#: app/src/Settings/LacaTools/ProjectNotificationHandler.php:65
-#, php-format
-msgid "lần cuối lúc %s."
-msgstr ""
-
-#: app/src/Settings/LacaTools/ProjectNotificationHandler.php:67
-msgid "Lỗi:"
-msgstr ""
-
-#: app/src/Settings/LacaTools/ProjectNotificationHandler.php:69
-msgid "Kiểm tra cấu hình tại Laca Admin → LacaDev PM & Bots."
-msgstr ""
-
-#: app/src/Settings/LacaTools/ProjectNotificationHandler.php:123
-msgid "Cron có thể đang trễ:"
-msgstr ""
-
-#: app/src/Settings/LacaTools/ProjectNotificationHandler.php:124
-#, php-format
-msgid "Cronjob kiểm tra hết hạn dịch vụ (laca_project_manager_daily_cron) chưa chạy lại trong %d giờ qua."
-msgstr ""
-
-#: app/src/Settings/LacaTools/ProjectNotificationHandler.php:125
-msgid "Site ít traffic thì WordPress pseudo-cron không tự chạy đều — xem hướng dẫn cài cron hệ thống thật trong doc/TRACKER_HUB_CLIENT_SYNC.md."
-msgstr ""
-
-#: app/src/Settings/LacaTools/ProjectPdfExporter.php:20
-msgid "📄 Báo giá / Invoice"
-msgstr ""
-
-#: app/src/Settings/LacaTools/ProjectReportsManager.php:63
-msgid "Đã Publish"
-msgstr ""
-
-#: app/src/Settings/LacaTools/ProjectReportsManager.php:64
-msgid "Bản Nháp"
-msgstr ""
-
-#: app/src/Settings/LacaTools/ProjectReportsManager.php:65
-msgid "Private"
-msgstr ""
-
-#: app/src/Settings/LacaTools/ProjectReportsManager.php:66
-msgid "Chờ Duyệt"
-msgstr ""
-
-#: app/src/Settings/LacaTools/ProjectReportsManager.php:67
-msgid "Đang Làm"
-msgstr ""
-
-#: app/src/Settings/LacaTools/ProjectReportsManager.php:68
-msgid "Hoàn Thành"
-msgstr ""
-
-#: app/src/Settings/LacaTools/ProjectReportsManager.php:69
-msgid "Đã Hủy"
-msgstr ""
-
-#: app/src/Settings/LacaTools/Security.php:57
+#: app/src/Settings/LacaTools/Security.php:46
 msgid "You are not logged in"
+msgstr ""
+
+#: app/src/Settings/LayoutModeMeta.php:26
+#: app/src/Settings/LayoutModeMeta.php:31
+msgid "Khung trang"
+msgstr ""
+
+#: app/src/Settings/LayoutModeMeta.php:33
+msgid "Kế thừa từ site"
+msgstr ""
+
+#: app/src/Settings/LayoutModeMeta.php:34
+msgid "Fluid (Toàn rộng)"
+msgstr ""
+
+#: app/src/Settings/LayoutModeMeta.php:35
+msgid "Boxed (Cố định max-width)"
+msgstr ""
+
+#: app/src/Settings/LayoutModeMeta.php:38
+msgid "Chọn chế độ khung cho riêng trang này. Mặc định kế thừa từ cài đặt của website."
 msgstr ""
 
 #: app/src/Settings/RequirePlugins.php:45
@@ -7197,41 +6513,92 @@ msgid "Please contact the administrator of this site for help."
 msgstr ""
 
 #. translators: %d: số phút
-#: app/src/Settings/Security/LoginGuard.php:69
+#: app/src/Settings/Security/LoginGuard.php:54
 #, php-format
 msgid "Đăng nhập sai quá nhiều lần. Vui lòng thử lại sau %d phút."
 msgstr ""
 
-#: app/src/Settings/Security/SecurityManager.php:586
+#: app/src/Settings/Security/MalwareScanner.php:539
+msgid "Không đối chiếu được checksum WordPress"
+msgstr ""
+
+#: app/src/Settings/Security/MalwareScanner.php:540
+msgid "Không thể kết nối đến api.wordpress.org. Bộ quét đã chuyển sang phân tích heuristic dự phòng cho toàn bộ file."
+msgstr ""
+
+#: app/src/Settings/Security/MalwareScanner.php:545
+#, php-format
+msgid "Đã đối chiếu checksum: lõi WordPress %s file khớp, %s plugin."
+msgstr ""
+
+#: app/src/Settings/Security/MalwareScanner.php:556
+#, php-format
+msgid "Không phát hiện vấn đề trong %s file."
+msgstr ""
+
+#: app/src/Settings/Security/MalwareScanner.php:568
+#, php-format
+msgid "%s vấn đề được phát hiện trong %s file."
+msgstr ""
+
+#: app/src/Settings/Security/MalwareScanner.php:575
+msgid "🔴 Nguy hiểm cao"
+msgstr ""
+
+#: app/src/Settings/Security/MalwareScanner.php:576
+msgid "🟡 Trung bình"
+msgstr ""
+
+#: app/src/Settings/Security/MalwareScanner.php:577
+msgid "🟢 Thấp"
+msgstr ""
+
+#: app/src/Settings/Security/MalwareScanner.php:587
+msgid "File"
+msgstr ""
+
+#: app/src/Settings/Security/MalwareScanner.php:588
+msgid "Dòng"
+msgstr ""
+
+#: app/src/Settings/Security/MalwareScanner.php:589
+msgid "Mô tả"
+msgstr ""
+
+#: app/src/Settings/Security/MalwareScanner.php:590
+msgid "Code / Chi tiết"
+msgstr ""
+
+#: app/src/Settings/Security/MalwareScanner.php:607
+msgid "Đánh dấu an toàn"
+msgstr ""
+
+#: app/src/Settings/Security/SecurityManager.php:84
+#: app/src/Settings/Security/SecurityManager.php:85
+#: app/src/Settings/Security/SecurityManager.php:119
+msgid "Xác thực 2 bước (2FA)"
+msgstr "Two-factor authentication (2FA)"
+
+#: app/src/Settings/Security/SecurityManager.php:93
+#: app/src/Settings/Security/SecurityManager.php:94
+#: app/src/Settings/Security/SecurityManager.php:128
+msgid "Super User"
+msgstr "Super User"
+
+#: app/src/Settings/Security/SecurityManager.php:644
 msgid "Đường dẫn file không hợp lệ."
 msgstr ""
 
-#: app/src/Settings/Security/SecurityManager.php:592
+#: app/src/Settings/Security/SecurityManager.php:650
 msgid "File không tồn tại trên hệ thống."
 msgstr ""
 
-#: app/src/Settings/Security/SecurityManager.php:597
+#: app/src/Settings/Security/SecurityManager.php:655
 msgid "Không thể tạo mã băm cho file."
 msgstr ""
 
-#: app/src/Settings/Security/SecurityManager.php:609
+#: app/src/Settings/Security/SecurityManager.php:667
 msgid "Đã thêm vào danh sách an toàn."
-msgstr ""
-
-#: app/src/Settings/Security/SecurityManager.php:635
-msgid "Slug không được để trống khi bật tính năng."
-msgstr ""
-
-#: app/src/Settings/Security/SecurityManager.php:638
-msgid "Slug trùng với query var hệ thống của WordPress, vui lòng chọn slug khác."
-msgstr ""
-
-#: app/src/Settings/Security/SecurityManager.php:642
-msgid "Cài đặt đã lưu. Tải lại trang để áp dụng."
-msgstr ""
-
-#: app/src/Settings/Security/UserEnumerationGuard.php:68
-msgid "Bạn không có quyền xem thông tin thành viên."
 msgstr ""
 
 #: app/src/Widgets/Carbon_Rich_Text_Widget.php:17
@@ -7254,52 +6621,36 @@ msgstr ""
 msgid "Mục lục"
 msgstr ""
 
-#: block-gutenberg/blog-block/render.php:95
-#: theme/archive.php:65
-#: theme/functions.php:298
-#: theme/index.php:36
-#: theme/template-parts/comment-single.php:35
-#, php-format
-msgid "%s ago"
+#: theme/404.php:48
+msgid "404"
 msgstr ""
 
-#: block-gutenberg/blog-block/render.php:106
-#: theme/archive.php:76
-#: theme/index.php:47
-#, php-format
-msgid "By %s"
+#: theme/404.php:49
+msgid "La cà hơi xa rồi bạn ơi!"
 msgstr ""
 
-#: block-gutenberg/blog-block/render.php:132
-msgid "Vui lòng chọn hoặc thêm bài viết để hiển thị."
+#: theme/comments.php:20
+msgid "No Responses"
 msgstr ""
 
-#: block-gutenberg/project-block/render.php:93
-#: block-gutenberg/project-block/build/index.js:1
-#: block-gutenberg/project-block/edit.js:358
-msgid "All"
+#: theme/comments.php:20
+msgid "One Response"
 msgstr ""
 
-#: theme/404.php:51
-msgid "Chỗ này hoang vu lắm, chưa có nội dung gì đâu."
+#: theme/comments.php:20
+msgid "% Responses"
 msgstr ""
 
-#: theme/404.php:57
-msgid "đường lớn"
+#: theme/comments.php:36
+msgid "« Previous Comments"
 msgstr ""
 
-#: theme/404.php:62
-#, php-format
-msgid "Quay về %s kẻo lạc."
+#: theme/comments.php:37
+msgid "Next Comments »"
 msgstr ""
 
-#: theme/archive-service.php:32
-#: theme/archive-template.php:32
-msgid "Chưa có dịch vụ nào."
-msgstr ""
-
-#: theme/archive.php:94
-msgid "Chưa có bài viết nào trong mục này."
+#: theme/comments.php:43
+msgid "Comments are closed."
 msgstr ""
 
 #: theme/comments.php:62
@@ -7343,71 +6694,235 @@ msgstr ""
 msgid "Gửi bình luận"
 msgstr ""
 
+#. translators: generic error page content; placeholders represents homepage opening and closing anchor tags
+#: theme/error.php:16
+#, php-format
+msgid "Please check the URL for proper spelling and capitalization. If you're having trouble locating a destination, try visiting the %1$shome page%2$s."
+msgstr ""
+
+#: theme/functions.php:281 theme/index.php:36
+#, php-format
+msgid "%s ago"
+msgstr ""
+
+#: theme/functions.php:288 theme/loop_templates/comment_single.php:18
+msgid "Your comment is awaiting moderation."
+msgstr ""
+
+#: theme/index.php:47
+#, php-format
+msgid "By %s"
+msgstr ""
+
 #: theme/index.php:61
 msgid "Chưa có bài viết nào."
 msgstr ""
 
-#: theme/page_templates/template-contact.php:132
-msgid "09xx xxx xxx"
+#: theme/loop_templates/comment_single.php:14
+msgid "says:"
 msgstr ""
 
-#: theme/page_templates/template-contact.php:141
-msgid "Để tôi có thể gửi phản hồi (Không bắt buộc)"
+#. translators: comment date and time
+#: theme/loop_templates/comment_single.php:25
+#, php-format
+msgid "%1$s at %2$s"
 msgstr ""
 
-#: theme/page_templates/template-contact.php:165
-msgid "Trang này được bảo vệ bởi reCAPTCHA và tuân thủ"
+#: theme/loop_templates/comment_single.php:29
+msgid "(Edit)"
 msgstr ""
 
-#: theme/page_templates/template-contact.php:168
-msgid "và"
+#: theme/loop_templates/loop.php:44
+msgid "« Previous Entries"
 msgstr ""
 
-#: theme/page_templates/template-contact.php:170
-msgid "Điều khoản dịch vụ"
+#: theme/loop_templates/loop.php:45
+msgid "Next Entries »"
 msgstr ""
 
-#: theme/page_templates/template-contact.php:171
-msgid "của Google."
+#: theme/loop_templates/loop_single.php:39
+msgid "« Previous Entry"
+msgstr ""
+
+#: theme/loop_templates/loop_single.php:40
+msgid "Next Entry »"
+msgstr ""
+
+#. translators: post author attribution
+#: theme/loop_templates/post_meta.php:22
+#, php-format
+msgid "by %s"
+msgstr ""
+
+#: theme/loop_templates/post_meta.php:28
+msgid "Posted in "
+msgstr ""
+
+#: theme/loop_templates/post_meta.php:32
+msgid "No Comments"
+msgstr ""
+
+#: theme/loop_templates/post_meta.php:32
+msgid "1 Comment"
+msgstr ""
+
+#: theme/loop_templates/post_meta.php:32
+msgid "% Comments"
+msgstr ""
+
+#: theme/loop_templates/post_meta.php:37
+msgid "Tags:"
 msgstr ""
 
 #. Template Name of the theme
-msgid "Portfolio Page"
+msgid "Contact Page"
 msgstr ""
 
-#: theme/setup/assets.php:171
+#: theme/page_templates/template-contact.php:21
+msgid "Ping tôi tại đây"
+msgstr ""
+
+#: theme/page_templates/template-contact.php:22
+msgid "Bạn có ý tưởng mới, một dự án hay ho hay đơn giản là muốn chia sẻ một hành trình? Đừng ngần ngại, trạm luôn mở cửa đón chờ!"
+msgstr ""
+
+#: theme/page_templates/template-contact.php:129
+msgid "Họ và tên"
+msgstr ""
+
+#: theme/page_templates/template-contact.php:134
+msgid "Họ và tên của bạn"
+msgstr ""
+
+#: theme/page_templates/template-contact.php:142
+msgid "Số điện thoại"
+msgstr ""
+
+#: theme/page_templates/template-contact.php:147
+msgid "09xx xxx xxx"
+msgstr ""
+
+#: theme/page_templates/template-contact.php:156
+msgid "Email liên hệ"
+msgstr ""
+
+#: theme/page_templates/template-contact.php:161
+msgid "Để tôi có thể gửi phản hồi (Không bắt buộc)"
+msgstr ""
+
+#: theme/page_templates/template-contact.php:167
+msgid "Nội dung"
+msgstr ""
+
+#: theme/page_templates/template-contact.php:172
+msgid "Nơi bạn viết nên những ý tưởng hoặc lời nhắn gửi..."
+msgstr ""
+
+#: theme/page_templates/template-contact.php:187
+msgid "Trang này được bảo vệ bởi reCAPTCHA và tuân thủ"
+msgstr ""
+
+#: theme/page_templates/template-contact.php:188
+msgid "Chính sách bảo mật"
+msgstr ""
+
+#: theme/page_templates/template-contact.php:189
+msgid "và"
+msgstr ""
+
+#: theme/page_templates/template-contact.php:190
+msgid "Điều khoản dịch vụ"
+msgstr ""
+
+#: theme/page_templates/template-contact.php:191
+msgid "của Google."
+msgstr ""
+
+#: theme/page_templates/template-contact.php:204
+msgid "Gửi lời nhắn"
+msgstr ""
+
+#: theme/search.php:20
+msgid "Kết quả tìm kiếm"
+msgstr ""
+
+#: theme/search.php:23
+#, php-format
+msgid "Từ khóa: \"%s\""
+msgstr ""
+
+#: theme/search.php:79
+msgid "Sản phẩm liên quan"
+msgstr ""
+
+#: theme/search.php:100 theme/search.php:153 theme/search.php:205
+#: theme/search.php:266
+msgid "Xem thêm"
+msgstr ""
+
+#: theme/search.php:132
+msgid "Bài viết liên quan"
+msgstr ""
+
+#: theme/search.php:184
+msgid "Trang liên quan"
+msgstr ""
+
+#: theme/search.php:237
+#, php-format
+msgid "%s liên quan"
+msgstr ""
+
+#: theme/search.php:280
+#, php-format
+msgid "Không tìm thấy kết quả nào cho \"%s\""
+msgstr ""
+
+#: theme/search.php:281
+msgid "Vui lòng thử lại với từ khóa khác."
+msgstr ""
+
+#: theme/searchform.php:13 theme/searchform.php:15
+msgid "Search for:"
+msgstr ""
+
+#: theme/searchform.php:15
+msgid "Search &hellip;"
+msgstr ""
+
+#: theme/setup/assets.php:160
 msgid "Remove Thumbnail?"
 msgstr ""
 
-#: theme/setup/assets.php:172
+#: theme/setup/assets.php:161
 msgid "Are you sure you want to remove this featured image?"
 msgstr ""
 
-#: theme/setup/assets.php:173
+#: theme/setup/assets.php:162
 msgid "Yes, remove it"
 msgstr ""
 
-#: theme/setup/assets.php:174
+#: theme/setup/assets.php:163
 msgid "Cancel"
 msgstr ""
 
-#: theme/setup/assets.php:175
+#: theme/setup/assets.php:164
 msgid "Removed!"
 msgstr ""
 
-#: theme/setup/assets.php:176
+#: theme/setup/assets.php:165
 msgid "Featured image has been removed."
 msgstr ""
 
-#: theme/setup/assets.php:177
+#: theme/setup/assets.php:166
 msgid "Error!"
 msgstr ""
 
-#: theme/setup/assets.php:178
+#: theme/setup/assets.php:167
 msgid "Failed to remove thumbnail."
 msgstr ""
 
-#: theme/setup/assets.php:181
+#: theme/setup/assets.php:170
 msgid "Choose image"
 msgstr ""
 
@@ -7415,236 +6930,441 @@ msgstr ""
 msgid "Layout Settings"
 msgstr ""
 
-#: theme/setup/category_meta.php:26
+#: theme/setup/category_meta.php:21
 msgid "Archive Layout"
 msgstr ""
 
-#: theme/setup/category_meta.php:28
+#: theme/setup/category_meta.php:23
 msgid "Card Layout (Bản tin)"
 msgstr ""
 
-#: theme/setup/category_meta.php:29
+#: theme/setup/category_meta.php:24
 msgid "Staggered Layout (So le)"
 msgstr ""
 
-#: theme/setup/recaptcha.php:139
+#: theme/setup/contact_page_meta.php:17
+msgid "Nội dung trang Liên hệ"
+msgstr ""
+
+#: theme/setup/contact_page_meta.php:23
+msgid "Tiêu đề"
+msgstr ""
+
+#: theme/setup/contact_page_meta.php:25
+msgid "Mô tả ngắn"
+msgstr ""
+
+#: theme/setup/gutenberg-blocks.php:35
+msgid "La Cà Blocks"
+msgstr ""
+
+#: theme/setup/gutenberg-blocks.php:48
+msgid "LixRoastery"
+msgstr ""
+
+#: theme/setup/gutenberg-blocks.php:53
+msgid "Phúc Đại Nam"
+msgstr ""
+
+#: theme/setup/gutenberg-blocks.php:58
+msgid "Nha Khoa Thiện Phước"
+msgstr ""
+
+#: theme/setup/gutenberg-blocks.php:63
+msgid "Site khác (chưa phân loại)"
+msgstr ""
+
+#: theme/setup/gutenberg-blocks.php:492 theme/setup/gutenberg-blocks.php:493
+#: theme/setup/gutenberg-blocks.php:556
+msgid "Block Categories"
+msgstr ""
+
+#: theme/setup/gutenberg-blocks.php:539
+msgid "Đã lưu mapping block category."
+msgstr ""
+
+#: theme/setup/gutenberg-blocks.php:557
+msgid "Chọn category cho từng block. Nếu để \"Mặc định\", hệ thống sẽ tự gán theo nguồn block."
+msgstr ""
+
+#: theme/setup/gutenberg-blocks.php:560
+msgid "Block local của dự án: mặc định vào PĐN Blocks."
+msgstr ""
+
+#: theme/setup/gutenberg-blocks.php:561
+msgid "Block sync từ lacadev: mặc định vào La Cà Blocks."
+msgstr ""
+
+#: theme/setup/gutenberg-blocks.php:575
+msgid "Block"
+msgstr ""
+
+#: theme/setup/gutenberg-blocks.php:576
+msgid "Nguồn"
+msgstr ""
+
+#: theme/setup/gutenberg-blocks.php:577 theme/setup/gutenberg-blocks.php:603
+msgid "Mặc định"
+msgstr ""
+
+#: theme/setup/gutenberg-blocks.php:578
+msgid "Category áp dụng"
+msgstr ""
+
+#: theme/setup/gutenberg-blocks.php:584
+msgid "Chưa tìm thấy block nào."
+msgstr ""
+
+#: theme/setup/gutenberg-blocks.php:592
+msgid "Sync từ lacadev"
+msgstr ""
+
+#: theme/setup/gutenberg-blocks.php:592
+msgid "Local dự án"
+msgstr ""
+
+#: theme/setup/gutenberg-blocks.php:618
+msgid "Lưu cấu hình"
+msgstr ""
+
+#: theme/setup/menus.php:20
+msgid "Main Menu"
+msgstr ""
+
+#: theme/setup/menus.php:21
+msgid "Footer Menu"
+msgstr ""
+
+#: theme/setup/menus.php:33
+msgid "Menu image"
+msgstr ""
+
+#: theme/setup/performance.php:74
+msgid "That key doesn't seem to work. Please check and try again."
+msgstr ""
+
+#: theme/setup/recaptcha.php:150
+msgid "Vui lòng tải lại trang để xác thực reCAPTCHA."
+msgstr ""
+
+#: theme/setup/recaptcha.php:165
+msgid "Lỗi kết nối đến máy chủ xác thực."
+msgstr ""
+
+#: theme/setup/recaptcha.php:172
 msgid "Phản hồi xác thực không hợp lệ."
 msgstr ""
 
-#: theme/setup/recaptcha.php:151
+#: theme/setup/recaptcha.php:176
+msgid "Xác thực reCAPTCHA thất bại. Bạn có phải là robot?"
+msgstr ""
+
+#: theme/setup/recaptcha.php:180
+msgid "Hệ thống nghi ngờ bạn là robot. Điểm tín nhiệm thấp."
+msgstr ""
+
+#: theme/setup/recaptcha.php:184
 msgid "Phiên xác thực không hợp lệ (action)."
 msgstr ""
 
-#: theme/setup/recaptcha.php:157
+#: theme/setup/recaptcha.php:190
 msgid "Phiên xác thực không hợp lệ (hostname)."
 msgstr ""
 
-#: theme/setup/recaptcha.php:164
+#: theme/setup/recaptcha.php:197
 msgid "Mã xác thực đã hết hạn, vui lòng thử lại."
 msgstr ""
 
-#: theme/setup/recaptcha.php:177
+#: theme/setup/recaptcha.php:210
 msgid "Yêu cầu không hợp lệ."
 msgstr ""
 
-#: theme/setup/recaptcha.php:182
+#: theme/setup/recaptcha.php:215
 msgid "Phiên gửi biểu mẫu không hợp lệ."
 msgstr ""
 
-#: theme/setup/recaptcha.php:187
+#: theme/setup/recaptcha.php:220
 msgid "Thời gian gửi biểu mẫu không hợp lệ."
 msgstr ""
 
-#: theme/setup/taxonomies/template_cat.php:28
-#: theme/setup/taxonomies/template_cat.php:39
-msgid "Template Category"
+#: theme/setup/security.php:136
+msgid "Quá nhiều lần đăng nhập thất bại. Vui lòng thử lại sau 15 phút."
 msgstr ""
 
-#: theme/setup/taxonomies/template_tags.php:27
-msgid "Template Tags"
+#: theme/setup/sidebars.php:31
+msgid "Default Sidebar"
 msgstr ""
 
-#: theme/setup/theme-options.php:76
-msgid "Archive pages | List bài viết CPT"
+#: theme/setup/theme-support.php:92
+msgid "extra small"
 msgstr ""
 
-#: theme/setup/theme-options.php:101
-msgid "AI Translation | Dịch thuật AI"
+#: theme/setup/theme-support.php:93
+msgid "XS"
 msgstr ""
 
-#: theme/setup/theme-options.php:105
-msgid "Gemini API Key"
+#: theme/setup/theme-support.php:98
+msgid "small"
 msgstr ""
 
-#: theme/setup/theme-options.php:108
-msgid "Groq API Key"
+#: theme/setup/theme-support.php:99
+msgid "S"
 msgstr ""
 
-#: theme/setup/theme-options.php:111
-msgid "DeepSeek API Key"
+#: theme/setup/theme-support.php:104
+msgid "regular"
 msgstr ""
 
-#: theme/setup/theme-options.php:114
-msgid "OpenAI API Key"
+#: theme/setup/theme-support.php:105
+msgid "M"
 msgstr ""
 
-#: theme/setup/theme-options.php:117
-msgid "Anthropic API Key"
+#: theme/setup/theme-support.php:110
+msgid "large"
 msgstr ""
 
-#: theme/setup/theme-options.php:120
-msgid "Bô xử lý ưu tiên"
+#: theme/setup/theme-support.php:111
+msgid "L"
 msgstr ""
 
-#: theme/single-project.php:124
-msgid "Báo giá dự án"
+#: theme/setup/theme-support.php:116
+msgid "extra large"
 msgstr ""
 
-#: theme/single-project.php:131
-msgid "Nhà cung cấp"
+#: theme/setup/theme-support.php:117
+msgid "XL"
 msgstr ""
 
-#: theme/single-project.php:144
-msgid "Thông tin khách hàng"
+#: theme/setup/users/auth.php:43 theme/setup/users/auth.php:81
+msgid "Empty request."
 msgstr ""
 
-#: theme/single-project.php:157
-msgid "Mã báo giá"
+#: theme/setup/users/auth.php:47 theme/setup/users/auth.php:85
+msgid "Token mismatch!"
 msgstr ""
 
-#: theme/single-project.php:161
-msgid "Ngày phát hành"
+#: theme/setup/users/auth.php:51
+msgid "Tài khoản hoặc mật khẩu không đúng, vui lòng kiểm tra lại"
 msgstr ""
 
-#: theme/single-project.php:194
-msgid "Thời gian thực hiện"
+#: theme/setup/users/auth.php:70 theme/setup/users/auth.php:199
+msgid "Xin chào, "
 msgstr ""
 
-#: theme/single-project.php:195
-msgid "ngày làm việc"
+#: theme/setup/users/auth.php:71 theme/setup/users/auth.php:200
+msgid "Chúc mừng bạn đã đăng nhập thành công"
 msgstr ""
 
-#: theme/single-project.php:204
-msgid "Tham khảo thiết kế"
+#: theme/setup/users/auth.php:89
+msgid "Vui lòng nhập họ"
 msgstr ""
 
-#: theme/single-project.php:220
-msgid "Phạm vi công việc"
+#: theme/setup/users/auth.php:93
+msgid "Vui lòng nhập tên"
 msgstr ""
 
-#: theme/single-project.php:223
-msgid "Danh sách các trang thiết kế"
+#: theme/setup/users/auth.php:97
+msgid "Vui lòng nhập email hợp lệ"
 msgstr ""
 
-#: theme/single-project.php:257
-msgid "Tính năng kỹ thuật & Nền tảng"
+#: theme/setup/users/auth.php:101
+msgid "Vui lòng nhập mật khẩu"
 msgstr ""
 
-#: theme/single-project.php:348
-msgid "Quy trình thực hiện"
+#: theme/setup/users/auth.php:105
+msgid "Vui lòng kiểm tra lại mật khẩu"
 msgstr ""
 
-#: theme/single-project.php:387
-msgid "Chi tiết báo giá"
+#: theme/setup/users/auth.php:135
+msgid "Đăng ký thành công!"
 msgstr ""
 
-#: theme/single-project.php:393
-msgid "Mô tả hạng mục"
+#: theme/setup/users/auth.php:306
+msgid "Cuối tuần vui vẻ, "
 msgstr ""
 
-#: theme/single-project.php:394
-msgid "Thành tiền (VND)"
+#: theme/setup/users/auth.php:307
+msgid "Hãy gác lại công việc, dành thời gian nghỉ ngơi và sạc đầy năng lượng nhé! ✨"
 msgstr ""
 
-#: theme/single-project.php:435
-msgid "Gia hạn domain / năm"
+#: theme/setup/users/auth.php:313
+#, php-format
+msgid "Chào buổi sáng %s"
 msgstr ""
 
-#: theme/single-project.php:441
-msgid "Gia hạn hosting / năm"
+#: theme/setup/users/auth.php:314
+msgid "Một tách cà phê thơm và bắt đầu ngày mới thật hứng khởi nào! ☕"
 msgstr ""
 
-#: theme/single-project.php:454
-msgid "Tổng chi phí xây dựng"
+#: theme/setup/users/auth.php:318
+#, php-format
+msgid "Nghỉ trưa thôi %s"
+msgstr ""
+
+#: theme/setup/users/auth.php:319
+msgid "Đừng quên ăn trưa và chợp mắt một lát để nạp lại pin nhé! 🍱"
+msgstr ""
+
+#: theme/setup/users/auth.php:323
+#, php-format
+msgid "Chào buổi chiều %s"
+msgstr ""
+
+#: theme/setup/users/auth.php:324
+msgid "Giữ vững sự tập trung, sắp hoàn thành mục tiêu ngày rồi! 💪"
+msgstr ""
+
+#: theme/setup/users/auth.php:328
+#, php-format
+msgid "Chào buổi tối %s"
+msgstr ""
+
+#: theme/setup/users/auth.php:329
+msgid "Đã muộn rồi, làm việc vừa sức và sớm đi ngủ nhé! 🌕"
+msgstr ""
+
+#. translators: %s: khoảng thời gian, vd "5 phút".
+#: theme/template-parts/comment-single.php:35
+#, php-format
+msgid "%s trước"
+msgstr ""
+
+#: theme/template-parts/comment-single.php:42
+msgid "Bình luận của bạn đang chờ duyệt."
 msgstr ""
 
 #: theme/template-parts/post-hero.php:9
 msgid "Dịch vụ chuyên nghiệp"
 msgstr ""
 
-#: theme/template-parts/rating-box.php:7
-msgid "Tiếp thêm nhiên liệu cho Trạm Laca nhé người anh em!"
+#: theme/template-parts/post-hero.php:18
+msgid "lượt xem"
 msgstr ""
 
 #: theme/template-parts/share_box.php:12
 msgid "Chia sẻ bài viết:"
 msgstr ""
 
-#: block-gutenberg/about-laca-block/build/index.js:1
-#: block-gutenberg/about-laca-block/edit.js:46
-msgid "Nhấn để chọn ảnh nền"
+#. translators: %s: tên mạng xã hội.
+#: theme/template-parts/share_box.php:15 theme/template-parts/share_box.php:20
+#: theme/template-parts/share_box.php:25
+#, php-format
+msgid "Chia sẻ lên %s"
 msgstr ""
 
-#: block-gutenberg/about-laca-block/build/index.js:1
-#: block-gutenberg/about-laca-block/edit.js:123
-msgid "// nhấn để chọn ảnh nền"
+#: block-gutenberg/block-seo-faq/block.json
+msgctxt "block title"
+msgid "FAQ Schema Block"
 msgstr ""
 
-#: block-gutenberg/about-laca-block/build/index.js:1
-#: block-gutenberg/about-laca-block/edit.js:172
-msgid "Cấu hình Ảnh nền"
+#: block-gutenberg/block-seo-faq/block.json
+msgctxt "block keyword"
+msgid "faq"
 msgstr ""
 
-#: block-gutenberg/about-laca-block/build/index.js:1
-#: block-gutenberg/about-laca-block/edit.js:184
-msgid "Xóa ảnh"
+#: block-gutenberg/block-seo-faq/block.json
+msgctxt "block keyword"
+msgid "questions"
 msgstr ""
 
-#: block-gutenberg/about-laca-block/build/index.js:1
-#: block-gutenberg/about-laca-block/edit.js:196
-msgid "Thay đổi ảnh"
+#: block-gutenberg/block-seo-faq/block.json
+#: block-gutenberg/block-seo-howto/block.json
+msgctxt "block keyword"
+msgid "schema"
 msgstr ""
 
-#: block-gutenberg/about-laca-block/build/index.js:1
-#: block-gutenberg/about-laca-block/edit.js:195
-msgid "Chọn ảnh nền"
+#: block-gutenberg/block-seo-faq/block.json
+#: block-gutenberg/block-seo-howto/block.json
+#: block-gutenberg/block-seo-toc/block.json
+msgctxt "block keyword"
+msgid "seo"
 msgstr ""
 
-#: block-gutenberg/about-laca-block/build/index.js:1
-#: block-gutenberg/about-laca-block/edit.js:210
-#: block-gutenberg/about-laca-block/edit.js:246
-msgid "Nhập nội dung giới thiệu…"
+#: block-gutenberg/block-seo-howto/block.json
+msgctxt "block title"
+msgid "HowTo Schema Block"
 msgstr ""
 
-#: block-gutenberg/ai-translate-plugin/index.js:109
+#: block-gutenberg/block-seo-howto/block.json
+msgctxt "block keyword"
+msgid "howto"
+msgstr ""
+
+#: block-gutenberg/block-seo-howto/block.json
+msgctxt "block keyword"
+msgid "instructions"
+msgstr ""
+
+#: block-gutenberg/block-seo-howto/block.json
+msgctxt "block keyword"
+msgid "steps"
+msgstr ""
+
+#: block-gutenberg/block-seo-toc/block.json
+msgctxt "block title"
+msgid "TOC (Mục lục) Block"
+msgstr ""
+
+#: block-gutenberg/block-seo-toc/block.json
+msgctxt "block keyword"
+msgid "toc"
+msgstr ""
+
+#: block-gutenberg/block-seo-toc/block.json
+msgctxt "block keyword"
+msgid "table of contents"
+msgstr ""
+
+#: block-gutenberg/block-seo-toc/block.json
+msgctxt "block keyword"
+msgid "mục lục"
+msgstr ""
+
+#: block-gutenberg/block-seo-toc/block.json
+msgctxt "block keyword"
+msgid "headings"
+msgstr ""
+
+#: app/src/Settings/AdminSettings.php:1126
+msgid "Kết nối với lacadev.com"
+msgstr ""
+
+#: block-gutenberg/ai-translate-plugin/index.js:102
+#: resources/scripts/editor/ai-translate-block.js:66
 msgid "Lỗi không xác định."
 msgstr ""
 
-#: block-gutenberg/ai-translate-plugin/index.js:120
+#: block-gutenberg/ai-translate-plugin/index.js:112
+#: resources/scripts/editor/ai-translate-block.js:74
 msgid "✅ Đã dịch thành công!"
 msgstr ""
 
-#: block-gutenberg/ai-translate-plugin/index.js:125
+#: block-gutenberg/ai-translate-plugin/index.js:117
+#: resources/scripts/editor/ai-translate-block.js:79
 msgid "Lỗi kết nối. Vui lòng thử lại."
 msgstr ""
 
-#: block-gutenberg/ai-translate-plugin/index.js:132
+#: block-gutenberg/ai-translate-plugin/index.js:124
+#: resources/scripts/editor/ai-translate-block.js:87
 msgid "✨ Dịch bằng AI"
 msgstr ""
 
-#: block-gutenberg/ai-translate-plugin/index.js:137
+#: block-gutenberg/ai-translate-plugin/index.js:129
 msgid "Ngôn ngữ gốc"
 msgstr ""
 
-#: block-gutenberg/ai-translate-plugin/index.js:149
+#: block-gutenberg/ai-translate-plugin/index.js:141
+#: resources/scripts/editor/ai-translate-block.js:91
 msgid "Ngôn ngữ đích"
 msgstr ""
 
-#: block-gutenberg/ai-translate-plugin/index.js:185
+#: block-gutenberg/ai-translate-plugin/index.js:177
+#: resources/scripts/editor/ai-translate-block.js:128
 msgid "Đang dịch…"
 msgstr ""
 
-#: block-gutenberg/ai-translate-plugin/index.js:188
+#: block-gutenberg/ai-translate-plugin/index.js:180
+#: resources/scripts/editor/ai-translate-block.js:133
 msgid "✨ Dịch ngay"
 msgstr ""
 
@@ -7749,10 +7469,6 @@ msgstr ""
 
 #: block-gutenberg/block-seo-howto/build/index.js:1
 #: block-gutenberg/block-seo-howto/edit.js:69
-#: block-gutenberg/process-block/build/index.js:1
-#: block-gutenberg/process-block/edit.js:255
-#: block-gutenberg/workflow-block/build/index.js:1
-#: block-gutenberg/workflow-block/edit.js:350
 #: block-gutenberg/block-seo-howto/build/index.js:69
 msgid "Tiêu đề bước…"
 msgstr ""
@@ -7771,8 +7487,6 @@ msgstr ""
 
 #: block-gutenberg/block-seo-howto/build/index.js:1
 #: block-gutenberg/block-seo-howto/edit.js:89
-#: block-gutenberg/workflow-block/build/index.js:1
-#: block-gutenberg/workflow-block/edit.js:306
 #: block-gutenberg/block-seo-howto/build/index.js:89
 msgid "+ Thêm bước"
 msgstr ""
@@ -7801,1155 +7515,216 @@ msgstr ""
 msgid "Mục lục sẽ tự động quét danh sách heading trong bài viết ngoài frontend."
 msgstr ""
 
-#: block-gutenberg/blog-block/build/index.js:1
-#: block-gutenberg/blog-block/edit.js:221
-msgid "Cấu hình Blog"
-msgstr ""
-
-#: block-gutenberg/blog-block/build/index.js:1
-#: block-gutenberg/blog-block/edit.js:223
-#: block-gutenberg/project-block/build/index.js:1
-#: block-gutenberg/project-block/edit.js:198
-#: block-gutenberg/service-block/build/index.js:1
-#: block-gutenberg/service-block/edit.js:159
-#: block-gutenberg/staggered-blog-block/build/index.js:1
-#: block-gutenberg/staggered-blog-block/edit.js:222
-msgid "Post Type"
-msgstr ""
-
-#: block-gutenberg/blog-block/build/index.js:1
-#: block-gutenberg/blog-block/edit.js:238
-#: block-gutenberg/service-block/build/index.js:1
-#: block-gutenberg/service-block/edit.js:195
-#: block-gutenberg/staggered-blog-block/build/index.js:1
-#: block-gutenberg/staggered-blog-block/edit.js:236
-msgid "Taxonomy (lọc)"
-msgstr ""
-
-#: block-gutenberg/blog-block/build/index.js:1
-#: block-gutenberg/blog-block/edit.js:241
-#: block-gutenberg/service-block/build/index.js:1
-#: block-gutenberg/service-block/edit.js:198
-#: block-gutenberg/staggered-blog-block/build/index.js:1
-#: block-gutenberg/staggered-blog-block/edit.js:239
-msgid "Không lọc"
-msgstr ""
-
-#: block-gutenberg/blog-block/build/index.js:1
-#: block-gutenberg/blog-block/edit.js:256
-#: block-gutenberg/project-block/build/index.js:1
-#: block-gutenberg/project-block/edit.js:232
-msgid "Tiêu đề block"
-msgstr ""
-
-#: block-gutenberg/blog-block/build/index.js:1
-#: block-gutenberg/blog-block/edit.js:263
-#: block-gutenberg/process-block/build/index.js:1
-#: block-gutenberg/process-block/edit.js:105
-#: block-gutenberg/project-block/build/index.js:1
-#: block-gutenberg/project-block/edit.js:239
-#: block-gutenberg/service-block/build/index.js:1
-#: block-gutenberg/service-block/edit.js:259
-msgid "Mô tả block"
-msgstr ""
-
-#: block-gutenberg/blog-block/build/index.js:1
-#: block-gutenberg/blog-block/edit.js:272
-#: block-gutenberg/service-block/build/index.js:1
-#: block-gutenberg/service-block/edit.js:174
-#: block-gutenberg/staggered-blog-block/build/index.js:1
-#: block-gutenberg/staggered-blog-block/edit.js:270
-msgid "Chế độ hiển thị"
-msgstr ""
-
-#: block-gutenberg/blog-block/build/index.js:1
-#: block-gutenberg/blog-block/edit.js:276
-#: block-gutenberg/service-block/build/index.js:1
-#: block-gutenberg/service-block/edit.js:182
-#: block-gutenberg/staggered-blog-block/build/index.js:1
-#: block-gutenberg/staggered-blog-block/edit.js:274
-msgid "Tự động (Auto)"
-msgstr ""
-
-#: block-gutenberg/blog-block/build/index.js:1
-#: block-gutenberg/blog-block/edit.js:280
-#: block-gutenberg/service-block/build/index.js:1
-#: block-gutenberg/service-block/edit.js:178
-#: block-gutenberg/staggered-blog-block/build/index.js:1
-#: block-gutenberg/staggered-blog-block/edit.js:278
-msgid "Thủ công (Manual)"
-msgstr ""
-
-#: block-gutenberg/blog-block/build/index.js:1
-#: block-gutenberg/blog-block/edit.js:293
-#: block-gutenberg/service-block/build/index.js:1
-#: block-gutenberg/service-block/edit.js:215
-msgid "Lọc theo taxonomy:"
-msgstr ""
-
-#: block-gutenberg/blog-block/build/index.js:1
-#: block-gutenberg/blog-block/edit.js:180
-#: block-gutenberg/staggered-blog-block/build/index.js:1
-#: block-gutenberg/staggered-blog-block/edit.js:180
-msgid "Chọn taxonomy để bật bộ lọc."
-msgstr ""
-
-#: block-gutenberg/blog-block/build/index.js:1
-#: block-gutenberg/blog-block/edit.js:299
-#: block-gutenberg/project-block/build/index.js:1
-#: block-gutenberg/project-block/edit.js:256
-#: block-gutenberg/staggered-blog-block/build/index.js:1
-#: block-gutenberg/staggered-blog-block/edit.js:297
-msgid "Sắp xếp theo"
-msgstr ""
-
-#: block-gutenberg/blog-block/build/index.js:1
-#: block-gutenberg/blog-block/edit.js:303
-#: block-gutenberg/project-block/build/index.js:1
-#: block-gutenberg/project-block/edit.js:259
-#: block-gutenberg/staggered-blog-block/build/index.js:1
-#: block-gutenberg/staggered-blog-block/edit.js:301
-msgid "Mới nhất"
-msgstr ""
-
-#: block-gutenberg/blog-block/build/index.js:1
-#: block-gutenberg/blog-block/edit.js:307
-#: block-gutenberg/project-block/build/index.js:1
-#: block-gutenberg/project-block/edit.js:261
-#: block-gutenberg/staggered-blog-block/build/index.js:1
-#: block-gutenberg/staggered-blog-block/edit.js:305
-msgid "Ngẫu nhiên"
-msgstr ""
-
-#: block-gutenberg/blog-block/build/index.js:1
-#: block-gutenberg/blog-block/edit.js:311
-msgid "Nhiều bình luận nhất (Proxy Popularity)"
-msgstr ""
-
-#: block-gutenberg/blog-block/build/index.js:1
-#: block-gutenberg/blog-block/edit.js:323
-#: block-gutenberg/staggered-blog-block/build/index.js:1
-#: block-gutenberg/staggered-blog-block/edit.js:318
-msgid "Số lượng bài viết"
-msgstr ""
-
-#: block-gutenberg/blog-block/build/index.js:1
-#: block-gutenberg/blog-block/edit.js:338
-#: block-gutenberg/service-block/build/index.js:1
-#: block-gutenberg/service-block/edit.js:296
-msgid "Chọn nội dung hiển thị:"
-msgstr ""
-
-#: block-gutenberg/blog-block/build/index.js:1
-#: block-gutenberg/blog-block/edit.js:375
-#: block-gutenberg/project-block/build/index.js:1
-#: block-gutenberg/project-block/edit.js:296
-#: block-gutenberg/service-block/build/index.js:1
-#: block-gutenberg/service-block/edit.js:268
-#: block-gutenberg/staggered-blog-block/build/index.js:1
-#: block-gutenberg/staggered-blog-block/edit.js:370
-msgid "Cấu hình Button:"
-msgstr ""
-
-#: block-gutenberg/blog-block/build/index.js:1
-#: block-gutenberg/blog-block/edit.js:378
-#: block-gutenberg/project-block/build/index.js:1
-#: block-gutenberg/project-block/edit.js:299
-#: block-gutenberg/service-block/build/index.js:1
-#: block-gutenberg/service-block/edit.js:271
-#: block-gutenberg/staggered-blog-block/build/index.js:1
-#: block-gutenberg/staggered-blog-block/edit.js:373
-msgid "Nội dung button"
-msgstr ""
-
-#: block-gutenberg/blog-block/build/index.js:1
-#: block-gutenberg/blog-block/edit.js:388
-#: block-gutenberg/service-block/build/index.js:1
-#: block-gutenberg/service-block/edit.js:281
-#: block-gutenberg/staggered-blog-block/build/index.js:1
-#: block-gutenberg/staggered-blog-block/edit.js:383
-msgid "Nhập URL (chọn page hoặc nhập thủ công):"
-msgstr ""
-
-#: block-gutenberg/blog-block/build/index.js:1
-#: block-gutenberg/blog-block/edit.js:416
-#: block-gutenberg/project-block/build/index.js:1
-#: block-gutenberg/project-block/edit.js:333
-#: block-gutenberg/service-block/build/index.js:1
-#: block-gutenberg/service-block/edit.js:338
-#: block-gutenberg/staggered-blog-block/build/index.js:1
-#: block-gutenberg/staggered-blog-block/edit.js:411
-msgid "Nhập tiêu đề…"
-msgstr ""
-
-#: block-gutenberg/blog-block/build/index.js:1
-#: block-gutenberg/blog-block/edit.js:425
-#: block-gutenberg/project-block/build/index.js:1
-#: block-gutenberg/project-block/edit.js:347
-#: block-gutenberg/service-block/build/index.js:1
-#: block-gutenberg/service-block/edit.js:347
-#: block-gutenberg/staggered-blog-block/build/index.js:1
-#: block-gutenberg/staggered-blog-block/edit.js:420
-msgid "Nhập mô tả…"
-msgstr ""
-
-#: block-gutenberg/blog-block/build/index.js:1
-#: block-gutenberg/blog-block/edit.js:463
-msgid "By Author"
-msgstr ""
-
-#: block-gutenberg/blog-block/build/index.js:1
-#: block-gutenberg/blog-block/edit.js:469
-msgid "Just now"
-msgstr ""
-
-#: block-gutenberg/button-block/build/index.js:1
-#: block-gutenberg/button-block/edit.js:62
-msgid "Cấu hình Button"
-msgstr ""
-
-#: block-gutenberg/button-block/build/index.js:1
-#: block-gutenberg/button-block/edit.js:64
-msgid "Nội dung nút"
-msgstr ""
-
-#: block-gutenberg/button-block/build/index.js:1
-#: block-gutenberg/button-block/edit.js:75
-msgid "Liên kết (URL):"
-msgstr ""
-
-#: block-gutenberg/button-block/build/index.js:1
-#: block-gutenberg/button-block/edit.js:86
-msgid "Kiểu dáng"
-msgstr ""
-
-#: block-gutenberg/button-block/build/index.js:1
-#: block-gutenberg/button-block/edit.js:90
-msgid "Tiêu chuẩn (Primary)"
-msgstr ""
-
-#: block-gutenberg/button-block/build/index.js:1
-#: block-gutenberg/button-block/edit.js:94
-msgid "Đường nét (Outline)"
-msgstr ""
-
-#: block-gutenberg/button-block/build/index.js:1
-#: block-gutenberg/button-block/edit.js:98
-msgid "Tối giản (Minimal)"
-msgstr ""
-
-#: block-gutenberg/button-block/build/index.js:1
-#: block-gutenberg/button-block/edit.js:102
-msgid "Gương thần (Glass)"
-msgstr ""
-
-#: block-gutenberg/button-block/build/index.js:1
-#: block-gutenberg/button-block/edit.js:106
-msgid "Gạch chân (Text only)"
-msgstr ""
-
-#: block-gutenberg/button-block/build/index.js:1
-#: block-gutenberg/button-block/edit.js:116
-msgid "Căn lề"
-msgstr ""
-
-#: block-gutenberg/button-block/build/index.js:1
-#: block-gutenberg/button-block/edit.js:119
-msgid "Trái"
-msgstr ""
-
-#: block-gutenberg/button-block/build/index.js:1
-#: block-gutenberg/button-block/edit.js:120
-msgid "Giữa"
-msgstr ""
-
-#: block-gutenberg/button-block/build/index.js:1
-#: block-gutenberg/button-block/edit.js:121
-msgid "Phải"
-msgstr ""
-
-#: block-gutenberg/button-block/build/index.js:1
-#: block-gutenberg/button-block/edit.js:129
-msgid "Mở trong"
-msgstr ""
-
-#: block-gutenberg/button-block/build/index.js:1
-#: block-gutenberg/button-block/edit.js:133
-msgid "Trang hiện tại (_self)"
-msgstr ""
-
-#: block-gutenberg/button-block/build/index.js:1
-#: block-gutenberg/button-block/edit.js:137
-msgid "Trang mới (_blank)"
-msgstr ""
-
-#: block-gutenberg/button-block/build/index.js:1
-#: block-gutenberg/button-block/edit.js:147
-msgid "Độ rộng tối đa (Full width)"
-msgstr ""
-
-#: block-gutenberg/button-block/build/index.js:1
-#: block-gutenberg/button-block/edit.js:155
-msgid "Khoảng cách trên (px)"
-msgstr ""
-
-#: block-gutenberg/button-block/build/index.js:1
-#: block-gutenberg/button-block/edit.js:165
-msgid "Khoảng cách dưới (px)"
-msgstr ""
-
-#: block-gutenberg/button-block/build/index.js:1
-#: block-gutenberg/button-block/edit.js:186
-msgid "Thêm tên nút…"
-msgstr ""
-
-#: block-gutenberg/marquee-block/build/index.js:1
-#: block-gutenberg/marquee-block/edit.js:92
-msgid "Cài đặt Marquee Brands"
-msgstr ""
-
-#: block-gutenberg/marquee-block/build/index.js:1
-#: block-gutenberg/marquee-block/edit.js:101
-msgid "* Bạn có thể nhấn và kéo các ô để đổi vị trí."
-msgstr ""
-
-#: block-gutenberg/marquee-block/build/index.js:1
-#: block-gutenberg/marquee-block/edit.js:143
-msgid "Di chuyển lên"
-msgstr ""
-
-#: block-gutenberg/marquee-block/build/index.js:1
-#: block-gutenberg/marquee-block/edit.js:150
-msgid "Di chuyển xuống"
-msgstr ""
-
-#: block-gutenberg/marquee-block/build/index.js:1
-#: block-gutenberg/marquee-block/edit.js:157
-#: block-gutenberg/tech-list-block/build/index.js:1
-#: block-gutenberg/tech-list-block/edit.js:202
-msgid "Xóa"
-msgstr ""
-
-#: block-gutenberg/marquee-block/build/index.js:1
-#: block-gutenberg/marquee-block/edit.js:161
-msgid "Tên thương hiệu"
-msgstr ""
-
-#: block-gutenberg/marquee-block/build/index.js:1
-#: block-gutenberg/marquee-block/edit.js:168
-msgid "URL (Tùy chọn)"
-msgstr ""
-
-#: block-gutenberg/marquee-block/build/index.js:1
-#: block-gutenberg/marquee-block/edit.js:181
-msgid "Thêm thương hiệu"
-msgstr ""
-
-#: block-gutenberg/marquee-block/build/index.js:1
-#: block-gutenberg/marquee-block/edit.js:204
-msgid "MARQUEE PREVIEW"
-msgstr ""
-
-#: block-gutenberg/marquee-block/build/index.js:1
-#: block-gutenberg/marquee-block/edit.js:223
-msgid "(Trống)"
-msgstr ""
-
-#: block-gutenberg/process-block/build/index.js:1
-#: block-gutenberg/process-block/edit.js:98
-msgid "Cài đặt Quy trình"
-msgstr ""
-
-#: block-gutenberg/process-block/build/index.js:1
-#: block-gutenberg/process-block/edit.js:100
-#: block-gutenberg/workflow-block/build/index.js:1
-#: block-gutenberg/workflow-block/edit.js:201
-msgid "Tiêu đề chính"
-msgstr ""
-
-#: block-gutenberg/process-block/build/index.js:1
-#: block-gutenberg/process-block/edit.js:121
-msgid "* Kéo thả các ô bên dưới để đổi thứ tự các bước."
-msgstr ""
-
-#: block-gutenberg/process-block/build/index.js:1
-#: block-gutenberg/process-block/edit.js:177
-msgid "Số thứ tự"
-msgstr ""
-
-#: block-gutenberg/process-block/build/index.js:1
-#: block-gutenberg/process-block/edit.js:184
-#: block-gutenberg/workflow-block/build/index.js:1
-#: block-gutenberg/workflow-block/edit.js:285
-msgid "Tiêu đề bước"
-msgstr ""
-
-#: block-gutenberg/process-block/build/index.js:1
-#: block-gutenberg/process-block/edit.js:191
-#: block-gutenberg/workflow-block/build/index.js:1
-#: block-gutenberg/workflow-block/edit.js:292
-msgid "Mô tả bước"
-msgstr ""
-
-#: block-gutenberg/process-block/build/index.js:1
-#: block-gutenberg/process-block/edit.js:205
-msgid "Thêm bước quy trình"
-msgstr ""
-
-#: block-gutenberg/process-block/build/index.js:1
-#: block-gutenberg/process-block/edit.js:220
-msgid "Tiêu đề quy trình…"
-msgstr ""
-
-#: block-gutenberg/process-block/build/index.js:1
-#: block-gutenberg/process-block/edit.js:229
-msgid "Mô tả quy trình…"
-msgstr ""
-
-#: block-gutenberg/process-block/build/index.js:1
-#: block-gutenberg/process-block/edit.js:267
-msgid "Mô tả bước…"
-msgstr ""
-
-#: block-gutenberg/project-block/build/index.js:1
-#: block-gutenberg/project-block/edit.js:196
-msgid "Cấu hình Project Block"
-msgstr ""
-
-#: block-gutenberg/project-block/build/index.js:1
-#: block-gutenberg/project-block/edit.js:211
-msgid "Taxonomy (Tab)"
-msgstr ""
-
-#: block-gutenberg/project-block/build/index.js:1
-#: block-gutenberg/project-block/edit.js:215
-msgid "Không dùng tab"
-msgstr ""
-
-#: block-gutenberg/project-block/build/index.js:1
-#: block-gutenberg/project-block/edit.js:250
-msgid "Chọn danh mục hiển thị (Tab)"
-msgstr ""
-
-#: block-gutenberg/project-block/build/index.js:1
-#: block-gutenberg/project-block/edit.js:164
-msgid "Chọn taxonomy để bật tab."
-msgstr ""
-
-#: block-gutenberg/project-block/build/index.js:1
-#: block-gutenberg/project-block/edit.js:265
-msgid "Dự án thực tế"
-msgstr ""
-
-#: block-gutenberg/project-block/build/index.js:1
-#: block-gutenberg/project-block/edit.js:275
-msgid "Số lượng hiển thị (Desktop)"
-msgstr ""
-
-#: block-gutenberg/project-block/build/index.js:1
-#: block-gutenberg/project-block/edit.js:285
-msgid "Số lượng hiển thị (Mobile)"
-msgstr ""
-
-#: block-gutenberg/project-block/build/index.js:1
-#: block-gutenberg/project-block/edit.js:309
-msgid "Nhập URL:"
-msgstr ""
-
-#: block-gutenberg/project-block/build/index.js:1
-#: block-gutenberg/project-block/edit.js:380
-msgid "Đang tải dự án…"
-msgstr ""
-
-#: block-gutenberg/project-block/build/index.js:1
-#: block-gutenberg/project-block/edit.js:387
-msgid "Không tìm thấy dự án nào. Vui lòng kiểm tra lại danh mục hoặc trạng thái bài viết."
-msgstr ""
-
-#: block-gutenberg/service-block/build/index.js:1
-#: block-gutenberg/service-block/edit.js:157
-msgid "Cấu hình Dịch vụ"
-msgstr ""
-
-#: block-gutenberg/service-block/build/index.js:1
-#: block-gutenberg/service-block/edit.js:354
-msgid "Laca Service"
+#: resources/scripts/editor/ai-translate-block.js:131
+msgid "✨ Dịch sang %s"
 msgstr ""
 
-#: block-gutenberg/service-block/build/index.js:1
-#: block-gutenberg/service-block/edit.js:356
-msgid "Vui lòng chọn các dịch vụ trong thanh cấu hình bên phải."
-msgstr ""
-
-#: block-gutenberg/service-block/build/index.js:1
-#: block-gutenberg/service-block/edit.js:389
-msgid "Chưa có mô tả…"
-msgstr ""
-
-#: block-gutenberg/slogan-block/build/index.js:1
-#: block-gutenberg/slogan-block/edit.js:40
-msgid "Cấu hình Slogan"
-msgstr ""
-
-#: block-gutenberg/slogan-block/build/index.js:1
-#: block-gutenberg/slogan-block/edit.js:42
-msgid "Nội dung Slogan (Hỗ trợ HTML)"
-msgstr ""
-
-#: block-gutenberg/slogan-block/build/index.js:1
-#: block-gutenberg/slogan-block/edit.js:47
-msgid "Bạn có thể nhập thẻ <span> để tạo hiệu ứng outline. Ví dụ: La Cà <span>Dev</span>"
-msgstr ""
-
-#: block-gutenberg/slogan-block/build/index.js:1
-#: block-gutenberg/slogan-block/edit.js:60
-msgid "Nhập slogan của bạn…"
-msgstr ""
-
-#: block-gutenberg/staggered-blog-block/build/index.js:1
-#: block-gutenberg/staggered-blog-block/edit.js:220
-msgid "Cấu hình Staggered Blog"
-msgstr ""
-
-#: block-gutenberg/staggered-blog-block/build/index.js:1
-#: block-gutenberg/staggered-blog-block/edit.js:254
-msgid "Tiêu đề block (Tùy chọn)"
-msgstr ""
-
-#: block-gutenberg/staggered-blog-block/build/index.js:1
-#: block-gutenberg/staggered-blog-block/edit.js:261
-msgid "Mô tả block (Tùy chọn)"
-msgstr ""
-
-#: block-gutenberg/staggered-blog-block/build/index.js:1
-#: block-gutenberg/staggered-blog-block/edit.js:291
-msgid "Lọc theo chuyên mục:"
-msgstr ""
-
-#: block-gutenberg/staggered-blog-block/build/index.js:1
-#: block-gutenberg/staggered-blog-block/edit.js:309
-msgid "Phổ biến nhất"
-msgstr ""
-
-#: block-gutenberg/staggered-blog-block/build/index.js:1
-#: block-gutenberg/staggered-blog-block/edit.js:333
-msgid "Chọn bài viết hiển thị:"
-msgstr ""
-
-#: block-gutenberg/staggered-blog-block/build/index.js:1
-#: block-gutenberg/staggered-blog-block/edit.js:428
-msgid "Không có bài viết"
-msgstr ""
-
-#: block-gutenberg/staggered-blog-block/build/index.js:1
-#: block-gutenberg/staggered-blog-block/edit.js:430
-msgid "Vui lòng chọn bài viết hoặc kiểm tra cấu hình."
-msgstr ""
-
-#: block-gutenberg/statement-block/build/index.js:1
-#: block-gutenberg/statement-block/edit.js:38
-msgid "Cài đặt Statement"
-msgstr ""
-
-#: block-gutenberg/statement-block/build/index.js:1
-#: block-gutenberg/statement-block/edit.js:40
-msgid "Phụ đề"
-msgstr ""
-
-#: block-gutenberg/statement-block/build/index.js:1
-#: block-gutenberg/statement-block/edit.js:47
-msgid "Tuyên ngôn"
-msgstr ""
-
-#: block-gutenberg/statement-block/build/index.js:1
-#: block-gutenberg/statement-block/edit.js:62
-msgid "Nhập phụ đề…"
-msgstr ""
-
-#: block-gutenberg/statement-block/build/index.js:1
-#: block-gutenberg/statement-block/edit.js:69
-msgid "Nhập tuyên ngôn…"
-msgstr ""
-
-#: block-gutenberg/tech-list-block/build/index.js:1
-#: block-gutenberg/tech-list-block/edit.js:78
-msgid "Cài đặt danh sách công nghệ"
-msgstr ""
-
-#: block-gutenberg/tech-list-block/build/index.js:1
-#: block-gutenberg/tech-list-block/edit.js:87
-msgid "Thêm, sửa, hoặc xóa các công nghệ sử dụng."
-msgstr ""
-
-#: block-gutenberg/tech-list-block/build/index.js:1
-#: block-gutenberg/tech-list-block/edit.js:141
-msgid "Biểu tượng/Logo"
-msgstr ""
-
-#: block-gutenberg/tech-list-block/build/index.js:1
-#: block-gutenberg/tech-list-block/edit.js:188
-msgid "Đổi"
-msgstr ""
-
-#: block-gutenberg/tech-list-block/build/index.js:1
-#: block-gutenberg/tech-list-block/edit.js:213
-msgid "Chọn Ảnh/SVG"
-msgstr ""
-
-#: block-gutenberg/tech-list-block/build/index.js:1
-#: block-gutenberg/tech-list-block/edit.js:231
-msgid "+ Thêm công nghệ"
-msgstr ""
-
-#: block-gutenberg/tech-list-block/build/index.js:1
-#: block-gutenberg/tech-list-block/edit.js:262
-msgid "Tên công nghệ…"
-msgstr ""
-
-#: block-gutenberg/workflow-block/build/index.js:1
-#: block-gutenberg/workflow-block/edit.js:181
-msgid "Màu nền"
-msgstr ""
-
-#: block-gutenberg/workflow-block/build/index.js:1
-#: block-gutenberg/workflow-block/edit.js:192
-msgid "Header"
-msgstr ""
-
-#: block-gutenberg/workflow-block/build/index.js:1
-#: block-gutenberg/workflow-block/edit.js:194
-msgid "Sub tiêu đề (nhỏ phía trên)"
-msgstr ""
-
-#: block-gutenberg/workflow-block/build/index.js:1
-#: block-gutenberg/workflow-block/edit.js:207
-msgid "Các bước — Steps"
-msgstr ""
-
-#: block-gutenberg/workflow-block/build/index.js:1
-#: block-gutenberg/workflow-block/edit.js:216
-msgid "Số thứ tự tự động sinh. Kéo thả để đổi thứ tự."
-msgstr ""
-
-#: block-gutenberg/workflow-block/build/index.js:1
-#: block-gutenberg/workflow-block/edit.js:322
-msgid "Sub tiêu đề…"
-msgstr ""
-
-#: block-gutenberg/workflow-block/build/index.js:1
-#: block-gutenberg/workflow-block/edit.js:329
-msgid "Tiêu đề…"
-msgstr ""
-
-#: block-gutenberg/workflow-block/build/index.js:1
-#: block-gutenberg/workflow-block/edit.js:362
-msgid "Mô tả…"
-msgstr ""
-
-#: block-gutenberg/about-laca-block/block.json
-msgctxt "block title"
-msgid "La Cà Dev"
-msgstr ""
-
-#: block-gutenberg/about-laca-block/block.json
-msgctxt "block description"
-msgid "Block giới thiệu bản thân với hiệu ứng hình ảnh mở rộng khi scroll"
-msgstr ""
-
-#: block-gutenberg/about-laca-block/block.json
-msgctxt "block keyword"
-msgid "about"
-msgstr ""
-
-#: block-gutenberg/about-laca-block/block.json
-#: block-gutenberg/blog-block/block.json
-#: block-gutenberg/button-block/block.json
-#: block-gutenberg/project-block/block.json
-#: block-gutenberg/service-block/block.json
-#: block-gutenberg/staggered-blog-block/block.json
-msgctxt "block keyword"
-msgid "laca"
-msgstr ""
-
-#: block-gutenberg/about-laca-block/block.json
-msgctxt "block keyword"
-msgid "hero"
-msgstr ""
-
-#: block-gutenberg/block-seo-faq/block.json
-msgctxt "block title"
-msgid "FAQ Schema Block"
-msgstr ""
-
-#: block-gutenberg/block-seo-faq/block.json
-msgctxt "block keyword"
-msgid "faq"
-msgstr ""
-
-#: block-gutenberg/block-seo-faq/block.json
-msgctxt "block keyword"
-msgid "questions"
-msgstr ""
-
-#: block-gutenberg/block-seo-faq/block.json
-#: block-gutenberg/block-seo-howto/block.json
-msgctxt "block keyword"
-msgid "schema"
-msgstr ""
-
-#: block-gutenberg/block-seo-faq/block.json
-#: block-gutenberg/block-seo-howto/block.json
-#: block-gutenberg/block-seo-toc/block.json
-msgctxt "block keyword"
-msgid "seo"
-msgstr ""
-
-#: block-gutenberg/block-seo-howto/block.json
-msgctxt "block title"
-msgid "HowTo Schema Block"
-msgstr ""
-
-#: block-gutenberg/block-seo-howto/block.json
-msgctxt "block keyword"
-msgid "howto"
-msgstr ""
-
-#: block-gutenberg/block-seo-howto/block.json
-msgctxt "block keyword"
-msgid "instructions"
-msgstr ""
-
-#: block-gutenberg/block-seo-howto/block.json
-#: block-gutenberg/process-block/block.json
-#: block-gutenberg/workflow-block/block.json
-msgctxt "block keyword"
-msgid "steps"
-msgstr ""
-
-#: block-gutenberg/block-seo-toc/block.json
-msgctxt "block title"
-msgid "TOC (Mục lục) Block"
-msgstr ""
-
-#: block-gutenberg/block-seo-toc/block.json
-msgctxt "block keyword"
-msgid "toc"
-msgstr ""
-
-#: block-gutenberg/block-seo-toc/block.json
-msgctxt "block keyword"
-msgid "table of contents"
-msgstr ""
-
-#: block-gutenberg/block-seo-toc/block.json
-msgctxt "block keyword"
-msgid "mục lục"
-msgstr ""
-
-#: block-gutenberg/block-seo-toc/block.json
-msgctxt "block keyword"
-msgid "headings"
-msgstr ""
-
-#: block-gutenberg/blog-block/block.json
-msgctxt "block title"
-msgid "Layout: Card Grid"
-msgstr ""
-
-#: block-gutenberg/blog-block/block.json
-msgctxt "block description"
-msgid "Hiển thị danh sách bài viết theo dạng card-grid (chọn được Post Type + taxonomy)"
-msgstr ""
-
-#: block-gutenberg/blog-block/block.json
-#: block-gutenberg/staggered-blog-block/block.json
-msgctxt "block keyword"
-msgid "blog"
-msgstr ""
-
-#: block-gutenberg/blog-block/block.json
-#: block-gutenberg/staggered-blog-block/block.json
-msgctxt "block keyword"
-msgid "post"
-msgstr ""
-
-#: block-gutenberg/button-block/block.json
-msgctxt "block title"
-msgid "Laca Button"
-msgstr ""
-
-#: block-gutenberg/button-block/block.json
-msgctxt "block description"
-msgid "Thêm nút bấm tùy chỉnh với nhiều kiểu dáng."
-msgstr ""
-
-#: block-gutenberg/button-block/block.json
-msgctxt "block keyword"
-msgid "button"
-msgstr ""
-
-#: block-gutenberg/button-block/block.json
-msgctxt "block keyword"
-msgid "link"
-msgstr ""
-
-#: block-gutenberg/button-block/block.json
-msgctxt "block keyword"
-msgid "nút"
-msgstr ""
-
-#: block-gutenberg/marquee-block/block.json
-msgctxt "block title"
-msgid "LaCa Marquee"
-msgstr ""
-
-#: block-gutenberg/marquee-block/block.json
-msgctxt "block description"
-msgid "Chữ chạy ngang màn hình tạo điểm nhấn"
-msgstr ""
+#. Dùng ở child theme: lacadev-client-child/theme/header.php
+msgid "Tìm kiếm"
+msgstr "Search"
 
-#: block-gutenberg/marquee-block/block.json
-msgctxt "block keyword"
-msgid "marquee"
+msgid "Thương hiệu"
 msgstr ""
 
-#: block-gutenberg/marquee-block/block.json
-msgctxt "block keyword"
-msgid "ticker"
+msgid "Footer"
 msgstr ""
 
-#: block-gutenberg/marquee-block/block.json
-msgctxt "block keyword"
-msgid "scrolling"
+msgid "Footer menu (Child)"
 msgstr ""
 
-#: block-gutenberg/process-block/block.json
-msgctxt "block title"
-msgid "LaCa Work Process"
+msgid "Newsletter"
 msgstr ""
 
-#: block-gutenberg/process-block/block.json
-msgctxt "block description"
-msgid "Hiển thị quy trình làm việc chuyên nghiệp"
+msgid "Dịch thuật AI"
 msgstr ""
 
-#: block-gutenberg/process-block/block.json
-#: block-gutenberg/workflow-block/block.json
-msgctxt "block keyword"
-msgid "process"
+msgid "Block Marketplace"
 msgstr ""
 
-#: block-gutenberg/process-block/block.json
-#: block-gutenberg/workflow-block/block.json
-msgctxt "block keyword"
-msgid "workflow"
+msgid "Thiết lập màu sắc và logo dùng chung cho toàn bộ website. Các màu và logo ở đây sẽ hiển thị đồng bộ trên mọi trang, mọi giao diện của site."
 msgstr ""
 
-#: block-gutenberg/project-block/block.json
-msgctxt "block title"
-msgid "Layout: Tabbed Grid"
+msgid "Nhập thông tin liên hệ của công ty (địa chỉ, số điện thoại, hotline, giờ làm việc, mạng xã hội). Các thông tin này sẽ tự động hiển thị ở footer và các khối liên hệ trên site."
 msgstr ""
 
-#: block-gutenberg/project-block/block.json
-msgctxt "block description"
-msgid "Hiển thị nội dung dạng lưới + tab theo taxonomy (chọn được Post Type + taxonomy)"
+msgid "Cấu hình 5 cột menu ở footer: Về chúng tôi, Dịch vụ, Chính sách, Showroom & Nhà máy, Dự án tiêu biểu và Đối tác. Nội dung khai báo ở đây sẽ hiển thị ở cuối mọi trang trên website."
 msgstr ""
 
-#: block-gutenberg/project-block/block.json
-msgctxt "block keyword"
-msgid "project"
+msgid "Tối ưu hóa"
 msgstr ""
 
-#: block-gutenberg/project-block/block.json
-msgctxt "block keyword"
-msgid "portfolio"
+msgid "Tắt thành phần không cần thiết"
 msgstr ""
 
-#: block-gutenberg/service-block/block.json
-msgctxt "block title"
-msgid "Layout: Icon Cards"
+msgid "Tắt jQuery Migrate"
 msgstr ""
 
-#: block-gutenberg/service-block/block.json
-msgctxt "block description"
-msgid "Hiển thị danh sách nội dung dạng card + ký tự icon (chọn được Post Type + taxonomy)"
+msgid "Tắt CSS Gutenberg"
 msgstr ""
 
-#: block-gutenberg/service-block/block.json
-msgctxt "block keyword"
-msgid "service"
+msgid "Tắt CSS Classic"
 msgstr ""
 
-#: block-gutenberg/slogan-block/block.json
-msgctxt "block title"
-msgid "LaCa Slogan"
+msgid "Tắt Emoji"
 msgstr ""
 
-#: block-gutenberg/slogan-block/block.json
-msgctxt "block description"
-msgid "Block hiển thị slogan của trang web"
+msgid "Thư viện tối ưu"
 msgstr ""
 
-#: block-gutenberg/slogan-block/block.json
-msgctxt "block keyword"
-msgid "slogan"
+msgid "Bật Instant-page"
 msgstr ""
 
-#: block-gutenberg/slogan-block/block.json
-#: block-gutenberg/statement-block/block.json
-msgctxt "block keyword"
-msgid "text"
+msgid "Bật cuộn mượt (Smooth-scroll)"
 msgstr ""
 
-#: block-gutenberg/slogan-block/block.json
-msgctxt "block keyword"
-msgid "quote"
+msgid "Tối ưu HTML & ảnh"
 msgstr ""
 
-#: block-gutenberg/staggered-blog-block/block.json
-msgctxt "block title"
-msgid "Layout: Staggered List"
+msgid "Xoá comment trong HTML, JavaScript và CSS"
 msgstr ""
 
-#: block-gutenberg/staggered-blog-block/block.json
-msgctxt "block description"
-msgid "Hiển thị nội dung theo dạng so le (staggered/alternating). Chọn được Post Type + taxonomy."
+msgid "Bỏ thẻ đóng XHTML ở phần tử rỗng (HTML5)"
 msgstr ""
 
-#: block-gutenberg/staggered-blog-block/block.json
-msgctxt "block keyword"
-msgid "staggered"
+msgid "Bỏ tên miền khỏi URL nội bộ"
 msgstr ""
 
-#: block-gutenberg/statement-block/block.json
-msgctxt "block title"
-msgid "LaCa Big Statement"
+msgid "Bỏ giao thức (HTTP: và HTTPS:) khỏi mọi URL"
 msgstr ""
 
-#: block-gutenberg/statement-block/block.json
-msgctxt "block description"
-msgid "Hiển thị tuyên ngôn thương hiệu với kích thước lớn"
+msgid "Hỗ trợ mã hoá UTF-8 nhiều byte (khi thấy ký tự lạ)"
 msgstr ""
 
-#: block-gutenberg/statement-block/block.json
-msgctxt "block keyword"
-msgid "statement"
+msgid "Tổng quan"
 msgstr ""
 
-#: block-gutenberg/statement-block/block.json
-msgctxt "block keyword"
-msgid "heading"
+msgid "Hệ thống"
 msgstr ""
 
-#: block-gutenberg/tech-list-block/block.json
-msgctxt "block title"
-msgid "Laca Tech List"
+msgid "Người dùng & đăng nhập"
 msgstr ""
 
-#: block-gutenberg/tech-list-block/block.json
-msgctxt "block description"
-msgid "Hiển thị danh sách công nghệ sử dụng"
+msgid "Nội dung & Form"
 msgstr ""
 
-#: block-gutenberg/tech-list-block/block.json
-msgctxt "block keyword"
-msgid "tech"
+msgid "Kết nối & dịch vụ"
 msgstr ""
 
-#: block-gutenberg/tech-list-block/block.json
-msgctxt "block keyword"
-msgid "list"
+msgid "Marketing & AI"
 msgstr ""
 
-#: block-gutenberg/tech-list-block/block.json
-msgctxt "block keyword"
-msgid "công nghệ"
+msgid "Hướng dẫn cơ bản"
 msgstr ""
 
-#: block-gutenberg/workflow-block/block.json
-msgctxt "block title"
-msgid "LaCa Workflow Steps"
+#. translators: %d: số nhóm trong checklist phát hành
+#, php-format
+msgid "Xem chi tiết %d nhóm"
 msgstr ""
 
-#: block-gutenberg/workflow-block/block.json
-msgctxt "block description"
-msgid "Hiển thị các bước quy trình làm việc theo dạng ngang với đường kết nối"
+msgid "Bài viết"
 msgstr ""
 
-#: block-gutenberg/workflow-block/block.json
-msgctxt "block keyword"
-msgid "quy trình"
+msgid "Trang"
 msgstr ""
 
-#: theme.json
-msgctxt "Color name"
-msgid "Primary"
+msgid "Form liên hệ chưa đọc"
 msgstr ""
 
-#: theme.json
-msgctxt "Color name"
-msgid "Primary Dark"
+msgid "Sản phẩm"
 msgstr ""
 
-#: theme.json
-msgctxt "Color name"
-msgid "Secondary"
+msgid "Viết bài mới"
 msgstr ""
 
-#: theme.json
-msgctxt "Color name"
-msgid "Secondary Dark"
+msgid "Xem site"
 msgstr ""
 
-#: theme.json
-msgctxt "Color name"
-msgid "Background"
+msgid "Bản nháp"
 msgstr ""
 
-#: theme.json
-msgctxt "Color name"
-msgid "Background Dark"
+msgid "Đã lên lịch"
 msgstr ""
 
-#: theme.json
-msgctxt "Color name"
-msgid "White"
+#, php-format
+msgid "Thêm %s"
 msgstr ""
 
-#: theme.json
-msgctxt "Color name"
-msgid "Black"
+msgid "Thêm sản phẩm"
 msgstr ""
 
-#: theme.json
-msgctxt "Font family name"
-msgid "Be Vietnam Pro"
+msgid "Media không dùng"
 msgstr ""
 
-#: theme.json
-msgctxt "Font family name"
-msgid "Quicksand"
+msgid "Cấu hình Theme"
 msgstr ""
 
-#: theme.json
-msgctxt "Font family name"
-msgid "System Sans"
+msgid "Chế độ bảo trì"
 msgstr ""
 
-#: theme.json
-msgctxt "Font size name"
-msgid "Extra Small"
+msgid "Đang bật"
 msgstr ""
 
-#: theme.json
-msgctxt "Font size name"
-msgid "Small"
+msgid "Đang tắt"
 msgstr ""
 
-#: theme.json
-msgctxt "Font size name"
-msgid "Base"
+msgid "Việc cần làm"
 msgstr ""
 
-#: theme.json
-msgctxt "Font size name"
-msgid "Large"
+msgid "Không có việc cần làm ngay."
 msgstr ""
 
-#: theme.json
-msgctxt "Font size name"
-msgid "Extra Large"
+msgid "Thao tác nhanh"
 msgstr ""
 
-#: theme.json
-msgctxt "Font size name"
-msgid "2XL"
+msgid "Bình luận chờ duyệt"
 msgstr ""
 
-#: theme.json
-msgctxt "Font size name"
-msgid "3XL"
+msgid "Đơn hàng mới cần xử lý"
 msgstr ""
 
-#: theme.json
-msgctxt "Font size name"
-msgid "4XL"
+msgid "Sản phẩm sắp hết hàng"
 msgstr ""
 
-#: theme.json
-msgctxt "Font size name"
-msgid "5XL"
+#, php-format
+msgid "%s bản nháp"
 msgstr ""
 
-#: theme.json
-msgctxt "Font size name"
-msgid "6XL"
+#, php-format
+msgid "%s lên lịch (7 ngày)"
 msgstr ""
 
-#: theme.json
-msgctxt "Space size name"
-msgid "1"
+msgid "Báo cáo nội dung"
 msgstr ""
 
-#: theme.json
-msgctxt "Space size name"
-msgid "2"
+msgid "Tình trạng website"
 msgstr ""
 
-#: theme.json
-msgctxt "Space size name"
-msgid "3"
+msgid "Thư viện media"
 msgstr ""
 
-#: theme.json
-msgctxt "Space size name"
-msgid "4"
+msgid "Tìm kiếm nhanh"
 msgstr ""
 
-#: theme.json
-msgctxt "Space size name"
-msgid "5"
+msgid "Thống kê dự án"
 msgstr ""
 
-#: theme.json
-msgctxt "Space size name"
-msgid "6"
+msgid "Site Tracker"
 msgstr ""
 
-#: theme.json
-msgctxt "Space size name"
-msgid "8"
+msgid "Chưa chấm"
 msgstr ""
 
-#: theme.json
-msgctxt "Space size name"
-msgid "10"
+msgid "Tiêu đề & mô tả riêng"
 msgstr ""
 
-#: theme.json
-msgctxt "Space size name"
-msgid "12"
+msgid "Có tiêu đề riêng, mô tả theo mẫu"
 msgstr ""
 
-#: theme.json
-msgctxt "Space size name"
-msgid "16"
+msgid "Có mô tả riêng, tiêu đề theo mẫu"
 msgstr ""
 
-#: theme.json
-msgctxt "Space size name"
-msgid "20"
+msgid "Theo mẫu chung"
 msgstr ""
 
-#: theme.json
-msgctxt "Space size name"
-msgid "24"
+msgid "Sửa SEO"
 msgstr ""
-
-#: app/src/Settings/Security/SecurityManager.php
-msgid "Xác thực 2 bước (2FA)"
-msgstr "Two-factor authentication (2FA)"
-
-#: app/src/Settings/Security/SecurityManager.php
-msgid "Super User"
-msgstr "Super User"

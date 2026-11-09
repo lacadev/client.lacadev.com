@@ -2984,3 +2984,27 @@ msgstr ""
 msgctxt "block keyword"
 msgid "khách hàng"
 msgstr ""
+
+msgid "Thương hiệu"
+msgstr ""
+
+msgid "Footer"
+msgstr ""
+
+msgid "Footer menu (Child)"
+msgstr ""
+
+msgid "Dịch thuật AI"
+msgstr ""
+
+msgid "Block Marketplace"
+msgstr ""
+
+msgid "Thiết lập màu sắc và logo dùng chung cho toàn bộ website. Các màu và logo ở đây sẽ hiển thị đồng bộ trên mọi trang, mọi giao diện của site."
+msgstr ""
+
+msgid "Nhập thông tin liên hệ của công ty (địa chỉ, số điện thoại, hotline, giờ làm việc, mạng xã hội). Các thông tin này sẽ tự động hiển thị ở footer và các khối liên hệ trên site."
+msgstr ""
+
+msgid "Cấu hình 5 cột menu ở footer: Về chúng tôi, Dịch vụ, Chính sách, Showroom & Nhà máy, Dự án tiêu biểu và Đối tác. Nội dung khai báo ở đây sẽ hiển thị ở cuối mọi trang trên website."
+msgstr ""

@@ -2,12 +2,12 @@
   "_comment": "DEPRECATED — dùng workflow publish-theme-updates.yml",
   "name": "LacaDev Client",
   "slug": "lacadev-client",
-  "version": "3.1",
-  "download_url": "https://clients.lacadev.com/theme-updates/lacadev-client-3.1.zip",
+  "version": "3.8",
+  "download_url": "https://clients.lacadev.com/theme-updates/lacadev-client-3.8.zip",
   "details_url": "https://clients.lacadev.com/theme-updates/changelog",
-  "last_updated": "2026-03-18",
+  "last_updated": "2026-11-10",
   "requires": "6.0",
   "requires_php": "8.0",
   "description": "LacaDev Client Theme — theme WordPress được phát triển bởi La Cà Dev.",
-  "changelog": "<h4>3.1</h4><ul><li>Phiên bản khởi tạo hệ thống auto-update</li></ul>"
+  "changelog": "<h4>3.8 (2026-11-10)</h4><ul><li>Sửa cập nhật theme lồng cấp (nested package), sao lưu thư mục gốc, HMAC signing, Content-Type tracker và đồng bộ cải tiến AI, Admin UX, CSP</li></ul><h4>3.1</h4><ul><li>Phiên bản khởi tạo hệ thống auto-update</li></ul>"
 }

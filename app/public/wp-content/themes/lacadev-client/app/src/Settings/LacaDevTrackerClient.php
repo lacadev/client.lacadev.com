@@ -1160,6 +1160,7 @@ class LacaDevTrackerClient
 
         $keyForSigning = $trackerKey ?: $secretKey;
         $headers       = \App\Security\RequestSigner::sign('POST', $endpoint, $bodyJson, $keyForSigning, $projectId);
+        $headers['Content-Type'] = 'application/json';
 
         $response = wp_remote_post($endpoint, [
             'body'     => $bodyJson,

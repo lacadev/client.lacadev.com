@@ -113,18 +113,23 @@ class AdminUxService
         $email   = carbon_get_theme_option('help_support_email')   ?: (defined('AUTHOR') ? AUTHOR['email'] : '');
         $website = carbon_get_theme_option('help_support_website') ?: (defined('AUTHOR') ? AUTHOR['website'] : '');
         // Styles extracted to resources/styles/admin/_admin-help.scss
+        $has_custom_guide = has_action('laca_help_page_before_blocks');
         ?>
 
         <div class="wrap laca-help-wrap">
+            <?php if (!$has_custom_guide) : ?>
             <div class="laca-alert laca-alert--info laca-mb-3">
                 <p class="laca-alert__title">Trang trợ giúp dành cho bạn</p>
                 <p class="laca-alert__description">Đây là trang hướng dẫn sử dụng website dành cho khách hàng. Nội dung bên dưới do quản trị viên cấu hình riêng cho từng dự án tại <strong>Laca Admin &gt; Quản trị &amp; HD Sử dụng</strong>.</p>
             </div>
+            <?php endif; ?>
             <h1 class="laca-help-header">
                 <span>📖</span>
                 <?php echo esc_html($page_title); ?>
             </h1>
             <p class="laca-help-intro"><?php echo nl2br(esc_html($page_intro)); ?></p>
+
+            <?php do_action('laca_help_page_before_blocks'); ?>
 
             <div class="laca-help-grid">
                 <?php if (!empty($blocks)) : ?>
@@ -136,7 +141,7 @@ class AdminUxService
                             </div>
                         </div>
                     <?php endforeach; ?>
-                <?php else : ?>
+                <?php elseif (!$has_custom_guide) : ?>
                     <div class="laca-help-card">
                         <h3>📝 Hướng dẫn mặc định</h3>
                         <p>Vui lòng vào <strong>Laca Admin &gt; Quản trị &amp; HD Sử dụng</strong> để cập nhật nội dung hướng dẫn cho khách hàng.</p>

@@ -699,8 +699,12 @@ body.wp-admin.has-laca-table-scroll {
     td[class*="column-taxonomy-"],
     th[class*="column-laca_product_cat"],
     td[class*="column-laca_product_cat"],
+    th[class*="column-laca_variety_cat"],
+    td[class*="column-laca_variety_cat"],
     th[class*="column-laca_category"],
-    td[class*="column-laca_category"] {
+    td[class*="column-laca_category"],
+    th[class*="column-laca_product_brand"],
+    td[class*="column-laca_product_brand"] {
       min-width: 160px !important;
       max-width: 240px !important;
       white-space: normal !important;

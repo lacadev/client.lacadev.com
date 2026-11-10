@@ -27,6 +27,7 @@ class EntityStats
         $types = get_post_types(['public' => true]);
         unset($types['attachment']);
         $types = array_values(array_unique(array_merge(['post', 'page'], array_values($types))));
+        $types = (array) apply_filters('laca_entity_stats_post_types', $types);
         return (array) apply_filters('laca_google_entity_post_types', $types);
     }
 

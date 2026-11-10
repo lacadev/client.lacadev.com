@@ -94,15 +94,42 @@ rm -rf \
     "${BUILD_DIR}/releases" \
     "${BUILD_DIR}/build-release.sh" \
     "${BUILD_DIR}/theme-server" \
+    "${BUILD_DIR}/doc" \
     "${BUILD_DIR}/node_modules" \
+    "${BUILD_DIR}/phpstan"*.neon \
+    "${BUILD_DIR}/composer.json" \
+    "${BUILD_DIR}/composer.lock" \
+    "${BUILD_DIR}/.editorconfig" \
+    "${BUILD_DIR}/.gitignore" \
+    "${BUILD_DIR}/config.json.dist" \
     "${BUILD_DIR}/.DS_Store"
 
 find "$BUILD_DIR" -name ".DS_Store" -delete
 find "$BUILD_DIR" -name "*.map" -delete
 
+# Kiểm tra các thành phần cốt lõi trước khi zip
+if [[ ! -f "${BUILD_DIR}/theme/style.css" ]]; then
+    echo "❌ Lỗi: Thiếu theme/style.css trong build"
+    exit 1
+fi
+if [[ ! -f "${BUILD_DIR}/vendor/autoload.php" ]]; then
+    echo "❌ Lỗi: Thiếu vendor/autoload.php trong build"
+    exit 1
+fi
+if [[ ! -d "${BUILD_DIR}/app" ]]; then
+    echo "❌ Lỗi: Thiếu thư mục app trong build"
+    exit 1
+fi
+
 # Tạo zip với tên thư mục đúng
-(cd /tmp && zip -r "$ZIP_PATH" "${THEME_SLUG}/" -x "*.git*" -x "__MACOSX*")
+(cd /tmp && zip -qr "$ZIP_PATH" "${THEME_SLUG}/" -x "*.git*" -x "__MACOSX*")
 rm -rf "$BUILD_DIR"
+
+# Xác thực lại cấu trúc bên trong zip
+unzip -l "$ZIP_PATH" | grep -E "${THEME_SLUG}/(theme/style.css|vendor/autoload.php|app/)" >/dev/null || {
+    echo "❌ Lỗi xác thực nội dung zip: thiếu các file cốt lõi"
+    exit 1
+}
 
 ZIP_SIZE=$(du -sh "$ZIP_PATH" | cut -f1)
 echo "   ✅ Đã tạo: ${ZIP_PATH} (${ZIP_SIZE})"

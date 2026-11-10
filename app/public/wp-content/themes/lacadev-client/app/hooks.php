@@ -168,9 +168,12 @@ add_action('carbon_fields_theme_options_container_saved', static function ($user
  */
 if (is_admin()) {
     add_action('init', static function () {
+        $defaultJsonUrl = wp_get_environment_type() === 'local'
+            ? 'http://lacadev.local/theme-updates/lacadev-client.json'
+            : 'https://lacadev.com/theme-updates/lacadev-client.json';
         $updateJsonUrl = (string) apply_filters(
             'laca_theme_update_json_url',
-            'https://lacadev.com/theme-updates/lacadev-client.json'
+            $defaultJsonUrl
         );
         new \App\Settings\ThemeUpdater(
             'lacadev-client/theme',

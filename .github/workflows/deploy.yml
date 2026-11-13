@@ -95,6 +95,10 @@ jobs:
         working-directory: app/public/wp-content/themes/lacadev-client-child
         run: yarn build:blocks
 
+      - name: Build parent theme assets (lacadev-client/dist)
+        working-directory: app/public/wp-content/themes/lacadev-client-child
+        run: yarn build:parent
+
       - name: Deploy Theme & Plugins
         id: ftp
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4

@@ -2,43 +2,88 @@ name: Publish Theme Updates
 
 on:
   push:
-    branches: [main, master]
+    tags:
+      - 'lacadev-client-v*'
+  workflow_dispatch:
+
+concurrency:
+  group: publish-theme-updates
+  cancel-in-progress: false
 
 jobs:
   publish:
-    name: Build, package & publish theme update packages
+    name: Build, sign & publish parent theme update package
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.1'
+          extensions: sodium, zip
           tools: composer:v2
+          coverage: none
 
-      - name: Build parent theme (lacadev-client)
-        working-directory: app/public/wp-content/themes/lacadev-client
-        run: composer install --no-dev --optimize-autoloader --prefer-dist
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
 
-      - name: Read theme version
+      - name: Create child config.json from dist
+        working-directory: app/public/wp-content/themes/lacadev-client-child
+        run: cp config.json.dist config.json
+
+      - name: Install child Node dependencies
+        working-directory: app/public/wp-content/themes/lacadev-client-child
+        run: yarn install --frozen-lockfile
+
+      - name: Verify version matches git tag & signing secret exists
         id: versions
-        working-directory: app/public/wp-content/themes
+        env:
+          REF_NAME: ${{ github.ref_name }}
+          REF_TYPE: ${{ github.ref_type }}
+          LACA_RELEASE_SIGNING_KEY: ${{ secrets.LACA_RELEASE_SIGNING_KEY }}
         run: |
-          PARENT_VERSION=$(grep -m1 '^ \* Version:' lacadev-client/theme/style.css | sed -E 's/^ \* Version:[[:space:]]*//')
-          echo "parent=$PARENT_VERSION" >> "$GITHUB_OUTPUT"
-          echo "date=$(date -u +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+          if [ -z "$LACA_RELEASE_SIGNING_KEY" ]; then
+            echo "::error::Missing required GitHub secret LACA_RELEASE_SIGNING_KEY"
+            exit 1
+          fi
 
-      # Chỉ đóng gói & publish theme CHA (lacadev-client). Theme con
-      # (lacadev-client-child) KHÔNG được tự động cập nhật xuống site khách.
-      - name: Package parent theme zip
-        working-directory: app/public/wp-content/themes
+          STYLE_VER="$(grep -m1 '^ \* Version:' app/public/wp-content/themes/lacadev-client/theme/style.css | sed -E 's/^ \* Version:[[:space:]]*//' | tr -d '\r')"
+          if [ -z "$STYLE_VER" ]; then
+            echo "::error::Could not read Version from theme/style.css"
+            exit 1
+          fi
+
+          if [ "$REF_TYPE" = "tag" ]; then
+            EXPECTED_TAG="lacadev-client-v${STYLE_VER}"
+            if [ "$REF_NAME" != "$EXPECTED_TAG" ]; then
+              echo "::error::Git tag ($REF_NAME) does not match theme/style.css Version ($STYLE_VER; expected $EXPECTED_TAG)"
+              exit 1
+            fi
+          fi
+
+          echo "version=$STYLE_VER" >> "$GITHUB_OUTPUT"
+
+      - name: Build & sign deterministic release package
+        env:
+          LACA_RELEASE_SIGNING_KEY: ${{ secrets.LACA_RELEASE_SIGNING_KEY }}
+          PARENT_VERSION: ${{ steps.versions.outputs.version }}
+        run: |
+          bash app/public/wp-content/themes/lacadev-client/tools/release/build-package.sh \
+            --version "$PARENT_VERSION" \
+            --download-url "https://lacadev.com/wp-json/laca/v1/theme-package/lacadev-client" \
+            --out "$GITHUB_WORKSPACE/publish-out"
+
+      - name: Assemble publish directory (private package + signed manifest only)
+        env:
+          PARENT_VERSION: ${{ steps.versions.outputs.version }}
         run: |
           mkdir -p "$GITHUB_WORKSPACE/publish/private"
-          mkdir -p "$GITHUB_WORKSPACE/publish-legacy"
 
-          # Tạo file .htaccess bảo vệ thư mục private không cho truy cập web trực tiếp
           cat > "$GITHUB_WORKSPACE/publish/private/.htaccess" << 'EOF'
           # Deny direct access to private theme packages
           <IfModule mod_authz_core.c>
@@ -49,69 +94,10 @@ jobs:
           </IfModule>
           EOF
 
-          # Đóng gói zip an toàn vào thư mục private/
-          zip -r "$GITHUB_WORKSPACE/publish/private/lacadev-client.zip" lacadev-client \
-            -x "lacadev-client/.git/*" \
-            -x "lacadev-client/.github/*" \
-            -x "lacadev-client/node_modules/*" \
-            -x "lacadev-client/*.md"
+          printf '<?php // Silence is golden.\n' > "$GITHUB_WORKSPACE/publish/private/index.php"
 
-          # TODO: XOÁ BƯỚC NÀY sau khi mọi client lên >= 3.2
-          # Giữ 1 bản zip công khai cũ cho các client cũ chưa biết ký HMAC tải trực tiếp
-          cp "$GITHUB_WORKSPACE/publish/private/lacadev-client.zip" "$GITHUB_WORKSPACE/publish/lacadev-client.zip"
-          cp "$GITHUB_WORKSPACE/publish/private/lacadev-client.zip" "$GITHUB_WORKSPACE/publish-legacy/lacadev-client.zip"
-
-      - name: Generate update JSON files
-        env:
-          PARENT_VERSION: ${{ steps.versions.outputs.parent }}
-          BUILD_DATE: ${{ steps.versions.outputs.date }}
-        run: |
-          php -r '
-            $version   = getenv("PARENT_VERSION") ?: "3.2";
-            $buildDate = getenv("BUILD_DATE") ?: date("Y-m-d");
-            $changelogPath = "app/public/wp-content/themes/lacadev-client/CHANGELOG.md";
-            $changelog = "";
-            if (file_exists($changelogPath)) {
-                $content = file_get_contents($changelogPath);
-                if (preg_match("/## " . preg_quote($version, "/") . ".*?\n(.*?)(?=\n## |\Z)/s", $content, $m)) {
-                    $changelog = trim($m[1]);
-                }
-            }
-
-            // 1. JSON chính thức đặt tại lacadev.com (download_url trỏ endpoint có xác thực)
-            $mainJson = [
-                "name"         => "La Cà Dev - Client",
-                "version"      => $version,
-                "download_url" => "https://lacadev.com/wp-json/laca/v1/theme-package/lacadev-client",
-                "details_url"  => "https://lacadev.com",
-                "requires"     => "6.0",
-                "requires_php" => "8.0",
-                "last_updated" => $buildDate,
-                "description"  => "Theme cha La Cà Dev - Client — cập nhật tự động an toàn từ lacadev.com",
-                "changelog"    => $changelog,
-            ];
-            file_put_contents(
-                getenv("GITHUB_WORKSPACE") . "/publish/lacadev-client.json",
-                json_encode($mainJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
-            );
-
-            // 2. JSON mồi cho client cũ đặt tại clients.lacadev.com (download_url trỏ zip công khai)
-            $legacyJson = [
-                "name"         => "La Cà Dev - Client",
-                "version"      => $version,
-                "download_url" => "https://lacadev.com/theme-updates/lacadev-client.zip",
-                "details_url"  => "https://lacadev.com",
-                "requires"     => "6.0",
-                "requires_php" => "8.0",
-                "last_updated" => $buildDate,
-                "description"  => "Theme cha La Cà Dev - Client — cập nhật tự động từ lacadev.com",
-                "changelog"    => $changelog,
-            ];
-            file_put_contents(
-                getenv("GITHUB_WORKSPACE") . "/publish-legacy/lacadev-client.json",
-                json_encode($legacyJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
-            );
-          '
+          cp "$GITHUB_WORKSPACE/publish-out/lacadev-client-${PARENT_VERSION}.zip" "$GITHUB_WORKSPACE/publish/private/lacadev-client.zip"
+          cp "$GITHUB_WORKSPACE/publish-out/lacadev-client-${PARENT_VERSION}.json" "$GITHUB_WORKSPACE/publish/lacadev-client.json"
 
       - name: Upload theme-updates package (lacadev.com)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -121,17 +107,3 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           server-dir: /public_html/theme-updates/
           local-dir: publish/
-
-      # -----------------------------------------------------------------------
-      # TODO: XOÁ BƯỚC NÀY sau khi mọi client đã nâng cấp lên >= 3.2
-      # Bước mồi cho client cũ đang đọc clients.lacadev.com/theme-updates/lacadev-client.json
-      # -----------------------------------------------------------------------
-      - name: Bait step for legacy clients (clients.lacadev.com)
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        continue-on-error: true
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: /clients.lacadev.com/theme-updates/
-          local-dir: publish-legacy/

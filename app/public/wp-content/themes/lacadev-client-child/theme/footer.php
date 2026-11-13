@@ -43,9 +43,11 @@ $footer_links_col2 = function_exists('getOption') ? getOption('footer_links_col2
 $footer_links_col2 = is_array($footer_links_col2) ? $footer_links_col2 : [];
 
 $footer_badges = function_exists('getOption') ? getOption('footer_badges') : [];
-if (empty($footer_badges) && function_exists('carbon_get_theme_option')) {
-    $fallback_badges = carbon_get_theme_option('footer_badges')
-        ?: (carbon_get_theme_option('footer_badgesen') ?: carbon_get_theme_option('footer_badgesvi'));
+if (empty($footer_badges)) {
+    $fallback_badges = function_exists('laca_theme_option') ? laca_theme_option('footer_badges') : (function_exists('carbon_get_theme_option') ? carbon_get_theme_option('footer_badges') : []);
+    if (empty($fallback_badges)) {
+        $fallback_badges = function_exists('laca_theme_option') ? (laca_theme_option('footer_badgesen') ?: laca_theme_option('footer_badgesvi')) : (function_exists('carbon_get_theme_option') ? (carbon_get_theme_option('footer_badgesen') ?: carbon_get_theme_option('footer_badgesvi')) : []);
+    }
     if (!empty($fallback_badges)) {
         $footer_badges = $fallback_badges;
     }
@@ -53,12 +55,12 @@ if (empty($footer_badges) && function_exists('carbon_get_theme_option')) {
 $footer_badges = is_array($footer_badges) ? $footer_badges : [];
 
 // Lấy DMCA badge
-$footer_dmca_badge = function_exists('carbon_get_theme_option') ? carbon_get_theme_option('footer_dmca_badge') : '';
+$footer_dmca_badge = function_exists('laca_theme_option') ? laca_theme_option('footer_dmca_badge') : (function_exists('carbon_get_theme_option') ? carbon_get_theme_option('footer_dmca_badge') : '');
 if (empty($footer_dmca_badge) && function_exists('getOption')) {
     $footer_dmca_badge = getOption('footer_dmca_badge');
 }
-if (empty($footer_dmca_badge) && function_exists('carbon_get_theme_option')) {
-    $footer_dmca_badge = carbon_get_theme_option('footer_dmca_badgeen') ?: carbon_get_theme_option('footer_dmca_badgevi');
+if (empty($footer_dmca_badge)) {
+    $footer_dmca_badge = function_exists('laca_theme_option') ? (laca_theme_option('footer_dmca_badgeen') ?: laca_theme_option('footer_dmca_badgevi')) : (function_exists('carbon_get_theme_option') ? (carbon_get_theme_option('footer_dmca_badgeen') ?: carbon_get_theme_option('footer_dmca_badgevi')) : '');
 }
 
 $footer_socials = [
@@ -73,8 +75,8 @@ $footer_socials = [
 $container_class = function_exists('laca_block_layout_class') ? laca_block_layout_class('container') : 'container-fluid';
 
 // Kiểm tra form liên hệ footer
-$footer_contact_image_id = function_exists('carbon_get_theme_option') ? (int) carbon_get_theme_option('footer_contact_image') : 0;
-$footer_contact_budget_raw = function_exists('carbon_get_theme_option') ? trim((string) carbon_get_theme_option('footer_contact_budget_options')) : '';
+$footer_contact_image_id = function_exists('laca_theme_option') ? (int) laca_theme_option('footer_contact_image') : (function_exists('carbon_get_theme_option') ? (int) carbon_get_theme_option('footer_contact_image') : 0);
+$footer_contact_budget_raw = function_exists('laca_theme_option') ? trim((string) laca_theme_option('footer_contact_budget_options')) : (function_exists('carbon_get_theme_option') ? trim((string) carbon_get_theme_option('footer_contact_budget_options')) : '');
 ?>
 
 <?php if ($footer_contact_image_id || $footer_contact_budget_raw !== ''): ?>

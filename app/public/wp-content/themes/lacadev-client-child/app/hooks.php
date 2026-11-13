@@ -40,7 +40,9 @@ if (file_exists(CHILD_APP_DIR . 'src/Newsletter/NewsletterTexts.php')) {
 }
 
 add_action('init', function () {
-    $newsletter_enabled = function_exists('carbon_get_theme_option') && carbon_get_theme_option('newsletter_enable');
+    $newsletter_enabled = function_exists('laca_theme_option')
+        ? laca_theme_option('newsletter_enable')
+        : (function_exists('carbon_get_theme_option') && carbon_get_theme_option('newsletter_enable'));
     if (!$newsletter_enabled) {
         return;
     }

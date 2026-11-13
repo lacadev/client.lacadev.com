@@ -51,9 +51,9 @@ $container_class = function_exists('laca_block_layout_class') ? laca_block_layou
 	<style>
 		:root {
 			/* Theme colors */
-			--primary-color: <?php echo function_exists('carbon_get_theme_option') ? carbon_get_theme_option('primary_color') : '#3D5A45'; ?>;
-			--second-color: <?php echo function_exists('carbon_get_theme_option') ? carbon_get_theme_option('secondary_color') : '#666666'; ?>;
-			--bg-color: <?php echo function_exists('carbon_get_theme_option') ? carbon_get_theme_option('bg_color') : '#ffffff'; ?>;
+			--primary-color: <?php echo function_exists('laca_theme_option') ? laca_theme_option('primary_color', '#3D5A45') : (function_exists('carbon_get_theme_option') ? carbon_get_theme_option('primary_color') : '#3D5A45'); ?>;
+			--second-color: <?php echo function_exists('laca_theme_option') ? laca_theme_option('secondary_color', '#666666') : (function_exists('carbon_get_theme_option') ? carbon_get_theme_option('secondary_color') : '#666666'); ?>;
+			--bg-color: <?php echo function_exists('laca_theme_option') ? laca_theme_option('bg_color', '#ffffff') : (function_exists('carbon_get_theme_option') ? carbon_get_theme_option('bg_color') : '#ffffff'); ?>;
 		}
 	</style>
 </head>
@@ -101,9 +101,9 @@ $container_class = function_exists('laca_block_layout_class') ? laca_block_layou
 						<div class="header__logo">
 							<a href="<?php echo esc_url(home_url('/')); ?>" class="header__logo-link">
 								<?php
-								$logo_id = function_exists('carbon_get_theme_option') ? carbon_get_theme_option('logo') : 0;
+								$logo_id = function_exists('laca_theme_option') ? laca_theme_option('logo') : (function_exists('carbon_get_theme_option') ? carbon_get_theme_option('logo') : 0);
 								$logo_url = $logo_id ? wp_get_attachment_image_url($logo_id, 'full') : '';
-								$logo_white_id = function_exists('carbon_get_theme_option') ? carbon_get_theme_option('logo_white') : 0;
+								$logo_white_id = function_exists('laca_theme_option') ? laca_theme_option('logo_white') : (function_exists('carbon_get_theme_option') ? carbon_get_theme_option('logo_white') : 0);
 								$logo_white_url = $logo_white_id ? wp_get_attachment_image_url($logo_white_id, 'full') : '';
 								$has_both_logos = $logo_url && $logo_white_url;
 

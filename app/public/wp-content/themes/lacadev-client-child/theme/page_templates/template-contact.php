@@ -11,7 +11,9 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-$site_key = function_exists('carbon_get_theme_option') ? carbon_get_theme_option('recaptcha_site_key') : '';
+$site_key = function_exists('laca_theme_option')
+    ? laca_theme_option('recaptcha_site_key')
+    : (function_exists('carbon_get_theme_option') ? carbon_get_theme_option('recaptcha_site_key') : '');
 ?>
 
 <div class="contact-page-template">

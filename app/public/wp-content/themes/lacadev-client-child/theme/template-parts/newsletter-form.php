@@ -11,7 +11,8 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-if (!function_exists('carbon_get_theme_option') || !carbon_get_theme_option('newsletter_enable')) {
+$nl_enabled = function_exists('laca_theme_option') ? laca_theme_option('newsletter_enable') : (function_exists('carbon_get_theme_option') ? carbon_get_theme_option('newsletter_enable') : false);
+if (!$nl_enabled) {
     return;
 }
 if (!class_exists('NewsletterEndpoints') || !class_exists('NewsletterTexts') || !class_exists('NewsletterAjaxHandler')) {

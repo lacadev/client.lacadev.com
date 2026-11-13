@@ -5,10 +5,27 @@ const utils = require('../lib/utils');
 const path = require('path');
 
 // Trỏ trực tiếp source scripts về parent theme
-const parentSrc = path.resolve(__dirname, '../../../../lacadev-client/resources/scripts');
-const childSrc  = path.resolve(__dirname, '../../scripts');
+const parentSrc    = path.resolve(__dirname, '../../../../lacadev-client/resources/scripts');
+const parentStyles = path.resolve(__dirname, '../../../../lacadev-client/resources/styles');
+const childSrc     = path.resolve(__dirname, '../../scripts');
 
-module.exports = {
+const isParentTarget = process.env.LACA_BUILD_TARGET === 'parent';
+
+const parentEntries = {
+  'admin': path.join(parentSrc, 'admin/index.js'),
+  'login': path.join(parentSrc, 'login/index.js'),
+  'editor': path.join(parentSrc, 'editor/index.js'),
+  'laca-seo': [
+    path.join(parentSrc, 'admin/laca-seo/index.js'),
+    path.join(parentStyles, 'admin/laca-seo/index.scss'),
+  ],
+  'laca-seo-editor': [
+    path.join(parentSrc, 'admin/laca-seo/editor.js'),
+    path.join(parentStyles, 'admin/laca-seo/editor.scss'),
+  ],
+};
+
+const childEntries = {
   'theme': path.join(parentSrc, 'theme/index.js'),
   'admin': path.join(parentSrc, 'admin/index.js'),
   'login': path.join(parentSrc, 'login/index.js'),
@@ -25,14 +42,16 @@ module.exports = {
     utils.srcStylesPath('child.scss'),
     path.join(childSrc, 'theme/index.js'),
   ],
-  // Laca SEO Admin Bundle (Phase 0 & 1)
+  // Laca SEO Admin Bundle (Phase 0 & 1) — giữ 1 bản phát hành chuyển tiếp, gỡ ở 4.0
   'laca-seo': [
     path.join(parentSrc, 'admin/laca-seo/index.js'),
-    path.resolve(__dirname, '../../../../lacadev-client/resources/styles/admin/laca-seo/index.scss'),
+    path.join(parentStyles, 'admin/laca-seo/index.scss'),
   ],
-  // Laca SEO Editor Bundle (Phase 2)
+  // Laca SEO Editor Bundle (Phase 2) — giữ 1 bản phát hành chuyển tiếp, gỡ ở 4.0
   'laca-seo-editor': [
     path.join(parentSrc, 'admin/laca-seo/editor.js'),
-    path.resolve(__dirname, '../../../../lacadev-client/resources/styles/admin/laca-seo/editor.scss'),
+    path.join(parentStyles, 'admin/laca-seo/editor.scss'),
   ],
 };
+
+module.exports = isParentTarget ? parentEntries : childEntries;

@@ -1,5 +1,7 @@
-# Build files
-/dist/
+# Build files (parent dist/ and block-gutenberg/**/build/ are tracked since 3.9)
+/dist/bundle-report.html
+/releases/
+/tools/release/*.keypair
 
 # Development files
 /config.json
@@ -19,9 +21,6 @@
 # CLI tools
 drone.json
 
-#block-gutenberg
-/block-gutenberg/**/build
-
 # Common
 .DS_Store
 .DS_Store?
@@ -31,6 +30,5 @@ drone.json
 ehthumbs.db
 Thumbs.db
 .idea
-composer.lock
 yarn.lock
 package-lock.json

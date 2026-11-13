@@ -21,6 +21,7 @@ const postcss = require('./postcss');
  * Setup the environment.
  */
 const { env: envName } = utils.detectEnv();
+const isParentBuild = process.env.LACA_BUILD_TARGET === 'parent';
 
 /**
  * Setup Babel loader.
@@ -59,32 +60,37 @@ const plugins = [
     }),
     miniCss,
     new WebpackManifestPlugin(),
-    new BundleAnalyzerPlugin({
-        analyzerMode: 'static',
-        reportFilename: 'bundle-report.html',
-        openAnalyzer: false
-    }),
-    new CopyWebpackPlugin({
-        patterns: [
-            {
-                from: require('path').resolve(__dirname, '../../../lacadev-client/resources/scripts/sw.js'),
-                to: utils.distPath('sw.js'),
-            },
-            {
-                from: require('path').resolve(__dirname, '../../../lacadev-client/resources/scripts/lib/instantpage.js'),
-                to: utils.distPath('instantpage.js'),
-            },
-            {
-                from: require('path').resolve(__dirname, '../../../lacadev-client/resources/scripts/lib/smooth-scroll.min.js'),
-                to: utils.distPath('smooth-scroll.min.js'),
-            },
-            {
-                from: require('path').resolve(__dirname, '../../../lacadev-client/resources/scripts/lib/lazysizes.min.js'),
-                to: utils.distPath('lazysizes.min.js'),
-            },
-        ],
-    }),
 ];
+
+if (!isParentBuild) {
+    plugins.push(
+        new BundleAnalyzerPlugin({
+            analyzerMode: 'static',
+            reportFilename: 'bundle-report.html',
+            openAnalyzer: false
+        }),
+        new CopyWebpackPlugin({
+            patterns: [
+                {
+                    from: require('path').resolve(__dirname, '../../../lacadev-client/resources/scripts/sw.js'),
+                    to: utils.distPath('sw.js'),
+                },
+                {
+                    from: require('path').resolve(__dirname, '../../../lacadev-client/resources/scripts/lib/instantpage.js'),
+                    to: utils.distPath('instantpage.js'),
+                },
+                {
+                    from: require('path').resolve(__dirname, '../../../lacadev-client/resources/scripts/lib/smooth-scroll.min.js'),
+                    to: utils.distPath('smooth-scroll.min.js'),
+                },
+                {
+                    from: require('path').resolve(__dirname, '../../../lacadev-client/resources/scripts/lib/lazysizes.min.js'),
+                    to: utils.distPath('lazysizes.min.js'),
+                },
+            ],
+        })
+    );
+}
 
 module.exports = {
     optimization: {
@@ -148,17 +154,35 @@ module.exports = {
                 ],
             })
         ],
-        // Tắt splitChunks: WP không tự enqueue vendor chunks,
-        // nên tất cả dependencies phải bundle vào entry file tương ứng.
-        splitChunks: false,
+        // Khi build parent: tách vendors.js cho admin (đã có theme-vendors-js enqueue trước admin.js).
+        // Khi build child mặc định: giữ nguyên splitChunks: false như hiện tại.
+        splitChunks: isParentBuild
+            ? {
+                cacheGroups: {
+                    vendors: {
+                        test: /[\\/]node_modules[\\/]/,
+                        name: 'vendors',
+                        chunks: (chunk) => chunk.name === 'admin',
+                        enforce: true,
+                    },
+                },
+            }
+            : false,
     },
     entry: require('./webpack/entry'),
-    output: {
-        ...require('./webpack/output'),
-        // Giữ critical*.css: critical.js chạy SAU webpack và có thể bỏ qua trang
-        // đang "Coming soon" — xoá sạch thì mất luôn bản đã sinh trước đó.
-        clean: { keep: /styles[\\/]critical[^/\\]*\.css$/ },
-    },
+    output: isParentBuild
+        ? {
+            ...require('./webpack/output'),
+            path: require('path').resolve(__dirname, '../../../lacadev-client/dist'),
+            publicPath: 'auto',
+            clean: true,
+        }
+        : {
+            ...require('./webpack/output'),
+            // Giữ critical*.css: critical.js chạy SAU webpack và có thể bỏ qua trang
+            // đang "Coming soon" — xoá sạch thì mất luôn bản đã sinh trước đó.
+            clean: { keep: /styles[\\/]critical[^/\\]*\.css$/ },
+        },
     resolve: require('./webpack/resolve'),
     externals: require('./webpack/externals'),
     module: {

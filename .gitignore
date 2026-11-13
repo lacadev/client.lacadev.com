@@ -9,3 +9,9 @@ conf/
 .agent/
 .envrc
 .DS_Store
+# --- Laca Sync (Production -> Local) ---
+laca-sync.yml
+app/sql/pulls/
+app/sql/backups/
+app/public/wp-content/laca-backups/
+

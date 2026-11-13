@@ -1,0 +1,68 @@
+# File cấu hình đồng bộ Production -> Local cho Laca Theme
+# Chép file này thành laca-sync.yml ở thư mục gốc của repository (ngang hàng với app/, .git/)
+# laca-sync.yml ĐÃ ĐƯỢC GITIGNORE - TUYỆT ĐỐI KHÔNG COMMIT THÔNG TIN TRUY CẬP LÊN GIT
+
+production:
+  # Địa chỉ SSH của hosting production:
+  # Có thể dùng dạng "user@host.example.com:22" hoặc tên Host đã cấu hình trong ~/.ssh/config
+  ssh: "user@host.example.com:22"
+
+  # Đường dẫn tuyệt đối tới thư mục WordPress trên server (nơi chứa wp-config.php)
+  path: "/home/user/public_html"
+
+  # URL chính của production (home_url / siteurl)
+  url: "https://example.com"
+
+  # Lệnh chạy WP-CLI trên server (mặc định là 'wp', hoặc đường dẫn cụ thể như 'php ~/bin/wp-cli.phar')
+  wp: "wp"
+
+local:
+  # URL của site local. Để trống = tự động lấy từ home_url() của WordPress local hiện tại
+  url: ""
+
+  # Danh sách plugin chỉ nên chạy trên production, tự động tắt trên local sau khi kéo DB
+  deactivate_plugins:
+    - "litespeed-cache"
+    - "wp-rocket"
+    - "w3-total-cache"
+    - "wordfence"
+    - "updraftplus"
+    - "all-in-one-wp-migration"
+
+db:
+  # Hậu tố của các bảng không cần kéo về (tự động ghép prefix của WordPress)
+  exclude_tables:
+    - "wf*"            # mọi bảng Wordfence (wp_wf…)
+    - "actionscheduler_logs"
+    - "laca_project_logs"
+
+  # Giữ cấu trúc (schema), bỏ dữ liệu bên trong cho các bảng log/lịch sử lớn
+  exclude_data_only:
+    - "laca_email_log"
+    - "laca_login_log"
+    - "laca_contact_submissions"
+
+  # Tự động ẩn danh dữ liệu cá nhân sau khi kéo (email non-admin, số điện thoại, đơn liên hệ...)
+  anonymize: false
+
+files:
+  # Các thư mục đồng bộ file (tương đối từ WordPress root)
+  paths:
+    - "wp-content/themes"
+    - "wp-content/plugins"
+    - "wp-content/mu-plugins"
+
+  # Các pattern loại trừ khi so sánh drift và kéo file
+  exclude:
+    - "node_modules"
+    - ".git"
+    - "*.log"
+    - "cache"
+    - "wflogs"
+    - "upgrade"
+    - "uploads"
+
+media:
+  # Bật tính năng LocalMediaProxy: ảnh chưa có ở local sẽ tự động proxy URL từ production
+  proxy: true
+

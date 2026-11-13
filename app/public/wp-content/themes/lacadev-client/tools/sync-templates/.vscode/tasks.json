@@ -1,0 +1,90 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Laca: Kiểm tra kết nối production (sync-check)",
+      "type": "shell",
+      "command": "wp laca sync-check",
+      "group": "none",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "clear": true
+      }
+    },
+    {
+      "label": "Laca: Kéo DB từ production (pull-db)",
+      "type": "shell",
+      "command": "wp laca pull-db",
+      "group": "none",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "clear": false
+      }
+    },
+    {
+      "label": "Laca: Kéo DB (Ẩn danh dữ liệu cá nhân)",
+      "type": "shell",
+      "command": "wp laca pull-db --anonymize",
+      "group": "none",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "clear": false
+      }
+    },
+    {
+      "label": "Laca: Xem file lệch production (drift)",
+      "type": "shell",
+      "command": "wp laca drift",
+      "group": "none",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "clear": true
+      }
+    },
+    {
+      "label": "Laca: Kéo file lệch từ production (pull-files)",
+      "type": "shell",
+      "command": "wp laca pull-files",
+      "group": "none",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "clear": false
+      }
+    },
+    {
+      "label": "Laca: Khôi phục DB local gần nhất (restore-db)",
+      "type": "shell",
+      "command": "wp laca restore-db",
+      "group": "none",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "clear": false
+      }
+    },
+    {
+      "label": "Laca: Làm an toàn DB local (local-safe)",
+      "type": "shell",
+      "command": "wp laca local-safe",
+      "group": "none",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "clear": false
+      }
+    }
+  ]
+}
+

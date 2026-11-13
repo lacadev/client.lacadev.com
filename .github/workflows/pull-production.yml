@@ -1,0 +1,105 @@
+name: Kéo thay đổi từ production
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Mặc định tắt schedule, bật bằng repo variable SYNC_SCHEDULE=1 nếu cần
+    - cron: '0 3 * * *'
+  repository_dispatch:
+    types: [production-drift]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  pull-production:
+    name: Kéo file lệch từ production
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'repository_dispatch' || vars.SYNC_SCHEDULE == '1'
+
+    steps:
+      - name: Checkout mã nguồn
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Thiết lập SSH
+        env:
+          SSH_KEY: ${{ secrets.PROD_SSH_KEY }}
+          SSH_HOST: ${{ secrets.PROD_SSH_HOST }}
+          SSH_PORT: ${{ secrets.PROD_SSH_PORT || '22' }}
+          SSH_KNOWN_HOSTS: ${{ secrets.PROD_SSH_KNOWN_HOSTS }}
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          if [ -n "$SSH_KNOWN_HOSTS" ]; then
+            echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
+          else
+            ssh-keyscan -p "$SSH_PORT" "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          fi
+          chmod 644 ~/.ssh/known_hosts
+
+      - name: Kéo file từ production về workspace (chỉ đọc server)
+        env:
+          SSH_USER: ${{ secrets.PROD_SSH_USER }}
+          SSH_HOST: ${{ secrets.PROD_SSH_HOST }}
+          SSH_PORT: ${{ secrets.PROD_SSH_PORT || '22' }}
+          PROD_PATH: ${{ vars.PROD_PATH || '/home/user/public_html' }}
+        run: |
+          # Thư mục themes và plugins
+          rsync -rlc -e "ssh -p $SSH_PORT" \
+            --exclude='node_modules' \
+            --exclude='.git' \
+            --exclude='*.log' \
+            --exclude='cache' \
+            --exclude='wflogs' \
+            --exclude='upgrade' \
+            --exclude='uploads' \
+            "$SSH_USER@$SSH_HOST:$PROD_PATH/wp-content/themes/" "app/public/wp-content/themes/"
+
+          rsync -rlc -e "ssh -p $SSH_PORT" \
+            --exclude='node_modules' \
+            --exclude='.git' \
+            --exclude='*.log' \
+            --exclude='cache' \
+            --exclude='wflogs' \
+            --exclude='upgrade' \
+            --exclude='uploads' \
+            "$SSH_USER@$SSH_HOST:$PROD_PATH/wp-content/plugins/" "app/public/wp-content/plugins/"
+
+      - name: Kiểm tra thay đổi và mở Pull Request
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "✅ Không có thay đổi nào giữa production và git."
+            exit 0
+          fi
+
+          BRANCH_NAME="sync/production-$(date +'%Y%m%d-%H%M')"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH_NAME"
+
+          git add app/public/wp-content/themes app/public/wp-content/plugins
+          git commit -m "chore(sync): sync production file changes into repo"
+          git push origin "$BRANCH_NAME"
+
+          PR_BODY="### Đồng bộ thay đổi từ Production
+          Đã phát hiện và kéo các tập tin thay đổi trên máy chủ production về repository.
+
+          **Tóm tắt trạng thái:**
+          \`\`\`
+          $(git status -s)
+          \`\`\`
+
+          Vui lòng kiểm tra kỹ diff trước khi merge vào nhánh chính."
+
+          gh pr create \
+            --title "chore(sync): đồng bộ thay đổi từ production ($(date +'%d/%m/%Y'))" \
+            --body "$PR_BODY" \
+            --base main \
+            --head "$BRANCH_NAME"

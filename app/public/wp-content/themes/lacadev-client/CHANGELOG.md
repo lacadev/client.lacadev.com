@@ -1,5 +1,18 @@
 # Nhật ký thay đổi (Changelog)
 
+## 3.9 (13/11/2026)
+
+- **Parent tự mang asset riêng (`dist/`)**: Bundle `admin`, `login`, `editor`, `laca-seo`, `laca-seo-editor` và `vendors` đi kèm gói Parent Theme với cache-busting `filemtime`. Từ 3.9 parent tự mang asset admin/login/SEO; entry tương ứng ở child sẽ gỡ ở 4.0.
+- **Đóng gói tất định & xác minh 2 lớp**: Phát hành qua `tools/release/build-package.sh` (`.distignore`, `composer install --no-dev`), ký manifest bằng Ed25519 (`ReleaseVerifier`) và kiểm tra SHA-256 trước khi cài đặt.
+- **Snapshot, Rollback & Báo cáo Fleet**: Tự động chụp snapshot Parent Theme trước khi nâng cấp (tối đa 3 bản), hỗ trợ khôi phục qua WP-CLI (`wp laca-theme rollback`) hoặc từ xa (`rollback_theme`), gửi trạng thái `theme_update_result` về Hub và cảnh báo khi Child Theme cần build lại (`ChildBuildNotice`). Lưu ý vận hành: khi gọi `wp laca-theme rollback` không truyền tên file cụ thể, hệ thống sẽ tự động pop (xoá) bản snapshot vừa dùng sau khi khôi phục thành công để các lệnh rollback liên tiếp lùi dần về các bản cũ hơn trên stack.
+- **Đồng bộ Block chọn lọc an toàn**: Xác thực HMAC-SHA256, allowlist đuôi file, kiểm checksum từng file, kiểm tra dependency (`parent`, `functions`, `ajax`), chống ghi đè tuỳ biến cục bộ (`409 local_modified`) và hỗ trợ snapshot/rollback từng block.
+- **Gia cố bảo mật & quản trị hệ thống**: Hoàn thiện bộ công cụ xuất/nhập cấu hình (`SiteConfig`), đồng bộ môi trường (`LacaSyncCommand`), kiểm soát đăng nhập, khử trùng SVG (`enshrined/svg-sanitize`), khôi phục kiểm tra nonce đăng nhập/đăng ký và loại bỏ DOM XSS trang cấu hình.
+
+## 3.8 (10/11/2026)
+
+- **Cập nhật theme lồng cấp & bảo mật kênh tải**: Sửa lỗi cập nhật cấu trúc lồng cấp `lacadev-client/theme`, sao lưu nguyên thư mục gốc khi nâng cấp, bổ sung ký số HMAC-SHA256 khi tải gói và gửi tracker log chuẩn JSON.
+- **Nâng cấp trải nghiệm quản trị**: Đồng bộ cải tiến AI, tối ưu giao diện Laca Admin UX và chính sách CSP.
+
 ## 3.7 (09/11/2026)
 - **Trang đăng nhập theo giờ**: Nền phong cảnh núi đồi nhiều lớp, rừng thông, mây trôi, lều và lửa trại; mặt trời/mặt trăng đi theo vòng cung theo múi giờ của site, có 4 tông màu bình minh / ngày / hoàng hôn / đêm.
 - **Form đăng nhập đổi theo ngày/đêm**: Card kính sáng ban ngày, kính tối buổi tối (logo trắng), màu nhấn xanh rừng / vàng lửa trại; chữ đủ tương phản, card gọn hơn.

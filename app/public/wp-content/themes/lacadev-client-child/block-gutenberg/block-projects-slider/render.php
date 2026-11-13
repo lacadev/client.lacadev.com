@@ -75,8 +75,8 @@ if ( $mode === 'manual' && ! empty( $selected_posts ) ) {
 $query = new WP_Query( $query_args );
 
 // ── Unique ID per instance ─────────────────────────────────────────────────
-static $instance = 0;
-$instance++;
+// wp_unique_id() dùng biến static bên trong hàm core nên luôn tăng đúng giữa các lần render block.
+$instance  = wp_unique_id();
 $swiper_id = 'projects-slider-' . $instance;
 
 $section_extra_attrs = 'class="block-projects-slider" style="background:' . esc_attr( $bg_rgba ) . ';"';
@@ -574,5 +574,6 @@ if ( $show_popup ) :
         $popup_id,
         $instance
     );
-    wp_add_inline_script( 'swiper', $popup_js );
+    // Gắn vào 'theme-js-bundle' (luôn được enqueue ở frontend) thay vì 'swiper' để không phụ thuộc thứ tự render block.
+    wp_add_inline_script( 'theme-js-bundle', $popup_js );
 endif;

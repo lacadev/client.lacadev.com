@@ -110,5 +110,11 @@
         "attributes": {
             "__isPreview": true
         }
+    },
+    "laca": {
+        "catalog": true,
+        "requires": {
+            "parent": ">=3.9"
+        }
     }
 }

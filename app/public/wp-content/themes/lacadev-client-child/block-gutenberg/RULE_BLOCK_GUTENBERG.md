@@ -262,3 +262,40 @@ $margin_top_css    = $is_editor_context ? '0' : ( '-' . $pull_up_overlap . 'px' 
 - `npx wp-scripts build --config resources/build/webpack.blocks.js` — build
   toàn bộ `block-gutenberg/`, xác nhận `webpack ... compiled successfully`
   cho từng block, không chỉ block vừa sửa (build là 1 lệnh chung cho tất cả).
+
+## 10. Versioning & Catalog
+
+Mọi block dùng chung qua Block Catalog / Block Sync phải khai báo rõ phiên bản SemVer và metadata `laca` trong `block.json`:
+
+```json
+{
+    "version": "1.0.0",
+    "laca": {
+        "catalog": true,
+        "requires": {
+            "parent": ">=3.9",
+            "functions": [],
+            "ajax": []
+        }
+    }
+}
+```
+
+### Quy tắc tăng phiên bản (SemVer)
+
+- **MAJOR (`X.0.0`)**: Thay đổi phá vỡ tương thích ngược (đổi tên hoặc kiểu dữ liệu `attributes` đã lưu trên bài viết/trang, đổi cấu trúc markup lưu tĩnh).
+- **MINOR (`1.Y.0`)**: Bổ sung tính năng mới, attribute mới có `default` an toàn, hoặc gộp cải tiến từ site khách về thư viện nguồn mà vẫn tương thích dữ liệu cũ.
+- **PATCH (`1.0.Z`)**: Sửa lỗi hiển thị, CSS/SCSS, JS hoặc `render.php` mà không đổi schema dữ liệu.
+
+### Quy tắc khoá `laca.catalog` và `laca.requires`
+
+- **Opt-in bắt buộc**: `BlockCatalogProvider` chỉ xuất các block có `"laca": { "catalog": true }`. Các bucket riêng theo khách hàng (ví dụ `nhakhoathienphuoc-blocks-site/`) **không** bật cờ này để tránh lộ giao diện/logic đặc thù sang site khác.
+- **Khai báo phụ thuộc (`laca.requires`)**:
+  - `parent`: Ràng buộc phiên bản Parent Theme tối thiểu (ví dụ `">=3.9"`).
+  - `functions`: Danh sách tên hàm PHP bắt buộc phải tồn tại (`function_exists`) trên site đích.
+  - `ajax`: Danh sách tên action AJAX (`wp_ajax_<name>` hoặc `wp_ajax_nopriv_<name>`) mà block gọi tới.
+
+### Luật phản hồi HTTP 409 khi đồng bộ
+
+- **`409 missing_dependencies`**: Trả về khi site đích thiếu phiên bản `parent`, hàm PHP trong `functions`, hoặc action trong `ajax`. Hub không tự động retry và ghi nhận trạng thái `missing_dependencies` để xử lý phụ thuộc trước.
+- **`409 local_modified`**: Trả về khi block trên đĩa của site khách có checksum khác với lần đồng bộ gần nhất (hoặc block đã tồn tại trên đĩa nhưng chưa từng có bản ghi đồng bộ) mà request không truyền `force: true`. Khi admin xác nhận ghi đè với `force: true`, client tự động tạo snapshot bản cũ vào `wp-content/laca-backups/blocks-*/` trước khi ghi bản mới để có thể gọi `/wp-json/lacadev/v1/sync-block/rollback` khôi phục bất cứ lúc nào.

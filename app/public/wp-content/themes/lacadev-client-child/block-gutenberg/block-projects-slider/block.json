@@ -2,7 +2,7 @@
     "$schema": "https://schemas.wp.org/trunk/block.json",
     "apiVersion": 3,
     "name": "lacadev/projects-slider-block",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "title": "Projects Slider Block",
     "category": "site-unclassified",
     "description": "Hiển thị danh sách dự án dạng Swiper slider fullwidth — chọn post type, danh mục, số lượng; hỗ trợ auto/manual.",
@@ -136,5 +136,14 @@
         }
     },
     "editorScript": "block-block-projects-slider-editor",
-    "style": "block-block-projects-slider"
+    "style": "block-block-projects-slider",
+    "laca": {
+        "catalog": true,
+        "requires": {
+            "parent": ">=3.9",
+            "ajax": [
+                "laca_footer_contact_submit"
+            ]
+        }
+    }
 }

@@ -20,11 +20,14 @@ const bindFooterContactForm = () => {
 			button.disabled = true;
 
 			try {
-				const response = await fetch( form.action, {
-					method: 'POST',
-					body: new FormData( form ),
-					credentials: 'same-origin',
-				} );
+				const response = await fetch(
+					form.getAttribute( 'action' ) || '',
+					{
+						method: 'POST',
+						body: new FormData( form ),
+						credentials: 'same-origin',
+					}
+				);
 
 				const result = await response.json();
 				message.removeAttribute( 'hidden' );

@@ -452,7 +452,10 @@ if ( $show_popup ) :
 
         <form class="pslider-popup__form" method="POST"
               action="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>"
-              novalidate data-pslider-form>
+              novalidate data-pslider-form
+              data-msg-success="<?php echo esc_attr__( 'Gửi thành công!', 'laca' ); ?>"
+              data-msg-error="<?php echo esc_attr__( 'Có lỗi, vui lòng thử lại.', 'laca' ); ?>"
+              data-msg-network="<?php echo esc_attr__( 'Lỗi kết nối.', 'laca' ); ?>">
             <?php wp_nonce_field( 'laca_footer_contact_nonce', 'nonce' ); ?>
             <input type="hidden" name="action" value="laca_footer_contact_submit">
 
@@ -545,23 +548,23 @@ if ( $show_popup ) :
             btn.classList.add("pslider-popup__btn--loading");
             btn.disabled = true;
             var fd = new FormData(form);
-            fetch(form.action, { method: "POST", body: fd, credentials: "same-origin" })
+            fetch(form.getAttribute("action") || "", { method: "POST", body: fd, credentials: "same-origin" })
             .then(function(r){ return r.json(); })
             .then(function(d){
                 msg.removeAttribute("hidden");
                 if (d.success) {
-                    msg.textContent = d.data || "Gửi thành công!";
+                    msg.textContent = d.data || form.dataset.msgSuccess || "";
                     msg.className = "pslider-popup__msg pslider-popup__msg--ok";
                     form.reset();
                     setTimeout(hidePopup, 1500);
                 } else {
-                    msg.textContent = d.data || "Có lỗi, vui lòng thử lại.";
+                    msg.textContent = d.data || form.dataset.msgError || "";
                     msg.className = "pslider-popup__msg pslider-popup__msg--err";
                 }
             })
             .catch(function(){
                 msg.removeAttribute("hidden");
-                msg.textContent = "Lỗi kết nối.";
+                msg.textContent = form.dataset.msgNetwork || "";
                 msg.className = "pslider-popup__msg pslider-popup__msg--err";
             })
             .finally(function(){

@@ -103,7 +103,10 @@ $footer_contact_budget_raw = function_exists('laca_theme_option') ? trim((string
                         <h2 class="bcf__heading"><?php echo esc_html($footer_contact_heading); ?></h2>
                     <?php endif; ?>
 
-                    <form class="bcf__form" method="POST" action="<?php echo esc_url(admin_url('admin-ajax.php')); ?>" novalidate data-bcf-form>
+                    <form class="bcf__form" method="POST" action="<?php echo esc_url(admin_url('admin-ajax.php')); ?>" novalidate data-bcf-form
+                        data-msg-success="<?php echo esc_attr__('Gửi thành công!', 'laca'); ?>"
+                        data-msg-error="<?php echo esc_attr__('Có lỗi, vui lòng thử lại.', 'laca'); ?>"
+                        data-msg-network="<?php echo esc_attr__('Lỗi kết nối.', 'laca'); ?>">
                         <?php wp_nonce_field('laca_footer_contact_nonce', 'nonce'); ?>
                         <input type="hidden" name="action" value="laca_footer_contact_submit">
 

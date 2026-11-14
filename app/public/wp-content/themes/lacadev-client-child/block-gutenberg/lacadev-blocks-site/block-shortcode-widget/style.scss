@@ -4,6 +4,7 @@
 
 .block-shortcode-widget {
     padding: 8rem 0;
+    overflow-x: clip;
 
     @include maxWidth($sm) {
         padding: 4rem 0;

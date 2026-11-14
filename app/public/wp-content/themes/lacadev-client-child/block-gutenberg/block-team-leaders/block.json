@@ -2,9 +2,9 @@
     "$schema": "https://schemas.wp.org/trunk/block.json",
     "apiVersion": 3,
     "name": "lacadev/team-leaders-block",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "title": "Team Leaders Block",
-    "category": "site-unclassified",
+    "category": "site-phucdainam",
     "description": "Hiển thị section lãnh đạo — ảnh cutout, tên, chức vụ và quote.",
     "keywords": [
         "team",

@@ -2,9 +2,9 @@
     "$schema": "https://schemas.wp.org/trunk/block.json",
     "apiVersion": 3,
     "name": "lacadev/projects-slider-block",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "title": "Projects Slider Block",
-    "category": "site-unclassified",
+    "category": "site-phucdainam",
     "description": "Hiển thị danh sách dự án dạng Swiper slider fullwidth — chọn post type, danh mục, số lượng; hỗ trợ auto/manual.",
     "keywords": [
         "project",

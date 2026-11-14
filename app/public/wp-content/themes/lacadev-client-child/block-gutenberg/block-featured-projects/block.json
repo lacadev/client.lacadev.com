@@ -2,9 +2,9 @@
     "$schema": "https://schemas.wp.org/trunk/block.json",
     "apiVersion": 3,
     "name": "lacadev/featured-projects-block",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "title": "Featured Projects Block",
-    "category": "site-unclassified",
+    "category": "site-phucdainam",
     "description": "Section DỰ ÁN BIỂU TƯỢNG — title lớn góc trái, badges, lưới 2x2 ảnh dự án.",
     "keywords": [
         "projects",

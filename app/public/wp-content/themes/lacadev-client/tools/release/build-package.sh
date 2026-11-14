@@ -72,7 +72,7 @@ if [[ -z "${DOWNLOAD_URL}" ]]; then
 fi
 
 IS_TEST_VERSION="0"
-if [[ "${VERSION}" == *-test ]]; then
+if [[ "${VERSION}" == *-test* ]]; then
     IS_TEST_VERSION="1"
 fi
 
@@ -82,7 +82,7 @@ if [[ "${IS_TEST_VERSION}" == "0" ]]; then
         echo "Error: Requested version (${VERSION}) does not match theme/style.css (${STYLE_VERSION})." >&2
         exit 1
     fi
-    if ! grep -Eq "^## ${VERSION}(\\s|$)" "${CHANGELOG_FILE}"; then
+    if ! grep -Eq "^## \\[?${VERSION}\\]?(\\s|$)" "${CHANGELOG_FILE}"; then
         echo "Error: CHANGELOG.md is missing section '## ${VERSION}'." >&2
         exit 1
     fi

@@ -64,10 +64,19 @@ $buildMetaPath    = $childRoot . '/dist/build-meta.json';
 $buildMeta        = is_readable($buildMetaPath) ? json_decode((string) file_get_contents($buildMetaPath), true) : null;
 $metaParentVer    = is_array($buildMeta) ? (string) ($buildMeta['parent_version'] ?? '') : '';
 
+$rebuildReq      = is_object($manifestObj) && !empty($manifestObj->child_rebuild_recommended);
+$expectedMajorMinor = (string) preg_replace('/^(\d+\.\d+).*/', '$1', $expectedVer);
+$metaMajorMinor     = (string) preg_replace('/^(\d+\.\d+).*/', '$1', $metaParentVer);
+$metaVersionOk      = $metaParentVer !== '' && $expectedVer !== '' && (
+    $rebuildReq
+        ? version_compare($metaParentVer, $expectedVer, '>=')
+        : ($metaParentVer === $expectedVer || ($expectedMajorMinor !== '' && $metaMajorMinor === $expectedMajorMinor))
+);
+
 $checks['child_active_and_build_meta'] = [
     'pass'           => ($activeStylesheet !== 'lacadev-client/theme')
         && ($templateHeader === 'lacadev-client/theme')
-        && ($metaParentVer !== '' && $metaParentVer === $expectedVer),
+        && $metaVersionOk,
     'stylesheet'     => $activeStylesheet,
     'template'       => $templateHeader,
     'meta_parent_ver'=> $metaParentVer,
